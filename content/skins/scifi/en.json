@@ -1,0 +1,1297 @@
+{
+ "schema": "aihw.translation.v1",
+ "skin": "scifi",
+ "locale": "en",
+ "entries": [
+  {
+   "key": "place.settlement",
+   "name": "Colony",
+   "flavor": "Home to settlers and basic services."
+  },
+  {
+   "key": "place.wilderness",
+   "name": "Frontier",
+   "flavor": "Open country beyond the colony lights."
+  },
+  {
+   "key": "place.dungeon",
+   "name": "Derelict",
+   "flavor": "Airlocks sealed for a long time."
+  },
+  {
+   "key": "place.market",
+   "name": "Trade Station",
+   "flavor": null
+  },
+  {
+   "key": "place.hall",
+   "name": "Command Hall",
+   "flavor": null
+  },
+  {
+   "key": "place.gate",
+   "name": "Jump Gate",
+   "flavor": "Step through, another sky."
+  },
+  {
+   "key": "place.shrine",
+   "name": "Memorial",
+   "flavor": "Names of the lost are read here."
+  },
+  {
+   "key": "place.road",
+   "name": "Transit Route",
+   "flavor": null
+  },
+  {
+   "key": "place.water",
+   "name": "Hydro Zone",
+   "flavor": null
+  },
+  {
+   "key": "place.ruin",
+   "name": "Ruins",
+   "flavor": null
+  },
+  {
+   "key": "place.arena",
+   "name": "Arena",
+   "flavor": "Scoreboards, not body bags."
+  },
+  {
+   "key": "feature.start",
+   "name": "Start",
+   "flavor": null
+  },
+  {
+   "key": "feature.tutorial",
+   "name": "Tutorial",
+   "flavor": null
+  },
+  {
+   "key": "feature.trade",
+   "name": "Trade",
+   "flavor": null
+  },
+  {
+   "key": "feature.repair",
+   "name": "Repair",
+   "flavor": null
+  },
+  {
+   "key": "feature.training",
+   "name": "Training",
+   "flavor": null
+  },
+  {
+   "key": "feature.resource",
+   "name": "Resource Site",
+   "flavor": null
+  },
+  {
+   "key": "feature.respawn",
+   "name": "Respawn",
+   "flavor": "Wake up somewhere familiar."
+  },
+  {
+   "key": "feature.portal",
+   "name": "Portal",
+   "flavor": null
+  },
+  {
+   "key": "feature.build_anchor",
+   "name": "Build Anchor",
+   "flavor": null
+  },
+  {
+   "key": "danger.safe",
+   "name": "Safe",
+   "flavor": null
+  },
+  {
+   "key": "danger.low",
+   "name": "Low Risk",
+   "flavor": null
+  },
+  {
+   "key": "danger.medium",
+   "name": "Moderate Risk",
+   "flavor": null
+  },
+  {
+   "key": "danger.high",
+   "name": "High Risk",
+   "flavor": null
+  },
+  {
+   "key": "combat.safe",
+   "name": "No Combat",
+   "flavor": null
+  },
+  {
+   "key": "combat.duel",
+   "name": "Duel Only",
+   "flavor": null
+  },
+  {
+   "key": "combat.pk",
+   "name": "Open Combat",
+   "flavor": null
+  },
+  {
+   "key": "combat.pve",
+   "name": "PvE Only",
+   "flavor": null
+  },
+  {
+   "key": "item.blade",
+   "name": "Monoblade",
+   "flavor": "One molecule wide, all edge."
+  },
+  {
+   "key": "item.blunt",
+   "name": "Impact Hammer",
+   "flavor": null
+  },
+  {
+   "key": "item.ranged",
+   "name": "Blaster",
+   "flavor": null
+  },
+  {
+   "key": "item.staff",
+   "name": "Pulse Staff",
+   "flavor": null
+  },
+  {
+   "key": "item.light_armor",
+   "name": "Light Suit",
+   "flavor": null
+  },
+  {
+   "key": "item.heavy_armor",
+   "name": "Heavy Plate",
+   "flavor": null
+  },
+  {
+   "key": "item.robe",
+   "name": "Enviro Suit",
+   "flavor": null
+  },
+  {
+   "key": "item.ring",
+   "name": "Tech Band",
+   "flavor": null
+  },
+  {
+   "key": "item.charm",
+   "name": "Token",
+   "flavor": null
+  },
+  {
+   "key": "item.potion",
+   "name": "Stim",
+   "flavor": "A hiss, then steady hands."
+  },
+  {
+   "key": "item.scroll",
+   "name": "Data Chip",
+   "flavor": null
+  },
+  {
+   "key": "item.ore",
+   "name": "Ore",
+   "flavor": null
+  },
+  {
+   "key": "item.herb",
+   "name": "Bio Sample",
+   "flavor": null
+  },
+  {
+   "key": "item.core",
+   "name": "Core Module",
+   "flavor": null
+  },
+  {
+   "key": "item.key",
+   "name": "Keycard",
+   "flavor": null
+  },
+  {
+   "key": "item.map",
+   "name": "Star Chart",
+   "flavor": null
+  },
+  {
+   "key": "category.weapon",
+   "name": "Weapon",
+   "flavor": null
+  },
+  {
+   "key": "category.armor",
+   "name": "Armor",
+   "flavor": null
+  },
+  {
+   "key": "category.accessory",
+   "name": "Accessory",
+   "flavor": null
+  },
+  {
+   "key": "category.consumable",
+   "name": "Consumable",
+   "flavor": null
+  },
+  {
+   "key": "category.material",
+   "name": "Material",
+   "flavor": null
+  },
+  {
+   "key": "category.socketable",
+   "name": "Module",
+   "flavor": null
+  },
+  {
+   "key": "category.utility",
+   "name": "Utility",
+   "flavor": null
+  },
+  {
+   "key": "socket.empty",
+   "name": "Empty Socket",
+   "flavor": null
+  },
+  {
+   "key": "socket.filled",
+   "name": "Filled Socket",
+   "flavor": null
+  },
+  {
+   "key": "person.player",
+   "name": "Operator",
+   "flavor": null
+  },
+  {
+   "key": "person.npc",
+   "name": "NPC",
+   "flavor": null
+  },
+  {
+   "key": "person.official",
+   "name": "Official",
+   "flavor": null
+  },
+  {
+   "key": "body.humanoid",
+   "name": "Humanoid",
+   "flavor": null
+  },
+  {
+   "key": "body.beast",
+   "name": "Beast",
+   "flavor": null
+  },
+  {
+   "key": "body.undead",
+   "name": "Reanimated",
+   "flavor": null
+  },
+  {
+   "key": "body.construct",
+   "name": "Machine",
+   "flavor": null
+  },
+  {
+   "key": "body.spirit",
+   "name": "Hologram",
+   "flavor": "Light that talks back."
+  },
+  {
+   "key": "npc.master",
+   "name": "Instructor",
+   "flavor": null
+  },
+  {
+   "key": "npc.merchant",
+   "name": "Vendor",
+   "flavor": null
+  },
+  {
+   "key": "npc.repairer",
+   "name": "Technician",
+   "flavor": null
+  },
+  {
+   "key": "npc.guard",
+   "name": "Sentry",
+   "flavor": null
+  },
+  {
+   "key": "npc.patroller",
+   "name": "Patroller",
+   "flavor": null
+  },
+  {
+   "key": "npc.quest_giver",
+   "name": "Dispatcher",
+   "flavor": null
+  },
+  {
+   "key": "npc.monster",
+   "name": "Hostile",
+   "flavor": null
+  },
+  {
+   "key": "npc.tutorial_opponent",
+   "name": "Target Drone",
+   "flavor": "It holds still on purpose."
+  },
+  {
+   "key": "class.warrior",
+   "name": "Warrior",
+   "flavor": null
+  },
+  {
+   "key": "class.mage",
+   "name": "Mage",
+   "flavor": null
+  },
+  {
+   "key": "class.ranger",
+   "name": "Ranger",
+   "flavor": null
+  },
+  {
+   "key": "class.priest",
+   "name": "Priest",
+   "flavor": null
+  },
+  {
+   "key": "bond.mentor",
+   "name": "Mentorship",
+   "flavor": null
+  },
+  {
+   "key": "bond.ally",
+   "name": "Alliance",
+   "flavor": null
+  },
+  {
+   "key": "bond.enemy",
+   "name": "Enmity",
+   "flavor": null
+  },
+  {
+   "key": "bond.member",
+   "name": "Membership",
+   "flavor": null
+  },
+  {
+   "key": "deed.travel",
+   "name": "Travel",
+   "flavor": null
+  },
+  {
+   "key": "deed.discover",
+   "name": "Discovery",
+   "flavor": null
+  },
+  {
+   "key": "deed.first_found",
+   "name": "First Discovery",
+   "flavor": null
+  },
+  {
+   "key": "deed.first_clear",
+   "name": "First Clear",
+   "flavor": "Someone has to be first."
+  },
+  {
+   "key": "deed.first_kill",
+   "name": "First Kill",
+   "flavor": null
+  },
+  {
+   "key": "deed.combat_win",
+   "name": "Victory",
+   "flavor": null
+  },
+  {
+   "key": "deed.combat_loss",
+   "name": "Defeat",
+   "flavor": null
+  },
+  {
+   "key": "deed.combat_draw",
+   "name": "Draw",
+   "flavor": null
+  },
+  {
+   "key": "deed.duel_win",
+   "name": "Duel Win",
+   "flavor": null
+  },
+  {
+   "key": "deed.bounty_done",
+   "name": "Bounty Done",
+   "flavor": null
+  },
+  {
+   "key": "deed.task_done",
+   "name": "Task Done",
+   "flavor": null
+  },
+  {
+   "key": "deed.task_accept",
+   "name": "Task Accepted",
+   "flavor": null
+  },
+  {
+   "key": "deed.task_release",
+   "name": "Task Released",
+   "flavor": null
+  },
+  {
+   "key": "deed.bounty_post",
+   "name": "Bounty Posted",
+   "flavor": null
+  },
+  {
+   "key": "deed.org_join",
+   "name": "Org Joined",
+   "flavor": null
+  },
+  {
+   "key": "deed.org_promote",
+   "name": "Promotion",
+   "flavor": null
+  },
+  {
+   "key": "deed.org_leave",
+   "name": "Org Left",
+   "flavor": null
+  },
+  {
+   "key": "deed.org_expel",
+   "name": "Expelled",
+   "flavor": null
+  },
+  {
+   "key": "deed.org_goal",
+   "name": "Org Goal Settled",
+   "flavor": null
+  },
+  {
+   "key": "deed.relation_offer",
+   "name": "Relation Offer",
+   "flavor": null
+  },
+  {
+   "key": "deed.relation_accept",
+   "name": "Relation Accepted",
+   "flavor": null
+  },
+  {
+   "key": "deed.relation_end",
+   "name": "Relation Ended",
+   "flavor": null
+  },
+  {
+   "key": "deed.enmity",
+   "name": "Enmity Logged",
+   "flavor": null
+  },
+  {
+   "key": "deed.wanted",
+   "name": "Wanted",
+   "flavor": null
+  },
+  {
+   "key": "deed.wanted_end",
+   "name": "Wanted Cleared",
+   "flavor": null
+  },
+  {
+   "key": "deed.death",
+   "name": "Death",
+   "flavor": null
+  },
+  {
+   "key": "deed.revive",
+   "name": "Revival",
+   "flavor": "A new body, same record."
+  },
+  {
+   "key": "deed.stage_up",
+   "name": "Stage Up",
+   "flavor": null
+  },
+  {
+   "key": "deed.breakthrough",
+   "name": "Promotion Trial",
+   "flavor": null
+  },
+  {
+   "key": "deed.ascend",
+   "name": "Transcend",
+   "flavor": "The ladder ends; the climb doesn't."
+  },
+  {
+   "key": "deed.build",
+   "name": "Build",
+   "flavor": null
+  },
+  {
+   "key": "deed.take",
+   "name": "Take",
+   "flavor": null
+  },
+  {
+   "key": "deed.give",
+   "name": "Give",
+   "flavor": null
+  },
+  {
+   "key": "deed.use",
+   "name": "Use",
+   "flavor": null
+  },
+  {
+   "key": "deed.equip",
+   "name": "Equip",
+   "flavor": null
+  },
+  {
+   "key": "deed.repair",
+   "name": "Repair",
+   "flavor": null
+  },
+  {
+   "key": "deed.trade",
+   "name": "Trade",
+   "flavor": null
+  },
+  {
+   "key": "deed.train",
+   "name": "Train",
+   "flavor": null
+  },
+  {
+   "key": "deed.learn",
+   "name": "Learn",
+   "flavor": null
+  },
+  {
+   "key": "deed.identity",
+   "name": "Identity",
+   "flavor": null
+  },
+  {
+   "key": "tier1",
+   "name": "Cadet",
+   "flavor": null
+  },
+  {
+   "key": "tier2",
+   "name": "Ensign",
+   "flavor": null
+  },
+  {
+   "key": "tier3",
+   "name": "Lieutenant",
+   "flavor": null
+  },
+  {
+   "key": "tier4",
+   "name": "Lieutenant Commander",
+   "flavor": null
+  },
+  {
+   "key": "tier5",
+   "name": "Commander",
+   "flavor": null
+  },
+  {
+   "key": "tier6",
+   "name": "Captain",
+   "flavor": null
+  },
+  {
+   "key": "tier7",
+   "name": "Commodore",
+   "flavor": null
+  },
+  {
+   "key": "tier8",
+   "name": "Admiral",
+   "flavor": null
+  },
+  {
+   "key": "tier9",
+   "name": "Fleet Admiral",
+   "flavor": "The Registry has no higher line."
+  },
+  {
+   "key": "stage1",
+   "name": "Mk.I",
+   "flavor": null
+  },
+  {
+   "key": "stage2",
+   "name": "Mk.II",
+   "flavor": null
+  },
+  {
+   "key": "stage3",
+   "name": "Mk.III",
+   "flavor": null
+  },
+  {
+   "key": "stage4",
+   "name": "Mk.IV",
+   "flavor": null
+  },
+  {
+   "key": "grade1",
+   "name": "Standard",
+   "flavor": null
+  },
+  {
+   "key": "grade2",
+   "name": "Refined",
+   "flavor": null
+  },
+  {
+   "key": "grade3",
+   "name": "Prototype",
+   "flavor": null
+  },
+  {
+   "key": "element.none",
+   "name": "Inert",
+   "flavor": null
+  },
+  {
+   "key": "element.fire",
+   "name": "Plasma",
+   "flavor": null
+  },
+  {
+   "key": "element.water",
+   "name": "Coolant",
+   "flavor": null
+  },
+  {
+   "key": "element.wind",
+   "name": "Vortex",
+   "flavor": null
+  },
+  {
+   "key": "element.earth",
+   "name": "Kinetic",
+   "flavor": null
+  },
+  {
+   "key": "element.void",
+   "name": "Void",
+   "flavor": null
+  },
+  {
+   "key": "element.light",
+   "name": "Photon",
+   "flavor": null
+  },
+  {
+   "key": "element.dark",
+   "name": "Dark Matter",
+   "flavor": null
+  },
+  {
+   "key": "skill.strike",
+   "name": "Strike",
+   "flavor": null
+  },
+  {
+   "key": "skill.guard",
+   "name": "Guard",
+   "flavor": null
+  },
+  {
+   "key": "skill.move",
+   "name": "Move",
+   "flavor": null
+  },
+  {
+   "key": "skill.inner",
+   "name": "Neural Sync",
+   "flavor": null
+  },
+  {
+   "key": "skill.org",
+   "name": "Org Skill",
+   "flavor": null
+  },
+  {
+   "key": "task.deliver",
+   "name": "Deliver",
+   "flavor": null
+  },
+  {
+   "key": "task.find",
+   "name": "Find",
+   "flavor": null
+  },
+  {
+   "key": "task.slay",
+   "name": "Slay",
+   "flavor": null
+  },
+  {
+   "key": "task.gather",
+   "name": "Gather",
+   "flavor": null
+  },
+  {
+   "key": "task.reach",
+   "name": "Reach",
+   "flavor": null
+  },
+  {
+   "key": "task_kind.system",
+   "name": "System Task",
+   "flavor": null
+  },
+  {
+   "key": "task_kind.bounty",
+   "name": "Bounty",
+   "flavor": null
+  },
+  {
+   "key": "task_kind.org",
+   "name": "Org Task",
+   "flavor": null
+  },
+  {
+   "key": "goal.system_tasks",
+   "name": "Weekly System Tasks",
+   "flavor": null
+  },
+  {
+   "key": "goal.deliver_items",
+   "name": "Weekly Deliveries",
+   "flavor": null
+  },
+  {
+   "key": "region.xiuxian",
+   "name": "Xiuxian Zone",
+   "flavor": null
+  },
+  {
+   "key": "region.wuxia",
+   "name": "Wuxia Zone",
+   "flavor": null
+  },
+  {
+   "key": "region.fantasy",
+   "name": "Fantasy Zone",
+   "flavor": null
+  },
+  {
+   "key": "region.scifi",
+   "name": "Sci-Fi Zone",
+   "flavor": null
+  },
+  {
+   "key": "region.neutral",
+   "name": "Neutral Zone",
+   "flavor": null
+  },
+  {
+   "key": "stat.coin",
+   "name": "Credits",
+   "flavor": null
+  },
+  {
+   "key": "stat.xp",
+   "name": "XP",
+   "flavor": null
+  },
+  {
+   "key": "stat.potential",
+   "name": "Potential",
+   "flavor": null
+  },
+  {
+   "key": "stat.vigor",
+   "name": "Stamina",
+   "flavor": null
+  },
+  {
+   "key": "stat.power",
+   "name": "Power",
+   "flavor": null
+  },
+  {
+   "key": "stat.guard",
+   "name": "Guard",
+   "flavor": null
+  },
+  {
+   "key": "stat.speed",
+   "name": "Speed",
+   "flavor": null
+  },
+  {
+   "key": "stat.cap",
+   "name": "Capacity",
+   "flavor": null
+  },
+  {
+   "key": "stat.dura",
+   "name": "Durability",
+   "flavor": null
+  },
+  {
+   "key": "stat.reputation",
+   "name": "Reputation",
+   "flavor": null
+  },
+  {
+   "key": "stat.legacy",
+   "name": "Legacy",
+   "flavor": null
+  },
+  {
+   "key": "org.registry",
+   "name": "Registry",
+   "flavor": null
+  },
+  {
+   "key": "org.group",
+   "name": "Group",
+   "flavor": null
+  },
+  {
+   "key": "org_rank.member",
+   "name": "Member",
+   "flavor": null
+  },
+  {
+   "key": "wanted.attack_guard",
+   "name": "Assault on Sentry",
+   "flavor": null
+  },
+  {
+   "key": "wanted.kill_player",
+   "name": "Killed Player",
+   "flavor": null
+  },
+  {
+   "key": "item.blade·tier1",
+   "name": "Training Monoblade",
+   "flavor": null
+  },
+  {
+   "key": "item.blade·tier2",
+   "name": "Service Monoblade",
+   "flavor": null
+  },
+  {
+   "key": "item.blade·tier3",
+   "name": "Reinforced Monoblade",
+   "flavor": null
+  },
+  {
+   "key": "item.blade·tier4",
+   "name": "Vibro Monoblade",
+   "flavor": null
+  },
+  {
+   "key": "item.blade·tier5",
+   "name": "Thermal Monoblade",
+   "flavor": null
+  },
+  {
+   "key": "item.blade·tier6",
+   "name": "Plasma Monoblade",
+   "flavor": null
+  },
+  {
+   "key": "item.blade·tier7",
+   "name": "Fleet Monoblade",
+   "flavor": null
+  },
+  {
+   "key": "item.blade·tier8",
+   "name": "Admiral's Monoblade",
+   "flavor": null
+  },
+  {
+   "key": "item.blade·tier9",
+   "name": "Flagship Monoblade",
+   "flavor": null
+  },
+  {
+   "key": "item.blunt·tier1",
+   "name": "Training Hammer",
+   "flavor": null
+  },
+  {
+   "key": "item.blunt·tier2",
+   "name": "Service Hammer",
+   "flavor": null
+  },
+  {
+   "key": "item.blunt·tier3",
+   "name": "Piston Hammer",
+   "flavor": null
+  },
+  {
+   "key": "item.blunt·tier4",
+   "name": "Kinetic Hammer",
+   "flavor": null
+  },
+  {
+   "key": "item.blunt·tier5",
+   "name": "Seismic Hammer",
+   "flavor": null
+  },
+  {
+   "key": "item.blunt·tier6",
+   "name": "Graviton Hammer",
+   "flavor": null
+  },
+  {
+   "key": "item.blunt·tier7",
+   "name": "Fleet Hammer",
+   "flavor": null
+  },
+  {
+   "key": "item.blunt·tier8",
+   "name": "Admiral's Hammer",
+   "flavor": null
+  },
+  {
+   "key": "item.blunt·tier9",
+   "name": "Flagship Maul",
+   "flavor": null
+  },
+  {
+   "key": "item.ranged·tier1",
+   "name": "Training Blaster",
+   "flavor": null
+  },
+  {
+   "key": "item.ranged·tier2",
+   "name": "Service Blaster",
+   "flavor": null
+  },
+  {
+   "key": "item.ranged·tier3",
+   "name": "Pulse Blaster",
+   "flavor": null
+  },
+  {
+   "key": "item.ranged·tier4",
+   "name": "Coil Blaster",
+   "flavor": null
+  },
+  {
+   "key": "item.ranged·tier5",
+   "name": "Rail Rifle",
+   "flavor": null
+  },
+  {
+   "key": "item.ranged·tier6",
+   "name": "Plasma Blaster",
+   "flavor": null
+  },
+  {
+   "key": "item.ranged·tier7",
+   "name": "Fleet Blaster",
+   "flavor": null
+  },
+  {
+   "key": "item.ranged·tier8",
+   "name": "Admiral's Blaster",
+   "flavor": null
+  },
+  {
+   "key": "item.ranged·tier9",
+   "name": "Flagship Cannon",
+   "flavor": null
+  },
+  {
+   "key": "item.staff·tier1",
+   "name": "Training Rod",
+   "flavor": null
+  },
+  {
+   "key": "item.staff·tier2",
+   "name": "Service Rod",
+   "flavor": null
+  },
+  {
+   "key": "item.staff·tier3",
+   "name": "Arc Rod",
+   "flavor": null
+  },
+  {
+   "key": "item.staff·tier4",
+   "name": "Ion Rod",
+   "flavor": null
+  },
+  {
+   "key": "item.staff·tier5",
+   "name": "Plasma Rod",
+   "flavor": null
+  },
+  {
+   "key": "item.staff·tier6",
+   "name": "Phase Rod",
+   "flavor": null
+  },
+  {
+   "key": "item.staff·tier7",
+   "name": "Fleet Rod",
+   "flavor": null
+  },
+  {
+   "key": "item.staff·tier8",
+   "name": "Admiral's Rod",
+   "flavor": null
+  },
+  {
+   "key": "item.staff·tier9",
+   "name": "Flagship Rod",
+   "flavor": null
+  },
+  {
+   "key": "item.light_armor·tier1",
+   "name": "Cadet Weave",
+   "flavor": null
+  },
+  {
+   "key": "item.light_armor·tier2",
+   "name": "Service Weave",
+   "flavor": null
+  },
+  {
+   "key": "item.light_armor·tier3",
+   "name": "Ballistic Weave",
+   "flavor": null
+  },
+  {
+   "key": "item.light_armor·tier4",
+   "name": "Ablative Weave",
+   "flavor": null
+  },
+  {
+   "key": "item.light_armor·tier5",
+   "name": "Composite Suit",
+   "flavor": null
+  },
+  {
+   "key": "item.light_armor·tier6",
+   "name": "Ceramic Suit",
+   "flavor": null
+  },
+  {
+   "key": "item.light_armor·tier7",
+   "name": "Fleet Suit",
+   "flavor": null
+  },
+  {
+   "key": "item.light_armor·tier8",
+   "name": "Admiral's Suit",
+   "flavor": null
+  },
+  {
+   "key": "item.light_armor·tier9",
+   "name": "Flagship Suit",
+   "flavor": null
+  },
+  {
+   "key": "item.heavy_armor·tier1",
+   "name": "Cadet Plate",
+   "flavor": null
+  },
+  {
+   "key": "item.heavy_armor·tier2",
+   "name": "Service Plate",
+   "flavor": null
+  },
+  {
+   "key": "item.heavy_armor·tier3",
+   "name": "Riot Plate",
+   "flavor": null
+  },
+  {
+   "key": "item.heavy_armor·tier4",
+   "name": "Combat Rig",
+   "flavor": null
+  },
+  {
+   "key": "item.heavy_armor·tier5",
+   "name": "Assault Rig",
+   "flavor": null
+  },
+  {
+   "key": "item.heavy_armor·tier6",
+   "name": "Exo Rig",
+   "flavor": null
+  },
+  {
+   "key": "item.heavy_armor·tier7",
+   "name": "Fleet Rig",
+   "flavor": null
+  },
+  {
+   "key": "item.heavy_armor·tier8",
+   "name": "Admiral's Rig",
+   "flavor": null
+  },
+  {
+   "key": "item.heavy_armor·tier9",
+   "name": "Flagship Rig",
+   "flavor": null
+  },
+  {
+   "key": "item.robe·tier1",
+   "name": "Cadet Enviro Suit",
+   "flavor": null
+  },
+  {
+   "key": "item.robe·tier2",
+   "name": "Service Enviro Suit",
+   "flavor": null
+  },
+  {
+   "key": "item.robe·tier3",
+   "name": "Sealed Enviro Suit",
+   "flavor": null
+  },
+  {
+   "key": "item.robe·tier4",
+   "name": "Insulated Enviro Suit",
+   "flavor": null
+  },
+  {
+   "key": "item.robe·tier5",
+   "name": "Thermo-Regulated Suit",
+   "flavor": null
+  },
+  {
+   "key": "item.robe·tier6",
+   "name": "Powered Enviro Suit",
+   "flavor": null
+  },
+  {
+   "key": "item.robe·tier7",
+   "name": "Fleet Enviro Suit",
+   "flavor": null
+  },
+  {
+   "key": "item.robe·tier8",
+   "name": "Admiral's Enviro Suit",
+   "flavor": null
+  },
+  {
+   "key": "item.robe·tier9",
+   "name": "Flagship Enviro Suit",
+   "flavor": null
+  },
+  {
+   "key": "item.ring·tier1",
+   "name": "Cadet Band",
+   "flavor": null
+  },
+  {
+   "key": "item.ring·tier2",
+   "name": "Service Band",
+   "flavor": null
+  },
+  {
+   "key": "item.ring·tier3",
+   "name": "Sensor Band",
+   "flavor": null
+  },
+  {
+   "key": "item.ring·tier4",
+   "name": "Shielded Band",
+   "flavor": null
+  },
+  {
+   "key": "item.ring·tier5",
+   "name": "Nano Band",
+   "flavor": null
+  },
+  {
+   "key": "item.ring·tier6",
+   "name": "Quantum Band",
+   "flavor": null
+  },
+  {
+   "key": "item.ring·tier7",
+   "name": "Fleet Band",
+   "flavor": null
+  },
+  {
+   "key": "item.ring·tier8",
+   "name": "Admiral's Band",
+   "flavor": null
+  },
+  {
+   "key": "item.ring·tier9",
+   "name": "Flagship Band",
+   "flavor": null
+  },
+  {
+   "key": "item.charm·tier1",
+   "name": "Cadet Token",
+   "flavor": null
+  },
+  {
+   "key": "item.charm·tier2",
+   "name": "Service Token",
+   "flavor": null
+  },
+  {
+   "key": "item.charm·tier3",
+   "name": "Dog Tag",
+   "flavor": null
+  },
+  {
+   "key": "item.charm·tier4",
+   "name": "Encrypted Token",
+   "flavor": null
+  },
+  {
+   "key": "item.charm·tier5",
+   "name": "Beacon Token",
+   "flavor": null
+  },
+  {
+   "key": "item.charm·tier6",
+   "name": "Quantum Token",
+   "flavor": null
+  },
+  {
+   "key": "item.charm·tier7",
+   "name": "Fleet Token",
+   "flavor": null
+  },
+  {
+   "key": "item.charm·tier8",
+   "name": "Admiral's Token",
+   "flavor": null
+  },
+  {
+   "key": "item.charm·tier9",
+   "name": "Flagship Token",
+   "flavor": null
+  }
+ ]
+}

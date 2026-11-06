@@ -1,0 +1,937 @@
+{
+  "schema": "aihw.translation.v1",
+  "skin": "wuxia",
+  "locale": "zh-CN",
+  "entries": [
+    {
+      "key": "place.settlement",
+      "name": "聚居地",
+      "flavor": null
+    },
+    {
+      "key": "place.wilderness",
+      "name": "荒野",
+      "flavor": null
+    },
+    {
+      "key": "place.dungeon",
+      "name": "秘境",
+      "flavor": null
+    },
+    {
+      "key": "place.market",
+      "name": "集市",
+      "flavor": null
+    },
+    {
+      "key": "place.hall",
+      "name": "驻地",
+      "flavor": null
+    },
+    {
+      "key": "place.gate",
+      "name": "关隘",
+      "flavor": null
+    },
+    {
+      "key": "place.shrine",
+      "name": "祠堂",
+      "flavor": null
+    },
+    {
+      "key": "place.road",
+      "name": "道路",
+      "flavor": null
+    },
+    {
+      "key": "place.water",
+      "name": "水域",
+      "flavor": null
+    },
+    {
+      "key": "place.ruin",
+      "name": "遗址",
+      "flavor": null
+    },
+    {
+      "key": "place.arena",
+      "name": "比武场",
+      "flavor": null
+    },
+    {
+      "key": "feature.start",
+      "name": "初入之地",
+      "flavor": null
+    },
+    {
+      "key": "feature.tutorial",
+      "name": "入门之地",
+      "flavor": null
+    },
+    {
+      "key": "feature.trade",
+      "name": "交易",
+      "flavor": null
+    },
+    {
+      "key": "feature.repair",
+      "name": "修理",
+      "flavor": null
+    },
+    {
+      "key": "feature.training",
+      "name": "练功",
+      "flavor": null
+    },
+    {
+      "key": "feature.resource",
+      "name": "采集",
+      "flavor": null
+    },
+    {
+      "key": "feature.respawn",
+      "name": "复生之地",
+      "flavor": null
+    },
+    {
+      "key": "feature.portal",
+      "name": "通界之门",
+      "flavor": null
+    },
+    {
+      "key": "feature.build_anchor",
+      "name": "建造入口",
+      "flavor": null
+    },
+    {
+      "key": "danger.safe",
+      "name": "无常规险情",
+      "flavor": null
+    },
+    {
+      "key": "danger.low",
+      "name": "低险",
+      "flavor": null
+    },
+    {
+      "key": "danger.medium",
+      "name": "中险",
+      "flavor": null
+    },
+    {
+      "key": "danger.high",
+      "name": "高险",
+      "flavor": null
+    },
+    {
+      "key": "combat.safe",
+      "name": "禁武",
+      "flavor": null
+    },
+    {
+      "key": "combat.duel",
+      "name": "比武",
+      "flavor": null
+    },
+    {
+      "key": "combat.pk",
+      "name": "生死相搏",
+      "flavor": null
+    },
+    {
+      "key": "combat.pve",
+      "name": "对敌",
+      "flavor": null
+    },
+    {
+      "key": "item.blade",
+      "name": "刃兵",
+      "flavor": null
+    },
+    {
+      "key": "item.blunt",
+      "name": "钝兵",
+      "flavor": null
+    },
+    {
+      "key": "item.ranged",
+      "name": "远射兵器",
+      "flavor": null
+    },
+    {
+      "key": "item.staff",
+      "name": "杆兵",
+      "flavor": null
+    },
+    {
+      "key": "item.light_armor",
+      "name": "轻甲",
+      "flavor": null
+    },
+    {
+      "key": "item.heavy_armor",
+      "name": "重甲",
+      "flavor": null
+    },
+    {
+      "key": "item.robe",
+      "name": "袍服",
+      "flavor": null
+    },
+    {
+      "key": "item.ring",
+      "name": "指环",
+      "flavor": null
+    },
+    {
+      "key": "item.charm",
+      "name": "佩饰",
+      "flavor": null
+    },
+    {
+      "key": "item.potion",
+      "name": "药品",
+      "flavor": null
+    },
+    {
+      "key": "item.scroll",
+      "name": "秘籍",
+      "flavor": null
+    },
+    {
+      "key": "item.ore",
+      "name": "矿石",
+      "flavor": null
+    },
+    {
+      "key": "item.herb",
+      "name": "草药",
+      "flavor": null
+    },
+    {
+      "key": "item.core",
+      "name": "镶嵌石",
+      "flavor": null
+    },
+    {
+      "key": "item.key",
+      "name": "钥匙",
+      "flavor": null
+    },
+    {
+      "key": "item.map",
+      "name": "舆图",
+      "flavor": null
+    },
+    {
+      "key": "category.weapon",
+      "name": "兵器",
+      "flavor": null
+    },
+    {
+      "key": "category.armor",
+      "name": "护具",
+      "flavor": null
+    },
+    {
+      "key": "category.accessory",
+      "name": "饰件",
+      "flavor": null
+    },
+    {
+      "key": "category.consumable",
+      "name": "消耗物",
+      "flavor": null
+    },
+    {
+      "key": "category.material",
+      "name": "材料",
+      "flavor": null
+    },
+    {
+      "key": "category.socketable",
+      "name": "镶嵌物",
+      "flavor": null
+    },
+    {
+      "key": "category.utility",
+      "name": "用具",
+      "flavor": null
+    },
+    {
+      "key": "socket.empty",
+      "name": "空槽",
+      "flavor": null
+    },
+    {
+      "key": "socket.filled",
+      "name": "已嵌槽",
+      "flavor": null
+    },
+    {
+      "key": "person.player",
+      "name": "江湖中人",
+      "flavor": null
+    },
+    {
+      "key": "person.npc",
+      "name": "江湖人物",
+      "flavor": null
+    },
+    {
+      "key": "person.official",
+      "name": "官任行走",
+      "flavor": null
+    },
+    {
+      "key": "body.humanoid",
+      "name": "人形",
+      "flavor": null
+    },
+    {
+      "key": "body.beast",
+      "name": "兽形",
+      "flavor": null
+    },
+    {
+      "key": "body.undead",
+      "name": "亡灵",
+      "flavor": null
+    },
+    {
+      "key": "body.construct",
+      "name": "机关造物",
+      "flavor": null
+    },
+    {
+      "key": "body.spirit",
+      "name": "灵体",
+      "flavor": null
+    },
+    {
+      "key": "npc.master",
+      "name": "师父",
+      "flavor": null
+    },
+    {
+      "key": "npc.merchant",
+      "name": "店家",
+      "flavor": null
+    },
+    {
+      "key": "npc.repairer",
+      "name": "修理匠",
+      "flavor": null
+    },
+    {
+      "key": "npc.guard",
+      "name": "守卫",
+      "flavor": null
+    },
+    {
+      "key": "npc.patroller",
+      "name": "巡路人",
+      "flavor": null
+    },
+    {
+      "key": "npc.quest_giver",
+      "name": "差事发布人",
+      "flavor": null
+    },
+    {
+      "key": "npc.monster",
+      "name": "凶物",
+      "flavor": null
+    },
+    {
+      "key": "npc.tutorial_opponent",
+      "name": "入门对手",
+      "flavor": null
+    },
+    {
+      "key": "class.warrior",
+      "name": "战士",
+      "flavor": null
+    },
+    {
+      "key": "class.mage",
+      "name": "法师",
+      "flavor": null
+    },
+    {
+      "key": "class.ranger",
+      "name": "游侠",
+      "flavor": null
+    },
+    {
+      "key": "class.priest",
+      "name": "牧师",
+      "flavor": null
+    },
+    {
+      "key": "bond.mentor",
+      "name": "师承",
+      "flavor": null
+    },
+    {
+      "key": "bond.ally",
+      "name": "结盟",
+      "flavor": null
+    },
+    {
+      "key": "bond.enemy",
+      "name": "敌对",
+      "flavor": null
+    },
+    {
+      "key": "bond.member",
+      "name": "组织成员",
+      "flavor": null
+    },
+    {
+      "key": "deed.travel",
+      "name": "行路",
+      "flavor": null
+    },
+    {
+      "key": "deed.discover",
+      "name": "发现",
+      "flavor": null
+    },
+    {
+      "key": "deed.first_found",
+      "name": "首发现",
+      "flavor": null
+    },
+    {
+      "key": "deed.first_clear",
+      "name": "首通",
+      "flavor": null
+    },
+    {
+      "key": "deed.first_kill",
+      "name": "首度击败",
+      "flavor": null
+    },
+    {
+      "key": "deed.combat_win",
+      "name": "对抗获胜",
+      "flavor": null
+    },
+    {
+      "key": "deed.combat_loss",
+      "name": "对抗落败",
+      "flavor": null
+    },
+    {
+      "key": "deed.combat_draw",
+      "name": "对抗平局",
+      "flavor": null
+    },
+    {
+      "key": "deed.duel_win",
+      "name": "比武获胜",
+      "flavor": null
+    },
+    {
+      "key": "deed.bounty_done",
+      "name": "悬赏完成",
+      "flavor": null
+    },
+    {
+      "key": "deed.task_done",
+      "name": "差事完成",
+      "flavor": null
+    },
+    {
+      "key": "deed.task_accept",
+      "name": "承接差事",
+      "flavor": null
+    },
+    {
+      "key": "deed.task_release",
+      "name": "差事结束",
+      "flavor": null
+    },
+    {
+      "key": "deed.bounty_post",
+      "name": "发布悬赏",
+      "flavor": null
+    },
+    {
+      "key": "deed.org_join",
+      "name": "加入组织",
+      "flavor": null
+    },
+    {
+      "key": "deed.org_promote",
+      "name": "组织晋升",
+      "flavor": null
+    },
+    {
+      "key": "deed.org_leave",
+      "name": "离开组织",
+      "flavor": null
+    },
+    {
+      "key": "deed.org_expel",
+      "name": "逐出组织",
+      "flavor": null
+    },
+    {
+      "key": "deed.org_goal",
+      "name": "组织目标结算",
+      "flavor": null
+    },
+    {
+      "key": "deed.relation_offer",
+      "name": "关系提议",
+      "flavor": null
+    },
+    {
+      "key": "deed.relation_accept",
+      "name": "关系确认",
+      "flavor": null
+    },
+    {
+      "key": "deed.relation_end",
+      "name": "关系终止",
+      "flavor": null
+    },
+    {
+      "key": "deed.enmity",
+      "name": "敌对变更",
+      "flavor": null
+    },
+    {
+      "key": "deed.wanted",
+      "name": "通缉变更",
+      "flavor": null
+    },
+    {
+      "key": "deed.wanted_end",
+      "name": "通缉结束",
+      "flavor": null
+    },
+    {
+      "key": "deed.death",
+      "name": "身亡",
+      "flavor": null
+    },
+    {
+      "key": "deed.revive",
+      "name": "复生",
+      "flavor": null
+    },
+    {
+      "key": "deed.stage_up",
+      "name": "精进",
+      "flavor": null
+    },
+    {
+      "key": "deed.breakthrough",
+      "name": "突破",
+      "flavor": null
+    },
+    {
+      "key": "deed.ascend",
+      "name": "破碎虚空",
+      "flavor": null
+    },
+    {
+      "key": "deed.build",
+      "name": "建造",
+      "flavor": null
+    },
+    {
+      "key": "deed.take",
+      "name": "拾取",
+      "flavor": null
+    },
+    {
+      "key": "deed.give",
+      "name": "给予",
+      "flavor": null
+    },
+    {
+      "key": "deed.use",
+      "name": "使用",
+      "flavor": null
+    },
+    {
+      "key": "deed.equip",
+      "name": "装备调整",
+      "flavor": null
+    },
+    {
+      "key": "deed.repair",
+      "name": "修理",
+      "flavor": null
+    },
+    {
+      "key": "deed.trade",
+      "name": "买卖",
+      "flavor": null
+    },
+    {
+      "key": "deed.train",
+      "name": "练功",
+      "flavor": null
+    },
+    {
+      "key": "deed.learn",
+      "name": "学艺",
+      "flavor": null
+    },
+    {
+      "key": "deed.identity",
+      "name": "身份变更",
+      "flavor": null
+    },
+    {
+      "key": "tier1",
+      "name": "不入流",
+      "flavor": null
+    },
+    {
+      "key": "tier2",
+      "name": "三流",
+      "flavor": null
+    },
+    {
+      "key": "tier3",
+      "name": "二流",
+      "flavor": null
+    },
+    {
+      "key": "tier4",
+      "name": "一流",
+      "flavor": null
+    },
+    {
+      "key": "tier5",
+      "name": "后天",
+      "flavor": null
+    },
+    {
+      "key": "tier6",
+      "name": "先天",
+      "flavor": null
+    },
+    {
+      "key": "tier7",
+      "name": "宗师",
+      "flavor": null
+    },
+    {
+      "key": "tier8",
+      "name": "大宗师",
+      "flavor": null
+    },
+    {
+      "key": "tier9",
+      "name": "陆地神仙",
+      "flavor": null
+    },
+    {
+      "key": "stage1",
+      "name": "初窥",
+      "flavor": null
+    },
+    {
+      "key": "stage2",
+      "name": "小成",
+      "flavor": null
+    },
+    {
+      "key": "stage3",
+      "name": "大成",
+      "flavor": null
+    },
+    {
+      "key": "stage4",
+      "name": "圆满",
+      "flavor": null
+    },
+    {
+      "key": "grade1",
+      "name": "普通",
+      "flavor": null
+    },
+    {
+      "key": "grade2",
+      "name": "精良",
+      "flavor": null
+    },
+    {
+      "key": "grade3",
+      "name": "传说",
+      "flavor": null
+    },
+    {
+      "key": "element.none",
+      "name": "无元素",
+      "flavor": null
+    },
+    {
+      "key": "element.fire",
+      "name": "火",
+      "flavor": null
+    },
+    {
+      "key": "element.water",
+      "name": "水",
+      "flavor": null
+    },
+    {
+      "key": "element.wind",
+      "name": "风",
+      "flavor": null
+    },
+    {
+      "key": "element.earth",
+      "name": "土",
+      "flavor": null
+    },
+    {
+      "key": "element.void",
+      "name": "虚空",
+      "flavor": null
+    },
+    {
+      "key": "element.light",
+      "name": "光",
+      "flavor": null
+    },
+    {
+      "key": "element.dark",
+      "name": "暗",
+      "flavor": null
+    },
+    {
+      "key": "skill.strike",
+      "name": "攻法",
+      "flavor": null
+    },
+    {
+      "key": "skill.guard",
+      "name": "守法",
+      "flavor": null
+    },
+    {
+      "key": "skill.move",
+      "name": "身法",
+      "flavor": null
+    },
+    {
+      "key": "skill.inner",
+      "name": "内功",
+      "flavor": null
+    },
+    {
+      "key": "skill.org",
+      "name": "门派绝学",
+      "flavor": null
+    },
+    {
+      "key": "task.deliver",
+      "name": "送物",
+      "flavor": null
+    },
+    {
+      "key": "task.find",
+      "name": "寻人",
+      "flavor": null
+    },
+    {
+      "key": "task.slay",
+      "name": "除敌",
+      "flavor": null
+    },
+    {
+      "key": "task.gather",
+      "name": "采集",
+      "flavor": null
+    },
+    {
+      "key": "task.reach",
+      "name": "抵达",
+      "flavor": null
+    },
+    {
+      "key": "task_kind.system",
+      "name": "江湖差事",
+      "flavor": null
+    },
+    {
+      "key": "task_kind.bounty",
+      "name": "悬赏",
+      "flavor": null
+    },
+    {
+      "key": "task_kind.org",
+      "name": "组织差事",
+      "flavor": null
+    },
+    {
+      "key": "goal.system_tasks",
+      "name": "完成江湖差事",
+      "flavor": null
+    },
+    {
+      "key": "goal.deliver_items",
+      "name": "交付差事物件",
+      "flavor": null
+    },
+    {
+      "key": "region.xiuxian",
+      "name": "修仙出身区",
+      "flavor": null
+    },
+    {
+      "key": "region.wuxia",
+      "name": "武侠出身区",
+      "flavor": null
+    },
+    {
+      "key": "region.fantasy",
+      "name": "魔幻出身区",
+      "flavor": null
+    },
+    {
+      "key": "region.scifi",
+      "name": "科幻出身区",
+      "flavor": null
+    },
+    {
+      "key": "region.neutral",
+      "name": "中立区",
+      "flavor": null
+    },
+    {
+      "key": "stat.coin",
+      "name": "银两",
+      "flavor": null
+    },
+    {
+      "key": "stat.xp",
+      "name": "修为",
+      "flavor": null
+    },
+    {
+      "key": "stat.potential",
+      "name": "潜能",
+      "flavor": null
+    },
+    {
+      "key": "stat.vigor",
+      "name": "体力",
+      "flavor": null
+    },
+    {
+      "key": "stat.power",
+      "name": "攻势",
+      "flavor": null
+    },
+    {
+      "key": "stat.guard",
+      "name": "防守",
+      "flavor": null
+    },
+    {
+      "key": "stat.speed",
+      "name": "身速",
+      "flavor": null
+    },
+    {
+      "key": "stat.cap",
+      "name": "装备容量占用",
+      "flavor": null
+    },
+    {
+      "key": "stat.dura",
+      "name": "耐久",
+      "flavor": null
+    },
+    {
+      "key": "stat.reputation",
+      "name": "名声",
+      "flavor": null
+    },
+    {
+      "key": "stat.legacy",
+      "name": "轮回余泽",
+      "flavor": null
+    },
+    {
+      "key": "org.registry",
+      "name": "登记组织",
+      "flavor": null
+    },
+    {
+      "key": "org.group",
+      "name": "成员组织",
+      "flavor": null
+    },
+    {
+      "key": "org_rank.member",
+      "name": "成员",
+      "flavor": null
+    },
+    {
+      "key": "wanted.attack_guard",
+      "name": "袭击守卫",
+      "flavor": null
+    },
+    {
+      "key": "wanted.kill_player",
+      "name": "杀害江湖中人",
+      "flavor": null
+    },
+    {
+      "key": "item.blade·tier1",
+      "name": "粗铁刀",
+      "flavor": null
+    },
+    {
+      "key": "item.blade·tier5",
+      "name": "流云刀",
+      "flavor": null
+    },
+    {
+      "key": "item.blade·tier9",
+      "name": "照影剑",
+      "flavor": null
+    },
+    {
+      "key": "item.light_armor·tier1",
+      "name": "布衫",
+      "flavor": null
+    },
+    {
+      "key": "item.light_armor·tier5",
+      "name": "云纹劲装",
+      "flavor": null
+    },
+    {
+      "key": "item.light_armor·tier9",
+      "name": "霁雪劲装",
+      "flavor": null
+    },
+    {
+      "key": "item.charm·tier1",
+      "name": "木佩",
+      "flavor": null
+    },
+    {
+      "key": "item.charm·tier5",
+      "name": "青玉佩",
+      "flavor": null
+    },
+    {
+      "key": "item.charm·tier9",
+      "name": "澄心佩",
+      "flavor": null
+    }
+  ]
+}

@@ -1,0 +1,1297 @@
+{
+ "schema": "aihw.translation.v1",
+ "skin": "scifi",
+ "locale": "zh-CN",
+ "entries": [
+  {
+   "key": "place.settlement",
+   "name": "定居点",
+   "flavor": "住民与基础服务都在这里。"
+  },
+  {
+   "key": "place.wilderness",
+   "name": "荒域",
+   "flavor": "殖民灯火之外的旷野。"
+  },
+  {
+   "key": "place.dungeon",
+   "name": "残骸",
+   "flavor": "气闸锁了很久。"
+  },
+  {
+   "key": "place.market",
+   "name": "贸易站",
+   "flavor": null
+  },
+  {
+   "key": "place.hall",
+   "name": "指挥厅",
+   "flavor": null
+  },
+  {
+   "key": "place.gate",
+   "name": "跳跃门",
+   "flavor": "穿过它就是另一片天。"
+  },
+  {
+   "key": "place.shrine",
+   "name": "纪念堂",
+   "flavor": "这里念着失踪者的名字。"
+  },
+  {
+   "key": "place.road",
+   "name": "航路",
+   "flavor": null
+  },
+  {
+   "key": "place.water",
+   "name": "水域",
+   "flavor": null
+  },
+  {
+   "key": "place.ruin",
+   "name": "遗址",
+   "flavor": null
+  },
+  {
+   "key": "place.arena",
+   "name": "竞技场",
+   "flavor": "只记比分,不收性命。"
+  },
+  {
+   "key": "feature.start",
+   "name": "起点",
+   "flavor": null
+  },
+  {
+   "key": "feature.tutorial",
+   "name": "教学",
+   "flavor": null
+  },
+  {
+   "key": "feature.trade",
+   "name": "交易",
+   "flavor": null
+  },
+  {
+   "key": "feature.repair",
+   "name": "维修",
+   "flavor": null
+  },
+  {
+   "key": "feature.training",
+   "name": "训练",
+   "flavor": null
+  },
+  {
+   "key": "feature.resource",
+   "name": "资源点",
+   "flavor": null
+  },
+  {
+   "key": "feature.respawn",
+   "name": "复苏点",
+   "flavor": "在熟悉的地方醒来。"
+  },
+  {
+   "key": "feature.portal",
+   "name": "跃迁口",
+   "flavor": null
+  },
+  {
+   "key": "feature.build_anchor",
+   "name": "建造锚点",
+   "flavor": null
+  },
+  {
+   "key": "danger.safe",
+   "name": "安全",
+   "flavor": null
+  },
+  {
+   "key": "danger.low",
+   "name": "低危",
+   "flavor": null
+  },
+  {
+   "key": "danger.medium",
+   "name": "中危",
+   "flavor": null
+  },
+  {
+   "key": "danger.high",
+   "name": "高危",
+   "flavor": null
+  },
+  {
+   "key": "combat.safe",
+   "name": "禁战",
+   "flavor": null
+  },
+  {
+   "key": "combat.duel",
+   "name": "仅比武",
+   "flavor": null
+  },
+  {
+   "key": "combat.pk",
+   "name": "开放交战",
+   "flavor": null
+  },
+  {
+   "key": "combat.pve",
+   "name": "仅对怪物",
+   "flavor": null
+  },
+  {
+   "key": "item.blade",
+   "name": "单分子刃",
+   "flavor": "刃宽一分子,通体是锋。"
+  },
+  {
+   "key": "item.blunt",
+   "name": "冲击锤",
+   "flavor": null
+  },
+  {
+   "key": "item.ranged",
+   "name": "能量枪",
+   "flavor": null
+  },
+  {
+   "key": "item.staff",
+   "name": "脉冲杖",
+   "flavor": null
+  },
+  {
+   "key": "item.light_armor",
+   "name": "轻型护服",
+   "flavor": null
+  },
+  {
+   "key": "item.heavy_armor",
+   "name": "重型装甲",
+   "flavor": null
+  },
+  {
+   "key": "item.robe",
+   "name": "环境防护服",
+   "flavor": null
+  },
+  {
+   "key": "item.ring",
+   "name": "功能环",
+   "flavor": null
+  },
+  {
+   "key": "item.charm",
+   "name": "随身牌",
+   "flavor": null
+  },
+  {
+   "key": "item.potion",
+   "name": "针剂",
+   "flavor": "嘶一声,手就稳了。"
+  },
+  {
+   "key": "item.scroll",
+   "name": "数据芯片",
+   "flavor": null
+  },
+  {
+   "key": "item.ore",
+   "name": "矿石",
+   "flavor": null
+  },
+  {
+   "key": "item.herb",
+   "name": "生物样本",
+   "flavor": null
+  },
+  {
+   "key": "item.core",
+   "name": "核心模组",
+   "flavor": null
+  },
+  {
+   "key": "item.key",
+   "name": "门禁卡",
+   "flavor": null
+  },
+  {
+   "key": "item.map",
+   "name": "星图",
+   "flavor": null
+  },
+  {
+   "key": "category.weapon",
+   "name": "武器",
+   "flavor": null
+  },
+  {
+   "key": "category.armor",
+   "name": "护具",
+   "flavor": null
+  },
+  {
+   "key": "category.accessory",
+   "name": "饰件",
+   "flavor": null
+  },
+  {
+   "key": "category.consumable",
+   "name": "消耗品",
+   "flavor": null
+  },
+  {
+   "key": "category.material",
+   "name": "材料",
+   "flavor": null
+  },
+  {
+   "key": "category.socketable",
+   "name": "插件",
+   "flavor": null
+  },
+  {
+   "key": "category.utility",
+   "name": "功能品",
+   "flavor": null
+  },
+  {
+   "key": "socket.empty",
+   "name": "空槽位",
+   "flavor": null
+  },
+  {
+   "key": "socket.filled",
+   "name": "已装载",
+   "flavor": null
+  },
+  {
+   "key": "person.player",
+   "name": "行动者",
+   "flavor": null
+  },
+  {
+   "key": "person.npc",
+   "name": "系统角色",
+   "flavor": null
+  },
+  {
+   "key": "person.official",
+   "name": "官方角色",
+   "flavor": null
+  },
+  {
+   "key": "body.humanoid",
+   "name": "人形",
+   "flavor": null
+  },
+  {
+   "key": "body.beast",
+   "name": "兽形",
+   "flavor": null
+  },
+  {
+   "key": "body.undead",
+   "name": "复生体",
+   "flavor": null
+  },
+  {
+   "key": "body.construct",
+   "name": "机械体",
+   "flavor": null
+  },
+  {
+   "key": "body.spirit",
+   "name": "全息体",
+   "flavor": "会回话的光。"
+  },
+  {
+   "key": "npc.master",
+   "name": "教官",
+   "flavor": null
+  },
+  {
+   "key": "npc.merchant",
+   "name": "补给商",
+   "flavor": null
+  },
+  {
+   "key": "npc.repairer",
+   "name": "技师",
+   "flavor": null
+  },
+  {
+   "key": "npc.guard",
+   "name": "哨卫",
+   "flavor": null
+  },
+  {
+   "key": "npc.patroller",
+   "name": "巡逻员",
+   "flavor": null
+  },
+  {
+   "key": "npc.quest_giver",
+   "name": "派遣员",
+   "flavor": null
+  },
+  {
+   "key": "npc.monster",
+   "name": "敌对体",
+   "flavor": null
+  },
+  {
+   "key": "npc.tutorial_opponent",
+   "name": "靶机",
+   "flavor": "它故意站着不动。"
+  },
+  {
+   "key": "class.warrior",
+   "name": "战士",
+   "flavor": null
+  },
+  {
+   "key": "class.mage",
+   "name": "法师",
+   "flavor": null
+  },
+  {
+   "key": "class.ranger",
+   "name": "游侠",
+   "flavor": null
+  },
+  {
+   "key": "class.priest",
+   "name": "牧师",
+   "flavor": null
+  },
+  {
+   "key": "bond.mentor",
+   "name": "师承",
+   "flavor": null
+  },
+  {
+   "key": "bond.ally",
+   "name": "结盟",
+   "flavor": null
+  },
+  {
+   "key": "bond.enemy",
+   "name": "敌对",
+   "flavor": null
+  },
+  {
+   "key": "bond.member",
+   "name": "成员身份",
+   "flavor": null
+  },
+  {
+   "key": "deed.travel",
+   "name": "移动",
+   "flavor": null
+  },
+  {
+   "key": "deed.discover",
+   "name": "发现",
+   "flavor": null
+  },
+  {
+   "key": "deed.first_found",
+   "name": "首发现",
+   "flavor": null
+  },
+  {
+   "key": "deed.first_clear",
+   "name": "首通",
+   "flavor": "总得有人第一个。"
+  },
+  {
+   "key": "deed.first_kill",
+   "name": "首杀",
+   "flavor": null
+  },
+  {
+   "key": "deed.combat_win",
+   "name": "战胜",
+   "flavor": null
+  },
+  {
+   "key": "deed.combat_loss",
+   "name": "战败",
+   "flavor": null
+  },
+  {
+   "key": "deed.combat_draw",
+   "name": "平局",
+   "flavor": null
+  },
+  {
+   "key": "deed.duel_win",
+   "name": "比武胜",
+   "flavor": null
+  },
+  {
+   "key": "deed.bounty_done",
+   "name": "完成悬赏",
+   "flavor": null
+  },
+  {
+   "key": "deed.task_done",
+   "name": "完成任务",
+   "flavor": null
+  },
+  {
+   "key": "deed.task_accept",
+   "name": "接单",
+   "flavor": null
+  },
+  {
+   "key": "deed.task_release",
+   "name": "弃单",
+   "flavor": null
+  },
+  {
+   "key": "deed.bounty_post",
+   "name": "发布悬赏",
+   "flavor": null
+  },
+  {
+   "key": "deed.org_join",
+   "name": "加入组织",
+   "flavor": null
+  },
+  {
+   "key": "deed.org_promote",
+   "name": "晋升",
+   "flavor": null
+  },
+  {
+   "key": "deed.org_leave",
+   "name": "离开组织",
+   "flavor": null
+  },
+  {
+   "key": "deed.org_expel",
+   "name": "被除名",
+   "flavor": null
+  },
+  {
+   "key": "deed.org_goal",
+   "name": "组织目标结算",
+   "flavor": null
+  },
+  {
+   "key": "deed.relation_offer",
+   "name": "关系提议",
+   "flavor": null
+  },
+  {
+   "key": "deed.relation_accept",
+   "name": "关系确认",
+   "flavor": null
+  },
+  {
+   "key": "deed.relation_end",
+   "name": "关系结束",
+   "flavor": null
+  },
+  {
+   "key": "deed.enmity",
+   "name": "敌对登记",
+   "flavor": null
+  },
+  {
+   "key": "deed.wanted",
+   "name": "被通缉",
+   "flavor": null
+  },
+  {
+   "key": "deed.wanted_end",
+   "name": "通缉解除",
+   "flavor": null
+  },
+  {
+   "key": "deed.death",
+   "name": "阵亡",
+   "flavor": null
+  },
+  {
+   "key": "deed.revive",
+   "name": "复苏",
+   "flavor": "新的身体,同一份档案。"
+  },
+  {
+   "key": "deed.stage_up",
+   "name": "晋段",
+   "flavor": null
+  },
+  {
+   "key": "deed.breakthrough",
+   "name": "晋升考核",
+   "flavor": null
+  },
+  {
+   "key": "deed.ascend",
+   "name": "升维",
+   "flavor": "阶梯到头,攀爬不止。"
+  },
+  {
+   "key": "deed.build",
+   "name": "建造",
+   "flavor": null
+  },
+  {
+   "key": "deed.take",
+   "name": "拾取",
+   "flavor": null
+  },
+  {
+   "key": "deed.give",
+   "name": "转交",
+   "flavor": null
+  },
+  {
+   "key": "deed.use",
+   "name": "使用",
+   "flavor": null
+  },
+  {
+   "key": "deed.equip",
+   "name": "装备",
+   "flavor": null
+  },
+  {
+   "key": "deed.repair",
+   "name": "维修",
+   "flavor": null
+  },
+  {
+   "key": "deed.trade",
+   "name": "交易",
+   "flavor": null
+  },
+  {
+   "key": "deed.train",
+   "name": "训练",
+   "flavor": null
+  },
+  {
+   "key": "deed.learn",
+   "name": "学艺",
+   "flavor": null
+  },
+  {
+   "key": "deed.identity",
+   "name": "身份登记",
+   "flavor": null
+  },
+  {
+   "key": "tier1",
+   "name": "学员",
+   "flavor": null
+  },
+  {
+   "key": "tier2",
+   "name": "少尉",
+   "flavor": null
+  },
+  {
+   "key": "tier3",
+   "name": "上尉",
+   "flavor": null
+  },
+  {
+   "key": "tier4",
+   "name": "少校",
+   "flavor": null
+  },
+  {
+   "key": "tier5",
+   "name": "中校",
+   "flavor": null
+  },
+  {
+   "key": "tier6",
+   "name": "上校",
+   "flavor": null
+  },
+  {
+   "key": "tier7",
+   "name": "准将",
+   "flavor": null
+  },
+  {
+   "key": "tier8",
+   "name": "上将",
+   "flavor": null
+  },
+  {
+   "key": "tier9",
+   "name": "元帅",
+   "flavor": "登记处没有更高的一行了。"
+  },
+  {
+   "key": "stage1",
+   "name": "一型",
+   "flavor": null
+  },
+  {
+   "key": "stage2",
+   "name": "二型",
+   "flavor": null
+  },
+  {
+   "key": "stage3",
+   "name": "三型",
+   "flavor": null
+  },
+  {
+   "key": "stage4",
+   "name": "四型",
+   "flavor": null
+  },
+  {
+   "key": "grade1",
+   "name": "标准型",
+   "flavor": null
+  },
+  {
+   "key": "grade2",
+   "name": "精工型",
+   "flavor": null
+  },
+  {
+   "key": "grade3",
+   "name": "原型机",
+   "flavor": null
+  },
+  {
+   "key": "element.none",
+   "name": "惰性",
+   "flavor": null
+  },
+  {
+   "key": "element.fire",
+   "name": "等离子",
+   "flavor": null
+  },
+  {
+   "key": "element.water",
+   "name": "冷媒",
+   "flavor": null
+  },
+  {
+   "key": "element.wind",
+   "name": "涡流",
+   "flavor": null
+  },
+  {
+   "key": "element.earth",
+   "name": "动能",
+   "flavor": null
+  },
+  {
+   "key": "element.void",
+   "name": "虚空",
+   "flavor": null
+  },
+  {
+   "key": "element.light",
+   "name": "光子",
+   "flavor": null
+  },
+  {
+   "key": "element.dark",
+   "name": "暗物质",
+   "flavor": null
+  },
+  {
+   "key": "skill.strike",
+   "name": "打击",
+   "flavor": null
+  },
+  {
+   "key": "skill.guard",
+   "name": "防护",
+   "flavor": null
+  },
+  {
+   "key": "skill.move",
+   "name": "机动",
+   "flavor": null
+  },
+  {
+   "key": "skill.inner",
+   "name": "神经同步",
+   "flavor": null
+  },
+  {
+   "key": "skill.org",
+   "name": "组织技能",
+   "flavor": null
+  },
+  {
+   "key": "task.deliver",
+   "name": "送物",
+   "flavor": null
+  },
+  {
+   "key": "task.find",
+   "name": "寻踪",
+   "flavor": null
+  },
+  {
+   "key": "task.slay",
+   "name": "清除",
+   "flavor": null
+  },
+  {
+   "key": "task.gather",
+   "name": "采集",
+   "flavor": null
+  },
+  {
+   "key": "task.reach",
+   "name": "抵达",
+   "flavor": null
+  },
+  {
+   "key": "task_kind.system",
+   "name": "系统任务",
+   "flavor": null
+  },
+  {
+   "key": "task_kind.bounty",
+   "name": "悬赏",
+   "flavor": null
+  },
+  {
+   "key": "task_kind.org",
+   "name": "组织任务",
+   "flavor": null
+  },
+  {
+   "key": "goal.system_tasks",
+   "name": "周系统任务",
+   "flavor": null
+  },
+  {
+   "key": "goal.deliver_items",
+   "name": "周送物件数",
+   "flavor": null
+  },
+  {
+   "key": "region.xiuxian",
+   "name": "修仙区",
+   "flavor": null
+  },
+  {
+   "key": "region.wuxia",
+   "name": "武侠区",
+   "flavor": null
+  },
+  {
+   "key": "region.fantasy",
+   "name": "魔幻区",
+   "flavor": null
+  },
+  {
+   "key": "region.scifi",
+   "name": "科幻区",
+   "flavor": null
+  },
+  {
+   "key": "region.neutral",
+   "name": "中立区",
+   "flavor": null
+  },
+  {
+   "key": "stat.coin",
+   "name": "信用点",
+   "flavor": null
+  },
+  {
+   "key": "stat.xp",
+   "name": "经验",
+   "flavor": null
+  },
+  {
+   "key": "stat.potential",
+   "name": "潜能",
+   "flavor": null
+  },
+  {
+   "key": "stat.vigor",
+   "name": "体力",
+   "flavor": null
+  },
+  {
+   "key": "stat.power",
+   "name": "火力",
+   "flavor": null
+  },
+  {
+   "key": "stat.guard",
+   "name": "防御",
+   "flavor": null
+  },
+  {
+   "key": "stat.speed",
+   "name": "速度",
+   "flavor": null
+  },
+  {
+   "key": "stat.cap",
+   "name": "装载量",
+   "flavor": null
+  },
+  {
+   "key": "stat.dura",
+   "name": "耐久",
+   "flavor": null
+  },
+  {
+   "key": "stat.reputation",
+   "name": "声望",
+   "flavor": null
+  },
+  {
+   "key": "stat.legacy",
+   "name": "传承",
+   "flavor": null
+  },
+  {
+   "key": "org.registry",
+   "name": "登记处",
+   "flavor": null
+  },
+  {
+   "key": "org.group",
+   "name": "组织",
+   "flavor": null
+  },
+  {
+   "key": "org_rank.member",
+   "name": "成员",
+   "flavor": null
+  },
+  {
+   "key": "wanted.attack_guard",
+   "name": "袭击哨卫",
+   "flavor": null
+  },
+  {
+   "key": "wanted.kill_player",
+   "name": "杀害角色",
+   "flavor": null
+  },
+  {
+   "key": "item.blade·tier1",
+   "name": "训练单分子刃",
+   "flavor": null
+  },
+  {
+   "key": "item.blade·tier2",
+   "name": "制式单分子刃",
+   "flavor": null
+  },
+  {
+   "key": "item.blade·tier3",
+   "name": "强化单分子刃",
+   "flavor": null
+  },
+  {
+   "key": "item.blade·tier4",
+   "name": "高频单分子刃",
+   "flavor": null
+  },
+  {
+   "key": "item.blade·tier5",
+   "name": "热熔单分子刃",
+   "flavor": null
+  },
+  {
+   "key": "item.blade·tier6",
+   "name": "等离子单分子刃",
+   "flavor": null
+  },
+  {
+   "key": "item.blade·tier7",
+   "name": "舰队级单分子刃",
+   "flavor": null
+  },
+  {
+   "key": "item.blade·tier8",
+   "name": "将官单分子刃",
+   "flavor": null
+  },
+  {
+   "key": "item.blade·tier9",
+   "name": "旗舰单分子刃",
+   "flavor": null
+  },
+  {
+   "key": "item.blunt·tier1",
+   "name": "训练冲击锤",
+   "flavor": null
+  },
+  {
+   "key": "item.blunt·tier2",
+   "name": "制式冲击锤",
+   "flavor": null
+  },
+  {
+   "key": "item.blunt·tier3",
+   "name": "活塞冲击锤",
+   "flavor": null
+  },
+  {
+   "key": "item.blunt·tier4",
+   "name": "动能冲击锤",
+   "flavor": null
+  },
+  {
+   "key": "item.blunt·tier5",
+   "name": "震波冲击锤",
+   "flavor": null
+  },
+  {
+   "key": "item.blunt·tier6",
+   "name": "引力子冲击锤",
+   "flavor": null
+  },
+  {
+   "key": "item.blunt·tier7",
+   "name": "舰队级冲击锤",
+   "flavor": null
+  },
+  {
+   "key": "item.blunt·tier8",
+   "name": "将官冲击锤",
+   "flavor": null
+  },
+  {
+   "key": "item.blunt·tier9",
+   "name": "旗舰重锤",
+   "flavor": null
+  },
+  {
+   "key": "item.ranged·tier1",
+   "name": "训练能量枪",
+   "flavor": null
+  },
+  {
+   "key": "item.ranged·tier2",
+   "name": "制式能量枪",
+   "flavor": null
+  },
+  {
+   "key": "item.ranged·tier3",
+   "name": "脉冲能量枪",
+   "flavor": null
+  },
+  {
+   "key": "item.ranged·tier4",
+   "name": "线圈能量枪",
+   "flavor": null
+  },
+  {
+   "key": "item.ranged·tier5",
+   "name": "磁轨步枪",
+   "flavor": null
+  },
+  {
+   "key": "item.ranged·tier6",
+   "name": "等离子能量枪",
+   "flavor": null
+  },
+  {
+   "key": "item.ranged·tier7",
+   "name": "舰队级能量枪",
+   "flavor": null
+  },
+  {
+   "key": "item.ranged·tier8",
+   "name": "将官能量枪",
+   "flavor": null
+  },
+  {
+   "key": "item.ranged·tier9",
+   "name": "旗舰炮",
+   "flavor": null
+  },
+  {
+   "key": "item.staff·tier1",
+   "name": "训练脉冲杖",
+   "flavor": null
+  },
+  {
+   "key": "item.staff·tier2",
+   "name": "制式脉冲杖",
+   "flavor": null
+  },
+  {
+   "key": "item.staff·tier3",
+   "name": "电弧脉冲杖",
+   "flavor": null
+  },
+  {
+   "key": "item.staff·tier4",
+   "name": "离子脉冲杖",
+   "flavor": null
+  },
+  {
+   "key": "item.staff·tier5",
+   "name": "等离子脉冲杖",
+   "flavor": null
+  },
+  {
+   "key": "item.staff·tier6",
+   "name": "相位脉冲杖",
+   "flavor": null
+  },
+  {
+   "key": "item.staff·tier7",
+   "name": "舰队级脉冲杖",
+   "flavor": null
+  },
+  {
+   "key": "item.staff·tier8",
+   "name": "将官脉冲杖",
+   "flavor": null
+  },
+  {
+   "key": "item.staff·tier9",
+   "name": "旗舰脉冲杖",
+   "flavor": null
+  },
+  {
+   "key": "item.light_armor·tier1",
+   "name": "学员护服",
+   "flavor": null
+  },
+  {
+   "key": "item.light_armor·tier2",
+   "name": "制式护服",
+   "flavor": null
+  },
+  {
+   "key": "item.light_armor·tier3",
+   "name": "防弹护服",
+   "flavor": null
+  },
+  {
+   "key": "item.light_armor·tier4",
+   "name": "烧蚀护服",
+   "flavor": null
+  },
+  {
+   "key": "item.light_armor·tier5",
+   "name": "复合护服",
+   "flavor": null
+  },
+  {
+   "key": "item.light_armor·tier6",
+   "name": "陶瓷护服",
+   "flavor": null
+  },
+  {
+   "key": "item.light_armor·tier7",
+   "name": "舰队级护服",
+   "flavor": null
+  },
+  {
+   "key": "item.light_armor·tier8",
+   "name": "将官护服",
+   "flavor": null
+  },
+  {
+   "key": "item.light_armor·tier9",
+   "name": "旗舰护服",
+   "flavor": null
+  },
+  {
+   "key": "item.heavy_armor·tier1",
+   "name": "学员装甲",
+   "flavor": null
+  },
+  {
+   "key": "item.heavy_armor·tier2",
+   "name": "制式装甲",
+   "flavor": null
+  },
+  {
+   "key": "item.heavy_armor·tier3",
+   "name": "镇暴装甲",
+   "flavor": null
+  },
+  {
+   "key": "item.heavy_armor·tier4",
+   "name": "作战装甲",
+   "flavor": null
+  },
+  {
+   "key": "item.heavy_armor·tier5",
+   "name": "突击装甲",
+   "flavor": null
+  },
+  {
+   "key": "item.heavy_armor·tier6",
+   "name": "外骨骼装甲",
+   "flavor": null
+  },
+  {
+   "key": "item.heavy_armor·tier7",
+   "name": "舰队级装甲",
+   "flavor": null
+  },
+  {
+   "key": "item.heavy_armor·tier8",
+   "name": "将官装甲",
+   "flavor": null
+  },
+  {
+   "key": "item.heavy_armor·tier9",
+   "name": "旗舰装甲",
+   "flavor": null
+  },
+  {
+   "key": "item.robe·tier1",
+   "name": "学员环境服",
+   "flavor": null
+  },
+  {
+   "key": "item.robe·tier2",
+   "name": "制式环境服",
+   "flavor": null
+  },
+  {
+   "key": "item.robe·tier3",
+   "name": "密封环境服",
+   "flavor": null
+  },
+  {
+   "key": "item.robe·tier4",
+   "name": "隔热环境服",
+   "flavor": null
+  },
+  {
+   "key": "item.robe·tier5",
+   "name": "恒温环境服",
+   "flavor": null
+  },
+  {
+   "key": "item.robe·tier6",
+   "name": "动力环境服",
+   "flavor": null
+  },
+  {
+   "key": "item.robe·tier7",
+   "name": "舰队级环境服",
+   "flavor": null
+  },
+  {
+   "key": "item.robe·tier8",
+   "name": "将官环境服",
+   "flavor": null
+  },
+  {
+   "key": "item.robe·tier9",
+   "name": "旗舰环境服",
+   "flavor": null
+  },
+  {
+   "key": "item.ring·tier1",
+   "name": "学员功能环",
+   "flavor": null
+  },
+  {
+   "key": "item.ring·tier2",
+   "name": "制式功能环",
+   "flavor": null
+  },
+  {
+   "key": "item.ring·tier3",
+   "name": "传感功能环",
+   "flavor": null
+  },
+  {
+   "key": "item.ring·tier4",
+   "name": "护盾功能环",
+   "flavor": null
+  },
+  {
+   "key": "item.ring·tier5",
+   "name": "纳米功能环",
+   "flavor": null
+  },
+  {
+   "key": "item.ring·tier6",
+   "name": "量子功能环",
+   "flavor": null
+  },
+  {
+   "key": "item.ring·tier7",
+   "name": "舰队级功能环",
+   "flavor": null
+  },
+  {
+   "key": "item.ring·tier8",
+   "name": "将官功能环",
+   "flavor": null
+  },
+  {
+   "key": "item.ring·tier9",
+   "name": "旗舰功能环",
+   "flavor": null
+  },
+  {
+   "key": "item.charm·tier1",
+   "name": "学员随身牌",
+   "flavor": null
+  },
+  {
+   "key": "item.charm·tier2",
+   "name": "制式随身牌",
+   "flavor": null
+  },
+  {
+   "key": "item.charm·tier3",
+   "name": "身份牌",
+   "flavor": null
+  },
+  {
+   "key": "item.charm·tier4",
+   "name": "加密随身牌",
+   "flavor": null
+  },
+  {
+   "key": "item.charm·tier5",
+   "name": "信标随身牌",
+   "flavor": null
+  },
+  {
+   "key": "item.charm·tier6",
+   "name": "量子随身牌",
+   "flavor": null
+  },
+  {
+   "key": "item.charm·tier7",
+   "name": "舰队级随身牌",
+   "flavor": null
+  },
+  {
+   "key": "item.charm·tier8",
+   "name": "将官随身牌",
+   "flavor": null
+  },
+  {
+   "key": "item.charm·tier9",
+   "name": "旗舰随身牌",
+   "flavor": null
+  }
+ ]
+}

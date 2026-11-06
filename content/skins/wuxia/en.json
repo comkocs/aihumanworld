@@ -1,0 +1,937 @@
+{
+  "schema": "aihw.translation.v1",
+  "skin": "wuxia",
+  "locale": "en",
+  "entries": [
+    {
+      "key": "place.settlement",
+      "name": "Settlement",
+      "flavor": null
+    },
+    {
+      "key": "place.wilderness",
+      "name": "Wilderness",
+      "flavor": null
+    },
+    {
+      "key": "place.dungeon",
+      "name": "Secluded Grounds",
+      "flavor": null
+    },
+    {
+      "key": "place.market",
+      "name": "Market",
+      "flavor": null
+    },
+    {
+      "key": "place.hall",
+      "name": "Hall",
+      "flavor": null
+    },
+    {
+      "key": "place.gate",
+      "name": "Gate",
+      "flavor": null
+    },
+    {
+      "key": "place.shrine",
+      "name": "Shrine",
+      "flavor": null
+    },
+    {
+      "key": "place.road",
+      "name": "Road",
+      "flavor": null
+    },
+    {
+      "key": "place.water",
+      "name": "Waters",
+      "flavor": null
+    },
+    {
+      "key": "place.ruin",
+      "name": "Ruins",
+      "flavor": null
+    },
+    {
+      "key": "place.arena",
+      "name": "Dueling Ground",
+      "flavor": null
+    },
+    {
+      "key": "feature.start",
+      "name": "Starting Point",
+      "flavor": null
+    },
+    {
+      "key": "feature.tutorial",
+      "name": "Training Ground",
+      "flavor": null
+    },
+    {
+      "key": "feature.trade",
+      "name": "Trade",
+      "flavor": null
+    },
+    {
+      "key": "feature.repair",
+      "name": "Repair",
+      "flavor": null
+    },
+    {
+      "key": "feature.training",
+      "name": "Practice",
+      "flavor": null
+    },
+    {
+      "key": "feature.resource",
+      "name": "Gathering",
+      "flavor": null
+    },
+    {
+      "key": "feature.respawn",
+      "name": "Revival Point",
+      "flavor": null
+    },
+    {
+      "key": "feature.portal",
+      "name": "Passage",
+      "flavor": null
+    },
+    {
+      "key": "feature.build_anchor",
+      "name": "Building Anchor",
+      "flavor": null
+    },
+    {
+      "key": "danger.safe",
+      "name": "No Ordinary Hazards",
+      "flavor": null
+    },
+    {
+      "key": "danger.low",
+      "name": "Low Danger",
+      "flavor": null
+    },
+    {
+      "key": "danger.medium",
+      "name": "Moderate Danger",
+      "flavor": null
+    },
+    {
+      "key": "danger.high",
+      "name": "High Danger",
+      "flavor": null
+    },
+    {
+      "key": "combat.safe",
+      "name": "No Combat",
+      "flavor": null
+    },
+    {
+      "key": "combat.duel",
+      "name": "Dueling",
+      "flavor": null
+    },
+    {
+      "key": "combat.pk",
+      "name": "Lethal Combat",
+      "flavor": null
+    },
+    {
+      "key": "combat.pve",
+      "name": "Combat Against Non-Players",
+      "flavor": null
+    },
+    {
+      "key": "item.blade",
+      "name": "Bladed Weapon",
+      "flavor": null
+    },
+    {
+      "key": "item.blunt",
+      "name": "Blunt Weapon",
+      "flavor": null
+    },
+    {
+      "key": "item.ranged",
+      "name": "Ranged Weapon",
+      "flavor": null
+    },
+    {
+      "key": "item.staff",
+      "name": "Staff Weapon",
+      "flavor": null
+    },
+    {
+      "key": "item.light_armor",
+      "name": "Light Armor",
+      "flavor": null
+    },
+    {
+      "key": "item.heavy_armor",
+      "name": "Heavy Armor",
+      "flavor": null
+    },
+    {
+      "key": "item.robe",
+      "name": "Robe",
+      "flavor": null
+    },
+    {
+      "key": "item.ring",
+      "name": "Ring",
+      "flavor": null
+    },
+    {
+      "key": "item.charm",
+      "name": "Charm",
+      "flavor": null
+    },
+    {
+      "key": "item.potion",
+      "name": "Medicine",
+      "flavor": null
+    },
+    {
+      "key": "item.scroll",
+      "name": "Manual",
+      "flavor": null
+    },
+    {
+      "key": "item.ore",
+      "name": "Ore",
+      "flavor": null
+    },
+    {
+      "key": "item.herb",
+      "name": "Herb",
+      "flavor": null
+    },
+    {
+      "key": "item.core",
+      "name": "Inlay Stone",
+      "flavor": null
+    },
+    {
+      "key": "item.key",
+      "name": "Key",
+      "flavor": null
+    },
+    {
+      "key": "item.map",
+      "name": "Map",
+      "flavor": null
+    },
+    {
+      "key": "category.weapon",
+      "name": "Weapon",
+      "flavor": null
+    },
+    {
+      "key": "category.armor",
+      "name": "Armor",
+      "flavor": null
+    },
+    {
+      "key": "category.accessory",
+      "name": "Accessory",
+      "flavor": null
+    },
+    {
+      "key": "category.consumable",
+      "name": "Consumable",
+      "flavor": null
+    },
+    {
+      "key": "category.material",
+      "name": "Material",
+      "flavor": null
+    },
+    {
+      "key": "category.socketable",
+      "name": "Inlay",
+      "flavor": null
+    },
+    {
+      "key": "category.utility",
+      "name": "Utility Item",
+      "flavor": null
+    },
+    {
+      "key": "socket.empty",
+      "name": "Empty Socket",
+      "flavor": null
+    },
+    {
+      "key": "socket.filled",
+      "name": "Filled Socket",
+      "flavor": null
+    },
+    {
+      "key": "person.player",
+      "name": "Player",
+      "flavor": null
+    },
+    {
+      "key": "person.npc",
+      "name": "Non-Player Character",
+      "flavor": null
+    },
+    {
+      "key": "person.official",
+      "name": "Official Character",
+      "flavor": null
+    },
+    {
+      "key": "body.humanoid",
+      "name": "Humanoid",
+      "flavor": null
+    },
+    {
+      "key": "body.beast",
+      "name": "Beast",
+      "flavor": null
+    },
+    {
+      "key": "body.undead",
+      "name": "Undead",
+      "flavor": null
+    },
+    {
+      "key": "body.construct",
+      "name": "Construct",
+      "flavor": null
+    },
+    {
+      "key": "body.spirit",
+      "name": "Spirit",
+      "flavor": null
+    },
+    {
+      "key": "npc.master",
+      "name": "Master",
+      "flavor": null
+    },
+    {
+      "key": "npc.merchant",
+      "name": "Merchant",
+      "flavor": null
+    },
+    {
+      "key": "npc.repairer",
+      "name": "Repairer",
+      "flavor": null
+    },
+    {
+      "key": "npc.guard",
+      "name": "Guard",
+      "flavor": null
+    },
+    {
+      "key": "npc.patroller",
+      "name": "Patroller",
+      "flavor": null
+    },
+    {
+      "key": "npc.quest_giver",
+      "name": "Task Giver",
+      "flavor": null
+    },
+    {
+      "key": "npc.monster",
+      "name": "Foe",
+      "flavor": null
+    },
+    {
+      "key": "npc.tutorial_opponent",
+      "name": "Tutorial Opponent",
+      "flavor": null
+    },
+    {
+      "key": "class.warrior",
+      "name": "Warrior",
+      "flavor": null
+    },
+    {
+      "key": "class.mage",
+      "name": "Mage",
+      "flavor": null
+    },
+    {
+      "key": "class.ranger",
+      "name": "Ranger",
+      "flavor": null
+    },
+    {
+      "key": "class.priest",
+      "name": "Priest",
+      "flavor": null
+    },
+    {
+      "key": "bond.mentor",
+      "name": "Mentorship",
+      "flavor": null
+    },
+    {
+      "key": "bond.ally",
+      "name": "Alliance",
+      "flavor": null
+    },
+    {
+      "key": "bond.enemy",
+      "name": "Enmity",
+      "flavor": null
+    },
+    {
+      "key": "bond.member",
+      "name": "Membership",
+      "flavor": null
+    },
+    {
+      "key": "deed.travel",
+      "name": "Travel",
+      "flavor": null
+    },
+    {
+      "key": "deed.discover",
+      "name": "Discovery",
+      "flavor": null
+    },
+    {
+      "key": "deed.first_found",
+      "name": "First Discovery",
+      "flavor": null
+    },
+    {
+      "key": "deed.first_clear",
+      "name": "First Clear",
+      "flavor": null
+    },
+    {
+      "key": "deed.first_kill",
+      "name": "First Defeat",
+      "flavor": null
+    },
+    {
+      "key": "deed.combat_win",
+      "name": "Combat Victory",
+      "flavor": null
+    },
+    {
+      "key": "deed.combat_loss",
+      "name": "Combat Defeat",
+      "flavor": null
+    },
+    {
+      "key": "deed.combat_draw",
+      "name": "Combat Draw",
+      "flavor": null
+    },
+    {
+      "key": "deed.duel_win",
+      "name": "Duel Victory",
+      "flavor": null
+    },
+    {
+      "key": "deed.bounty_done",
+      "name": "Bounty Completed",
+      "flavor": null
+    },
+    {
+      "key": "deed.task_done",
+      "name": "Task Completed",
+      "flavor": null
+    },
+    {
+      "key": "deed.task_accept",
+      "name": "Task Accepted",
+      "flavor": null
+    },
+    {
+      "key": "deed.task_release",
+      "name": "Task Released",
+      "flavor": null
+    },
+    {
+      "key": "deed.bounty_post",
+      "name": "Bounty Posted",
+      "flavor": null
+    },
+    {
+      "key": "deed.org_join",
+      "name": "Organization Joined",
+      "flavor": null
+    },
+    {
+      "key": "deed.org_promote",
+      "name": "Organization Promotion",
+      "flavor": null
+    },
+    {
+      "key": "deed.org_leave",
+      "name": "Organization Departed",
+      "flavor": null
+    },
+    {
+      "key": "deed.org_expel",
+      "name": "Organization Expulsion",
+      "flavor": null
+    },
+    {
+      "key": "deed.org_goal",
+      "name": "Organization Goal Resolved",
+      "flavor": null
+    },
+    {
+      "key": "deed.relation_offer",
+      "name": "Relationship Offered",
+      "flavor": null
+    },
+    {
+      "key": "deed.relation_accept",
+      "name": "Relationship Accepted",
+      "flavor": null
+    },
+    {
+      "key": "deed.relation_end",
+      "name": "Relationship Ended",
+      "flavor": null
+    },
+    {
+      "key": "deed.enmity",
+      "name": "Enmity Changed",
+      "flavor": null
+    },
+    {
+      "key": "deed.wanted",
+      "name": "Wanted Status Changed",
+      "flavor": null
+    },
+    {
+      "key": "deed.wanted_end",
+      "name": "Wanted Status Ended",
+      "flavor": null
+    },
+    {
+      "key": "deed.death",
+      "name": "Death",
+      "flavor": null
+    },
+    {
+      "key": "deed.revive",
+      "name": "Revival",
+      "flavor": null
+    },
+    {
+      "key": "deed.stage_up",
+      "name": "Stage Advancement",
+      "flavor": null
+    },
+    {
+      "key": "deed.breakthrough",
+      "name": "Breakthrough",
+      "flavor": null
+    },
+    {
+      "key": "deed.ascend",
+      "name": "Shattering the Void",
+      "flavor": null
+    },
+    {
+      "key": "deed.build",
+      "name": "Building",
+      "flavor": null
+    },
+    {
+      "key": "deed.take",
+      "name": "Item Taken",
+      "flavor": null
+    },
+    {
+      "key": "deed.give",
+      "name": "Gift Given",
+      "flavor": null
+    },
+    {
+      "key": "deed.use",
+      "name": "Item Used",
+      "flavor": null
+    },
+    {
+      "key": "deed.equip",
+      "name": "Equipment Changed",
+      "flavor": null
+    },
+    {
+      "key": "deed.repair",
+      "name": "Equipment Repaired",
+      "flavor": null
+    },
+    {
+      "key": "deed.trade",
+      "name": "Trade Completed",
+      "flavor": null
+    },
+    {
+      "key": "deed.train",
+      "name": "Training",
+      "flavor": null
+    },
+    {
+      "key": "deed.learn",
+      "name": "Learning",
+      "flavor": null
+    },
+    {
+      "key": "deed.identity",
+      "name": "Identity Changed",
+      "flavor": null
+    },
+    {
+      "key": "tier1",
+      "name": "Unranked",
+      "flavor": null
+    },
+    {
+      "key": "tier2",
+      "name": "Third Rate",
+      "flavor": null
+    },
+    {
+      "key": "tier3",
+      "name": "Second Rate",
+      "flavor": null
+    },
+    {
+      "key": "tier4",
+      "name": "First Rate",
+      "flavor": null
+    },
+    {
+      "key": "tier5",
+      "name": "Acquired Realm",
+      "flavor": null
+    },
+    {
+      "key": "tier6",
+      "name": "Innate Realm",
+      "flavor": null
+    },
+    {
+      "key": "tier7",
+      "name": "Master",
+      "flavor": null
+    },
+    {
+      "key": "tier8",
+      "name": "Grandmaster",
+      "flavor": null
+    },
+    {
+      "key": "tier9",
+      "name": "Earthly Immortal",
+      "flavor": null
+    },
+    {
+      "key": "stage1",
+      "name": "First Glimpse",
+      "flavor": null
+    },
+    {
+      "key": "stage2",
+      "name": "Early Accomplishment",
+      "flavor": null
+    },
+    {
+      "key": "stage3",
+      "name": "Great Accomplishment",
+      "flavor": null
+    },
+    {
+      "key": "stage4",
+      "name": "Perfection",
+      "flavor": null
+    },
+    {
+      "key": "grade1",
+      "name": "Common",
+      "flavor": null
+    },
+    {
+      "key": "grade2",
+      "name": "Fine",
+      "flavor": null
+    },
+    {
+      "key": "grade3",
+      "name": "Legendary",
+      "flavor": null
+    },
+    {
+      "key": "element.none",
+      "name": "No Element",
+      "flavor": null
+    },
+    {
+      "key": "element.fire",
+      "name": "Fire",
+      "flavor": null
+    },
+    {
+      "key": "element.water",
+      "name": "Water",
+      "flavor": null
+    },
+    {
+      "key": "element.wind",
+      "name": "Wind",
+      "flavor": null
+    },
+    {
+      "key": "element.earth",
+      "name": "Earth",
+      "flavor": null
+    },
+    {
+      "key": "element.void",
+      "name": "Void",
+      "flavor": null
+    },
+    {
+      "key": "element.light",
+      "name": "Light",
+      "flavor": null
+    },
+    {
+      "key": "element.dark",
+      "name": "Dark",
+      "flavor": null
+    },
+    {
+      "key": "skill.strike",
+      "name": "Offense",
+      "flavor": null
+    },
+    {
+      "key": "skill.guard",
+      "name": "Defense",
+      "flavor": null
+    },
+    {
+      "key": "skill.move",
+      "name": "Movement",
+      "flavor": null
+    },
+    {
+      "key": "skill.inner",
+      "name": "Inner Discipline",
+      "flavor": null
+    },
+    {
+      "key": "skill.org",
+      "name": "Organization Art",
+      "flavor": null
+    },
+    {
+      "key": "task.deliver",
+      "name": "Delivery",
+      "flavor": null
+    },
+    {
+      "key": "task.find",
+      "name": "Search",
+      "flavor": null
+    },
+    {
+      "key": "task.slay",
+      "name": "Defeat",
+      "flavor": null
+    },
+    {
+      "key": "task.gather",
+      "name": "Gathering",
+      "flavor": null
+    },
+    {
+      "key": "task.reach",
+      "name": "Arrival",
+      "flavor": null
+    },
+    {
+      "key": "task_kind.system",
+      "name": "System Task",
+      "flavor": null
+    },
+    {
+      "key": "task_kind.bounty",
+      "name": "Bounty",
+      "flavor": null
+    },
+    {
+      "key": "task_kind.org",
+      "name": "Organization Task",
+      "flavor": null
+    },
+    {
+      "key": "goal.system_tasks",
+      "name": "Complete System Tasks",
+      "flavor": null
+    },
+    {
+      "key": "goal.deliver_items",
+      "name": "Deliver Task Items",
+      "flavor": null
+    },
+    {
+      "key": "region.xiuxian",
+      "name": "Immortal Cultivation Region",
+      "flavor": null
+    },
+    {
+      "key": "region.wuxia",
+      "name": "Martial Arts Region",
+      "flavor": null
+    },
+    {
+      "key": "region.fantasy",
+      "name": "Fantasy Region",
+      "flavor": null
+    },
+    {
+      "key": "region.scifi",
+      "name": "Science Fiction Region",
+      "flavor": null
+    },
+    {
+      "key": "region.neutral",
+      "name": "Neutral Region",
+      "flavor": null
+    },
+    {
+      "key": "stat.coin",
+      "name": "Silver",
+      "flavor": null
+    },
+    {
+      "key": "stat.xp",
+      "name": "Cultivation",
+      "flavor": null
+    },
+    {
+      "key": "stat.potential",
+      "name": "Potential",
+      "flavor": null
+    },
+    {
+      "key": "stat.vigor",
+      "name": "Vigor",
+      "flavor": null
+    },
+    {
+      "key": "stat.power",
+      "name": "Attack",
+      "flavor": null
+    },
+    {
+      "key": "stat.guard",
+      "name": "Defense",
+      "flavor": null
+    },
+    {
+      "key": "stat.speed",
+      "name": "Speed",
+      "flavor": null
+    },
+    {
+      "key": "stat.cap",
+      "name": "Equipment Capacity Used",
+      "flavor": null
+    },
+    {
+      "key": "stat.dura",
+      "name": "Durability",
+      "flavor": null
+    },
+    {
+      "key": "stat.reputation",
+      "name": "Reputation",
+      "flavor": null
+    },
+    {
+      "key": "stat.legacy",
+      "name": "Legacy",
+      "flavor": null
+    },
+    {
+      "key": "org.registry",
+      "name": "Registry Organization",
+      "flavor": null
+    },
+    {
+      "key": "org.group",
+      "name": "Member Organization",
+      "flavor": null
+    },
+    {
+      "key": "org_rank.member",
+      "name": "Member",
+      "flavor": null
+    },
+    {
+      "key": "wanted.attack_guard",
+      "name": "Attack on a Guard",
+      "flavor": null
+    },
+    {
+      "key": "wanted.kill_player",
+      "name": "Killing a Player",
+      "flavor": null
+    },
+    {
+      "key": "item.blade·tier1",
+      "name": "Rough Iron Saber",
+      "flavor": null
+    },
+    {
+      "key": "item.blade·tier5",
+      "name": "Drifting Cloud Saber",
+      "flavor": null
+    },
+    {
+      "key": "item.blade·tier9",
+      "name": "Shadow-Reflecting Sword",
+      "flavor": null
+    },
+    {
+      "key": "item.light_armor·tier1",
+      "name": "Cloth Jacket",
+      "flavor": null
+    },
+    {
+      "key": "item.light_armor·tier5",
+      "name": "Cloud-Patterned Jacket",
+      "flavor": null
+    },
+    {
+      "key": "item.light_armor·tier9",
+      "name": "Snow-Clear Jacket",
+      "flavor": null
+    },
+    {
+      "key": "item.charm·tier1",
+      "name": "Wooden Pendant",
+      "flavor": null
+    },
+    {
+      "key": "item.charm·tier5",
+      "name": "Green Jade Pendant",
+      "flavor": null
+    },
+    {
+      "key": "item.charm·tier9",
+      "name": "Clear-Heart Pendant",
+      "flavor": null
+    }
+  ]
+}
