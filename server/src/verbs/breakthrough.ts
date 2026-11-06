@@ -39,9 +39,10 @@ export const def = defineVerb<BreakthroughArgs, BreakthroughResult>({
     if (me === null) throw new Error("breakthrough without actor");
     if (a.mode === "stage" ? me.stage >= 4 : a.mode === "tier" ? me.stage !== 4 || me.tier >= 9 : me.tier !== 9 || me.stage !== 4) return reject("CONDITION_UNMET", { reason: a.mode === "cycle" ? "tier" : "stage" });
     const grid = gridNumbers(ctx.balance, me.tier, me.stage);
-    if (me.xp < grid.xp_need) return reject("CONDITION_UNMET", { reason: "xp" });
+    if (me.xp < grid.xp_need) return reject("CONDITION_UNMET", { reason: "xp", required: grid.xp_need, have: me.xp });
     const facts = await neutralFacts(ctx.q, me);
-    if (effectiveLevels(facts).inner < grid.inner_req) return reject("CONDITION_UNMET", { reason: "training" });
+    const inner = facts.skills.find((s) => s.definition.base === "inner");
+    if (effectiveLevels(facts).inner < grid.inner_req) return reject("CONDITION_UNMET", { reason: "training", skill: "inner", required: grid.inner_req, level: inner?.learned.level ?? 0, cap: inner?.learned.cap ?? 0 });
     let item: ItemInstanceRow | null = null;
     let bonus = 0;
     if (a.item !== null) {

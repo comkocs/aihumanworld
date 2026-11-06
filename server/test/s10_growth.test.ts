@@ -185,8 +185,21 @@ test("S10: neutral combat → training → teaching → breakthrough paths → d
     assert.equal(bonded.ok, true);
     assert.deepEqual([bonded.result.skill.level, bonded.result.skill.cap, bonded.result.paid.coin], [5, 11, 0]);
 
+    const grid31 = gridNumbers(balance, 3, 1);
     await fixture(async (_q, w, row) => {
-      await w.update("char", actor, { xp: 710, ap_spent: 0, ap_tick: row.tick });
+      await w.update("char", actor, { tier: 3, stage: 1, xp: 0, ap_spent: 0, ap_tick: row.tick });
+    });
+    const shortXp = await call("breakthrough", { mode: "stage" }, code);
+    assertError(shortXp, "CONDITION_UNMET");
+    assert.deepEqual(shortXp.error.details, { reason: "xp", required: grid31.xp_need, have: 0 });
+    await fixture(async (_q, w, row) => {
+      await w.update("char", actor, { xp: grid31.xp_need, ap_spent: 0, ap_tick: row.tick });
+    });
+    const blocked = await call("breakthrough", { mode: "stage" }, code);
+    assertError(blocked, "CONDITION_UNMET");
+    assert.deepEqual(blocked.error.details, { reason: "training", skill: "inner", required: grid31.inner_req, level: 5, cap: 11 });
+    await fixture(async (_q, w, row) => {
+      await w.update("char", actor, { tier: 1, stage: 1, xp: 710, ap_spent: 0, ap_tick: row.tick });
     });
     const stage = await call("breakthrough", { mode: "stage" }, code);
     assert.equal(stage.ok, true);

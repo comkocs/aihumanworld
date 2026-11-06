@@ -20,7 +20,7 @@ export interface LearnResult {
 
 export const def = defineVerb<LearnArgs, LearnResult>({
   verb: "learn",
-  summary: "向同地更高阶师父学技能，按关系或钱支付学费。",
+  summary: "向同地更高阶师父学技能，按关系或钱支付学费。上限不够时向阶更高、该技能更高的师父学艺，每次上限 +5（不超本阶硬上限）。",
   errors: ["NOT_FOUND", "NOT_HERE", "TEACHER_REQUIRED", "INSUFFICIENT_RESOURCE", "SKILL_CAP"],
   args,
   lock: "world",

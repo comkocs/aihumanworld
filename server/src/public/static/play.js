@@ -387,9 +387,23 @@ function setDetails(body) {
   $("last-raw").textContent = lastRaw;
 }
 
+/** Breakthrough rejections name the missing number instead of a bare code. */
+function unmetLine(details) {
+  if (!details) return "";
+  if (details.reason === "training" && details.skill === "inner" && details.required !== undefined) {
+    const name = skillKeyName("inner");
+    if (zh) return name + "需 " + details.required + " 级，当前 " + details.level + " / 上限 " + details.cap + "：去找更高阶的师父学艺";
+    return name + " needs " + details.required + ", now " + details.level + " / cap " + details.cap + ": learn from a higher-tier teacher";
+  }
+  if (details.reason === "xp" && details.required !== undefined && details.have !== undefined) {
+    return zh ? UI.xp + "需 " + details.required + "，当前 " + details.have : UI.xp + " needs " + details.required + ", now " + details.have;
+  }
+  return "";
+}
 function showError(err) {
   const errorCode = err && err.envelope && err.envelope.error && err.envelope.error.code;
-  const line = UI.errors[errorCode] || UI.networkError;
+  const details = err && err.envelope && err.envelope.error && err.envelope.error.details;
+  const line = (errorCode === "CONDITION_UNMET" && unmetLine(details)) || UI.errors[errorCode] || UI.networkError;
   if (err && err.invalidIdentity) leave();
   if (err && err.envelope) setDetails(err.envelope);
   $("status").textContent = line;
@@ -493,6 +507,10 @@ function personIdName(id) {
 }
 function itemDefName(id) {
   return defs.has(id) ? itemName({ def_id: id }) : (zh ? "物品" : "an item");
+}
+/** Skin coin name (stat.coin); the hardcoded word is only a fallback. */
+function coinWord() {
+  return translated("stat.coin", UI.coin);
 }
 function skillKeyName(key) {
   const def = [...skillDefs.values()].find((d) => d.key === key);
@@ -810,9 +828,18 @@ function peopleCard(people, place) {
         goods.classList.remove("hidden");
         goods.appendChild(el("p", { class: "small", text: UI.stock }));
         if (shop.items.length === 0) empty(goods);
+        // Same definition at the same price is one line; buying still takes one instance.
+        const groups = [];
         for (const offer of shop.items) {
+          const group = groups.find((g) => g.def === offer.item.def_id && g.price === offer.price);
+          if (group) group.offers.push(offer);
+          else groups.push({ def: offer.item.def_id, price: offer.price, offers: [offer] });
+        }
+        for (const group of groups) {
+          const offer = group.offers[0];
+          const count = group.offers.length > 1 ? " ×" + group.offers.length : "";
           const item = el("div", { class: "item" });
-          item.appendChild(el("span", { text: itemName(offer.item) + " · " + UI.coin + " " + offer.price }));
+          item.appendChild(el("span", { text: itemName(offer.item) + count + " · " + coinWord() + " " + offer.price }));
           item.appendChild(btn(UI.buy, () => act("use", { op: "buy", item: offer.item.id, npc: c.id })));
           goods.appendChild(item);
         }

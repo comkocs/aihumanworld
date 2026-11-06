@@ -33,6 +33,11 @@ export interface ErrorDetailsMap {
   TASK_LIMIT: { kind: "accepted" | "bounty"; limit: UInt };
   CONDITION_UNMET: {
     reason: "task" | "xp" | "stage" | "tier" | "location" | "training" | "rank" | "relation";
+    skill?: string;
+    required?: UInt;
+    level?: UInt;
+    cap?: UInt;
+    have?: UInt;
   };
   DUPLICATE_KEY: { table: "place" | "item" | "task" };
   BUILD_INVALID: { reason: "shape" | "reference" | "tier" | "name"; field: string };
