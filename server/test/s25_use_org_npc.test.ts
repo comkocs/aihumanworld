@@ -192,6 +192,7 @@ test("S25 use, organization and NPC acceptance chains", async (t) => {
       assert.equal((await selectRows(app.db, "reputation", "char_id = $1 AND org_id = $2", [A.id, org.id]))[0]?.value, -5);
       await phase(orgGoalPhase, "3");
       assert.deepEqual(await mustGetRow(app.db, "org", org.id), settled);
+      assert.ok(!(await selectRows(app.db, "org", "split_part(id, ':', 1) = $1 AND clock_due_tick <= $2::bigint", [config.realm, "4"])).some((o) => o.id === org.id));
       await phase(orgGoalPhase, "10080");
       const next = (await mustGetRow(app.db, "org", org.id)).goal;
       assert.equal(next.week, 1);
@@ -216,6 +217,7 @@ test("S25 use, organization and NPC acceptance chains", async (t) => {
       const idle = await mustGetRow(app.db, "char", repairer.id);
       await phase(npcPhase, "6");
       assert.deepEqual(await mustGetRow(app.db, "char", repairer.id), idle);
+      assert.ok(!(await selectRows(app.db, "char", "split_part(id, ':', 1) = $1 AND npc_due_tick IS NOT NULL AND npc_due_tick <= $2::bigint", [config.realm, "7"])).some((c) => c.id === repairer.id));
       await phase(npcPhase, "29");
       assert.equal((await mustGetRow(app.db, "char", monster.id)).life, "dead");
       await phase(npcPhase, "30");

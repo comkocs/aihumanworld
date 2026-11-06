@@ -16,7 +16,7 @@ import { combatant, learnedSkill, neutralFacts, skillDefinition } from "../src/g
 import { resolveBreakthrough, resolveCombat, u32 } from "../src/growth/settlement.ts";
 import { setQuiet } from "../src/log.ts";
 import { slayEvidence } from "../src/tasks/evidence.ts";
-import type { Queryable } from "../src/db/db.ts";
+import type { Db, Queryable } from "../src/db/db.ts";
 
 type Json = any;
 
@@ -119,6 +119,7 @@ test("S10: neutral combat → training → teaching → breakthrough paths → d
     const idle = await char(target);
     await phase("11");
     assert.deepEqual(await char(target), idle);
+    assert.ok(!(await selectRows(app.db, "char", "split_part(id, ':', 1) = $1 AND growth_due_tick IS NOT NULL AND growth_due_tick <= $2::bigint", [config.realm, "12"])).some((c) => c.id === target));
     await phase("20");
     assert.equal((await learnedSkill(app.db, actor, innerDef.id))?.level, 1);
     assert.equal((await char(actor)).potential, 1); // cap never spends again
@@ -130,13 +131,27 @@ test("S10: neutral combat → training → teaching → breakthrough paths → d
     assertError(await call("train", { mode: "stop" }, code), "CONDITION_UNMET");
     const beforeCatchup = await char(actor);
     const catchupWorld = await world();
-    const missedTicks = 145 * balance.numbers.clock.train_period_ticks;
+    const missedTicks = 288 * balance.numbers.clock.train_period_ticks;
     const caughtAt = new Date(Date.parse(catchupWorld.tick_started_at) + missedTicks * (catchupWorld.rules.tick_seconds as number) * 1000);
     await fixture(async (_q, w, row) => {
       await w.update("char", actor, { train_skill: "inner", last_yield_tick: row.tick });
     });
+    // Fail after the first batch really commits, then discard the Clock instance.
+    let committedTicks = 0;
+    const interruptedDb: Db = {
+      ...app.db,
+      async tx<T>(fn: (q: Queryable) => Promise<T>): Promise<T> {
+        const result = await app.db.tx(fn);
+        committedTicks = Number(BigInt((await world()).tick) - BigInt(catchupWorld.tick));
+        throw new Error(`S19 interrupted after commit: ${String(result)}`);
+      },
+    };
+    const interrupted = new Clock(interruptedDb, { realm: config.realm, maxCatchupPerTx: 64, balance: () => balance, now: () => caughtAt });
+    await assert.rejects(interrupted.advanceDue(), /S19 interrupted after commit/);
+    assert.equal(committedTicks, 64);
+    assert.equal((await char(actor)).last_yield_tick, catchupWorld.tick);
     const clock = new Clock(app.db, { realm: config.realm, maxCatchupPerTx: 64, balance: () => balance, now: () => caughtAt });
-    assert.equal(await clock.advanceDue(), missedTicks);
+    assert.equal(await clock.advanceDue(), missedTicks - committedTicks);
     assert.equal((await char(actor)).xp - beforeCatchup.xp, 144 * balance.numbers.tiers[0]!.train_xp);
     assert.equal((await char(actor)).last_yield_tick, (await world()).tick);
     assert.equal(await clock.advanceDue(), 0);

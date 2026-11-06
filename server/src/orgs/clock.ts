@@ -90,12 +90,11 @@ export const orgGoalPhase: ClockPhase = {
   owner: "S25",
   async run(ctx) {
     requireRevision(ctx.balance, ctx.world.rules_revision, ctx.rules.balance_key);
-    const currentWeek = checkedUInt(BigInt(ctx.to_tick) / periodAt(ctx.balance, "clock.week_ticks"));
-    const rows = await selectRows(ctx.q, "org", `id LIKE $1 AND (
-      NOT EXISTS (SELECT 1 FROM s25_org_roster WHERE org_id = orgs.id) OR
-      (goal ->> 'week')::bigint < $2::bigint OR
-      ((goal ->> 'settled')::boolean = false AND (goal ->> 'progress')::numeric >= (goal ->> 'target')::numeric))`,
-      [`${ctx.world.realm}:org:%`, currentWeek], 'ORDER BY id COLLATE "C"');
+    const weekTicks = periodAt(ctx.balance, "clock.week_ticks");
+    const currentWeek = checkedUInt(BigInt(ctx.to_tick) / weekTicks);
+    const rows = await selectRows(ctx.q, "org",
+      "split_part(id, ':', 1) = $1 AND clock_due_tick <= $2::bigint",
+      [ctx.world.realm, ctx.to_tick], 'ORDER BY id COLLATE "C"');
     const orgs = new Map(rows.map((org) => [org.id, org]));
     for (const org of rows) {
       const initialized = await ctx.q.query("SELECT 1 FROM s25_org_roster WHERE org_id = $1", [org.id]);
@@ -108,9 +107,11 @@ export const orgGoalPhase: ClockPhase = {
     for (let org of orgs.values()) {
       org = await settle(ctx, org);
       if (org.goal.week < currentWeek) {
-        await snapshot(ctx, org, currentWeek);
+        org = await snapshot(ctx, org, currentWeek);
         await ctx.q.query("UPDATE s25_org_roster SET week = $2 WHERE org_id = $1", [org.id, currentWeek]);
       }
+      const due = (BigInt(org.goal.week) + 1n) * weekTicks;
+      await ctx.q.query("UPDATE orgs SET clock_due_tick = $2 WHERE id = $1", [org.id, due.toString()]);
     }
   },
 };

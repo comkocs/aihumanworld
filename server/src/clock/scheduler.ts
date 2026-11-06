@@ -74,32 +74,29 @@ export class Clock {
 
   private async run(): Promise<number> {
     const id = worldId(this.opts.realm);
-    // One offline interval keeps its training allowance across transaction batches.
+    // Training settles at the catch-up endpoint from its persisted last_yield_tick.
     const throughTime = this.now().getTime();
-    let trainPeriods = new Map<string, number>();
     let total = 0;
     for (;;) {
       const peek = await getRow(this.db, "world", id);
       if (peek === null || !this.isDue(peek, throughTime)) return total;
       const result = await this.db.tx(async (q) => {
         let w = await mustGetRow(q, "world", id, { lock: true });
-        const periods = new Map(trainPeriods);
         const due = Math.max(0, Math.floor((throughTime - Date.parse(w.tick_started_at)) / ((w.rules.tick_seconds as number) * 1000)));
         const throughTick = (BigInt(w.tick) + BigInt(due)).toString();
         let k = 0;
         while (k < this.opts.maxCatchupPerTx && this.isDue(w, throughTime)) {
-          w = await this.step(q, w, periods, throughTick);
+          w = await this.step(q, w, throughTick);
           k += 1;
         }
-        return { count: k, periods };
+        return k;
       });
-      trainPeriods = result.periods;
-      total += result.count;
-      if (result.count === 0) return total;
+      total += result;
+      if (result === 0) return total;
     }
   }
 
-  private async step(q: Queryable, world: WorldRow, trainPeriods: Map<string, number>, throughTick: WorldRow["tick"]): Promise<WorldRow> {
+  private async step(q: Queryable, world: WorldRow, throughTick: WorldRow["tick"]): Promise<WorldRow> {
     const from = world.tick;
     const to = nextTick(from);
     // The new tick's calendar first, so every phase sees this tick's day / week.
@@ -108,7 +105,7 @@ export class Clock {
     const view: WorldRow = { ...world, day_index: dayIndex, week_index: weekIndex };
     const w = new Writer(q, world.realm, to, world.rules_revision, true);
     const now = this.now();
-    const ctx: GrowthClockCtx = { q, w, world: view, rules: world.rules, balance: this.opts.balance(), from_tick: from, to_tick: to, now, train_periods: trainPeriods, train_through_tick: throughTick };
+    const ctx: GrowthClockCtx = { q, w, world: view, rules: world.rules, balance: this.opts.balance(), from_tick: from, to_tick: to, now, train_through_tick: throughTick };
     for (const phase of PHASES) {
       await phase.run(ctx);
     }
