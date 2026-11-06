@@ -139,6 +139,15 @@ test("S26: html door, play page, web enter, no translation_missing", async (t) =
       const definitions = await definitionResponse.json() as { items: ItemDefinitionRow[]; skills: SkillDefinitionRow[]; places: { id: string; content_key: string }[] };
       assert.ok(definitions.items.length > 0 && definitions.skills.length > 0);
       assert.ok(definitions.places.some((row) => row.id === created.result.char.loc && typeof row.content_key === "string"));
+      // B01: the public catalog GET /v1/defs (no auth) carries the same body as the web alias.
+      const publicDefs = await fetch(`${app.url}/v1/defs`);
+      assert.equal(publicDefs.status, 200);
+      assert.match(publicDefs.headers.get("content-type") ?? "", /^application\/json/);
+      assert.deepEqual(await publicDefs.json(), definitions);
+      // R08: slugs with an underscore are reachable.
+      for (const slug of ["use-org_join", "use-org_leave", "use-relation_end", "use-relation_accept"]) {
+        assert.equal((await fetch(`${app.url}/act/${slug}`)).status, 200, `GET /act/${slug}`);
+      }
       for (const item of definitions.items) {
         fields(item, ["id", "content_key", "kind", "tier", "effect"]);
         assert.equal(item.record, "definition");

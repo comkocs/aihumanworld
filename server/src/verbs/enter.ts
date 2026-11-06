@@ -5,8 +5,11 @@
 // lifecycle restore — dormant / buried (inside the revive window) return to
 // active, draft stays draft; display fields update when given; no code is
 // re-issued and no initial assets are granted again. Life is never touched.
+// A `skin` different from the current one is a conversion (改宗, 产品文档 v1
+// 阵营 = 出身皮): tier <= 3, standing in the target region, registry-org member
+// only; skin / origin_region / respawn_place / registry bond move together.
 
-import { SKILL_BASES } from "../facts/enums.ts";
+import { SKILL_BASES, type Skin } from "../facts/enums.ts";
 import { worldClientView, type WorldClientView } from "../facts/project.ts";
 import { getRow, selectRows } from "../facts/store.ts";
 import type {
@@ -14,6 +17,7 @@ import type {
   Change,
   CharRow,
   IdentityRow,
+  OrgRow,
   ReputationRow,
   SkillDefinitionRow,
   SkillLearnedRow,
@@ -21,11 +25,13 @@ import type {
 } from "../facts/types.ts";
 import { deriveStats, startValues } from "../growth/balance.ts";
 import { generateCode, hashCode, type NewCode } from "../identity/code.ts";
-import { reject } from "../protocol/errors.ts";
+import { emitBond, membership } from "../orgs/membership.ts";
+import { NO_DETAILS, reject } from "../protocol/errors.ts";
 import { charClass, door, skin } from "../protocol/shapes.ts";
 import { nullable, opt, str, union, type Out } from "../protocol/validate.ts";
 import { requireRule } from "../rules/world_rules.ts";
 import { sanitizeLabel } from "../speech/sanitize.ts";
+import { publicChanges } from "../tasks/common.ts";
 import { supplyInitialTasks } from "../tasks/hooks.ts";
 import { defineVerb, type VerbContext } from "./types.ts";
 
@@ -207,6 +213,29 @@ async function create(ctx: VerbContext, a: Extract<EnterArgs, { mode: "create" }
   return { char, identity_code: code.display, created: true, changes, world: worldClientView(world) };
 }
 
+/** 产品文档 v1 阵营 = 出身皮: switching is free through tier 3, locked after. */
+const CONVERT_TIER_MAX = 3;
+
+interface Conversion {
+  from: BondRow;
+  registry: OrgRow;
+  spawn: CharRow["respawn_place"];
+}
+
+/** Conversion preconditions, in order: tier, standing in the target region, registry-only membership. */
+async function conversionGuard(ctx: VerbContext, c: CharRow, target: Skin): Promise<Conversion> {
+  if (c.tier > CONVERT_TIER_MAX) return reject("NOT_ALLOWED", { reason: "faith_locked" });
+  const here = await getRow(ctx.q, "place", c.loc);
+  if (here === null || here.region !== target) return reject("NOT_HERE", NO_DETAILS);
+  const from = await membership(ctx.q, c.id);
+  const old = await getRow(ctx.q, "org", from.b);
+  if (old === null) throw new Error(`org ${from.b} of the membership bond missing`);
+  if (!old.registry) return reject("NOT_ALLOWED", { reason: "org" });
+  const registry = await getRow(ctx.q, "org", ctx.world.registry_orgs[target]);
+  if (registry === null || !registry.registry) throw new Error(`registry org of ${target} missing`);
+  return { from, registry, spawn: ctx.world.spawn_places[target] };
+}
+
 async function resume(ctx: VerbContext, a: Extract<EnterArgs, { mode: "resume" }>): Promise<EnterResult> {
   const c = ctx.actor;
   if (c === null) throw new Error("enter resume: no actor");
@@ -221,17 +250,24 @@ async function resume(ctx: VerbContext, a: Extract<EnterArgs, { mode: "resume" }
   // Leaving fantasy clears the class server-side unless the caller already did.
   const cls = a.class !== undefined ? a.class : skin !== "fantasy" ? null : c.class;
   const model = a.model !== undefined ? sanitizeLabel(a.model, textMax) : c.model;
+  const conversion = skin !== c.skin ? await conversionGuard(ctx, c, skin) : null;
 
   const patch: {
     skin?: CharRow["skin"];
     class?: CharRow["class"];
+    origin_region?: CharRow["origin_region"];
+    respawn_place?: CharRow["respawn_place"];
     door?: CharRow["door"];
     model?: CharRow["model"];
     state?: "active";
     state_since?: Tick;
     last_yield_tick?: Tick;
   } = {};
-  if (skin !== c.skin) patch.skin = skin;
+  if (conversion !== null) {
+    patch.skin = skin;
+    patch.origin_region = skin;
+    patch.respawn_place = conversion.spawn;
+  }
   if (cls !== c.class) patch.class = cls;
   if (a.door !== undefined && ctx.door !== c.door) patch.door = ctx.door;
   if (model !== c.model) patch.model = model;
@@ -246,9 +282,36 @@ async function resume(ctx: VerbContext, a: Extract<EnterArgs, { mode: "resume" }
     const ch = await ctx.w.update("char", c.id, patch);
     if (ch !== null) changes.push(ch);
   }
+  let ended: BondRow | null = null;
+  let added: BondRow | null = null;
+  if (conversion !== null) {
+    // Same transaction: the old registry bond ends, the target registry bond begins.
+    const rank = conversion.registry.ranks.find((r) => r.key === "org_rank.member") ?? conversion.registry.ranks[0];
+    if (rank === undefined) throw new Error(`registry org ${conversion.registry.id} has no ranks`);
+    const endChange = await ctx.w.update("bond", conversion.from.id, { state: "ended", ended_tick: ctx.tick });
+    if (endChange !== null) changes.push(endChange);
+    ended = { ...conversion.from, state: "ended", ended_tick: ctx.tick, updated_tick: ctx.tick };
+    added = {
+      id: await ctx.w.newId("bond"),
+      created_tick: ctx.tick,
+      updated_tick: ctx.tick,
+      kind: "member",
+      a: c.id,
+      b: conversion.registry.id,
+      state: "active",
+      weight: 0,
+      rank: rank.rank,
+      since_tick: ctx.tick,
+      ended_tick: null,
+    };
+    const addChange = await ctx.w.insert("bond", added);
+    if (addChange !== null) changes.push(addChange);
+  }
   const char: CharRow = { ...c };
   if (patch.skin !== undefined) char.skin = patch.skin;
   if (patch.class !== undefined) char.class = patch.class;
+  if (patch.origin_region !== undefined) char.origin_region = patch.origin_region;
+  if (patch.respawn_place !== undefined) char.respawn_place = patch.respawn_place;
   if (patch.door !== undefined) char.door = patch.door;
   if (patch.model !== undefined) char.model = patch.model;
   if (restored) {
@@ -260,16 +323,21 @@ async function resume(ctx: VerbContext, a: Extract<EnterArgs, { mode: "resume" }
       await ctx.w.update("identity", ident.id, { expires_tick: null });
     }
   }
+  // A conversion is a public fact (chronicle); a plain resume stays self-visible.
   const deed = await ctx.w.deed({
     actor: c.id,
     verb: "enter",
     kind: "identity",
-    targets: [c.id],
+    targets: conversion === null ? [c.id] : [c.id, conversion.registry.id],
     place_id: c.loc,
-    result: { outcome: "success", changes, roll: null, proposal: null },
-    visibility: "self",
+    result: { outcome: "success", changes: conversion === null ? changes : publicChanges(changes), roll: null, proposal: null },
+    visibility: conversion === null ? "self" : "world",
     participants: [c.id],
   });
+  if (ended !== null && added !== null) {
+    await emitBond(ctx.w, ended, deed.id);
+    await emitBond(ctx.w, added, deed.id);
+  }
   if (restored) {
     await ctx.w.emit({
       scope: "self",

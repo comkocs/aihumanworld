@@ -183,6 +183,9 @@ function routeOf(path: string): RouteHit | null {
   return null;
 }
 
+/** Form slugs may carry `_` (use-org_join, use-relation_end, ...). */
+const FORM_PATH = /^\/act\/([a-z0-9_-]+)$/;
+
 const STATIC_FILES = new Map<string, string>([
   ["play.js", "text/javascript"],
   ["play.css", "text/css"],
@@ -213,20 +216,29 @@ async function sendLexicon(res: ServerResponse, skin: string, locale: string): P
   send(res, 200, "application/json", body, { "Cache-Control": "no-store", "Content-Security-Policy": CSP });
 }
 
+/**
+ * Public definition catalog: item / skill definitions of this realm plus place
+ * content keys. One body for `GET /v1/defs` (no auth, no arguments) and its web
+ * alias `GET /play/definitions`.
+ */
+async function sendDefinitions(deps: PublicDeps, res: ServerResponse): Promise<void> {
+  const where = "record = 'definition' AND split_part(id, ':', 1) = $1";
+  const items = await selectRows(deps.db, "item", where, [deps.realm]);
+  const skills = await selectRows(deps.db, "skill", where, [deps.realm]);
+  const places = await selectRows(deps.db, "place", "split_part(id, ':', 1) = $1", [deps.realm]);
+  send(res, 200, "application/json", JSON.stringify({ items, skills, places: places.map(({ id, content_key }) => ({ id, content_key })) }), {
+    "Cache-Control": "no-store",
+    "Content-Security-Policy": CSP,
+  });
+}
+
 async function handleGet(deps: PublicDeps, req: IncomingMessage, res: ServerResponse, path: string, search: URLSearchParams): Promise<void> {
   if (path === "/play") {
     sendHtml(res, 200, PLAY_PAGE, true);
     return;
   }
-  if (path === "/play/definitions") {
-    const where = "record = 'definition' AND split_part(id, ':', 1) = $1";
-    const items = await selectRows(deps.db, "item", where, [deps.realm]);
-    const skills = await selectRows(deps.db, "skill", where, [deps.realm]);
-    const places = await selectRows(deps.db, "place", "split_part(id, ':', 1) = $1", [deps.realm]);
-    send(res, 200, "application/json", JSON.stringify({ items, skills, places: places.map(({ id, content_key }) => ({ id, content_key })) }), {
-      "Cache-Control": "no-store",
-      "Content-Security-Policy": CSP,
-    });
+  if (path === "/v1/defs" || path === "/play/definitions") {
+    await sendDefinitions(deps, res);
     return;
   }
   const asset = /^\/play\/static\/(play\.(?:js|css))$/.exec(path);
@@ -247,7 +259,7 @@ async function handleGet(deps: PublicDeps, req: IncomingMessage, res: ServerResp
     sendHtml(res, 200, indexHtml(chosen.query, lang), true);
     return;
   }
-  const slug = /^\/act\/([a-z0-9-]+)$/.exec(path);
+  const slug = FORM_PATH.exec(path);
   if (slug?.[1] !== undefined) {
     const spec = formBySlug(slug[1]);
     if (spec === null) return notFound(res);
@@ -277,7 +289,7 @@ async function handleGet(deps: PublicDeps, req: IncomingMessage, res: ServerResp
 }
 
 async function handlePost(deps: PublicDeps, req: IncomingMessage, res: ServerResponse, path: string, search: URLSearchParams): Promise<void> {
-  const slug = /^\/act\/([a-z0-9-]+)$/.exec(path)?.[1];
+  const slug = FORM_PATH.exec(path)?.[1];
   const spec = slug === undefined ? null : formBySlug(slug);
   if (spec === null) return notFound(res);
   const type = req.headers["content-type"] ?? "";

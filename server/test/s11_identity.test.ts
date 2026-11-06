@@ -144,6 +144,45 @@ test("S11 identity: code, resume, promotion, draft TTL, dormant, bury, revive, w
     assert.equal(promoted.status, 200);
     assert.equal(promoted.body.result.char.state, "active");
 
+    // --- B07 conversion (改宗): resume with another skin; tier <= 3, standing in the target region, registry bond only ---
+    const world = await mustGetRow(app.db, "world", wid);
+    const c = await call("enter", { mode: "create", skin: "xiuxian", door: "api" });
+    const codeC: string = c.body.result.identity_code;
+    const meC: string = c.body.result.char.id;
+    const toWuxia = (): Promise<{ status: number; body: Json }> => call("enter", { mode: "resume", skin: "wuxia" }, codeC);
+    const notHere = await toWuxia(); // still standing in the xiuxian region
+    assert.equal(notHere.status, 409);
+    assert.equal(notHere.body.error.code, "NOT_HERE");
+    await app.db.query("UPDATE chars SET tier = 4 WHERE id = $1", [meC]);
+    const locked = await toWuxia(); // tier beyond 3 is checked before the place
+    assert.equal(locked.status, 403);
+    assert.equal(locked.body.error.code, "NOT_ALLOWED");
+    assert.equal(locked.body.error.details.reason, "faith_locked");
+    await app.db.query("UPDATE chars SET tier = 1, loc = $2 WHERE id = $1", [meC, world.spawn_places.wuxia]);
+    // The minimal seed has registry orgs only: clone one as a non-registry org for the refusal.
+    const outsider = "r1:org:s11_guild";
+    await app.db.query(
+      `INSERT INTO orgs (id, created_tick, updated_tick, content_key, region, hall, registry, ranks, skill_defs, treasury, goal)
+       SELECT $1, created_tick, updated_tick, 'content.r1.org.s11_guild', region, hall, false, ranks, skill_defs, treasury, goal FROM orgs WHERE registry LIMIT 1`,
+      [outsider],
+    );
+    const setBond = (org: string): Promise<unknown> => app.db.query("UPDATE bonds SET b = $2 WHERE a = $1 AND kind = 'member' AND state = 'active'", [meC, org]);
+    await setBond(outsider);
+    const inOrg = await toWuxia(); // member of a non-registry org: leave it first
+    assert.equal(inOrg.status, 403);
+    assert.equal(inOrg.body.error.code, "NOT_ALLOWED");
+    assert.equal(inOrg.body.error.details.reason, "org");
+    await setBond(world.registry_orgs.xiuxian);
+    const converted = await toWuxia();
+    assert.equal(converted.status, 200);
+    assert.equal(converted.body.result.char.skin, "wuxia");
+    assert.equal(converted.body.result.char.origin_region, "wuxia");
+    assert.equal(converted.body.result.char.respawn_place, world.spawn_places.wuxia);
+    const bonds = await app.db.query<{ b: string; state: string }>("SELECT b, state FROM bonds WHERE a = $1 AND kind = 'member' ORDER BY state", [meC]);
+    assert.deepEqual(bonds.rows.map((r) => [r.state, r.b]), [["active", world.registry_orgs.wuxia], ["ended", world.registry_orgs.xiuxian]]);
+    const seen = await app.db.query<{ visibility: string }>("SELECT visibility FROM deeds WHERE actor = $1 AND verb = 'enter' AND kind = 'identity' AND visibility = 'world'", [meC]);
+    assert.equal(seen.rows.length, 1);
+
     // --- draft TTL: expired draft → buried, credential cleared, AUTH_INVALID ---
     const b = await call("enter", { mode: "create", skin: "wuxia", door: "api" });
     assert.equal(b.status, 200);
