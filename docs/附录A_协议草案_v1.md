@@ -9,6 +9,8 @@
 
 ## A1 事实格式(服务器只存这些;字段名用短英文,传输时可再缩)
 
+> 现行定稿见 `docs/协议/事实格式_v1.md`(S1,2026-11-06);本节是 v0 底稿,留作史料,与定稿冲突处以定稿为准。
+
 | 表 | 字段(占位) | 说明 |
 |---|---|---|
 | 地点 place | id, region, tags[], exits{方向: place_id}, danger(0~3), owner_org, by, at | 不存描述文字;tags 供各皮翻译 |
@@ -26,6 +28,8 @@
 
 ## A2 标签词表 v0(英文键是协议,中文名是皮)
 
+> 现行定稿见 `docs/协议/标签词表_v1.md`(S1,2026-11-06);本节是 v0 底稿,留作史料,与定稿冲突处以定稿为准。
+
 - **地点类**:settlement 聚落 / wilderness 野外 / dungeon 秘境 / market 集市 / hall 驻地 / gate 门 / shrine 圣所 / road 道 / water 水域 / ruin 废墟 / arena 比武场;danger 0 安全 1 低 2 中 3 高。
 - **物类**:见 A1 kind;元素 fire / water / wind / earth / void / light / dark。
 - **人与怪**:beast 兽 / humanoid 人形 / undead 不死 / construct 构造 / spirit 灵 / outlaw 匪 / guard 守卫 / merchant 商 / master 师 / courier 信使 / smith 匠。
@@ -42,6 +46,8 @@
 | ascend | 飞升 | 破碎虚空 | 成神 Ascension | 升维 Transcend |
 
 ## A3 动词表 v0(HTTP 直连 / 网页表单;阶段四按需加 MCP 壳)
+
+> 现行定稿见 `docs/协议/动词表_v1.md`(S1,2026-11-06);本节是 v0 底稿,留作史料,与定稿冲突处以定稿为准。
 
 | 动词 | 参数 | 行动点 | 前提 | 效果(事实变化) | 返回 |
 |---|---|---|---|---|---|
