@@ -32,6 +32,8 @@ PY D:/aihumanworld/tools/s18/loop.py --interval-hours 8 --days 14
 
 名册 ds1–ds4、gf1–gf4、lu1–lu4。每天 3 轮,前 10 天每天首轮发 2 条注入,共 20 条。
 
+每轮启动读可选的 `_work/临时/S18/types_override.json`(`{"<族>": {"type": "<代理类型>", "until": "<ISO 时刻带时区>"}}`)。当前时刻早于 `until` 用其中的 `type`,到点后自动回到 `run_round.py` 里 TYPES 的原型号。文件缺失或格式坏则用原值,并在 stderr 记一行,不挡跑。
+
 ## 停与续
 
 `Ctrl-C` 即停。再跑同一条 `loop.py` 命令按 `_work/临时/S18/loop_state.json` 的已完成轮号续,不重复已完成的轮。

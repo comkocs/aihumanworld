@@ -7,3 +7,4 @@ _work/临时/
 *.tmp
 *.temp
 *~
+__pycache__/

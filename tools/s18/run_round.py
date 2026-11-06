@@ -6,6 +6,7 @@ import re
 import subprocess
 import sys
 import time
+from datetime import datetime
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(os.path.dirname(HERE))
@@ -16,6 +17,7 @@ FIXTURE = os.path.join(REPO, "server", "test", "fixtures", "s12_malicious_speech
 REALM = "r1"
 RED = "red"
 TYPES = {"ds": "reader-dsflash", "gf": "reader-glmflash", "lu": "reader-luna"}
+OVERRIDE_PATH = os.path.join(WORK, "types_override.json")
 FAMILIES = ("ds", "gf", "lu")
 PER_FAMILY = 4
 MAX_PARALLEL = 4
@@ -35,6 +37,38 @@ def roster():
 
 def family_of(agent):
     return re.fullmatch(r"(ds|gf|lu)[1-9]\d*", agent).group(1)
+
+
+def load_types(now=None):
+    """可选覆盖:当前时刻早于 until 用 override 的 type,否则用 TYPES 原值。
+    文件缺失或格式坏 → 用原值并在 stderr 记一行,不挡跑。"""
+    types = dict(TYPES)
+    if not os.path.isfile(OVERRIDE_PATH):
+        sys.stderr.write("types_override.json 缺失,用 TYPES 原值\n")
+        return types
+    try:
+        with open(OVERRIDE_PATH, encoding="utf-8") as f:
+            data = json.load(f)
+        if not isinstance(data, dict):
+            raise ValueError("根不是对象")
+        if now is None:
+            now = datetime.now().astimezone()
+        for fam, spec in data.items():
+            if fam not in TYPES or not isinstance(spec, dict):
+                raise ValueError(f"族 {fam} 格式坏")
+            typ = spec.get("type")
+            until = spec.get("until")
+            if not isinstance(typ, str) or not typ or not isinstance(until, str):
+                raise ValueError(f"族 {fam} 缺 type 或 until")
+            deadline = datetime.fromisoformat(until)
+            if deadline.tzinfo is None:
+                raise ValueError(f"族 {fam} until 缺时区")
+            if now < deadline:
+                types[fam] = typ
+    except (OSError, json.JSONDecodeError, ValueError, TypeError) as e:
+        sys.stderr.write(f"types_override.json 格式坏,用 TYPES 原值:{e}\n")
+        return dict(TYPES)
+    return types
 
 
 def code_exists(agent):
@@ -192,7 +226,7 @@ def inject(seq, base, round_no):
     return {"ok": ok, "条": item["id"], "地点": target, "错误": None if ok else err}
 
 
-def dispatch(round_no, agents, base, n):
+def dispatch(round_no, agents, base, n, types):
     """同时最多 4 个,单段超时 20 分钟。"""
     queue = list(agents)
     running = {}
@@ -207,7 +241,7 @@ def dispatch(round_no, agents, base, n):
                 capture_output=True, text=True, encoding="utf-8",
             ).stdout.strip()
             proc = subprocess.Popen(
-                ["bash", PAI, TYPES[family_of(agent)], f"S18第{round_no}轮{agent}", order, "--timeout-min", str(TIMEOUT_MIN)],
+                ["bash", PAI, types[family_of(agent)], f"S18第{round_no}轮{agent}", order, "--timeout-min", str(TIMEOUT_MIN)],
             )
             running[agent] = proc
         finished = [a for a, p in running.items() if p.poll() is not None]
@@ -252,15 +286,16 @@ def main(argv):
     if bad:
         sys.stderr.write(f"参数错:名册外的代理 {','.join(bad)}\n")
         return 2
+    types = load_types()
     rc = {}
     if not inject_only:
-        for agent, code in dispatch(round_no, agents, base, n).items():
-            rc[agent] = {"派.sh退出码": code, "服务器事实": whoami_fact(agent, base, round_no) if code_exists(agent) else {"ok": False, "错误": "无码"}}
+        for agent, code in dispatch(round_no, agents, base, n, types).items():
+            rc[agent] = {"类型": types[family_of(agent)], "派.sh退出码": code, "服务器事实": whoami_fact(agent, base, round_no) if code_exists(agent) else {"ok": False, "错误": "无码"}}
     injections = [inject(inject_from + k, base, round_no) for k in range(injects)]
     os.makedirs(os.path.join(WORK, "轮"), exist_ok=True)
     out = os.path.join(WORK, "轮", f"{round_no}.json")
     with open(out, "w", encoding="utf-8", newline="\n") as f:
-        json.dump({"轮": round_no, "代理": rc, "注入": injections}, f, ensure_ascii=False, indent=1)
+        json.dump({"轮": round_no, "类型": {a: types[family_of(a)] for a in agents}, "代理": rc, "注入": injections}, f, ensure_ascii=False, indent=1)
     sys.stdout.write(out + "\n")
     return 0
 
