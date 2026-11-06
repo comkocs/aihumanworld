@@ -5827,6 +5827,10 @@
       "place": "place:dungeon_t1",
       "items": [
         {
+          "def": "item:key_t1",
+          "cap": 2
+        },
+        {
           "def": "item:ore_t1",
           "cap": 4
         },
@@ -5865,6 +5869,10 @@
     {
       "place": "place:dungeon_t2",
       "items": [
+        {
+          "def": "item:key_t2",
+          "cap": 2
+        },
         {
           "def": "item:ore_t2",
           "cap": 4
@@ -5905,6 +5913,10 @@
       "place": "place:dungeon_t3",
       "items": [
         {
+          "def": "item:key_t3",
+          "cap": 2
+        },
+        {
           "def": "item:ore_t3",
           "cap": 4
         },
@@ -5943,6 +5955,10 @@
     {
       "place": "place:dungeon_t4",
       "items": [
+        {
+          "def": "item:key_t4",
+          "cap": 2
+        },
         {
           "def": "item:ore_t4",
           "cap": 4
@@ -5983,6 +5999,10 @@
       "place": "place:dungeon_t5",
       "items": [
         {
+          "def": "item:key_t5",
+          "cap": 2
+        },
+        {
           "def": "item:ore_t5",
           "cap": 4
         },
@@ -6021,6 +6041,10 @@
     {
       "place": "place:dungeon_t6",
       "items": [
+        {
+          "def": "item:key_t6",
+          "cap": 2
+        },
         {
           "def": "item:ore_t6",
           "cap": 4
@@ -6061,6 +6085,10 @@
       "place": "place:dungeon_t7",
       "items": [
         {
+          "def": "item:key_t7",
+          "cap": 2
+        },
+        {
           "def": "item:ore_t7",
           "cap": 4
         },
@@ -6100,6 +6128,10 @@
       "place": "place:dungeon_t8",
       "items": [
         {
+          "def": "item:key_t8",
+          "cap": 2
+        },
+        {
           "def": "item:ore_t8",
           "cap": 4
         },
@@ -6138,6 +6170,10 @@
     {
       "place": "place:dungeon_t9",
       "items": [
+        {
+          "def": "item:key_t9",
+          "cap": 2
+        },
         {
           "def": "item:ore_t9",
           "cap": 4
