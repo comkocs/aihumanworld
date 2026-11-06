@@ -9,7 +9,7 @@
 // 阵营 = 出身皮): tier <= 3, standing in the target region, registry-org member
 // only; skin / origin_region / respawn_place / registry bond move together.
 
-import { SKILL_BASES, type Skin } from "../facts/enums.ts";
+import { SKILL_BASES, SKINS, type Skin } from "../facts/enums.ts";
 import { worldClientView, type WorldClientView } from "../facts/project.ts";
 import { getRow, selectRows } from "../facts/store.ts";
 import type {
@@ -24,6 +24,7 @@ import type {
   Tick,
 } from "../facts/types.ts";
 import { deriveStats, startValues } from "../growth/balance.ts";
+import { resolutionSeed, u32 } from "../growth/settlement.ts";
 import { touchSeen } from "../identity/auth.ts";
 import { generateCode, hashCode, type NewCode } from "../identity/code.ts";
 import { hashEmail, normalizeEmail } from "../identity/email.ts";
@@ -40,7 +41,8 @@ import { defineVerb, type VerbContext } from "./types.ts";
 
 const args = union("mode", {
   create: {
-    skin,
+    // Absent → the least-populated living origin region (see pickSkin).
+    skin: opt(skin, undefined),
     door,
     class: opt(nullable(charClass), null),
     model: opt(nullable(str()), null),
@@ -79,22 +81,59 @@ async function freshCode(ctx: VerbContext): Promise<{ code: NewCode; hash: strin
   throw new Error("identity code space collision");
 }
 
-async function create(ctx: VerbContext, a: Extract<EnterArgs, { mode: "create" }>): Promise<EnterResult> {
-  if (a.class !== null && a.skin !== "fantasy") {
-    reject("INVALID_ARGUMENT", { expected: "null unless skin is fantasy" }, "args.class");
+/**
+ * Origin region when create omits skin: the one with the fewest living
+ * participants (player + official, not yet buried). Ties break by this
+ * request's server seed (same construction as combat resolution, no
+ * Math.random), walking the tied regions in SKINS order.
+ */
+async function pickSkin(ctx: VerbContext): Promise<Skin> {
+  const rows = await ctx.q.query<{ skin: string; n: string }>(
+    "SELECT skin, count(*)::text AS n FROM chars WHERE kind IN ('player', 'official') AND state <> 'buried' GROUP BY skin",
+  );
+  const counts = new Map<Skin, number>(SKINS.map((s) => [s, 0]));
+  for (const row of rows.rows) {
+    if (counts.has(row.skin as Skin)) counts.set(row.skin as Skin, Number(row.n));
   }
+  let least = Number.POSITIVE_INFINITY;
+  const tied: Skin[] = [];
+  for (const s of SKINS) {
+    const n = counts.get(s) ?? 0;
+    if (n < least) {
+      least = n;
+      tied.length = 0;
+      tied.push(s);
+    } else if (n === least) {
+      tied.push(s);
+    }
+  }
+  const only = tied[0];
+  if (only === undefined) throw new Error("no origin skin");
+  if (tied.length === 1) return only;
+  const seed = await resolutionSeed(ctx.q, ctx.world.rules_revision, ctx.world.realm, ctx.tick, "-", null);
+  return tied[u32(seed, "skin") % tied.length] ?? only;
+}
+
+async function create(ctx: VerbContext, a: Extract<EnterArgs, { mode: "create" }>): Promise<EnterResult> {
   if (a.door !== ctx.door) {
     reject("INVALID_ARGUMENT", { expected: "door of the entry shell (api for /v1/actions)" }, "args.door");
+  }
+  // A given skin is used as-is. An omitted one is assigned first, then the
+  // existing class rule applies: class is meaningful only on fantasy, so a
+  // class on any other skin (including one just assigned) is refused.
+  const chosen = a.skin ?? (await pickSkin(ctx));
+  if (a.class !== null && chosen !== "fantasy") {
+    reject("INVALID_ARGUMENT", { expected: "null unless skin is fantasy" }, "args.class");
   }
   const { w, world, tick } = ctx;
   const textMax = requireRule(ctx.rules, "text_max_chars");
   requireRule(ctx.rules, "ap_per_tick");
   const start = startValues(ctx.balance);
 
-  const spawn = world.spawn_places[a.skin];
-  const orgId = world.registry_orgs[a.skin];
+  const spawn = world.spawn_places[chosen];
+  const orgId = world.registry_orgs[chosen];
   const org = await getRow(ctx.q, "org", orgId);
-  if (org === null || !org.registry) throw new Error(`registry org of ${a.skin} missing`);
+  if (org === null || !org.registry) throw new Error(`registry org of ${chosen} missing`);
   const rank = org.ranks.find((r) => r.key === "org_rank.member") ?? org.ranks[0];
   if (rank === undefined) throw new Error(`registry org ${orgId} has no ranks`);
   const defs = (await selectRows(
@@ -115,9 +154,9 @@ async function create(ctx: VerbContext, a: Extract<EnterArgs, { mode: "create" }
     handle: await allocateHandle(ctx.q),
     email_hash: null,
     model: sanitizeLabel(a.model, textMax),
-    skin: a.skin,
+    skin: chosen,
     class: a.class,
-    origin_region: a.skin,
+    origin_region: chosen,
     body: "humanoid",
     archetype: null,
     tier: 1,
