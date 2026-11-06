@@ -204,8 +204,8 @@ def run_round(round_no, base, state):
         if not running:
             break
         resident, proc = running.pop(0)
-        out, _ = proc.communicate()
-        text = mask(out or "")
+        output, _ = proc.communicate()
+        text = mask(output or "")
         out(f"--- {resident['名']} 退出 {proc.returncode} ---")
         out(text.rstrip("\n"))
         if proc.returncode != 0:
