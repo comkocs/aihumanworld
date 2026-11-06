@@ -3,5 +3,6 @@
   "http": { "host": "127.0.0.1", "port": 8787, "body_max_bytes": 65536 },
   "db": { "driver": "pglite", "pglite_dir": "../data/pglite", "pool_max": 10 },
   "rules_file": "rules.placeholder.json",
+  "content_dir": "../../content/world",
   "clock": { "max_catchup_ticks_per_tx": 120 }
 }

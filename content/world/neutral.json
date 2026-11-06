@@ -1,0 +1,5799 @@
+{
+  "schema": "aihw.content.v1",
+  "places": [
+    {
+      "local": "gate_confluence",
+      "region": "neutral",
+      "kind": "gate",
+      "features": [
+        "portal"
+      ],
+      "tier": 1,
+      "danger": "safe",
+      "combat": "safe",
+      "exits": [
+        {
+          "dir": "out",
+          "to": "place:market_neutral"
+        },
+        {
+          "dir": "north",
+          "to": "place:camp_neutral"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "camp_neutral",
+      "region": "neutral",
+      "kind": "settlement",
+      "features": [
+        "build_anchor",
+        "repair",
+        "respawn",
+        "trade",
+        "training"
+      ],
+      "tier": 1,
+      "danger": "safe",
+      "combat": "safe",
+      "exits": [
+        {
+          "dir": "south",
+          "to": "place:gate_confluence"
+        },
+        {
+          "dir": "east",
+          "to": "place:market_ring"
+        },
+        {
+          "dir": "west",
+          "to": "place:arena_neutral"
+        },
+        {
+          "dir": "north",
+          "to": "place:wild_t1"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "market_ring",
+      "region": "neutral",
+      "kind": "road",
+      "features": [
+        "trade"
+      ],
+      "tier": 1,
+      "danger": "safe",
+      "combat": "safe",
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:camp_neutral"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "arena_neutral",
+      "region": "neutral",
+      "kind": "arena",
+      "features": [],
+      "tier": 1,
+      "danger": "low",
+      "combat": "duel",
+      "exits": [
+        {
+          "dir": "east",
+          "to": "place:camp_neutral"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "wild_t1",
+      "region": "neutral",
+      "kind": "wilderness",
+      "features": [
+        "resource"
+      ],
+      "tier": 1,
+      "danger": "low",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "east",
+          "to": "place:wild2_t1"
+        },
+        {
+          "dir": "down",
+          "to": "place:dungeon_t1"
+        },
+        {
+          "dir": "south",
+          "to": "place:camp_neutral"
+        },
+        {
+          "dir": "north",
+          "to": "place:wild_t2"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "wild2_t1",
+      "region": "neutral",
+      "kind": "wilderness",
+      "features": [
+        "resource"
+      ],
+      "tier": 1,
+      "danger": "low",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:wild_t1"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "dungeon_t1",
+      "region": "neutral",
+      "kind": "dungeon",
+      "features": [
+        "resource"
+      ],
+      "tier": 1,
+      "danger": "low",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "up",
+          "to": "place:wild_t1"
+        },
+        {
+          "dir": "in",
+          "to": "place:inner_t1",
+          "locked": true,
+          "key_def": "item:key_t1"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "inner_t1",
+      "region": "neutral",
+      "kind": "dungeon",
+      "features": [],
+      "tier": 1,
+      "danger": "low",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "out",
+          "to": "place:dungeon_t1"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "wild_t2",
+      "region": "neutral",
+      "kind": "wilderness",
+      "features": [
+        "resource"
+      ],
+      "tier": 2,
+      "danger": "low",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "east",
+          "to": "place:wild2_t2"
+        },
+        {
+          "dir": "down",
+          "to": "place:dungeon_t2"
+        },
+        {
+          "dir": "south",
+          "to": "place:wild_t1"
+        },
+        {
+          "dir": "north",
+          "to": "place:wild_t3"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "wild2_t2",
+      "region": "neutral",
+      "kind": "water",
+      "features": [
+        "resource"
+      ],
+      "tier": 2,
+      "danger": "low",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:wild_t2"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "dungeon_t2",
+      "region": "neutral",
+      "kind": "dungeon",
+      "features": [
+        "resource"
+      ],
+      "tier": 2,
+      "danger": "low",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "up",
+          "to": "place:wild_t2"
+        },
+        {
+          "dir": "in",
+          "to": "place:inner_t2",
+          "locked": true,
+          "key_def": "item:key_t2"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "inner_t2",
+      "region": "neutral",
+      "kind": "dungeon",
+      "features": [],
+      "tier": 2,
+      "danger": "low",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "out",
+          "to": "place:dungeon_t2"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "wild_t3",
+      "region": "neutral",
+      "kind": "wilderness",
+      "features": [
+        "resource"
+      ],
+      "tier": 3,
+      "danger": "medium",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "east",
+          "to": "place:wild2_t3"
+        },
+        {
+          "dir": "down",
+          "to": "place:dungeon_t3"
+        },
+        {
+          "dir": "south",
+          "to": "place:wild_t2"
+        },
+        {
+          "dir": "north",
+          "to": "place:wild_t4"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "wild2_t3",
+      "region": "neutral",
+      "kind": "ruin",
+      "features": [
+        "resource"
+      ],
+      "tier": 3,
+      "danger": "medium",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:wild_t3"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "dungeon_t3",
+      "region": "neutral",
+      "kind": "dungeon",
+      "features": [
+        "resource"
+      ],
+      "tier": 3,
+      "danger": "medium",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "up",
+          "to": "place:wild_t3"
+        },
+        {
+          "dir": "in",
+          "to": "place:inner_t3",
+          "locked": true,
+          "key_def": "item:key_t3"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "inner_t3",
+      "region": "neutral",
+      "kind": "dungeon",
+      "features": [],
+      "tier": 3,
+      "danger": "medium",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "out",
+          "to": "place:dungeon_t3"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "wild_t4",
+      "region": "neutral",
+      "kind": "wilderness",
+      "features": [
+        "resource"
+      ],
+      "tier": 4,
+      "danger": "medium",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "east",
+          "to": "place:wild2_t4"
+        },
+        {
+          "dir": "down",
+          "to": "place:dungeon_t4"
+        },
+        {
+          "dir": "south",
+          "to": "place:wild_t3"
+        },
+        {
+          "dir": "north",
+          "to": "place:wild_t5"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "wild2_t4",
+      "region": "neutral",
+      "kind": "wilderness",
+      "features": [
+        "resource"
+      ],
+      "tier": 4,
+      "danger": "medium",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:wild_t4"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "dungeon_t4",
+      "region": "neutral",
+      "kind": "dungeon",
+      "features": [
+        "resource"
+      ],
+      "tier": 4,
+      "danger": "medium",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "up",
+          "to": "place:wild_t4"
+        },
+        {
+          "dir": "in",
+          "to": "place:inner_t4",
+          "locked": true,
+          "key_def": "item:key_t4"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "inner_t4",
+      "region": "neutral",
+      "kind": "dungeon",
+      "features": [],
+      "tier": 4,
+      "danger": "medium",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "out",
+          "to": "place:dungeon_t4"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "wild_t5",
+      "region": "neutral",
+      "kind": "wilderness",
+      "features": [
+        "resource"
+      ],
+      "tier": 5,
+      "danger": "high",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "east",
+          "to": "place:wild2_t5"
+        },
+        {
+          "dir": "down",
+          "to": "place:dungeon_t5"
+        },
+        {
+          "dir": "south",
+          "to": "place:wild_t4"
+        },
+        {
+          "dir": "north",
+          "to": "place:wild_t6"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "wild2_t5",
+      "region": "neutral",
+      "kind": "water",
+      "features": [
+        "resource"
+      ],
+      "tier": 5,
+      "danger": "high",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:wild_t5"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "dungeon_t5",
+      "region": "neutral",
+      "kind": "dungeon",
+      "features": [
+        "resource"
+      ],
+      "tier": 5,
+      "danger": "high",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "up",
+          "to": "place:wild_t5"
+        },
+        {
+          "dir": "in",
+          "to": "place:inner_t5",
+          "locked": true,
+          "key_def": "item:key_t5"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "inner_t5",
+      "region": "neutral",
+      "kind": "dungeon",
+      "features": [],
+      "tier": 5,
+      "danger": "high",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "out",
+          "to": "place:dungeon_t5"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "wild_t6",
+      "region": "neutral",
+      "kind": "wilderness",
+      "features": [
+        "resource"
+      ],
+      "tier": 6,
+      "danger": "high",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "east",
+          "to": "place:wild2_t6"
+        },
+        {
+          "dir": "down",
+          "to": "place:dungeon_t6"
+        },
+        {
+          "dir": "south",
+          "to": "place:wild_t5"
+        },
+        {
+          "dir": "north",
+          "to": "place:wild_t7"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "wild2_t6",
+      "region": "neutral",
+      "kind": "ruin",
+      "features": [
+        "resource"
+      ],
+      "tier": 6,
+      "danger": "high",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:wild_t6"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "dungeon_t6",
+      "region": "neutral",
+      "kind": "dungeon",
+      "features": [
+        "resource"
+      ],
+      "tier": 6,
+      "danger": "high",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "up",
+          "to": "place:wild_t6"
+        },
+        {
+          "dir": "in",
+          "to": "place:inner_t6",
+          "locked": true,
+          "key_def": "item:key_t6"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "inner_t6",
+      "region": "neutral",
+      "kind": "dungeon",
+      "features": [],
+      "tier": 6,
+      "danger": "high",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "out",
+          "to": "place:dungeon_t6"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "wild_t7",
+      "region": "neutral",
+      "kind": "wilderness",
+      "features": [
+        "resource"
+      ],
+      "tier": 7,
+      "danger": "high",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "east",
+          "to": "place:wild2_t7"
+        },
+        {
+          "dir": "down",
+          "to": "place:dungeon_t7"
+        },
+        {
+          "dir": "south",
+          "to": "place:wild_t6"
+        },
+        {
+          "dir": "north",
+          "to": "place:wild_t8"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "wild2_t7",
+      "region": "neutral",
+      "kind": "wilderness",
+      "features": [
+        "resource"
+      ],
+      "tier": 7,
+      "danger": "high",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:wild_t7"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "dungeon_t7",
+      "region": "neutral",
+      "kind": "dungeon",
+      "features": [
+        "resource"
+      ],
+      "tier": 7,
+      "danger": "high",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "up",
+          "to": "place:wild_t7"
+        },
+        {
+          "dir": "in",
+          "to": "place:inner_t7",
+          "locked": true,
+          "key_def": "item:key_t7"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "inner_t7",
+      "region": "neutral",
+      "kind": "dungeon",
+      "features": [],
+      "tier": 7,
+      "danger": "high",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "out",
+          "to": "place:dungeon_t7"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "wild_t8",
+      "region": "neutral",
+      "kind": "wilderness",
+      "features": [
+        "resource"
+      ],
+      "tier": 8,
+      "danger": "high",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "east",
+          "to": "place:wild2_t8"
+        },
+        {
+          "dir": "down",
+          "to": "place:dungeon_t8"
+        },
+        {
+          "dir": "south",
+          "to": "place:wild_t7"
+        },
+        {
+          "dir": "north",
+          "to": "place:wild_t9"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "wild2_t8",
+      "region": "neutral",
+      "kind": "water",
+      "features": [
+        "resource"
+      ],
+      "tier": 8,
+      "danger": "high",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:wild_t8"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "dungeon_t8",
+      "region": "neutral",
+      "kind": "dungeon",
+      "features": [
+        "resource"
+      ],
+      "tier": 8,
+      "danger": "high",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "up",
+          "to": "place:wild_t8"
+        },
+        {
+          "dir": "in",
+          "to": "place:inner_t8",
+          "locked": true,
+          "key_def": "item:key_t8"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "inner_t8",
+      "region": "neutral",
+      "kind": "dungeon",
+      "features": [],
+      "tier": 8,
+      "danger": "high",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "out",
+          "to": "place:dungeon_t8"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "wild_t9",
+      "region": "neutral",
+      "kind": "wilderness",
+      "features": [
+        "resource"
+      ],
+      "tier": 9,
+      "danger": "high",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "east",
+          "to": "place:wild2_t9"
+        },
+        {
+          "dir": "down",
+          "to": "place:dungeon_t9"
+        },
+        {
+          "dir": "south",
+          "to": "place:wild_t8"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "wild2_t9",
+      "region": "neutral",
+      "kind": "ruin",
+      "features": [
+        "resource"
+      ],
+      "tier": 9,
+      "danger": "high",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:wild_t9"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "dungeon_t9",
+      "region": "neutral",
+      "kind": "dungeon",
+      "features": [
+        "resource"
+      ],
+      "tier": 9,
+      "danger": "high",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "up",
+          "to": "place:wild_t9"
+        },
+        {
+          "dir": "in",
+          "to": "place:inner_t9",
+          "locked": true,
+          "key_def": "item:key_t9"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "inner_t9",
+      "region": "neutral",
+      "kind": "dungeon",
+      "features": [],
+      "tier": 9,
+      "danger": "high",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "out",
+          "to": "place:dungeon_t9"
+        }
+      ],
+      "owner_org": null
+    }
+  ],
+  "place_links": [
+    {
+      "place": "place:market_neutral",
+      "dir": "in",
+      "to": "place:gate_confluence"
+    }
+  ],
+  "items": [
+    {
+      "local": "weapon_t1_g1",
+      "kind": "blade",
+      "tier": 1,
+      "grade": 1,
+      "element": "none",
+      "slots": 1,
+      "cap": 33,
+      "dura_max": 100,
+      "modifiers": {
+        "vigor": 0,
+        "power": 40,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "weapon_t1_g2",
+      "kind": "blade",
+      "tier": 1,
+      "grade": 2,
+      "element": "none",
+      "slots": 2,
+      "cap": 38,
+      "dura_max": 110,
+      "modifiers": {
+        "vigor": 0,
+        "power": 50,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "weapon_t1_g3",
+      "kind": "blade",
+      "tier": 1,
+      "grade": 3,
+      "element": "none",
+      "slots": 3,
+      "cap": 44,
+      "dura_max": 120,
+      "modifiers": {
+        "vigor": 0,
+        "power": 60,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "weapon_t2_g1",
+      "kind": "blade",
+      "tier": 2,
+      "grade": 1,
+      "element": "none",
+      "slots": 1,
+      "cap": 50,
+      "dura_max": 130,
+      "modifiers": {
+        "vigor": 0,
+        "power": 72,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "weapon_t2_g2",
+      "kind": "blade",
+      "tier": 2,
+      "grade": 2,
+      "element": "none",
+      "slots": 2,
+      "cap": 57,
+      "dura_max": 140,
+      "modifiers": {
+        "vigor": 0,
+        "power": 90,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "weapon_t2_g3",
+      "kind": "blade",
+      "tier": 2,
+      "grade": 3,
+      "element": "none",
+      "slots": 3,
+      "cap": 66,
+      "dura_max": 150,
+      "modifiers": {
+        "vigor": 0,
+        "power": 108,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "weapon_t3_g1",
+      "kind": "blade",
+      "tier": 3,
+      "grade": 1,
+      "element": "none",
+      "slots": 1,
+      "cap": 73,
+      "dura_max": 160,
+      "modifiers": {
+        "vigor": 0,
+        "power": 128,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "weapon_t3_g2",
+      "kind": "blade",
+      "tier": 3,
+      "grade": 2,
+      "element": "none",
+      "slots": 2,
+      "cap": 84,
+      "dura_max": 170,
+      "modifiers": {
+        "vigor": 0,
+        "power": 160,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "weapon_t3_g3",
+      "kind": "blade",
+      "tier": 3,
+      "grade": 3,
+      "element": "none",
+      "slots": 3,
+      "cap": 97,
+      "dura_max": 180,
+      "modifiers": {
+        "vigor": 0,
+        "power": 192,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "weapon_t4_g1",
+      "kind": "blade",
+      "tier": 4,
+      "grade": 1,
+      "element": "none",
+      "slots": 1,
+      "cap": 109,
+      "dura_max": 190,
+      "modifiers": {
+        "vigor": 0,
+        "power": 232,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "weapon_t4_g2",
+      "kind": "blade",
+      "tier": 4,
+      "grade": 2,
+      "element": "none",
+      "slots": 2,
+      "cap": 125,
+      "dura_max": 200,
+      "modifiers": {
+        "vigor": 0,
+        "power": 290,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "weapon_t4_g3",
+      "kind": "blade",
+      "tier": 4,
+      "grade": 3,
+      "element": "none",
+      "slots": 3,
+      "cap": 145,
+      "dura_max": 210,
+      "modifiers": {
+        "vigor": 0,
+        "power": 348,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "weapon_t5_g1",
+      "kind": "blade",
+      "tier": 5,
+      "grade": 1,
+      "element": "none",
+      "slots": 1,
+      "cap": 165,
+      "dura_max": 220,
+      "modifiers": {
+        "vigor": 0,
+        "power": 420,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "weapon_t5_g2",
+      "kind": "blade",
+      "tier": 5,
+      "grade": 2,
+      "element": "none",
+      "slots": 2,
+      "cap": 190,
+      "dura_max": 230,
+      "modifiers": {
+        "vigor": 0,
+        "power": 525,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "weapon_t5_g3",
+      "kind": "blade",
+      "tier": 5,
+      "grade": 3,
+      "element": "none",
+      "slots": 3,
+      "cap": 220,
+      "dura_max": 240,
+      "modifiers": {
+        "vigor": 0,
+        "power": 630,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "weapon_t6_g1",
+      "kind": "blade",
+      "tier": 6,
+      "grade": 1,
+      "element": "none",
+      "slots": 1,
+      "cap": 248,
+      "dura_max": 250,
+      "modifiers": {
+        "vigor": 0,
+        "power": 756,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "weapon_t6_g2",
+      "kind": "blade",
+      "tier": 6,
+      "grade": 2,
+      "element": "none",
+      "slots": 2,
+      "cap": 285,
+      "dura_max": 260,
+      "modifiers": {
+        "vigor": 0,
+        "power": 945,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "weapon_t6_g3",
+      "kind": "blade",
+      "tier": 6,
+      "grade": 3,
+      "element": "none",
+      "slots": 3,
+      "cap": 330,
+      "dura_max": 270,
+      "modifiers": {
+        "vigor": 0,
+        "power": 1134,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "weapon_t7_g1",
+      "kind": "blade",
+      "tier": 7,
+      "grade": 1,
+      "element": "none",
+      "slots": 1,
+      "cap": 363,
+      "dura_max": 280,
+      "modifiers": {
+        "vigor": 0,
+        "power": 1360,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "weapon_t7_g2",
+      "kind": "blade",
+      "tier": 7,
+      "grade": 2,
+      "element": "none",
+      "slots": 2,
+      "cap": 418,
+      "dura_max": 290,
+      "modifiers": {
+        "vigor": 0,
+        "power": 1700,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "weapon_t7_g3",
+      "kind": "blade",
+      "tier": 7,
+      "grade": 3,
+      "element": "none",
+      "slots": 3,
+      "cap": 484,
+      "dura_max": 300,
+      "modifiers": {
+        "vigor": 0,
+        "power": 2040,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "weapon_t8_g1",
+      "kind": "blade",
+      "tier": 8,
+      "grade": 1,
+      "element": "none",
+      "slots": 1,
+      "cap": 545,
+      "dura_max": 310,
+      "modifiers": {
+        "vigor": 0,
+        "power": 2440,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "weapon_t8_g2",
+      "kind": "blade",
+      "tier": 8,
+      "grade": 2,
+      "element": "none",
+      "slots": 2,
+      "cap": 627,
+      "dura_max": 320,
+      "modifiers": {
+        "vigor": 0,
+        "power": 3050,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "weapon_t8_g3",
+      "kind": "blade",
+      "tier": 8,
+      "grade": 3,
+      "element": "none",
+      "slots": 3,
+      "cap": 726,
+      "dura_max": 330,
+      "modifiers": {
+        "vigor": 0,
+        "power": 3660,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "weapon_t9_g1",
+      "kind": "blade",
+      "tier": 9,
+      "grade": 1,
+      "element": "none",
+      "slots": 1,
+      "cap": 825,
+      "dura_max": 340,
+      "modifiers": {
+        "vigor": 0,
+        "power": 4400,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "weapon_t9_g2",
+      "kind": "blade",
+      "tier": 9,
+      "grade": 2,
+      "element": "none",
+      "slots": 2,
+      "cap": 950,
+      "dura_max": 350,
+      "modifiers": {
+        "vigor": 0,
+        "power": 5500,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "weapon_t9_g3",
+      "kind": "blade",
+      "tier": 9,
+      "grade": 3,
+      "element": "none",
+      "slots": 3,
+      "cap": 1100,
+      "dura_max": 360,
+      "modifiers": {
+        "vigor": 0,
+        "power": 6600,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "armor_t1_g1",
+      "kind": "light_armor",
+      "tier": 1,
+      "grade": 1,
+      "element": "none",
+      "slots": 1,
+      "cap": 33,
+      "dura_max": 100,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 40,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "armor_t1_g2",
+      "kind": "light_armor",
+      "tier": 1,
+      "grade": 2,
+      "element": "none",
+      "slots": 2,
+      "cap": 38,
+      "dura_max": 110,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 50,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "armor_t1_g3",
+      "kind": "light_armor",
+      "tier": 1,
+      "grade": 3,
+      "element": "none",
+      "slots": 3,
+      "cap": 44,
+      "dura_max": 120,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 60,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "armor_t2_g1",
+      "kind": "light_armor",
+      "tier": 2,
+      "grade": 1,
+      "element": "none",
+      "slots": 1,
+      "cap": 50,
+      "dura_max": 130,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 72,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "armor_t2_g2",
+      "kind": "light_armor",
+      "tier": 2,
+      "grade": 2,
+      "element": "none",
+      "slots": 2,
+      "cap": 57,
+      "dura_max": 140,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 90,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "armor_t2_g3",
+      "kind": "light_armor",
+      "tier": 2,
+      "grade": 3,
+      "element": "none",
+      "slots": 3,
+      "cap": 66,
+      "dura_max": 150,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 108,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "armor_t3_g1",
+      "kind": "light_armor",
+      "tier": 3,
+      "grade": 1,
+      "element": "none",
+      "slots": 1,
+      "cap": 73,
+      "dura_max": 160,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 128,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "armor_t3_g2",
+      "kind": "light_armor",
+      "tier": 3,
+      "grade": 2,
+      "element": "none",
+      "slots": 2,
+      "cap": 84,
+      "dura_max": 170,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 160,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "armor_t3_g3",
+      "kind": "light_armor",
+      "tier": 3,
+      "grade": 3,
+      "element": "none",
+      "slots": 3,
+      "cap": 97,
+      "dura_max": 180,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 192,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "armor_t4_g1",
+      "kind": "light_armor",
+      "tier": 4,
+      "grade": 1,
+      "element": "none",
+      "slots": 1,
+      "cap": 109,
+      "dura_max": 190,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 232,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "armor_t4_g2",
+      "kind": "light_armor",
+      "tier": 4,
+      "grade": 2,
+      "element": "none",
+      "slots": 2,
+      "cap": 125,
+      "dura_max": 200,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 290,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "armor_t4_g3",
+      "kind": "light_armor",
+      "tier": 4,
+      "grade": 3,
+      "element": "none",
+      "slots": 3,
+      "cap": 145,
+      "dura_max": 210,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 348,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "armor_t5_g1",
+      "kind": "light_armor",
+      "tier": 5,
+      "grade": 1,
+      "element": "none",
+      "slots": 1,
+      "cap": 165,
+      "dura_max": 220,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 420,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "armor_t5_g2",
+      "kind": "light_armor",
+      "tier": 5,
+      "grade": 2,
+      "element": "none",
+      "slots": 2,
+      "cap": 190,
+      "dura_max": 230,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 525,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "armor_t5_g3",
+      "kind": "light_armor",
+      "tier": 5,
+      "grade": 3,
+      "element": "none",
+      "slots": 3,
+      "cap": 220,
+      "dura_max": 240,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 630,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "armor_t6_g1",
+      "kind": "light_armor",
+      "tier": 6,
+      "grade": 1,
+      "element": "none",
+      "slots": 1,
+      "cap": 248,
+      "dura_max": 250,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 756,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "armor_t6_g2",
+      "kind": "light_armor",
+      "tier": 6,
+      "grade": 2,
+      "element": "none",
+      "slots": 2,
+      "cap": 285,
+      "dura_max": 260,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 945,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "armor_t6_g3",
+      "kind": "light_armor",
+      "tier": 6,
+      "grade": 3,
+      "element": "none",
+      "slots": 3,
+      "cap": 330,
+      "dura_max": 270,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 1134,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "armor_t7_g1",
+      "kind": "light_armor",
+      "tier": 7,
+      "grade": 1,
+      "element": "none",
+      "slots": 1,
+      "cap": 363,
+      "dura_max": 280,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 1360,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "armor_t7_g2",
+      "kind": "light_armor",
+      "tier": 7,
+      "grade": 2,
+      "element": "none",
+      "slots": 2,
+      "cap": 418,
+      "dura_max": 290,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 1700,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "armor_t7_g3",
+      "kind": "light_armor",
+      "tier": 7,
+      "grade": 3,
+      "element": "none",
+      "slots": 3,
+      "cap": 484,
+      "dura_max": 300,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 2040,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "armor_t8_g1",
+      "kind": "light_armor",
+      "tier": 8,
+      "grade": 1,
+      "element": "none",
+      "slots": 1,
+      "cap": 545,
+      "dura_max": 310,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 2440,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "armor_t8_g2",
+      "kind": "light_armor",
+      "tier": 8,
+      "grade": 2,
+      "element": "none",
+      "slots": 2,
+      "cap": 627,
+      "dura_max": 320,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 3050,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "armor_t8_g3",
+      "kind": "light_armor",
+      "tier": 8,
+      "grade": 3,
+      "element": "none",
+      "slots": 3,
+      "cap": 726,
+      "dura_max": 330,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 3660,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "armor_t9_g1",
+      "kind": "light_armor",
+      "tier": 9,
+      "grade": 1,
+      "element": "none",
+      "slots": 1,
+      "cap": 825,
+      "dura_max": 340,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 4400,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "armor_t9_g2",
+      "kind": "light_armor",
+      "tier": 9,
+      "grade": 2,
+      "element": "none",
+      "slots": 2,
+      "cap": 950,
+      "dura_max": 350,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 5500,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "armor_t9_g3",
+      "kind": "light_armor",
+      "tier": 9,
+      "grade": 3,
+      "element": "none",
+      "slots": 3,
+      "cap": 1100,
+      "dura_max": 360,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 6600,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "ring_t1_g1",
+      "kind": "ring",
+      "tier": 1,
+      "grade": 1,
+      "element": "none",
+      "slots": 1,
+      "cap": 33,
+      "dura_max": 100,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 40
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "ring_t1_g2",
+      "kind": "ring",
+      "tier": 1,
+      "grade": 2,
+      "element": "none",
+      "slots": 2,
+      "cap": 38,
+      "dura_max": 110,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 50
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "ring_t1_g3",
+      "kind": "ring",
+      "tier": 1,
+      "grade": 3,
+      "element": "none",
+      "slots": 3,
+      "cap": 44,
+      "dura_max": 120,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 60
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "ring_t2_g1",
+      "kind": "ring",
+      "tier": 2,
+      "grade": 1,
+      "element": "none",
+      "slots": 1,
+      "cap": 50,
+      "dura_max": 130,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 72
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "ring_t2_g2",
+      "kind": "ring",
+      "tier": 2,
+      "grade": 2,
+      "element": "none",
+      "slots": 2,
+      "cap": 57,
+      "dura_max": 140,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 90
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "ring_t2_g3",
+      "kind": "ring",
+      "tier": 2,
+      "grade": 3,
+      "element": "none",
+      "slots": 3,
+      "cap": 66,
+      "dura_max": 150,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 108
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "ring_t3_g1",
+      "kind": "ring",
+      "tier": 3,
+      "grade": 1,
+      "element": "none",
+      "slots": 1,
+      "cap": 73,
+      "dura_max": 160,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 128
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "ring_t3_g2",
+      "kind": "ring",
+      "tier": 3,
+      "grade": 2,
+      "element": "none",
+      "slots": 2,
+      "cap": 84,
+      "dura_max": 170,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 160
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "ring_t3_g3",
+      "kind": "ring",
+      "tier": 3,
+      "grade": 3,
+      "element": "none",
+      "slots": 3,
+      "cap": 97,
+      "dura_max": 180,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 192
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "ring_t4_g1",
+      "kind": "ring",
+      "tier": 4,
+      "grade": 1,
+      "element": "none",
+      "slots": 1,
+      "cap": 109,
+      "dura_max": 190,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 232
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "ring_t4_g2",
+      "kind": "ring",
+      "tier": 4,
+      "grade": 2,
+      "element": "none",
+      "slots": 2,
+      "cap": 125,
+      "dura_max": 200,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 290
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "ring_t4_g3",
+      "kind": "ring",
+      "tier": 4,
+      "grade": 3,
+      "element": "none",
+      "slots": 3,
+      "cap": 145,
+      "dura_max": 210,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 348
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "ring_t5_g1",
+      "kind": "ring",
+      "tier": 5,
+      "grade": 1,
+      "element": "none",
+      "slots": 1,
+      "cap": 165,
+      "dura_max": 220,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 420
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "ring_t5_g2",
+      "kind": "ring",
+      "tier": 5,
+      "grade": 2,
+      "element": "none",
+      "slots": 2,
+      "cap": 190,
+      "dura_max": 230,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 525
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "ring_t5_g3",
+      "kind": "ring",
+      "tier": 5,
+      "grade": 3,
+      "element": "none",
+      "slots": 3,
+      "cap": 220,
+      "dura_max": 240,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 630
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "ring_t6_g1",
+      "kind": "ring",
+      "tier": 6,
+      "grade": 1,
+      "element": "none",
+      "slots": 1,
+      "cap": 248,
+      "dura_max": 250,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 756
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "ring_t6_g2",
+      "kind": "ring",
+      "tier": 6,
+      "grade": 2,
+      "element": "none",
+      "slots": 2,
+      "cap": 285,
+      "dura_max": 260,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 945
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "ring_t6_g3",
+      "kind": "ring",
+      "tier": 6,
+      "grade": 3,
+      "element": "none",
+      "slots": 3,
+      "cap": 330,
+      "dura_max": 270,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 1134
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "ring_t7_g1",
+      "kind": "ring",
+      "tier": 7,
+      "grade": 1,
+      "element": "none",
+      "slots": 1,
+      "cap": 363,
+      "dura_max": 280,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 1360
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "ring_t7_g2",
+      "kind": "ring",
+      "tier": 7,
+      "grade": 2,
+      "element": "none",
+      "slots": 2,
+      "cap": 418,
+      "dura_max": 290,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 1700
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "ring_t7_g3",
+      "kind": "ring",
+      "tier": 7,
+      "grade": 3,
+      "element": "none",
+      "slots": 3,
+      "cap": 484,
+      "dura_max": 300,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 2040
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "ring_t8_g1",
+      "kind": "ring",
+      "tier": 8,
+      "grade": 1,
+      "element": "none",
+      "slots": 1,
+      "cap": 545,
+      "dura_max": 310,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 2440
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "ring_t8_g2",
+      "kind": "ring",
+      "tier": 8,
+      "grade": 2,
+      "element": "none",
+      "slots": 2,
+      "cap": 627,
+      "dura_max": 320,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 3050
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "ring_t8_g3",
+      "kind": "ring",
+      "tier": 8,
+      "grade": 3,
+      "element": "none",
+      "slots": 3,
+      "cap": 726,
+      "dura_max": 330,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 3660
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "ring_t9_g1",
+      "kind": "ring",
+      "tier": 9,
+      "grade": 1,
+      "element": "none",
+      "slots": 1,
+      "cap": 825,
+      "dura_max": 340,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 4400
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "ring_t9_g2",
+      "kind": "ring",
+      "tier": 9,
+      "grade": 2,
+      "element": "none",
+      "slots": 2,
+      "cap": 950,
+      "dura_max": 350,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 5500
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "ring_t9_g3",
+      "kind": "ring",
+      "tier": 9,
+      "grade": 3,
+      "element": "none",
+      "slots": 3,
+      "cap": 1100,
+      "dura_max": 360,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 6600
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "potion_restore_t1_g1",
+      "kind": "potion",
+      "tier": 1,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "restore",
+        "vigor": 1200
+      }
+    },
+    {
+      "local": "potion_restore_t1_g2",
+      "kind": "potion",
+      "tier": 1,
+      "grade": 2,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "restore",
+        "vigor": 1600
+      }
+    },
+    {
+      "local": "potion_restore_t1_g3",
+      "kind": "potion",
+      "tier": 1,
+      "grade": 3,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "restore",
+        "vigor": 2000
+      }
+    },
+    {
+      "local": "potion_bt_t1",
+      "kind": "potion",
+      "tier": 1,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "breakthrough",
+        "bonus": 1000
+      }
+    },
+    {
+      "local": "scroll_strike_t1",
+      "kind": "scroll",
+      "tier": 1,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "strike",
+        "levels": 2
+      }
+    },
+    {
+      "local": "scroll_guard_t1",
+      "kind": "scroll",
+      "tier": 1,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "guard",
+        "levels": 2
+      }
+    },
+    {
+      "local": "scroll_move_t1",
+      "kind": "scroll",
+      "tier": 1,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "move",
+        "levels": 2
+      }
+    },
+    {
+      "local": "scroll_inner_t1",
+      "kind": "scroll",
+      "tier": 1,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "inner",
+        "levels": 2
+      }
+    },
+    {
+      "local": "map_t1",
+      "kind": "map",
+      "tier": 1,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "map",
+        "places": [
+          "place:wild_t1",
+          "place:wild2_t1",
+          "place:dungeon_t1",
+          "place:inner_t1"
+        ]
+      }
+    },
+    {
+      "local": "key_t1",
+      "kind": "key",
+      "tier": 1,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "unlock"
+      }
+    },
+    {
+      "local": "ore_t1",
+      "kind": "ore",
+      "tier": 1,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "herb_t1",
+      "kind": "herb",
+      "tier": 1,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "potion_restore_t2_g1",
+      "kind": "potion",
+      "tier": 2,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "restore",
+        "vigor": 2160
+      }
+    },
+    {
+      "local": "potion_restore_t2_g2",
+      "kind": "potion",
+      "tier": 2,
+      "grade": 2,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "restore",
+        "vigor": 2880
+      }
+    },
+    {
+      "local": "potion_restore_t2_g3",
+      "kind": "potion",
+      "tier": 2,
+      "grade": 3,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "restore",
+        "vigor": 3600
+      }
+    },
+    {
+      "local": "potion_bt_t2",
+      "kind": "potion",
+      "tier": 2,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "breakthrough",
+        "bonus": 1000
+      }
+    },
+    {
+      "local": "scroll_strike_t2",
+      "kind": "scroll",
+      "tier": 2,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "strike",
+        "levels": 2
+      }
+    },
+    {
+      "local": "scroll_guard_t2",
+      "kind": "scroll",
+      "tier": 2,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "guard",
+        "levels": 2
+      }
+    },
+    {
+      "local": "scroll_move_t2",
+      "kind": "scroll",
+      "tier": 2,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "move",
+        "levels": 2
+      }
+    },
+    {
+      "local": "scroll_inner_t2",
+      "kind": "scroll",
+      "tier": 2,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "inner",
+        "levels": 2
+      }
+    },
+    {
+      "local": "map_t2",
+      "kind": "map",
+      "tier": 2,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "map",
+        "places": [
+          "place:wild_t2",
+          "place:wild2_t2",
+          "place:dungeon_t2",
+          "place:inner_t2"
+        ]
+      }
+    },
+    {
+      "local": "key_t2",
+      "kind": "key",
+      "tier": 2,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "unlock"
+      }
+    },
+    {
+      "local": "ore_t2",
+      "kind": "ore",
+      "tier": 2,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "herb_t2",
+      "kind": "herb",
+      "tier": 2,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "potion_restore_t3_g1",
+      "kind": "potion",
+      "tier": 3,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "restore",
+        "vigor": 3840
+      }
+    },
+    {
+      "local": "potion_restore_t3_g2",
+      "kind": "potion",
+      "tier": 3,
+      "grade": 2,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "restore",
+        "vigor": 5120
+      }
+    },
+    {
+      "local": "potion_restore_t3_g3",
+      "kind": "potion",
+      "tier": 3,
+      "grade": 3,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "restore",
+        "vigor": 6400
+      }
+    },
+    {
+      "local": "potion_bt_t3",
+      "kind": "potion",
+      "tier": 3,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "breakthrough",
+        "bonus": 1000
+      }
+    },
+    {
+      "local": "scroll_strike_t3",
+      "kind": "scroll",
+      "tier": 3,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "strike",
+        "levels": 2
+      }
+    },
+    {
+      "local": "scroll_guard_t3",
+      "kind": "scroll",
+      "tier": 3,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "guard",
+        "levels": 2
+      }
+    },
+    {
+      "local": "scroll_move_t3",
+      "kind": "scroll",
+      "tier": 3,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "move",
+        "levels": 2
+      }
+    },
+    {
+      "local": "scroll_inner_t3",
+      "kind": "scroll",
+      "tier": 3,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "inner",
+        "levels": 2
+      }
+    },
+    {
+      "local": "map_t3",
+      "kind": "map",
+      "tier": 3,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "map",
+        "places": [
+          "place:wild_t3",
+          "place:wild2_t3",
+          "place:dungeon_t3",
+          "place:inner_t3"
+        ]
+      }
+    },
+    {
+      "local": "key_t3",
+      "kind": "key",
+      "tier": 3,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "unlock"
+      }
+    },
+    {
+      "local": "ore_t3",
+      "kind": "ore",
+      "tier": 3,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "herb_t3",
+      "kind": "herb",
+      "tier": 3,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "potion_restore_t4_g1",
+      "kind": "potion",
+      "tier": 4,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "restore",
+        "vigor": 6960
+      }
+    },
+    {
+      "local": "potion_restore_t4_g2",
+      "kind": "potion",
+      "tier": 4,
+      "grade": 2,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "restore",
+        "vigor": 9280
+      }
+    },
+    {
+      "local": "potion_restore_t4_g3",
+      "kind": "potion",
+      "tier": 4,
+      "grade": 3,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "restore",
+        "vigor": 11600
+      }
+    },
+    {
+      "local": "potion_bt_t4",
+      "kind": "potion",
+      "tier": 4,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "breakthrough",
+        "bonus": 1000
+      }
+    },
+    {
+      "local": "scroll_strike_t4",
+      "kind": "scroll",
+      "tier": 4,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "strike",
+        "levels": 2
+      }
+    },
+    {
+      "local": "scroll_guard_t4",
+      "kind": "scroll",
+      "tier": 4,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "guard",
+        "levels": 2
+      }
+    },
+    {
+      "local": "scroll_move_t4",
+      "kind": "scroll",
+      "tier": 4,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "move",
+        "levels": 2
+      }
+    },
+    {
+      "local": "scroll_inner_t4",
+      "kind": "scroll",
+      "tier": 4,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "inner",
+        "levels": 2
+      }
+    },
+    {
+      "local": "map_t4",
+      "kind": "map",
+      "tier": 4,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "map",
+        "places": [
+          "place:wild_t4",
+          "place:wild2_t4",
+          "place:dungeon_t4",
+          "place:inner_t4"
+        ]
+      }
+    },
+    {
+      "local": "key_t4",
+      "kind": "key",
+      "tier": 4,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "unlock"
+      }
+    },
+    {
+      "local": "ore_t4",
+      "kind": "ore",
+      "tier": 4,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "herb_t4",
+      "kind": "herb",
+      "tier": 4,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "potion_restore_t5_g1",
+      "kind": "potion",
+      "tier": 5,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "restore",
+        "vigor": 12600
+      }
+    },
+    {
+      "local": "potion_restore_t5_g2",
+      "kind": "potion",
+      "tier": 5,
+      "grade": 2,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "restore",
+        "vigor": 16800
+      }
+    },
+    {
+      "local": "potion_restore_t5_g3",
+      "kind": "potion",
+      "tier": 5,
+      "grade": 3,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "restore",
+        "vigor": 21000
+      }
+    },
+    {
+      "local": "potion_bt_t5",
+      "kind": "potion",
+      "tier": 5,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "breakthrough",
+        "bonus": 1000
+      }
+    },
+    {
+      "local": "scroll_strike_t5",
+      "kind": "scroll",
+      "tier": 5,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "strike",
+        "levels": 2
+      }
+    },
+    {
+      "local": "scroll_guard_t5",
+      "kind": "scroll",
+      "tier": 5,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "guard",
+        "levels": 2
+      }
+    },
+    {
+      "local": "scroll_move_t5",
+      "kind": "scroll",
+      "tier": 5,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "move",
+        "levels": 2
+      }
+    },
+    {
+      "local": "scroll_inner_t5",
+      "kind": "scroll",
+      "tier": 5,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "inner",
+        "levels": 2
+      }
+    },
+    {
+      "local": "map_t5",
+      "kind": "map",
+      "tier": 5,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "map",
+        "places": [
+          "place:wild_t5",
+          "place:wild2_t5",
+          "place:dungeon_t5",
+          "place:inner_t5"
+        ]
+      }
+    },
+    {
+      "local": "key_t5",
+      "kind": "key",
+      "tier": 5,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "unlock"
+      }
+    },
+    {
+      "local": "ore_t5",
+      "kind": "ore",
+      "tier": 5,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "herb_t5",
+      "kind": "herb",
+      "tier": 5,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "potion_restore_t6_g1",
+      "kind": "potion",
+      "tier": 6,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "restore",
+        "vigor": 22680
+      }
+    },
+    {
+      "local": "potion_restore_t6_g2",
+      "kind": "potion",
+      "tier": 6,
+      "grade": 2,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "restore",
+        "vigor": 30240
+      }
+    },
+    {
+      "local": "potion_restore_t6_g3",
+      "kind": "potion",
+      "tier": 6,
+      "grade": 3,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "restore",
+        "vigor": 37800
+      }
+    },
+    {
+      "local": "potion_bt_t6",
+      "kind": "potion",
+      "tier": 6,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "breakthrough",
+        "bonus": 1000
+      }
+    },
+    {
+      "local": "scroll_strike_t6",
+      "kind": "scroll",
+      "tier": 6,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "strike",
+        "levels": 2
+      }
+    },
+    {
+      "local": "scroll_guard_t6",
+      "kind": "scroll",
+      "tier": 6,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "guard",
+        "levels": 2
+      }
+    },
+    {
+      "local": "scroll_move_t6",
+      "kind": "scroll",
+      "tier": 6,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "move",
+        "levels": 2
+      }
+    },
+    {
+      "local": "scroll_inner_t6",
+      "kind": "scroll",
+      "tier": 6,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "inner",
+        "levels": 2
+      }
+    },
+    {
+      "local": "map_t6",
+      "kind": "map",
+      "tier": 6,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "map",
+        "places": [
+          "place:wild_t6",
+          "place:wild2_t6",
+          "place:dungeon_t6",
+          "place:inner_t6"
+        ]
+      }
+    },
+    {
+      "local": "key_t6",
+      "kind": "key",
+      "tier": 6,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "unlock"
+      }
+    },
+    {
+      "local": "ore_t6",
+      "kind": "ore",
+      "tier": 6,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "herb_t6",
+      "kind": "herb",
+      "tier": 6,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "potion_restore_t7_g1",
+      "kind": "potion",
+      "tier": 7,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "restore",
+        "vigor": 40800
+      }
+    },
+    {
+      "local": "potion_restore_t7_g2",
+      "kind": "potion",
+      "tier": 7,
+      "grade": 2,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "restore",
+        "vigor": 54400
+      }
+    },
+    {
+      "local": "potion_restore_t7_g3",
+      "kind": "potion",
+      "tier": 7,
+      "grade": 3,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "restore",
+        "vigor": 68000
+      }
+    },
+    {
+      "local": "potion_bt_t7",
+      "kind": "potion",
+      "tier": 7,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "breakthrough",
+        "bonus": 1000
+      }
+    },
+    {
+      "local": "scroll_strike_t7",
+      "kind": "scroll",
+      "tier": 7,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "strike",
+        "levels": 2
+      }
+    },
+    {
+      "local": "scroll_guard_t7",
+      "kind": "scroll",
+      "tier": 7,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "guard",
+        "levels": 2
+      }
+    },
+    {
+      "local": "scroll_move_t7",
+      "kind": "scroll",
+      "tier": 7,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "move",
+        "levels": 2
+      }
+    },
+    {
+      "local": "scroll_inner_t7",
+      "kind": "scroll",
+      "tier": 7,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "inner",
+        "levels": 2
+      }
+    },
+    {
+      "local": "map_t7",
+      "kind": "map",
+      "tier": 7,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "map",
+        "places": [
+          "place:wild_t7",
+          "place:wild2_t7",
+          "place:dungeon_t7",
+          "place:inner_t7"
+        ]
+      }
+    },
+    {
+      "local": "key_t7",
+      "kind": "key",
+      "tier": 7,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "unlock"
+      }
+    },
+    {
+      "local": "ore_t7",
+      "kind": "ore",
+      "tier": 7,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "herb_t7",
+      "kind": "herb",
+      "tier": 7,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "potion_restore_t8_g1",
+      "kind": "potion",
+      "tier": 8,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "restore",
+        "vigor": 73200
+      }
+    },
+    {
+      "local": "potion_restore_t8_g2",
+      "kind": "potion",
+      "tier": 8,
+      "grade": 2,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "restore",
+        "vigor": 97600
+      }
+    },
+    {
+      "local": "potion_restore_t8_g3",
+      "kind": "potion",
+      "tier": 8,
+      "grade": 3,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "restore",
+        "vigor": 122000
+      }
+    },
+    {
+      "local": "potion_bt_t8",
+      "kind": "potion",
+      "tier": 8,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "breakthrough",
+        "bonus": 1000
+      }
+    },
+    {
+      "local": "scroll_strike_t8",
+      "kind": "scroll",
+      "tier": 8,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "strike",
+        "levels": 2
+      }
+    },
+    {
+      "local": "scroll_guard_t8",
+      "kind": "scroll",
+      "tier": 8,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "guard",
+        "levels": 2
+      }
+    },
+    {
+      "local": "scroll_move_t8",
+      "kind": "scroll",
+      "tier": 8,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "move",
+        "levels": 2
+      }
+    },
+    {
+      "local": "scroll_inner_t8",
+      "kind": "scroll",
+      "tier": 8,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "inner",
+        "levels": 2
+      }
+    },
+    {
+      "local": "map_t8",
+      "kind": "map",
+      "tier": 8,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "map",
+        "places": [
+          "place:wild_t8",
+          "place:wild2_t8",
+          "place:dungeon_t8",
+          "place:inner_t8"
+        ]
+      }
+    },
+    {
+      "local": "key_t8",
+      "kind": "key",
+      "tier": 8,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "unlock"
+      }
+    },
+    {
+      "local": "ore_t8",
+      "kind": "ore",
+      "tier": 8,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "herb_t8",
+      "kind": "herb",
+      "tier": 8,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "potion_restore_t9_g1",
+      "kind": "potion",
+      "tier": 9,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "restore",
+        "vigor": 132000
+      }
+    },
+    {
+      "local": "potion_restore_t9_g2",
+      "kind": "potion",
+      "tier": 9,
+      "grade": 2,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "restore",
+        "vigor": 176000
+      }
+    },
+    {
+      "local": "potion_restore_t9_g3",
+      "kind": "potion",
+      "tier": 9,
+      "grade": 3,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "restore",
+        "vigor": 220000
+      }
+    },
+    {
+      "local": "potion_bt_t9",
+      "kind": "potion",
+      "tier": 9,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "breakthrough",
+        "bonus": 1000
+      }
+    },
+    {
+      "local": "scroll_strike_t9",
+      "kind": "scroll",
+      "tier": 9,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "strike",
+        "levels": 2
+      }
+    },
+    {
+      "local": "scroll_guard_t9",
+      "kind": "scroll",
+      "tier": 9,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "guard",
+        "levels": 2
+      }
+    },
+    {
+      "local": "scroll_move_t9",
+      "kind": "scroll",
+      "tier": 9,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "move",
+        "levels": 2
+      }
+    },
+    {
+      "local": "scroll_inner_t9",
+      "kind": "scroll",
+      "tier": 9,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "learn",
+        "skill": "inner",
+        "levels": 2
+      }
+    },
+    {
+      "local": "map_t9",
+      "kind": "map",
+      "tier": 9,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "map",
+        "places": [
+          "place:wild_t9",
+          "place:wild2_t9",
+          "place:dungeon_t9",
+          "place:inner_t9"
+        ]
+      }
+    },
+    {
+      "local": "key_t9",
+      "kind": "key",
+      "tier": 9,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "unlock"
+      }
+    },
+    {
+      "local": "ore_t9",
+      "kind": "ore",
+      "tier": 9,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    },
+    {
+      "local": "herb_t9",
+      "kind": "herb",
+      "tier": 9,
+      "grade": 1,
+      "element": "none",
+      "slots": 0,
+      "cap": 0,
+      "dura_max": 0,
+      "modifiers": {
+        "vigor": 0,
+        "power": 0,
+        "guard": 0,
+        "speed": 0
+      },
+      "effect": {
+        "kind": "none"
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "local": "deliver_t1",
+      "tpl": "deliver",
+      "tier": 1,
+      "stage": 1,
+      "condition": {
+        "tpl": "deliver",
+        "item_def": "item:herb_t1",
+        "count": 2,
+        "to_place": "place:camp_neutral",
+        "to_char": null
+      },
+      "reward_spec": {
+        "coin": 100,
+        "xp": 300,
+        "potential": 30,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "find_t1",
+      "tpl": "find",
+      "tier": 1,
+      "stage": 1,
+      "condition": {
+        "tpl": "find",
+        "target": "char:quest_giver"
+      },
+      "reward_spec": {
+        "coin": 80,
+        "xp": 240,
+        "potential": 24,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "slay_t1",
+      "tpl": "slay",
+      "tier": 1,
+      "stage": 1,
+      "condition": {
+        "tpl": "slay",
+        "target": null,
+        "archetype": "monster",
+        "tier": 1,
+        "count": 1
+      },
+      "reward_spec": {
+        "coin": 140,
+        "xp": 420,
+        "potential": 42,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "gather_t1",
+      "tpl": "gather",
+      "tier": 1,
+      "stage": 1,
+      "condition": {
+        "tpl": "gather",
+        "item_def": "item:ore_t1",
+        "count": 3,
+        "to_place": "place:market_ring"
+      },
+      "reward_spec": {
+        "coin": 110,
+        "xp": 330,
+        "potential": 33,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "reach_t1",
+      "tpl": "reach",
+      "tier": 1,
+      "stage": 1,
+      "condition": {
+        "tpl": "reach",
+        "mode": "place",
+        "place": "place:dungeon_t1"
+      },
+      "reward_spec": {
+        "coin": 70,
+        "xp": 210,
+        "potential": 21,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "deliver_t2",
+      "tpl": "deliver",
+      "tier": 2,
+      "stage": 1,
+      "condition": {
+        "tpl": "deliver",
+        "item_def": "item:herb_t2",
+        "count": 2,
+        "to_place": "place:camp_neutral",
+        "to_char": null
+      },
+      "reward_spec": {
+        "coin": 150,
+        "xp": 450,
+        "potential": 45,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "find_t2",
+      "tpl": "find",
+      "tier": 2,
+      "stage": 1,
+      "condition": {
+        "tpl": "find",
+        "target": "char:quest_giver"
+      },
+      "reward_spec": {
+        "coin": 120,
+        "xp": 360,
+        "potential": 36,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "slay_t2",
+      "tpl": "slay",
+      "tier": 2,
+      "stage": 1,
+      "condition": {
+        "tpl": "slay",
+        "target": null,
+        "archetype": "monster",
+        "tier": 2,
+        "count": 1
+      },
+      "reward_spec": {
+        "coin": 210,
+        "xp": 630,
+        "potential": 63,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "gather_t2",
+      "tpl": "gather",
+      "tier": 2,
+      "stage": 1,
+      "condition": {
+        "tpl": "gather",
+        "item_def": "item:ore_t2",
+        "count": 3,
+        "to_place": "place:market_ring"
+      },
+      "reward_spec": {
+        "coin": 165,
+        "xp": 495,
+        "potential": 49,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "reach_t2",
+      "tpl": "reach",
+      "tier": 2,
+      "stage": 1,
+      "condition": {
+        "tpl": "reach",
+        "mode": "place",
+        "place": "place:dungeon_t2"
+      },
+      "reward_spec": {
+        "coin": 105,
+        "xp": 315,
+        "potential": 31,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "deliver_t3",
+      "tpl": "deliver",
+      "tier": 3,
+      "stage": 1,
+      "condition": {
+        "tpl": "deliver",
+        "item_def": "item:herb_t3",
+        "count": 2,
+        "to_place": "place:camp_neutral",
+        "to_char": null
+      },
+      "reward_spec": {
+        "coin": 230,
+        "xp": 680,
+        "potential": 68,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "find_t3",
+      "tpl": "find",
+      "tier": 3,
+      "stage": 1,
+      "condition": {
+        "tpl": "find",
+        "target": "char:quest_giver"
+      },
+      "reward_spec": {
+        "coin": 184,
+        "xp": 544,
+        "potential": 54,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "slay_t3",
+      "tpl": "slay",
+      "tier": 3,
+      "stage": 1,
+      "condition": {
+        "tpl": "slay",
+        "target": null,
+        "archetype": "monster",
+        "tier": 3,
+        "count": 1
+      },
+      "reward_spec": {
+        "coin": 322,
+        "xp": 952,
+        "potential": 95,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "gather_t3",
+      "tpl": "gather",
+      "tier": 3,
+      "stage": 1,
+      "condition": {
+        "tpl": "gather",
+        "item_def": "item:ore_t3",
+        "count": 3,
+        "to_place": "place:market_ring"
+      },
+      "reward_spec": {
+        "coin": 253,
+        "xp": 748,
+        "potential": 74,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "reach_t3",
+      "tpl": "reach",
+      "tier": 3,
+      "stage": 1,
+      "condition": {
+        "tpl": "reach",
+        "mode": "place",
+        "place": "place:dungeon_t3"
+      },
+      "reward_spec": {
+        "coin": 161,
+        "xp": 476,
+        "potential": 47,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "deliver_t4",
+      "tpl": "deliver",
+      "tier": 4,
+      "stage": 1,
+      "condition": {
+        "tpl": "deliver",
+        "item_def": "item:herb_t4",
+        "count": 2,
+        "to_place": "place:camp_neutral",
+        "to_char": null
+      },
+      "reward_spec": {
+        "coin": 330,
+        "xp": 1000,
+        "potential": 100,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "find_t4",
+      "tpl": "find",
+      "tier": 4,
+      "stage": 1,
+      "condition": {
+        "tpl": "find",
+        "target": "char:quest_giver"
+      },
+      "reward_spec": {
+        "coin": 264,
+        "xp": 800,
+        "potential": 80,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "slay_t4",
+      "tpl": "slay",
+      "tier": 4,
+      "stage": 1,
+      "condition": {
+        "tpl": "slay",
+        "target": null,
+        "archetype": "monster",
+        "tier": 4,
+        "count": 1
+      },
+      "reward_spec": {
+        "coin": 462,
+        "xp": 1400,
+        "potential": 140,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "gather_t4",
+      "tpl": "gather",
+      "tier": 4,
+      "stage": 1,
+      "condition": {
+        "tpl": "gather",
+        "item_def": "item:ore_t4",
+        "count": 3,
+        "to_place": "place:market_ring"
+      },
+      "reward_spec": {
+        "coin": 363,
+        "xp": 1100,
+        "potential": 110,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "reach_t4",
+      "tpl": "reach",
+      "tier": 4,
+      "stage": 1,
+      "condition": {
+        "tpl": "reach",
+        "mode": "place",
+        "place": "place:dungeon_t4"
+      },
+      "reward_spec": {
+        "coin": 231,
+        "xp": 700,
+        "potential": 70,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "deliver_t5",
+      "tpl": "deliver",
+      "tier": 5,
+      "stage": 1,
+      "condition": {
+        "tpl": "deliver",
+        "item_def": "item:herb_t5",
+        "count": 2,
+        "to_place": "place:camp_neutral",
+        "to_char": null
+      },
+      "reward_spec": {
+        "coin": 500,
+        "xp": 1500,
+        "potential": 150,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "find_t5",
+      "tpl": "find",
+      "tier": 5,
+      "stage": 1,
+      "condition": {
+        "tpl": "find",
+        "target": "char:quest_giver"
+      },
+      "reward_spec": {
+        "coin": 400,
+        "xp": 1200,
+        "potential": 120,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "slay_t5",
+      "tpl": "slay",
+      "tier": 5,
+      "stage": 1,
+      "condition": {
+        "tpl": "slay",
+        "target": null,
+        "archetype": "monster",
+        "tier": 5,
+        "count": 1
+      },
+      "reward_spec": {
+        "coin": 700,
+        "xp": 2100,
+        "potential": 210,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "gather_t5",
+      "tpl": "gather",
+      "tier": 5,
+      "stage": 1,
+      "condition": {
+        "tpl": "gather",
+        "item_def": "item:ore_t5",
+        "count": 3,
+        "to_place": "place:market_ring"
+      },
+      "reward_spec": {
+        "coin": 550,
+        "xp": 1650,
+        "potential": 165,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "reach_t5",
+      "tpl": "reach",
+      "tier": 5,
+      "stage": 1,
+      "condition": {
+        "tpl": "reach",
+        "mode": "place",
+        "place": "place:dungeon_t5"
+      },
+      "reward_spec": {
+        "coin": 350,
+        "xp": 1050,
+        "potential": 105,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "deliver_t6",
+      "tpl": "deliver",
+      "tier": 6,
+      "stage": 1,
+      "condition": {
+        "tpl": "deliver",
+        "item_def": "item:herb_t6",
+        "count": 2,
+        "to_place": "place:camp_neutral",
+        "to_char": null
+      },
+      "reward_spec": {
+        "coin": 770,
+        "xp": 2300,
+        "potential": 230,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "find_t6",
+      "tpl": "find",
+      "tier": 6,
+      "stage": 1,
+      "condition": {
+        "tpl": "find",
+        "target": "char:quest_giver"
+      },
+      "reward_spec": {
+        "coin": 616,
+        "xp": 1840,
+        "potential": 184,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "slay_t6",
+      "tpl": "slay",
+      "tier": 6,
+      "stage": 1,
+      "condition": {
+        "tpl": "slay",
+        "target": null,
+        "archetype": "monster",
+        "tier": 6,
+        "count": 1
+      },
+      "reward_spec": {
+        "coin": 1078,
+        "xp": 3220,
+        "potential": 322,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "gather_t6",
+      "tpl": "gather",
+      "tier": 6,
+      "stage": 1,
+      "condition": {
+        "tpl": "gather",
+        "item_def": "item:ore_t6",
+        "count": 3,
+        "to_place": "place:market_ring"
+      },
+      "reward_spec": {
+        "coin": 847,
+        "xp": 2530,
+        "potential": 253,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "reach_t6",
+      "tpl": "reach",
+      "tier": 6,
+      "stage": 1,
+      "condition": {
+        "tpl": "reach",
+        "mode": "place",
+        "place": "place:dungeon_t6"
+      },
+      "reward_spec": {
+        "coin": 539,
+        "xp": 1610,
+        "potential": 161,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "deliver_t7",
+      "tpl": "deliver",
+      "tier": 7,
+      "stage": 1,
+      "condition": {
+        "tpl": "deliver",
+        "item_def": "item:herb_t7",
+        "count": 2,
+        "to_place": "place:camp_neutral",
+        "to_char": null
+      },
+      "reward_spec": {
+        "coin": 1100,
+        "xp": 3400,
+        "potential": 340,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "find_t7",
+      "tpl": "find",
+      "tier": 7,
+      "stage": 1,
+      "condition": {
+        "tpl": "find",
+        "target": "char:quest_giver"
+      },
+      "reward_spec": {
+        "coin": 880,
+        "xp": 2720,
+        "potential": 272,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "slay_t7",
+      "tpl": "slay",
+      "tier": 7,
+      "stage": 1,
+      "condition": {
+        "tpl": "slay",
+        "target": null,
+        "archetype": "monster",
+        "tier": 7,
+        "count": 1
+      },
+      "reward_spec": {
+        "coin": 1540,
+        "xp": 4760,
+        "potential": 476,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "gather_t7",
+      "tpl": "gather",
+      "tier": 7,
+      "stage": 1,
+      "condition": {
+        "tpl": "gather",
+        "item_def": "item:ore_t7",
+        "count": 3,
+        "to_place": "place:market_ring"
+      },
+      "reward_spec": {
+        "coin": 1210,
+        "xp": 3740,
+        "potential": 374,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "reach_t7",
+      "tpl": "reach",
+      "tier": 7,
+      "stage": 1,
+      "condition": {
+        "tpl": "reach",
+        "mode": "place",
+        "place": "place:dungeon_t7"
+      },
+      "reward_spec": {
+        "coin": 770,
+        "xp": 2380,
+        "potential": 238,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "deliver_t8",
+      "tpl": "deliver",
+      "tier": 8,
+      "stage": 1,
+      "condition": {
+        "tpl": "deliver",
+        "item_def": "item:herb_t8",
+        "count": 2,
+        "to_place": "place:camp_neutral",
+        "to_char": null
+      },
+      "reward_spec": {
+        "coin": 1700,
+        "xp": 5100,
+        "potential": 510,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "find_t8",
+      "tpl": "find",
+      "tier": 8,
+      "stage": 1,
+      "condition": {
+        "tpl": "find",
+        "target": "char:quest_giver"
+      },
+      "reward_spec": {
+        "coin": 1360,
+        "xp": 4080,
+        "potential": 408,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "slay_t8",
+      "tpl": "slay",
+      "tier": 8,
+      "stage": 1,
+      "condition": {
+        "tpl": "slay",
+        "target": null,
+        "archetype": "monster",
+        "tier": 8,
+        "count": 1
+      },
+      "reward_spec": {
+        "coin": 2380,
+        "xp": 7140,
+        "potential": 714,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "gather_t8",
+      "tpl": "gather",
+      "tier": 8,
+      "stage": 1,
+      "condition": {
+        "tpl": "gather",
+        "item_def": "item:ore_t8",
+        "count": 3,
+        "to_place": "place:market_ring"
+      },
+      "reward_spec": {
+        "coin": 1870,
+        "xp": 5610,
+        "potential": 561,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "reach_t8",
+      "tpl": "reach",
+      "tier": 8,
+      "stage": 1,
+      "condition": {
+        "tpl": "reach",
+        "mode": "place",
+        "place": "place:dungeon_t8"
+      },
+      "reward_spec": {
+        "coin": 1190,
+        "xp": 3570,
+        "potential": 357,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "deliver_t9",
+      "tpl": "deliver",
+      "tier": 9,
+      "stage": 1,
+      "condition": {
+        "tpl": "deliver",
+        "item_def": "item:herb_t9",
+        "count": 2,
+        "to_place": "place:camp_neutral",
+        "to_char": null
+      },
+      "reward_spec": {
+        "coin": 2600,
+        "xp": 7700,
+        "potential": 770,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "find_t9",
+      "tpl": "find",
+      "tier": 9,
+      "stage": 1,
+      "condition": {
+        "tpl": "find",
+        "target": "char:quest_giver"
+      },
+      "reward_spec": {
+        "coin": 2080,
+        "xp": 6160,
+        "potential": 616,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "slay_t9",
+      "tpl": "slay",
+      "tier": 9,
+      "stage": 1,
+      "condition": {
+        "tpl": "slay",
+        "target": null,
+        "archetype": "monster",
+        "tier": 9,
+        "count": 1
+      },
+      "reward_spec": {
+        "coin": 3640,
+        "xp": 10780,
+        "potential": 1078,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "gather_t9",
+      "tpl": "gather",
+      "tier": 9,
+      "stage": 1,
+      "condition": {
+        "tpl": "gather",
+        "item_def": "item:ore_t9",
+        "count": 3,
+        "to_place": "place:market_ring"
+      },
+      "reward_spec": {
+        "coin": 2860,
+        "xp": 8470,
+        "potential": 847,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "reach_t9",
+      "tpl": "reach",
+      "tier": 9,
+      "stage": 1,
+      "condition": {
+        "tpl": "reach",
+        "mode": "place",
+        "place": "place:dungeon_t9"
+      },
+      "reward_spec": {
+        "coin": 1820,
+        "xp": 5390,
+        "potential": 539,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    }
+  ],
+  "chars": [
+    {
+      "local": "master_t2",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "humanoid",
+      "archetype": "master",
+      "tier": 2,
+      "stage": 1,
+      "loc": "place:camp_neutral",
+      "respawn_place": "place:camp_neutral"
+    },
+    {
+      "local": "master_t3",
+      "skin": "wuxia",
+      "origin_region": "wuxia",
+      "body": "humanoid",
+      "archetype": "master",
+      "tier": 3,
+      "stage": 1,
+      "loc": "place:camp_neutral",
+      "respawn_place": "place:camp_neutral"
+    },
+    {
+      "local": "master_t4",
+      "skin": "fantasy",
+      "origin_region": "fantasy",
+      "body": "humanoid",
+      "archetype": "master",
+      "tier": 4,
+      "stage": 1,
+      "loc": "place:camp_neutral",
+      "respawn_place": "place:camp_neutral"
+    },
+    {
+      "local": "master_t5",
+      "skin": "scifi",
+      "origin_region": "scifi",
+      "body": "humanoid",
+      "archetype": "master",
+      "tier": 5,
+      "stage": 1,
+      "loc": "place:camp_neutral",
+      "respawn_place": "place:camp_neutral"
+    },
+    {
+      "local": "master_t6",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "humanoid",
+      "archetype": "master",
+      "tier": 6,
+      "stage": 1,
+      "loc": "place:camp_neutral",
+      "respawn_place": "place:camp_neutral"
+    },
+    {
+      "local": "master_t7",
+      "skin": "wuxia",
+      "origin_region": "wuxia",
+      "body": "humanoid",
+      "archetype": "master",
+      "tier": 7,
+      "stage": 1,
+      "loc": "place:camp_neutral",
+      "respawn_place": "place:camp_neutral"
+    },
+    {
+      "local": "master_t8",
+      "skin": "fantasy",
+      "origin_region": "fantasy",
+      "body": "humanoid",
+      "archetype": "master",
+      "tier": 8,
+      "stage": 1,
+      "loc": "place:camp_neutral",
+      "respawn_place": "place:camp_neutral"
+    },
+    {
+      "local": "master_t9",
+      "skin": "scifi",
+      "origin_region": "scifi",
+      "body": "humanoid",
+      "archetype": "master",
+      "tier": 9,
+      "stage": 1,
+      "loc": "place:camp_neutral",
+      "respawn_place": "place:camp_neutral"
+    },
+    {
+      "local": "merchant_t3",
+      "skin": "wuxia",
+      "origin_region": "wuxia",
+      "body": "humanoid",
+      "archetype": "merchant",
+      "tier": 3,
+      "stage": 1,
+      "loc": "place:market_neutral",
+      "respawn_place": "place:market_neutral"
+    },
+    {
+      "local": "repairer_t2",
+      "skin": "scifi",
+      "origin_region": "scifi",
+      "body": "humanoid",
+      "archetype": "repairer",
+      "tier": 2,
+      "stage": 1,
+      "loc": "place:camp_neutral",
+      "respawn_place": "place:camp_neutral"
+    },
+    {
+      "local": "guard_t3",
+      "skin": "fantasy",
+      "origin_region": "fantasy",
+      "body": "humanoid",
+      "archetype": "guard",
+      "tier": 3,
+      "stage": 1,
+      "loc": "place:gate_confluence",
+      "respawn_place": "place:gate_confluence"
+    },
+    {
+      "local": "quest_giver",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "humanoid",
+      "archetype": "quest_giver",
+      "tier": 2,
+      "stage": 1,
+      "loc": "place:camp_neutral",
+      "respawn_place": "place:camp_neutral"
+    },
+    {
+      "local": "patroller_t3",
+      "skin": "fantasy",
+      "origin_region": "fantasy",
+      "body": "humanoid",
+      "archetype": "patroller",
+      "tier": 3,
+      "stage": 1,
+      "loc": "place:wild_t1",
+      "respawn_place": "place:wild_t1",
+      "patrol_route": [
+        "place:wild_t1",
+        "place:wild_t2",
+        "place:wild_t3",
+        "place:wild_t2"
+      ]
+    },
+    {
+      "local": "monster_t1",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "beast",
+      "archetype": "monster",
+      "tier": 1,
+      "stage": 1,
+      "loc": "place:inner_t1",
+      "respawn_place": "place:inner_t1"
+    },
+    {
+      "local": "monster_t2",
+      "skin": "wuxia",
+      "origin_region": "wuxia",
+      "body": "undead",
+      "archetype": "monster",
+      "tier": 2,
+      "stage": 1,
+      "loc": "place:inner_t2",
+      "respawn_place": "place:inner_t2"
+    },
+    {
+      "local": "monster_t3",
+      "skin": "fantasy",
+      "origin_region": "fantasy",
+      "body": "construct",
+      "archetype": "monster",
+      "tier": 3,
+      "stage": 1,
+      "loc": "place:inner_t3",
+      "respawn_place": "place:inner_t3"
+    },
+    {
+      "local": "monster_t4",
+      "skin": "scifi",
+      "origin_region": "scifi",
+      "body": "spirit",
+      "archetype": "monster",
+      "tier": 4,
+      "stage": 1,
+      "loc": "place:inner_t4",
+      "respawn_place": "place:inner_t4"
+    },
+    {
+      "local": "monster_t5",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "beast",
+      "archetype": "monster",
+      "tier": 5,
+      "stage": 1,
+      "loc": "place:inner_t5",
+      "respawn_place": "place:inner_t5"
+    },
+    {
+      "local": "monster_t6",
+      "skin": "wuxia",
+      "origin_region": "wuxia",
+      "body": "undead",
+      "archetype": "monster",
+      "tier": 6,
+      "stage": 1,
+      "loc": "place:inner_t6",
+      "respawn_place": "place:inner_t6"
+    },
+    {
+      "local": "monster_t7",
+      "skin": "fantasy",
+      "origin_region": "fantasy",
+      "body": "construct",
+      "archetype": "monster",
+      "tier": 7,
+      "stage": 1,
+      "loc": "place:inner_t7",
+      "respawn_place": "place:inner_t7"
+    },
+    {
+      "local": "monster_t8",
+      "skin": "scifi",
+      "origin_region": "scifi",
+      "body": "spirit",
+      "archetype": "monster",
+      "tier": 8,
+      "stage": 1,
+      "loc": "place:inner_t8",
+      "respawn_place": "place:inner_t8"
+    },
+    {
+      "local": "monster_t9",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "beast",
+      "archetype": "monster",
+      "tier": 9,
+      "stage": 1,
+      "loc": "place:inner_t9",
+      "respawn_place": "place:inner_t9"
+    },
+    {
+      "local": "tutorial_opponent_t1",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "construct",
+      "archetype": "tutorial_opponent",
+      "tier": 1,
+      "stage": 1,
+      "loc": "place:arena_neutral",
+      "respawn_place": "place:arena_neutral"
+    }
+  ]
+}

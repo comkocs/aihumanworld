@@ -71,7 +71,8 @@ const deliverTo = (id: string, toPlace: string): TaskTemplateRow => ({
 
 test("S24 chain: deliver task → daily decay → bounty escrow / payout / refund → refusals", async () => {
   setQuiet(true);
-  const config = await loadConfig({ ...process.env, AIHW_DB_DRIVER: "pglite", AIHW_PGLITE_DIR: "memory", AIHW_PORT: "0" });
+  // Clean world: no content/world import, only the seed plus this test's fixtures.
+  const config = await loadConfig({ ...process.env, AIHW_DB_DRIVER: "pglite", AIHW_PGLITE_DIR: "memory", AIHW_PORT: "0", AIHW_CONTENT_DIR: "null" });
   const app = await startApp(config);
   try {
     const db = app.db;

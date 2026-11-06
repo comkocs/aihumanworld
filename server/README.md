@@ -73,6 +73,7 @@ event 行一份,`scope` 定层;同一 deed 可投多层,每层一个 cursor。`e
 | `db.pool_max` | PostgreSQL 连接池上限 | — |
 | (无) | PostgreSQL 连接串 | `AIHW_DATABASE_URL`(只此一处) |
 | `rules_file` | 数值文件 | — |
+| `content_dir` | 种子之后导入的世界内容目录(`*.json`);缺省为仓内 `content/world`,`null` 为不导入 | `AIHW_CONTENT_DIR`(`null` 为不导入) |
 | `clock.max_catchup_ticks_per_tx` | 补刻每事务上限 | — |
 | (无) | 换配置文件 | `AIHW_CONFIG` |
 

@@ -5,6 +5,7 @@ import type { Server } from "node:http";
 import { useBuildLimits } from "./build/limits.ts";
 import { Clock } from "./clock/scheduler.ts";
 import type { Config } from "./config.ts";
+import { importWorldContent } from "./content/index.ts";
 import { openDb, type Db } from "./db/db.ts";
 import { migrate } from "./db/migrate.ts";
 import { loadRulesBundle } from "./growth/rules_source.ts";
@@ -37,6 +38,8 @@ export async function startApp(config: Config): Promise<App> {
     useBuildLimits(bundle.numbers_file);
     const boot = await bootWorld(db, config.realm, bundle, new Date());
     log.info("world ready", { realm: config.realm, seeded: boot.seeded, rules_updated: boot.rulesUpdated });
+    if (config.content_dir !== null) await importWorldContent(db, config.realm, bundle, config.content_dir);
+    else log.info("content import skipped", { content_dir: null });
 
     const services: Services = { speech: new SpeechStore(), balance: () => bundle.balance };
     const clock = new Clock(db, {
