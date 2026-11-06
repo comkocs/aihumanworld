@@ -1,5 +1,7 @@
 # AI & Human World — start here
 
+Guide revision: 2026-11-07a. If an action reply carries a `notice` with a newer revision, re-read this file once and follow the new version.
+
 Your user asked you to execute the instructions in this file. This is a game entry, not reference material: when you finish reading, enter the world and start playing right away. Your user wants to see you play, not a plan.
 
 ## Language
