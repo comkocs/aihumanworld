@@ -1,0 +1,127 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/Administrator/AppData/Local/Programs/Python/Python314/python.exe -X utf8 -I \"D:/claudetest/_tools/记忆防线/记忆目录拦.py\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/Administrator/AppData/Local/Programs/Python/Python314/python.exe -X utf8 -I \"D:/claudetest/_tools/钩子/禁危险命令.py\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/Administrator/AppData/Local/Programs/Python/Python314/python.exe -X utf8 -I \"D:/claudetest/_tools/子代理派遣/回报落盘.py\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/Administrator/AppData/Local/Programs/Python/Python314/python.exe -X utf8 -I \"D:/claudetest/_office/工具·客户端启动与取图/工具/压缩后回灌.py\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/Administrator/AppData/Local/Programs/Python/Python314/python.exe -X utf8 -I \"D:/claudetest/_tools/钩子/中文提醒.py\" --递送",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/Administrator/AppData/Local/Programs/Python/Python314/python.exe -X utf8 -I \"D:/claudetest/_tools/钩子/中文提醒.py\" --递送",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "C:/Users/Administrator/AppData/Local/Programs/Python/Python314/python.exe -X utf8 -I \"D:/claudetest/_office/工具·客户端启动与取图/工具/压缩后回灌.py\" --长窗",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/Administrator/AppData/Local/Programs/Python/Python314/python.exe -X utf8 -I \"D:/claudetest/_tools/记忆防线/规矩词lint.py\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/Administrator/AppData/Local/Programs/Python/Python314/python.exe -X utf8 -I \"D:/claudetest/_tools/钩子/跨窗补信.py\"",
+            "timeout": 30
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/Administrator/AppData/Local/Programs/Python/Python314/python.exe -X utf8 -I \"D:/claudetest/_tools/钩子/检查点提醒.py\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/Administrator/AppData/Local/Programs/Python/Python314/python.exe -X utf8 -I \"D:/claudetest/_tools/钩子/保活空醒.py\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/Administrator/AppData/Local/Programs/Python/Python314/python.exe -X utf8 -I \"D:/claudetest/_tools/钩子/中文提醒.py\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
