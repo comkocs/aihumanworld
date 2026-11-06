@@ -1,0 +1,8 @@
+# 机上没有 nginx 时用 Caddy。域名 aihumanworld.org,A 记录已指向本机。
+# Caddy 自动申请与续期证书,不需要另放证书文件,也不在这里写任何密钥。
+# 反代到本机 127.0.0.1:8787。
+# 用法:caddy validate --config /opt/aihw/deploy/Caddyfile.example && systemctl reload caddy
+
+aihumanworld.org {
+	reverse_proxy 127.0.0.1:8787
+}

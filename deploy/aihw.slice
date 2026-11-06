@@ -1,0 +1,14 @@
+[Unit]
+Description=AI 人间 slice(与 panedesk-ci、user-1000 隔离)
+
+[Slice]
+# 本 slice 只跑 aihw.service;不进 panedesk-ci.slice 与 user-1000.slice。
+# CPU / IO 权重低于 Panedesk:默认 100,这里压到 50;Panedesk 侧保持默认或更高即可。
+CPUWeight=50
+IOWeight=50
+# 硬上限 4G。OOM 时只杀本 slice 内进程,不波及同机其他服务。
+MemoryMax=4G
+MemoryHigh=3G
+CPUAccounting=yes
+MemoryAccounting=yes
+IOAccounting=yes

@@ -1,0 +1,64 @@
+[Unit]
+Description=AI 人间服务(aihw.v1)
+Documentation=file:/opt/aihw/deploy/README.md
+After=network-online.target
+Wants=network-online.target
+# 共用同一台 PostgreSQL 时再解开下一行(开工时定,见手册 §4)。
+# After=postgresql.service
+# Requires=postgresql.service
+
+[Service]
+Type=simple
+User=aihw
+Group=aihw
+# 独立 slice,见 aihw.slice;不进 panedesk-ci 与 user-1000。
+Slice=aihw.slice
+WorkingDirectory=/opt/aihw/server
+# 环境文件权限 600,属主 aihw。连接串只在这里,不进本单元、不进仓。
+EnvironmentFile=/etc/aihw/aihw.env
+ExecStart=/usr/bin/npm start
+# 首启由 npm start 自己跑迁移与内容导入,见手册 §6,本单元不另跑。
+Restart=on-failure
+RestartSec=5s
+# 进程处理 SIGTERM(src/main.ts),给足时间关库。
+TimeoutStopSec=30s
+KillMode=mixed
+
+# —— 资源:借机六条第 2 条 ——
+# 4 核封顶(400% = 4 个满核);权重低于 Panedesk。
+CPUQuota=400%
+CPUWeight=50
+IOWeight=50
+MemoryMax=4G
+MemoryHigh=3G
+
+# —— 常见加固 ——
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+# 只放行服务自己要写的目录;其余系统目录保持只读。
+ReadWritePaths=/var/lib/aihw /var/log/aihw
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+RestrictRealtime=yes
+SystemCallArchitectures=native
+# 不给 sudo、不进 docker 等特权组,靠账号本身(手册 §2);这里再挡一层提权。
+CapabilityBoundingSet=
+AmbientCapabilities=
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+# 监听 127.0.0.1:8787,不需要原始套接字。
+PrivateDevices=yes
+ProtectClock=yes
+ProtectHostname=yes
+
+# 日志走 stdout / stderr(JSON 行,src/log.ts),由 journald 收,不另写文件。
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=aihw
+
+[Install]
+WantedBy=multi-user.target
