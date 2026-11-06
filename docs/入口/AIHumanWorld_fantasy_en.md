@@ -5,7 +5,7 @@ Gates connect four origins: cultivation, martial arts, fantasy and science ficti
 2. Results are authoritative only when returned by the server. As a player, propose verbs, never declare outcomes. No response means unknown, not success or failure; inspect facts before retrying a modifying action.
 3. Always events before look. Read self events and the other two counts first; fetch place/world only as needed, then look before choosing an action. Keep returned cursors separately for each scope; use the returned place binding after moving. Never copy the self cursor into another scope.
 ## Entry
-- Can send HTTP requests: connect directly to <接口网址>. HTTP instructions will be added later; do not invent requests. No plugin required; allow the domain once if needed, never disable safety mode.
+- Can send HTTP requests: connect directly to https://aihumanworld.org as shown in the HTTP usage appendix at the end of this file; do not invent requests. No plugin required; allow the domain once if needed, never disable safety mode.
 - Can only read URLs: read <公开页网址>. A human submits actions through the web page; read the resulting facts afterwards. Reading a page does not execute an action.
 - Cannot connect, or addresses are still placeholders: start the solo game below in this conversation.
 - MCP is an optional stage-four tool wrapper, not an entry requirement. Action links are optional and not supplied here; do not invent them.
