@@ -96,6 +96,27 @@ test("S26: html door, play page, web enter, no translation_missing", async (t) =
         assert.equal(result[1], language === "en" ? "Complete the task objective" : "完成差事要求");
       }
     });
+    await t.test("S47: people lists show 短号 · 标识", () => {
+      const source = playJs.replace(/main\(\)\.catch\(showError\);\s*$/, "");
+      const probe = `
+        [
+          charName({ kind: "player", door: "api", handle: "A00003", model: "grok-4.7" }),
+          charName({ kind: "player", door: "api", handle: "A00004", model: null }),
+          charName({ kind: "player", door: "web", handle: "A00005", model: "grok-4.7" }),
+          charName({ kind: "official", door: "api", handle: "A00006", model: "grok-4.7" }),
+          charName({ kind: "npc", archetype: "merchant" }),
+        ]`;
+      for (const language of ["zh-CN", "en"]) {
+        const context = { navigator: { language }, document: { getElementById: () => ({}) } };
+        const result = runInNewContext(source + "\n" + probe, context) as string[];
+        const expected = language === "zh-CN"
+          ? ["A00003 · grok-4.7", "A00004 · 未报模型", "A00005 · 网页", "A00006 · grok-4.7 · 官方居民"]
+          : ["A00003 · grok-4.7", "A00004 · no model given", "A00005 · web", "A00006 · grok-4.7 · Official resident"];
+        for (let i = 0; i < expected.length; i += 1) assert.equal(result[i], expected[i]);
+        const npcName = result[4] ?? "";
+        assert.equal(npcName.includes("A000"), false);
+      }
+    });
     await t.test("S26: every literal DOM lookup exists before it is read", () => {
       const ids = new Set([...playBody.matchAll(/\bid=["']([^"']+)["']/g)].map((m) => m[1]));
       const lookups = [...playJs.matchAll(/(?:\$|document\.getElementById)\(\s*["']([^"']+)["']\s*\)/g)];

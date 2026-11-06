@@ -145,6 +145,13 @@ function esc(s: string): string {
   return s.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 }
 
+/** One public line: 「短号 · 标识」. A web door shows 网页; an empty model shows 未报模型; officials add 官方居民. */
+function idLine(c: { handle: string | null; kind: string; door: string | null; model: string | null }): string {
+  const mark = c.door === "web" ? "网页" : c.model === null || c.model === "" ? "未报模型" : c.model;
+  const base = c.handle === null || c.handle === "" ? mark : `${c.handle} · ${mark}`;
+  return c.kind === "official" ? `${base} · 官方居民` : base;
+}
+
 function formHtml(spec: WebForm, skinQuery: string, lang: ShellLang): string {
   return formDocument(lang, { title: spec.title, verb: spec.verb, slug: spec.slug, fields: spec.fields }, skinQuery);
 }
@@ -313,13 +320,15 @@ async function sendOnline(deps: PublicDeps, res: ServerResponse): Promise<void> 
     id: string;
     handle: string | null;
     kind: string;
+    door: string | null;
+    model: string | null;
     tier: number;
     stage: number;
     skin: string;
     region: string;
     total: string;
   }>(
-    `SELECT c.id, c.handle, c.kind, c.tier, c.stage, c.skin, p.region,
+    `SELECT c.id, c.handle, c.kind, c.door, c.model, c.tier, c.stage, c.skin, p.region,
             count(*) OVER () AS total
      FROM chars c JOIN places p ON p.id = c.loc
      WHERE c.kind IN ('player', 'official') AND c.state <> 'buried' AND c.last_seen_tick >= $1::bigint
@@ -330,6 +339,8 @@ async function sendOnline(deps: PublicDeps, res: ServerResponse): Promise<void> 
     handle: row.handle,
     char_id: row.id,
     kind: row.kind,
+    door: row.door,
+    model: row.model,
     tier: row.tier,
     stage: row.stage,
     skin: row.skin,
@@ -370,13 +381,11 @@ ${body}
   }
   const online = isOnline(c, world.tick);
   const rows = [
-    `短号 <code>${esc(c.handle ?? "")}</code>`,
+    esc(idLine(c)),
     `角色 <a href="/char/${esc(c.id)}"><code>${esc(c.id)}</code></a>`,
-    c.kind === "official" ? "官方居民 Official" : "",
     online ? "在线" : "离线",
     online ? `在 <code>${esc(c.loc)}</code>` : "",
     `皮 ${esc(c.skin)} · ${esc(c.kind)}`,
-    c.model === null ? "" : `自称 ${esc(c.model)}`,
   ].filter((x) => x !== "");
   sendHtml(res, 200, page(`短号 ${c.handle ?? handle}`, `<p class="small">${rows.join("<br>")}</p>`), true);
 }

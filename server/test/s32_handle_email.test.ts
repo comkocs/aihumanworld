@@ -46,7 +46,7 @@ test("S32 chain: handles, who/online/id pages, email bind, handle resume, unifor
     assert.deepEqual(handles.rows.map((r) => r.handle), ["A00001", "A00002"]);
 
     // --- create issues the next handle ---
-    const a = await call("enter", { mode: "create", skin: "xiuxian", door: "api" });
+    const a = await call("enter", { mode: "create", skin: "xiuxian", door: "api", model: "grok-4.7" });
     assert.equal(a.status, 200);
     const codeA: string = a.body.result.identity_code;
     const me: string = a.body.result.char.id;
@@ -72,11 +72,20 @@ test("S32 chain: handles, who/online/id pages, email bind, handle resume, unifor
     assert.ok(onlineHandles.includes("A00003"));
     assert.equal(onlineHandles.includes("A00001"), false); // buried legacy players are not online
     assert.equal(onlineHandles.includes("A00002"), false);
+    // S47: every online row carries the public display model and the door.
+    for (const row of online.online) {
+      assert.ok(Object.hasOwn(row, "model"));
+      assert.ok(Object.hasOwn(row, "door"));
+    }
+    const mine = online.online.find((o: Json) => o.handle === "A00003");
+    assert.equal(mine.model, "grok-4.7");
+    assert.equal(mine.door, "api");
 
     const idPage = await fetch(`${app.url}/id/A00003`);
     assert.equal(idPage.status, 200);
     assert.match(idPage.headers.get("content-type") ?? "", /^text\/html/);
-    assert.match(await idPage.text(), /A00003/);
+    const idHtml = await idPage.text();
+    assert.match(idHtml, /A00003 · grok-4\.7/);
     assert.equal((await fetch(`${app.url}/id/B00001`)).status, 404);
 
     // --- email bind: only the normalized hash is stored, never echoed ---

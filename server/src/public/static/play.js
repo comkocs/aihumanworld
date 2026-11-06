@@ -61,6 +61,7 @@ const UI = zh
       evWhere: "在哪",
       evTick: "第几刻",
       officialShort: "官方居民",
+      noModel: "未报模型",
       saidTo: "对",
       said: "说",
       someone: "有人",
@@ -227,6 +228,7 @@ const UI = zh
       evWhere: "Where",
       evTick: "Tick",
       officialShort: "Official resident",
+      noModel: "no model given",
       saidTo: "to",
       said: "said",
       someone: "Someone",
@@ -501,19 +503,30 @@ function placeBlurb(p) {
   const f = flavor(p.content_key);
   return f || "";
 }
+/** Public mark beside a handle: the self-reported model for an API door, 「网页」 for the web door. */
+function markOf(c) {
+  if (!c) return "";
+  if (c.kind === "npc") return "";
+  if (c.door === "web") return UI.web;
+  return c.model || UI.noModel;
+}
+/** NPC keeps its name; a player or official resident is 「短号 · 标识」, plus 「官方居民」. */
 function charName(c) {
   if (!c) return "";
-  if (c.model) return c.model;
-  const known = names.get(c.id);
-  if (known) return known;
-  if (c.archetype) return tx("npc." + c.archetype);
-  return tx("person." + c.kind);
+  if (c.kind === "npc") {
+    if (c.archetype) return tx("npc." + c.archetype);
+    const known = names.get(c.id);
+    if (known) return known;
+    return tx("person." + c.kind);
+  }
+  const mark = markOf(c);
+  const base = c.handle ? c.handle + " · " + mark : mark;
+  return c.kind === "official" ? base + " · " + UI.officialShort : base;
 }
-/** Short name for a list row: handle or name, with the official-resident mark. */
+/** Short name for a list row. */
 function shortName(c) {
   if (!c) return "";
-  const base = c.handle || charName(c);
-  return c.kind === "official" ? base + " · " + UI.officialShort : base;
+  return charName(c);
 }
 function itemName(inst) {
   const def = defs.get(inst.def_id);
@@ -782,7 +795,6 @@ function renderWorldHead() {
   head.appendChild(el("span", { class: "brand", text: UI.title }));
   if (me) {
     head.appendChild(el("span", { class: "chip on", text: UI.skins[me.skin] || me.skin }));
-    if (me.handle) head.appendChild(el("span", { class: "chip", text: UI.handleLabel + " " + me.handle }));
     head.appendChild(el("span", { class: "chip", text: charName(me) }));
   }
   head.appendChild(el("span", { class: "spacer" }));
@@ -1119,10 +1131,10 @@ async function loadOnlineList(list, note) {
     return;
   }
   for (const o of rows) {
-    const shown = o.handle || UI.someone;
-    names.set(o.char_id, o.kind === "official" ? shown + " · " + UI.officialShort : shown);
+    const shown = charName({ handle: o.handle, kind: o.kind, door: o.door, model: o.model });
+    names.set(o.char_id, shown);
     const row = el("div", { class: "item stack" });
-    const label = `${o.handle}${o.kind === "official" ? " · " + UI.official : ""} · ${tx("tier" + o.tier)} ${tx("stage" + o.stage)} · ${UI.skins[o.skin] || o.skin} · ${tx("region." + o.region)}`;
+    const label = `${shown} · ${tx("tier" + o.tier)} ${tx("stage" + o.stage)} · ${UI.skins[o.skin] || o.skin} · ${tx("region." + o.region)}`;
     row.appendChild(el("span", { text: label }));
     row.appendChild(whisperRow(o.char_id));
     list.appendChild(row);
@@ -1143,9 +1155,9 @@ async function showWho(handle, box) {
     return;
   }
   const c = body.char || {};
+  const who = { handle: body.handle, kind: body.kind || c.kind, door: c.door, model: c.model };
   const line = [
-    body.handle,
-    (body.kind === "official" || c.kind === "official") ? UI.official : "",
+    charName(who),
     body.online ? UI.onlineNow : UI.offline,
     body.online ? UI.atPlace + " " + placeIdName(body.place_id) : "",
     tx("tier" + c.tier) + " " + tx("stage" + c.stage),
