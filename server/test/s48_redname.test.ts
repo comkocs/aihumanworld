@@ -65,6 +65,8 @@ test("S48: newbie window, red name by tier relation, hunting a red name", async 
       if (tier !== 1 || stage !== 1) await q("UPDATE chars SET tier = $2, stage = $3 WHERE id = $1", [p.id, tier, stage]);
       return p;
     };
+    // S53 ages a char out of the newbie window without moving the world clock (the red-name section below relies on that).
+    const ageOut = (p: Player): Promise<unknown> => q("UPDATE chars SET created_tick = created_tick - 5 WHERE id = $1", [p.id]);
     const arena: string = await (async () => {
       const first = await join();
       return (await q("SELECT loc FROM chars WHERE id = $1", [first.id]))[0]?.loc as string;
@@ -107,10 +109,26 @@ test("S48: newbie window, red name by tier relation, hunting a red name", async 
     assert.equal(Number(still.tick), created + 4);
     const vsNpc = await call("attack", { target: npc }, n1.code); // NPCs are not protected, and may be fought meanwhile
     assert.equal(vsNpc.ok, true, JSON.stringify(vsNpc));
+    // S53: a newcomer attacking an NPC keeps its own protection; attacking another participant ends it that same tick.
+    const mob: string = (await q("SELECT id FROM chars WHERE kind = 'npc' AND archetype = 'monster' AND life = 'alive' AND state = 'active' LIMIT 1"))[0]?.id;
+    assert.ok(mob);
+    await q("UPDATE chars SET loc = $2 WHERE id = $1", [mob, arena]);
+    const n3 = await join();
+    await advance(1); // n3 still has ticks of protection left; n1's window is already over
+    const vsNpc2 = await call("attack", { target: mob }, n3.code);
+    assert.equal(vsNpc2.ok, true, JSON.stringify(vsNpc2));
+    const kept = await call("attack", { target: n3.id }, n1.code); // hitting an NPC does not drop the protection
+    assert.equal(kept.ok, false);
+    assert.equal(kept.error?.details?.reason, "newbie", JSON.stringify(kept));
+    await advance(1);
+    const struck = await call("attack", { target: n1.id }, n3.code); // n3 strikes a participant first: its protection ends now
+    assert.equal(struck.ok, true, JSON.stringify(struck));
+    const back = await call("attack", { target: n3.id }, n1.code); // n1 may answer inside what used to be n3's window
+    assert.equal(back.ok, true, JSON.stringify(back));
     await advance(1); // created + 5: the window is over
     await vigorOf(n2, 1);
     const open = await call("attack", { target: n2.id }, n1.code);
-    assert.equal(Number(open.tick), created + 5);
+    assert.equal(Number(open.tick), created + 7); // the S53 segment above advances two more ticks
     assert.equal(open.ok, true, JSON.stringify(open));
 
     // ---------- ② red name by tier relation ----------
@@ -128,7 +146,7 @@ test("S48: newbie window, red name by tier relation, hunting a red name", async 
     const U5b = await join(5); // hunter, higher than the tier-1 red name
     const lo3 = await join(1, 4); // hunter, lower than the tier-2 red name
     const V = await join(5); // a fresh peer for the hunter's own pk reward
-    await advance(6); // everybody is past the newbie window
+    for (const p of [H, L, P, Q, lo, hi, lo2, hi2, R, R0, U5, U5b, lo3, V]) await ageOut(p);
 
     // higher kills lower: 2880-tick red name, bounty, no PK reward
     await vigorOf(H, 1000000);

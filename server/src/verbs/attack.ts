@@ -45,9 +45,24 @@ export const def = defineVerb<AttackArgs, AttackResult>({
     if (place === null) throw new Error("combat place missing");
     if (place.combat === "safe" || (place.combat === "pve" && target.kind !== "npc")) return reject("NOT_ALLOWED", { reason: "combat" });
     // S48 newbie protection: a new participant cannot be attacked by other participants for a few ticks (NPCs go on as usual).
+    // S53: protection also ends the tick the newcomer itself first attacks another participant (player / official);
+    // attacking an NPC does not count. No new table — the earliest such combat_resolved is the fact.
     const protect = ctx.balance.numbers.combat.newbie_protect_ticks ?? 0;
     if (protect > 0 && me.kind !== "npc" && target.kind !== "npc") {
-      const until = BigInt(target.created_tick) + BigInt(protect);
+      const windowEnd = BigInt(target.created_tick) + BigInt(protect);
+      let until = windowEnd;
+      // Only look while the window is open, and only in the target's own inbox (indexed by char_id).
+      if (BigInt(ctx.tick) < windowEnd) {
+        const broke = await ctx.q.query<{ tick: string | null }>(
+          "SELECT min(e.tick)::text AS tick FROM event_inbox i JOIN events e ON e.cursor = i.cursor " +
+            "JOIN chars c ON c.id = e.data->>'target' " +
+            "WHERE i.char_id = $1 AND e.type = 'combat_resolved' AND e.data->>'attacker' = $1 " +
+            "AND c.kind IN ('player', 'official') AND e.tick >= $2::bigint AND e.tick < $3::bigint",
+          [target.id, target.created_tick, windowEnd.toString()],
+        );
+        const first = broke.rows[0]?.tick;
+        if (first !== undefined && first !== null) until = BigInt(first);
+      }
       if (BigInt(ctx.tick) < until) {
         return reject("NOT_ALLOWED", { reason: "newbie", until_tick: until.toString() });
       }

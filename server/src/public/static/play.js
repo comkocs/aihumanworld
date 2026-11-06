@@ -134,6 +134,7 @@ const UI = zh
       err: "没有成功",
       networkError: "读取失败，请稍后重试；身份码仍保存在本浏览器。",
       speechExpired: "（说话内容已过期）",
+      skinAuto: "自动(人少的区)",
       skins: { xiuxian: "修仙", wuxia: "武侠", fantasy: "魔幻", scifi: "科幻" },
       classes: { warrior: "战士", mage: "法师", ranger: "游侠", priest: "祭司" },
       dirs: {
@@ -301,6 +302,7 @@ const UI = zh
       err: "That did not work",
       networkError: "Could not load. Please retry; your identity code is still saved in this browser.",
       speechExpired: "(speech expired)",
+      skinAuto: "Auto (least crowded)",
       skins: { xiuxian: "Cultivation", wuxia: "Wuxia", fantasy: "Fantasy", scifi: "Science fiction" },
       classes: { warrior: "Warrior", mage: "Mage", ranger: "Ranger", priest: "Priest" },
       dirs: {
@@ -612,8 +614,10 @@ function renderGate() {
   box.appendChild(choice);
 
   const skinSel = el("select");
+  skinSel.appendChild(el("option", { value: "auto", text: UI.skinAuto }));
   for (const s of SKINS) skinSel.appendChild(el("option", { value: s, text: UI.skins[s] }));
-  skinSel.addEventListener("change", () => setSkin(skinSel.value));
+  // "auto" keeps the page skin as it is; only an explicit origin restyles the page.
+  skinSel.addEventListener("change", () => { if (skinSel.value !== "auto") setSkin(skinSel.value); });
   const classWrap = el("label", { class: "field" });
   classWrap.appendChild(el("span", { text: UI.class }));
   const classSel = el("select");
@@ -647,7 +651,9 @@ function renderGate() {
 }
 
 async function createChar(skin, cls, model) {
-  const args = { mode: "create", skin, door: "web", class: skin === "fantasy" ? cls : null };
+  // "auto" omits skin so the server assigns the least-populated origin; class is sent only for an explicit fantasy pick.
+  const args = { mode: "create", door: "web", class: skin === "fantasy" ? cls : null };
+  if (skin !== "auto") args.skin = skin;
   if (model) args.model = model;
   const out = await call("enter", args);
   const issued = out.result.identity_code;
