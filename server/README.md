@@ -54,8 +54,11 @@ event 行一份,`scope` 定层;同一 deed 可投多层,每层一个 cursor。`e
 | S11 身份 | `src/verbs/enter.ts`(create / resume);`src/identity/*`(`code.ts` 校验位终版、`auth.ts` 过期与访问时生命周期、`lifecycle.ts` 刻阶段);迁移 `0200`–`0299` | A7 状态机 |
 | S12 言语与建造校验 | `src/verbs/say.ts` `build.ts`;`src/speech/*`(`sanitize.ts` 统一清洗器终版、`store.ts` 内存投递);`src/build/*`(`limits.ts` 读 S5 建造上限、`check.ts` 纯校验、`refs.ts` 查库引用);迁移 `0300`–`0399` | 20 条注入样例、越阶物拒收 |
 | S13 公开页 | `src/public/*`(GET 页面、ETag、网页表单经 `dispatch` 以 door=web 提交);迁移 `0400`–`0499` | 不含身份码 |
+| S26 网页游戏 | `src/public/static/*` `src/public/html.ts` `src/public/routes.ts`(挂 `/play`;`src/http/server.ts` 未改);`test/s26_play.test.ts` | `GET /play` 与 `POST /play/v1/<verb>`(door=web,码走 Authorization 头);`Accept: text/html` 的首页与公开页回 HTML,其余照旧 Markdown |
 | S24 世界交互与任务 | `src/verbs/go.ts` `take.ts` `give.ts` `task.ts` `bounty.ts`;`src/tasks/*`(到期与入土释放阶段、系统任务供给、look/go 证据、悬赏托管 / 发放 / 退款);迁移 `0500`–`0549` | 任务进度只由本路写 |
 | S25 物与服务、组织、NPC | `src/verbs/use.ts`;`src/orgs/*`;`src/npc/*`;迁移 `0550`–`0599` | 组织周目标、NPC 巡逻与再生 |
+| S19 返工二 到期索引 | 迁移 `0600_clock_due.sql`(角色 / NPC / 组织下次到期刻与索引) | 刻阶段只取到期对象,空闲满值零开销 |
+| S27 资源点与商人 | `src/resources/*`;`src/content/index.ts` 的 `resource_spots` / `shop_lists` 段与来源校验;`src/clock/phases.ts` 末尾一阶段(S9 冻结面,0 号窗 11-06 备案);`src/verbs/take.ts` `use.ts` 各一行唤醒;迁移 `0700`–`0799`;`test/s27_resources.test.ts` | 资源点按 `npc.resource_respawn_ticks` 补满、商人按 `npc.merchant_restock_ticks` 补货;任务要的物无来源即拒启动 |
 
 约定:每个动词一个文件,定义里已写好参数校验与结果类型,实现方只填 `handler`;刻阶段与跨路钩子都放在归属方自己的文件里,S9 已建好空实现。各路只往自己的迁移号段加新文件,不改已跑过的迁移。要新增依赖、改协议常量或改共享类型,交 0 号窗合并。
 

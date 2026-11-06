@@ -5,15 +5,21 @@
 // "web" — no second action path, no session, no cookie.
 
 import { createHash } from "node:crypto";
+import { readFile } from "node:fs/promises";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { join } from "node:path";
 import type { Db } from "../db/db.ts";
 import { SERVER_ROOT } from "../config.ts";
-import { VERBS } from "../facts/enums.ts";
+import { SKINS, VERBS, type Skin } from "../facts/enums.ts";
+import { selectRows } from "../facts/store.ts";
+import { publicChar } from "../facts/project.ts";
+import type { LookResult } from "../verbs/look.ts";
+import { parseBearer } from "../identity/auth.ts";
 import type { DispatchInput, DispatchOutput } from "../verbs/runner.ts";
 import { argsFromPost, formBySlug, formsOf, type WebForm } from "./forms.ts";
-import { indexDoc, isFactId, renderPage, resolveSkin, type PageDoc, type PageKind } from "./pages.ts";
-import { loadSkins, type SkinBook } from "./skins.ts";
+import { formDocument, formsIndexDocument, homeHtml, publicHtml, resultDocument, shellLang, wantsHtml, type ShellLang } from "./html.ts";
+import { indexDoc, isFactId, renderPage, resolveSkin, type PageDoc, type PageKind, type ResolvedSkin } from "./pages.ts";
+import { lexiconFor, loadSkins, neutralLexicon, type SkinBook } from "./skins.ts";
 
 export interface PublicDeps {
   db: Db;
@@ -24,6 +30,36 @@ export interface PublicDeps {
 
 const BODY_MAX = 65536;
 const SKINS_DIR = join(SERVER_ROOT, "..", "content", "skins");
+const STATIC_DIR = join(SERVER_ROOT, "src", "public", "static");
+const PLAY_PAGE = `<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 人间</title>
+<link rel="stylesheet" href="/play/static/play.css">
+</head>
+<body>
+<div class="wrap">
+<div id="gate"></div>
+<div id="reveal" class="hidden"></div>
+<main id="world" class="hidden">
+<header id="world-head" class="top"></header>
+<p id="status" class="small" role="status"></p>
+<div id="world-view" class="grid"></div>
+<section id="events-card" class="card">
+<h3 id="events-title"></h3>
+<div id="events" class="list"></div>
+</section>
+<details class="raw"><summary id="details-title"></summary><pre id="last-raw"></pre></details>
+</main>
+</div>
+<div id="toast" class="toast hidden" role="status"></div>
+<script src="/play/static/play.js"></script>
+</body>
+</html>
+`;
+const CSP = "default-src 'self'";
 
 let skinsPromise: Promise<SkinBook> | null = null;
 function skins(): Promise<SkinBook> {
@@ -69,8 +105,27 @@ function sendPage(req: IncomingMessage, res: ServerResponse, doc: PageDoc): void
   });
 }
 
-function sendHtml(res: ServerResponse, status: number, body: string): void {
-  send(res, status, "text/html", body, { "Cache-Control": "no-store" });
+function sendHtml(res: ServerResponse, status: number, body: string, csp = false): void {
+  send(res, status, "text/html", body, {
+    "Cache-Control": "no-store",
+    ...(csp ? { "Content-Security-Policy": CSP } : {}),
+  });
+}
+
+function headerLine(req: IncomingMessage, name: string): string | undefined {
+  const v = req.headers[name];
+  return typeof v === "string" ? v : Array.isArray(v) ? v.join(", ") : undefined;
+}
+
+/** Browser view of a public page. Region pages use that region's skin; the rest default by language. */
+function browserSkin(book: SkinBook, kind: PageKind | "index", ref: string | null, search: URLSearchParams, lang: ShellLang): ResolvedSkin {
+  const asked = resolveSkin(book, search);
+  if (asked.query !== "") return asked;
+  const locale = lang === "zh" ? "zh-CN" : "en";
+  const skin: Skin = kind === "region" && ref !== null && (SKINS as readonly string[]).includes(ref) ? (ref as Skin) : lang === "zh" ? "xiuxian" : "fantasy";
+  const lex = lexiconFor(book, skin, locale);
+  if (lex.skin === null) return { lexicon: neutralLexicon(), query: "" };
+  return { lexicon: lex, query: `?skin=${skin}&locale=${encodeURIComponent(locale)}` };
 }
 
 function notFound(res: ServerResponse): void {
@@ -81,61 +136,22 @@ function esc(s: string): string {
   return s.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 }
 
-function formHtml(spec: WebForm, skinQuery: string): string {
-  const inputs = spec.fields
-    .map((f) => {
-      const control =
-        f.kind === "select"
-          ? `<select name="${esc(f.name)}">${(f.options ?? []).map((o) => `<option value="${esc(o)}">${esc(o === "" ? "(empty)" : o)}</option>`).join("")}</select>`
-          : `<input name="${esc(f.name)}" type="${f.name === "code" ? "password" : "text"}" autocomplete="off">`;
-      return `<label>${esc(f.label)}<br>${control}</label>`;
-    })
-    .join("\n");
-  return `<!doctype html>
-<html lang="zh"><head><meta charset="utf-8"><title>${esc(spec.title)}</title></head>
-<body>
-<p><a href="/${skinQuery}">公开页</a> · <a href="/act${skinQuery}">全部动作</a></p>
-<h1>${esc(spec.title)}</h1>
-<p>verb <code>${esc(spec.verb)}</code> · door <code>web</code> · 身份码只在这次提交里,不进网址。</p>
-<form method="post" action="/act/${esc(spec.slug)}">
-${inputs}
-<button type="submit">提交</button>
-</form>
-</body></html>
-`;
+function formHtml(spec: WebForm, skinQuery: string, lang: ShellLang): string {
+  return formDocument(lang, { title: spec.title, verb: spec.verb, slug: spec.slug, fields: spec.fields }, skinQuery);
 }
 
-function indexHtml(skinQuery: string): string {
+function indexHtml(skinQuery: string, lang: ShellLang): string {
   const items = VERBS.map((verb) => {
     const forms = formsOf(verb);
-    if (forms.length === 0) return `<li><code>${verb}</code> — 参数是嵌套对象,走 JSON 接口 <code>POST /v1/actions/${verb}</code></li>`;
+    if (forms.length === 0) return `<li><code>${verb}</code> — JSON <code>POST /v1/actions/${verb}</code></li>`;
     const links = forms.map((f) => `<a href="/act/${esc(f.slug)}${skinQuery}">${esc(f.title)}</a>`).join(" · ");
     return `<li><code>${verb}</code> — ${links}</li>`;
   }).join("\n");
-  return `<!doctype html>
-<html lang="zh"><head><meta charset="utf-8"><title>动作表单</title></head>
-<body>
-<p><a href="/${skinQuery}">公开页</a></p>
-<h1>动作 · 网页表单</h1>
-<p>每个动作一张表单。身份码填在表单里提交,不出现在网址上。提交走与 JSON 接口同一个分发,入口记 web。</p>
-<ul>
-${items}
-</ul>
-</body></html>
-`;
+  return formsIndexDocument(lang, items, skinQuery);
 }
 
-function resultHtml(spec: WebForm, out: DispatchOutput, skinQuery: string): string {
-  const body = JSON.stringify(out.body, null, 2);
-  return `<!doctype html>
-<html lang="zh"><head><meta charset="utf-8"><title>${esc(spec.title)} · 结果</title></head>
-<body>
-<p><a href="/act/${esc(spec.slug)}${skinQuery}">返回表单</a> · <a href="/${skinQuery}">公开页</a></p>
-<h1>${esc(spec.title)} · 结果</h1>
-<p>HTTP ${out.status} · door web</p>
-<pre>${esc(body)}</pre>
-</body></html>
-`;
+function resultHtml(spec: WebForm, out: DispatchOutput, skinQuery: string, lang: ShellLang): string {
+  return resultDocument(lang, spec.title, out.status, JSON.stringify(out.body, null, 2), `/act/${spec.slug}${skinQuery}`, skinQuery);
 }
 
 async function readFormBody(req: IncomingMessage): Promise<string> {
@@ -167,29 +183,97 @@ function routeOf(path: string): RouteHit | null {
   return null;
 }
 
+const STATIC_FILES = new Map<string, string>([
+  ["play.js", "text/javascript"],
+  ["play.css", "text/css"],
+]);
+
+async function sendStatic(res: ServerResponse, name: string): Promise<void> {
+  const type = STATIC_FILES.get(name);
+  if (type === undefined) return notFound(res);
+  let body: string;
+  try {
+    body = await readFile(join(STATIC_DIR, name), "utf8");
+  } catch {
+    return notFound(res);
+  }
+  send(res, 200, type, body, { "Cache-Control": "no-store", "Content-Security-Policy": CSP });
+}
+
+async function sendLexicon(res: ServerResponse, skin: string, locale: string): Promise<void> {
+  if (!(SKINS as readonly string[]).includes(skin) || !/^[a-zA-Z]{2,3}(?:-[a-zA-Z0-9]{2,8})?$/.test(locale)) return notFound(res);
+  const file = join(SKINS_DIR, skin, `${locale}.json`);
+  if (!file.startsWith(SKINS_DIR)) return notFound(res);
+  let body: string;
+  try {
+    body = await readFile(file, "utf8");
+  } catch {
+    return notFound(res);
+  }
+  send(res, 200, "application/json", body, { "Cache-Control": "no-store", "Content-Security-Policy": CSP });
+}
+
 async function handleGet(deps: PublicDeps, req: IncomingMessage, res: ServerResponse, path: string, search: URLSearchParams): Promise<void> {
+  if (path === "/play") {
+    sendHtml(res, 200, PLAY_PAGE, true);
+    return;
+  }
+  if (path === "/play/definitions") {
+    const where = "record = 'definition' AND split_part(id, ':', 1) = $1";
+    const items = await selectRows(deps.db, "item", where, [deps.realm]);
+    const skills = await selectRows(deps.db, "skill", where, [deps.realm]);
+    const places = await selectRows(deps.db, "place", "split_part(id, ':', 1) = $1", [deps.realm]);
+    send(res, 200, "application/json", JSON.stringify({ items, skills, places: places.map(({ id, content_key }) => ({ id, content_key })) }), {
+      "Cache-Control": "no-store",
+      "Content-Security-Policy": CSP,
+    });
+    return;
+  }
+  const asset = /^\/play\/static\/(play\.(?:js|css))$/.exec(path);
+  if (asset?.[1] !== undefined) {
+    await sendStatic(res, asset[1]);
+    return;
+  }
+  const lex = /^\/play\/lexicon\/([a-z]+)\/([a-zA-Z0-9-]+)\.json$/.exec(path);
+  if (lex?.[1] !== undefined && lex[2] !== undefined) {
+    await sendLexicon(res, lex[1], lex[2]);
+    return;
+  }
   const book = await skins();
+  const html = wantsHtml(headerLine(req, "accept"));
+  const lang = shellLang(headerLine(req, "accept-language"));
   const chosen = resolveSkin(book, search);
   if (path === "/act") {
-    sendHtml(res, 200, indexHtml(chosen.query));
+    sendHtml(res, 200, indexHtml(chosen.query, lang), true);
     return;
   }
   const slug = /^\/act\/([a-z0-9-]+)$/.exec(path);
   if (slug?.[1] !== undefined) {
     const spec = formBySlug(slug[1]);
     if (spec === null) return notFound(res);
-    sendHtml(res, 200, formHtml(spec, chosen.query));
+    sendHtml(res, 200, formHtml(spec, chosen.query, lang), true);
     return;
   }
   const hit = routeOf(path);
   if (hit === null) return notFound(res);
-  if (hit.kind === "index") {
-    sendPage(req, res, indexDoc(book, chosen.query));
+  if (!html) {
+    if (hit.kind === "index") {
+      sendPage(req, res, indexDoc(book, chosen.query));
+      return;
+    }
+    const doc = await renderPage(deps.db, { kind: hit.kind, ref: hit.ref, lexicon: chosen.lexicon });
+    if (doc === null) return notFound(res);
+    sendPage(req, res, doc);
     return;
   }
-  const doc = await renderPage(deps.db, { kind: hit.kind, ref: hit.ref, lexicon: chosen.lexicon });
+  const view = browserSkin(book, hit.kind, hit.ref, search, lang);
+  if (hit.kind === "index") {
+    sendHtml(res, 200, homeHtml(lang, book), true);
+    return;
+  }
+  const doc = await renderPage(deps.db, { kind: hit.kind, ref: hit.ref, lexicon: view.lexicon });
   if (doc === null) return notFound(res);
-  sendPage(req, res, doc);
+  sendHtml(res, 200, publicHtml(lang, doc.markdown, view.query), true);
 }
 
 async function handlePost(deps: PublicDeps, req: IncomingMessage, res: ServerResponse, path: string, search: URLSearchParams): Promise<void> {
@@ -217,7 +301,43 @@ async function handlePost(deps: PublicDeps, req: IncomingMessage, res: ServerRes
     door: "web",
   });
   const book = await skins();
-  sendHtml(res, out.status, resultHtml(spec, out, resolveSkin(book, search).query));
+  const lang = shellLang(headerLine(req, "accept-language"));
+  sendHtml(res, out.status, resultHtml(spec, out, resolveSkin(book, search).query, lang), true);
+}
+
+async function handlePlay(deps: PublicDeps, req: IncomingMessage, res: ServerResponse, path: string): Promise<void> {
+  const verb = /^\/play\/v1\/([a-z]{1,32})$/.exec(path)?.[1];
+  if (verb === undefined) return notFound(res);
+  const type = req.headers["content-type"] ?? "";
+  if (!type.startsWith("application/json")) {
+    send(res, 415, "application/json", JSON.stringify({ ok: false, error: { code: "INVALID_ARGUMENT" } }), {
+      "Cache-Control": "no-store",
+      "Content-Security-Policy": CSP,
+    });
+    return;
+  }
+  const raw = await readFormBody(req);
+  let body: unknown;
+  try {
+    body = JSON.parse(raw);
+  } catch {
+    send(res, 400, "application/json", JSON.stringify({ ok: false, error: { code: "INVALID_ARGUMENT" } }), {
+      "Cache-Control": "no-store",
+      "Content-Security-Policy": CSP,
+    });
+    return;
+  }
+  const out = await deps.dispatch({ verb, body, bearer: parseBearer(req.headers.authorization), door: "web" });
+  if (verb === "look" && out.body.ok && (body as { args?: { section?: string } })?.args?.section === "place") {
+    const result = out.body.result as LookResult;
+    const people = await selectRows(deps.db, "char", "loc = $1 AND state <> 'buried'", [result.place.id]);
+    const items = await selectRows(deps.db, "item", "record = 'instance' AND holder ->> 'kind' = 'place' AND holder ->> 'id' = $1 AND state = 'available'", [result.place.id]);
+    const enriched = { ...out.body, result: { ...result, people: people.map(publicChar), items } };
+    send(res, out.status, "application/json", JSON.stringify(enriched), { "Cache-Control": "no-store", "Content-Security-Policy": CSP });
+    return;
+  }
+  const json = out.json ?? JSON.stringify(out.body);
+  send(res, out.status, "application/json", json, { "Cache-Control": "no-store", "Content-Security-Policy": CSP });
 }
 
 export async function handlePublic(deps: PublicDeps, req: IncomingMessage, res: ServerResponse): Promise<void> {
@@ -225,6 +345,10 @@ export async function handlePublic(deps: PublicDeps, req: IncomingMessage, res: 
   const path = decodeURI(url.pathname);
   if (req.method === "GET" || req.method === "HEAD") {
     await handleGet(deps, req, res, path, url.searchParams);
+    return;
+  }
+  if (req.method === "POST" && path.startsWith("/play/v1/")) {
+    await handlePlay(deps, req, res, path);
     return;
   }
   if (req.method === "POST") {

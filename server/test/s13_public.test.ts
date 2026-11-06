@@ -68,7 +68,7 @@ test("S13 chain: place page → biography → no code → 304 → web form look"
     });
     assert.equal(posted.status, 200);
     const result = await posted.text();
-    assert.match(result, /door web/);
+    assert.match(result, /HTTP 200 · web/);
     assert.match(result, /&quot;ok&quot;: true/);
     assert.match(result, new RegExp(me.loc.replaceAll("_", "\\_")));
     // The form result page echoes the verb result, never the code that was posted.
