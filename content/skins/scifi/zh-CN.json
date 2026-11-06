@@ -1679,6 +1679,15 @@
   {"key": "skill.org·skill.move·content.r1.xiuxian_jiuhuan.herb_stride", "name": "九转采步", "flavor": "九转药剂组在样本田间穿行的机动。"},
   {"key": "skill.org·skill.guard·content.r1.xiuxian_yunzhuan.sigil_ward", "name": "云纹护罩", "flavor": "云纹数据组以符码结成护罩的防护技。"},
   {"key": "skill.org·skill.strike·content.r1.xiuxian_yunzhuan.sigil_bolt", "name": "云纹符击", "flavor": "云纹数据组掷出符码伤敌的打击技。"},
-  {"key": "skill.org·skill.inner·content.r1.xiuxian_yunzhuan.sigil_breath", "name": "云纹调息", "flavor": "云纹数据组借符码调息的神经同步。"}
+  {"key": "skill.org·skill.inner·content.r1.xiuxian_yunzhuan.sigil_breath", "name": "云纹调息", "flavor": "云纹数据组借符码调息的神经同步。"},
+  {"key": "org_rank.xiuxian_sword_elder", "name": "剑团长老", "flavor": "银刃剑团的长老。"},
+  {"key": "org_rank.xiuxian_elixir_elder", "name": "药剂组长老", "flavor": "九转药剂组的长老。"},
+  {"key": "org_rank.xiuxian_sigil_elder", "name": "数据组长老", "flavor": "云纹数据组的长老。"},
+  {"key": "org_rank.fantasy_warden", "name": "驻防队长", "flavor": "灰港驻防队的首领。"},
+  {"key": "org_rank.fantasy_candle", "name": "银烛研究主管", "flavor": "银烛研究组的主管。"},
+  {"key": "org_rank.fantasy_pathfinder", "name": "青径护航领队", "flavor": "青径护航团的领路人。"},
+  {"key": "org_rank.wuxia_escort_chief", "name": "护航局总领", "flavor": "青溪护航局的首领。"},
+  {"key": "org_rank.wuxia_martial_instructor", "name": "格斗教官", "flavor": "松风格斗团的教官。"},
+  {"key": "org_rank.wuxia_herb_keeper", "name": "样本社主管", "flavor": "听雨样本社的主管。"}
  ]
 }

@@ -1679,6 +1679,15 @@
   {"key": "skill.org·skill.move·content.r1.xiuxian_jiuhuan.herb_stride", "name": "Ninefold Sample Stride", "flavor": "The movement of the Ninefold Compound Group through the sample fields."},
   {"key": "skill.org·skill.guard·content.r1.xiuxian_yunzhuan.sigil_ward", "name": "Cloud-Pattern Aegis", "flavor": "The guard art of the Cloud-Pattern Data Group that raises a shield of code."},
   {"key": "skill.org·skill.strike·content.r1.xiuxian_yunzhuan.sigil_bolt", "name": "Cloud-Pattern Bolt", "flavor": "The strike art of the Cloud-Pattern Data Group that hurls a coded sigil."},
-  {"key": "skill.org·skill.inner·content.r1.xiuxian_yunzhuan.sigil_breath", "name": "Cloud-Pattern Breath", "flavor": "The neural-sync art of the Cloud-Pattern Data Group that steadies the breath through code."}
+  {"key": "skill.org·skill.inner·content.r1.xiuxian_yunzhuan.sigil_breath", "name": "Cloud-Pattern Breath", "flavor": "The neural-sync art of the Cloud-Pattern Data Group that steadies the breath through code."},
+  {"key": "org_rank.xiuxian_sword_elder", "name": "Sword Company Elder", "flavor": "An elder of the Silverblade Company."},
+  {"key": "org_rank.xiuxian_elixir_elder", "name": "Compound Group Elder", "flavor": "An elder of the Ninefold Compound Group."},
+  {"key": "org_rank.xiuxian_sigil_elder", "name": "Data Group Elder", "flavor": "An elder of the Cloud-Pattern Data Group."},
+  {"key": "org_rank.fantasy_warden", "name": "Garrison Captain", "flavor": "The head of the Grayhaven Garrison."},
+  {"key": "org_rank.fantasy_candle", "name": "Silver Candle Research Lead", "flavor": "A lead of the Silver Candle Lab Group."},
+  {"key": "org_rank.fantasy_pathfinder", "name": "Greenpath Convoy Guide", "flavor": "A guide of the Greenpath Convoy."},
+  {"key": "org_rank.wuxia_escort_chief", "name": "Convoy Office Chief", "flavor": "The head of the Qingxi Convoy Office."},
+  {"key": "org_rank.wuxia_martial_instructor", "name": "Combat Instructor", "flavor": "An instructor of the Pinewind Combat Group."},
+  {"key": "org_rank.wuxia_herb_keeper", "name": "Sample Society Steward", "flavor": "A steward of the Rainlisten Sample Society."}
  ]
 }

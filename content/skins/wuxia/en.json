@@ -2862,6 +2862,51 @@
       "key": "skill.org·skill.move·content.r1.scifi_salvage.haul",
       "name": "Salvage Haul",
       "flavor": "The footwork of the Salvage Crew."
+    },
+    {
+      "key": "org_rank.xiuxian_sword_elder",
+      "name": "Sword School Elder",
+      "flavor": "An elder of the Taihua Sword School."
+    },
+    {
+      "key": "org_rank.xiuxian_elixir_elder",
+      "name": "Apothecary Elder",
+      "flavor": "An elder of the Nine-Return Apothecary."
+    },
+    {
+      "key": "org_rank.xiuxian_sigil_elder",
+      "name": "Library Elder",
+      "flavor": "An elder of the Cloud-Pattern Library."
+    },
+    {
+      "key": "org_rank.fantasy_warden",
+      "name": "Watch Captain",
+      "flavor": "The head of the Grayport Watch."
+    },
+    {
+      "key": "org_rank.fantasy_candle",
+      "name": "Silver Candle Steward",
+      "flavor": "A steward of the Silver Candle Society."
+    },
+    {
+      "key": "org_rank.fantasy_pathfinder",
+      "name": "Greenpath Guide",
+      "flavor": "A guide of the Greenpath Brotherhood."
+    },
+    {
+      "key": "org_rank.scifi_survey_lead",
+      "name": "Pathfinding Chief",
+      "flavor": "The head of the Pathfinding Crew."
+    },
+    {
+      "key": "org_rank.scifi_trade_broker",
+      "name": "Wharf Broker",
+      "flavor": "A broker of the Wharf Guild."
+    },
+    {
+      "key": "org_rank.scifi_salvage_boss",
+      "name": "Salvage Chief",
+      "flavor": "The head of the Salvage Crew."
     }
   ]
 }

@@ -2862,6 +2862,51 @@
       "key": "skill.org·skill.move·content.r1.scifi_salvage.haul",
       "name": "打捞拖绳",
       "flavor": "打捞队的身法。"
+    },
+    {
+      "key": "org_rank.xiuxian_sword_elder",
+      "name": "剑派长老",
+      "flavor": "太华剑派的长老。"
+    },
+    {
+      "key": "org_rank.xiuxian_elixir_elder",
+      "name": "药铺长老",
+      "flavor": "九还药铺的长老。"
+    },
+    {
+      "key": "org_rank.xiuxian_sigil_elder",
+      "name": "书楼长老",
+      "flavor": "云纹书楼的长老。"
+    },
+    {
+      "key": "org_rank.fantasy_warden",
+      "name": "卫所卫长",
+      "flavor": "灰港卫所的首领。"
+    },
+    {
+      "key": "org_rank.fantasy_candle",
+      "name": "银烛执事",
+      "flavor": "银烛会的执事。"
+    },
+    {
+      "key": "org_rank.fantasy_pathfinder",
+      "name": "青径引路人",
+      "flavor": "青径帮的引路人。"
+    },
+    {
+      "key": "org_rank.scifi_survey_lead",
+      "name": "勘路头领",
+      "flavor": "勘路帮的首领。"
+    },
+    {
+      "key": "org_rank.scifi_trade_broker",
+      "name": "埠头经纪",
+      "flavor": "埠头商会的经纪。"
+    },
+    {
+      "key": "org_rank.scifi_salvage_boss",
+      "name": "打捞头领",
+      "flavor": "打捞队的首领。"
     }
   ]
 }
