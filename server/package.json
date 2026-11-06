@@ -1,0 +1,25 @@
+{
+  "name": "aihw-server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI & Human World engine (aihw.v1): facts, three-layer events, tick clock, HTTP verb dispatch.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": {
+    "node": ">=24.12"
+  },
+  "scripts": {
+    "start": "node src/main.ts",
+    "test": "node --test \"test/*.test.ts\"",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "0.5.15",
+    "pg": "8.23.1"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "@types/pg": "8.23.1",
+    "typescript": "7.0.2"
+  }
+}
