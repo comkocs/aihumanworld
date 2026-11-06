@@ -8,6 +8,7 @@ import { capacity, definition, equipped, stats } from "../npc/facts.ts";
 import { changeOrg, emitBond, manageOrg, membership } from "../orgs/membership.ts";
 import { boolAt, ceilRatio, cellNumber, checkedUInt, floorRatio, numberAt, requireRevision } from "../orgs/numbers.ts";
 import { NO_DETAILS, reject } from "../protocol/errors.ts";
+import { wakeSupply } from "../resources/clock.ts";
 import { requireRule } from "../rules/world_rules.ts";
 import { bondId, charId, deedId, direction, itemId, orgId } from "../protocol/shapes.ts";
 import { bool, oneOf, uint, union, type Out } from "../protocol/validate.ts";
@@ -253,6 +254,8 @@ async function trade(ctx: VerbContext, a: Extract<UseArgs, { op: "buy" | "sell" 
     await operation.update("char", buyer.id, { coin: buyer.coin - amount });
     await operation.update("char", seller.id, { coin: checkedUInt(BigInt(seller.coin) + BigInt(amount)) });
     await operation.update("item", row.id, { holder: { kind: "char", id: buyer.id } });
+    // [S27] The shop is one item poorer: wake its supply row if it was idle.
+    if (a.op === "buy") await wakeSupply(ctx.q, ctx.balance, { kind: "char", id: npc.id }, row.def_id, ctx.tick);
   }
   const result = await operation.finish(a.op, a.op === "repair" ? "repair" : "trade", [row.id, npc.id], [npc.id]);
   return a.op === "repair" ? result : { ...result, price: amount };

@@ -1,6 +1,7 @@
 // Ordered tick phases (事实格式 §3.1: due tasks & refunds → identity states →
 // wanted expiry → org weekly goals and last-tick yields → new budgets; budgets are
-// lazy, see budget.ts). Each phase lives in its owner's file; owners change their
+// lazy, see budget.ts). After the NPC phase, S27 tops resource spots and merchant
+// shops back up to cap. Each phase lives in its owner's file; owners change their
 // own file only. Adding / reordering phases is an S9 (0 号窗) change.
 
 import type { Queryable } from "../db/db.ts";
@@ -12,6 +13,7 @@ import { identityPhase } from "../identity/lifecycle.ts";
 import { wantedPhase, yieldPhase } from "../growth/clock.ts";
 import { orgGoalPhase } from "../orgs/clock.ts";
 import { npcPhase } from "../npc/clock.ts";
+import { resourcePhase } from "../resources/clock.ts";
 
 export interface ClockCtx {
   q: Queryable;
@@ -31,7 +33,7 @@ export interface ClockCtx {
 
 export interface ClockPhase {
   name: string;
-  owner: "S10" | "S11" | "S24" | "S25" | "unassigned";
+  owner: "S10" | "S11" | "S24" | "S25" | "S27" | "unassigned";
   run(ctx: ClockCtx): Promise<void>;
 }
 
@@ -44,4 +46,5 @@ export const PHASES: readonly ClockPhase[] = [
   orgGoalPhase,
   yieldPhase,
   npcPhase,
+  resourcePhase,
 ];

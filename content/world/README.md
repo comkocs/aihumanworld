@@ -4,7 +4,7 @@
 
 ## 文件格式(aihw.content.v1)
 
-一个 JSON 对象,七段,全部可省(空文件合法):
+一个 JSON 对象,九段,全部可省(空文件合法):
 
 | 段 | 内容 | 幂等键 |
 |---|---|---|
@@ -15,6 +15,8 @@
 | `tasks` | 任务模板行:`local/tpl/tier/stage/condition/reward_spec/duration_ticks` | `content.<realm>.task.<local>` |
 | `orgs` | 组织行(事实格式 §8.1):`local/region/hall/ranks/goal_kind`;`goal_kind` 可省,缺省 `system_tasks` | `content.<realm>.org.<local>` |
 | `org_skills` | 组织专属技能定义(事实格式 §7.1 定义分支):`org/local/base/tier` | `org:<realm>:org:<org_local>:<local>` |
+| `resource_spots` | 资源点产出表(S27):`{place, items:[{def, cap}]}`;`place` 必须带 `resource` feature | `<holder> 的 <def>` |
+| `shop_lists` | 商人货单(S27):`{char, items:[{def, cap}]}`;`char` 必须是 merchant 原型 NPC | `<holder> 的 <def>` |
 
 约定:
 
@@ -25,6 +27,7 @@
 - 已在库的组织(含种子的四个登记组织 `org:registry_<皮>`)不重建、不改,`orgs` 段同名条目只计跳过;要给它们加专属技能,写在 `org_skills` 段。
 - 组织专属技能:`org` 指已在库或本文件新建的组织,`base` 为四类之一,`tier` 为适用起阶 1..9。库内键为 `org:<org_id>:<local>`(事实格式 §2.1 SkillKey),展示键为 `skill.org·skill.<base>·content.<realm>.<org_local>.<local>`(标签词表 §8.1),四皮按展示键起名。定义只带 base 与 tier,不带数:练、学的等级与上限照 S5 同一四类公式(`tiers.skill_cap_hard` 等)。导入的定义 ID 为 `<realm>:skill:org_<org_local>_<local>`,并追加进该组织的 `skill_defs`(只增不删)。本文件新建或加过技能的组织,文件结束时须有 2~3 门专属技能(产品文档 §17 F),否则整文件不入。
 - 一个文件一个事务,任何一条不过整文件不入,错误报出文件 / 段 / local;已在库的跳过、不覆盖。
+- 资源点与商人(S27,「世界里要有物」):产出表 / 货单一行 = 一个物定义 + 该持有者名下同定义 `available` 实例的上限 `cap ≥ 1`;引用一律写 `item:<local>`(多为中立 189 定义)。两段在七段之后**第二遍**导入,故可引用本批稍后文件导入的定义。导入即把该行 `due_tick` 记为当前刻,开服首刻补满一次;之后资源点每 `npc.resource_respawn_ticks`、商人每 `npc.merchant_restock_ticks`(数值表)把缺的补到上限、只补缺不超上限(take / buy 拿走才重排到期,满额对象零开销)。补出的实例 holder = 该地点 / 该商人,可 take / 可 `use buy`。导入收口有一条库级校验:每个 deliver / gather 任务模板要的 `item_def`,必须在其交付地点(`to_place`)同区或中立区至少有一个资源点或商人能出,否则点名报错、整个导入失败。
 
 ## neutral.json 的中立 content_key 清单(四皮第二步起名用)
 

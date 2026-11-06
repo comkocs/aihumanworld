@@ -78,9 +78,9 @@ export interface ContentImportResult {
 }
 
 /** `skill` counts skill rows of both records (master learned rows, org skill definitions). */
-export type ContentCounter = "place" | "item" | "task" | "char" | "skill" | "exit" | "org";
+export type ContentCounter = "place" | "item" | "task" | "char" | "skill" | "exit" | "org" | "supply";
 
-const zeroCounts = (): Record<ContentCounter, number> => ({ place: 0, item: 0, task: 0, char: 0, skill: 0, exit: 0, org: 0 });
+const zeroCounts = (): Record<ContentCounter, number> => ({ place: 0, item: 0, task: 0, char: 0, skill: 0, exit: 0, org: 0, supply: 0 });
 
 /** Org skills per org (产品文档 §17 F: 每组织专属 2~3 门). */
 export const ORG_SKILLS_MIN = 2;
@@ -187,6 +187,17 @@ const orgSkillEntry = obj({
   tier,
 });
 
+// [S27] One producible definition per holder: resource spots sit on
+// feature.resource places, shop lists on merchant NPCs. due_tick = import tick,
+// so the first clock tick after boot fills every holder once.
+const supplyItemEntry = obj({
+  def: itemId,
+  cap: refine(uint, (n) => n >= 1, "supply cap >= 1"),
+});
+
+const spotEntry = obj({ place: placeId, items: arr(supplyItemEntry, { min: 1 }) });
+const shopEntry = obj({ char: charId, items: arr(supplyItemEntry, { min: 1 }) });
+
 const contentFile = obj({
   schema: lit("aihw.content.v1"),
   places: opt(arr(placeEntry), []),
@@ -196,6 +207,8 @@ const contentFile = obj({
   tasks: opt(arr(taskEntry), []),
   orgs: opt(arr(orgEntry), []),
   org_skills: opt(arr(orgSkillEntry), []),
+  resource_spots: opt(arr(spotEntry), []),
+  shop_lists: opt(arr(shopEntry), []),
 });
 
 type ItemEntry = Out<typeof itemEntry>;
@@ -472,6 +485,100 @@ async function importTasks(ctx: FileCtx, file: string, entries: TaskEntry[], res
 }
 
 /**
+ * [S27] Resource spots (feature.resource places) and merchant shop lists, into
+ * the private s27_supply table, idempotent per (holder, def): an existing row
+ * is skipped, never overwritten. due_tick = the import tick, so the first clock
+ * tick after boot tops every holder up once. Runs in a second pass over the
+ * files, because a spot / shop list may reference item definitions a later
+ * file (the neutral list) imports.
+ */
+async function importSupply(
+  ctx: FileCtx,
+  file: string,
+  spots: Out<typeof spotEntry>[],
+  shops: Out<typeof shopEntry>[],
+  result: ContentImportResult,
+): Promise<void> {
+  const lists = [
+    ...spots.map((e) => ({ e, kind: "place" as const, id: e.place, section: "resource_spots" })),
+    ...shops.map((e) => ({ e, kind: "char" as const, id: e.char, section: "shop_lists" })),
+  ];
+  for (let i = 0; i < lists.length; i += 1) {
+    const { e, kind, id, section } = lists[i]!;
+    try {
+      if (kind === "place") {
+        const place = await getRow(ctx.w.q, "place", id);
+        if (place === null) throw new Error(`place ${id} not in library`);
+        if (!place.features.includes("resource")) throw new Error(`place ${id} has no resource feature`);
+      } else {
+        const npc = await getRow(ctx.w.q, "char", id);
+        if (npc === null) throw new Error(`char ${id} not in library`);
+        if (npc.kind !== "npc" || npc.archetype !== "merchant") throw new Error(`char ${id} is not a merchant NPC`);
+      }
+      const seen = new Set<string>();
+      for (const it of e.items) {
+        if (seen.has(it.def)) throw new Error(`duplicate def ${it.def} in this list`);
+        seen.add(it.def);
+        const def = await getRow(ctx.w.q, "item", it.def);
+        if (def === null || def.record !== "definition") throw new Error(`item definition ${it.def} not in library`);
+        const taken = await ctx.w.q.query(
+          "SELECT 1 FROM s27_supply WHERE holder_kind = $1 AND holder_id = $2 AND def_id = $3",
+          [kind, id, it.def],
+        );
+        if (taken.rows.length > 0) {
+          result.skipped.supply += 1;
+          continue;
+        }
+        await ctx.w.q.query(
+          "INSERT INTO s27_supply (holder_kind, holder_id, def_id, cap, due_tick) VALUES ($1, $2, $3, $4, $5)",
+          [kind, id, it.def, it.cap, ctx.tick],
+        );
+        result.inserted.supply += 1;
+      }
+    } catch (err) {
+      fail(file, section, i, id, err);
+    }
+  }
+}
+
+/**
+ * [S27] Whole-library source check: every deliver / gather template's item_def
+ * must be producible by at least one resource spot or merchant in the task's
+ * own region (its to_place's region) or the neutral region. Violations are
+ * named by content_key and item id, and abort startup.
+ */
+async function verifyTaskSources(db: Db): Promise<void> {
+  const templates = (await selectRows(
+    db,
+    "task",
+    "record = 'template' AND tpl IN ('deliver', 'gather')",
+    [],
+    'ORDER BY id COLLATE "C"',
+  )) as TaskTemplateRow[];
+  for (const t of templates) {
+    if (t.record !== "template") continue;
+    const c = t.condition;
+    if (c.tpl !== "deliver" && c.tpl !== "gather") continue;
+    const to = await getRow(db, "place", c.to_place);
+    if (to === null) continue; // dangling references are the S12 checker's failure, not this one
+    const found = await db.query(
+      `SELECT 1 FROM s27_supply s WHERE s.def_id = $1 AND (
+         (s.holder_kind = 'place' AND EXISTS (SELECT 1 FROM places p WHERE p.id = s.holder_id AND p.region IN ($2, 'neutral')))
+         OR (s.holder_kind = 'char' AND EXISTS (
+           SELECT 1 FROM chars c JOIN places p ON p.id = c.loc
+           WHERE c.id = s.holder_id AND p.region IN ($2, 'neutral')))
+       ) LIMIT 1`,
+      [c.item_def, to.region],
+    );
+    if (found.rows.length === 0) {
+      throw new Error(
+        `content: task template ${t.content_key} needs ${c.item_def}, but no resource spot or merchant produces it in region ${to.region} or neutral`,
+      );
+    }
+  }
+}
+
+/**
  * Org rows (事实格式 §8.1), idempotent per content_key: an org already in the
  * library — including the seed's registry orgs — is never rebuilt or changed
  * here (org_skills may still add skill definitions to it). New orgs are not
@@ -608,7 +715,16 @@ async function verifyPlaces(ctx: FileCtx, file: string, fresh: PlaceRow[]): Prom
   }
 }
 
-async function importFile(db: Db, realm: string, bundle: RulesBundle, file: string, path: string, result: ContentImportResult): Promise<void> {
+/** pass "main" imports the seven fact sections; pass "supply" the [S27] supply lists. */
+async function importFile(
+  db: Db,
+  realm: string,
+  bundle: RulesBundle,
+  file: string,
+  path: string,
+  result: ContentImportResult,
+  pass: "main" | "supply",
+): Promise<void> {
   let parsed: Out<typeof contentFile>;
   try {
     parsed = contentFile(realmize(JSON.parse(await readFile(path, "utf8")), realm), "$");
@@ -633,6 +749,10 @@ async function importFile(db: Db, realm: string, bundle: RulesBundle, file: stri
       pendingOwners: [],
       touchedOrgs: new Set(),
     };
+    if (pass === "supply") {
+      await importSupply(ctx, file, parsed.resource_spots, parsed.shop_lists, result);
+      return;
+    }
     const fresh = await importPlaces(ctx, file, parsed.places, result);
     await importLinks(ctx, file, parsed.place_links, result);
     await importOrgs(ctx, file, parsed.orgs, result);
@@ -647,7 +767,10 @@ async function importFile(db: Db, realm: string, bundle: RulesBundle, file: stri
 
 /**
  * Imports every content/world/*.json (sorted by name) after the seed. One
- * transaction per file; a failure names the entry and aborts startup.
+ * transaction per file; a failure names the entry and aborts startup. The
+ * [S27] supply lists go in a second pass over the same files (they may
+ * reference item definitions a later file imports), then every deliver /
+ * gather template is checked for a producible source.
  */
 export async function importWorldContent(
   db: Db,
@@ -657,18 +780,22 @@ export async function importWorldContent(
 ): Promise<ContentImportResult> {
   const files = (await readdir(dir)).filter((f) => f.endsWith(".json")).sort();
   const result: ContentImportResult = { files, inserted: zeroCounts(), skipped: zeroCounts() };
-  for (const file of files) {
-    try {
-      await importFile(db, realm, bundle, file, `${dir}/${file}`, result);
-    } catch (err) {
-      log.error("content import failed", { file, err: errText(err) });
-      throw err;
+  for (const pass of ["main", "supply"] as const) {
+    for (const file of files) {
+      try {
+        await importFile(db, realm, bundle, file, `${dir}/${file}`, result, pass);
+      } catch (err) {
+        log.error("content import failed", { file, pass, err: errText(err) });
+        throw err;
+      }
     }
   }
+  await verifyTaskSources(db);
   const { inserted, skipped } = result;
   log.info("content imported", {
     files: result.files.length,
     places: inserted.place, items: inserted.item, tasks: inserted.task, chars: inserted.char, skills: inserted.skill, exits: inserted.exit, orgs: inserted.org,
+    supply: inserted.supply,
     skipped: Object.values(skipped).reduce((a, b) => a + b, 0),
   });
   return result;

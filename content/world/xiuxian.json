@@ -371,5 +371,116 @@
       "reward_spec": { "coin": 100, "xp": 300, "potential": 30, "rep": 0, "item_defs": [] },
       "duration_ticks": 1440
     }
+  ],
+  "resource_spots": [
+    {
+      "place": "place:xiuxian_peach_slope",
+      "items": [
+        {
+          "def": "item:herb_t1",
+          "cap": 4
+        },
+        {
+          "def": "item:ore_t1",
+          "cap": 3
+        }
+      ]
+    },
+    {
+      "place": "place:xiuxian_spirit_field",
+      "items": [
+        {
+          "def": "item:herb_t1",
+          "cap": 4
+        },
+        {
+          "def": "item:ore_t1",
+          "cap": 3
+        }
+      ]
+    },
+    {
+      "place": "place:xiuxian_dew_pool",
+      "items": [
+        {
+          "def": "item:herb_t1",
+          "cap": 4
+        },
+        {
+          "def": "item:ore_t1",
+          "cap": 3
+        }
+      ]
+    },
+    {
+      "place": "place:xiuxian_herb_ravine",
+      "items": [
+        {
+          "def": "item:herb_t1",
+          "cap": 5
+        }
+      ]
+    },
+    {
+      "place": "place:xiuxian_beast_cave",
+      "items": [
+        {
+          "def": "item:ore_t1",
+          "cap": 5
+        }
+      ]
+    },
+    {
+      "place": "place:xiuxian_broken_cliff",
+      "items": [
+        {
+          "def": "item:ore_t1",
+          "cap": 4
+        },
+        {
+          "def": "item:herb_t1",
+          "cap": 2
+        }
+      ]
+    }
+  ],
+  "shop_lists": [
+    {
+      "char": "char:xiuxian_merchant",
+      "items": [
+        {
+          "def": "item:potion_restore_t2_g1",
+          "cap": 4
+        },
+        {
+          "def": "item:potion_restore_t1_g1",
+          "cap": 4
+        },
+        {
+          "def": "item:scroll_strike_t2",
+          "cap": 2
+        },
+        {
+          "def": "item:scroll_guard_t2",
+          "cap": 2
+        },
+        {
+          "def": "item:key_t2",
+          "cap": 2
+        },
+        {
+          "def": "item:map_t2",
+          "cap": 2
+        },
+        {
+          "def": "item:herb_t1",
+          "cap": 4
+        },
+        {
+          "def": "item:ore_t1",
+          "cap": 4
+        }
+      ]
+    }
   ]
 }

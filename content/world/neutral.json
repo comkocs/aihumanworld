@@ -5795,5 +5795,401 @@
       "loc": "place:arena_neutral",
       "respawn_place": "place:arena_neutral"
     }
+  ],
+  "resource_spots": [
+    {
+      "place": "place:wild_t1",
+      "items": [
+        {
+          "def": "item:herb_t1",
+          "cap": 4
+        },
+        {
+          "def": "item:ore_t1",
+          "cap": 2
+        }
+      ]
+    },
+    {
+      "place": "place:wild2_t1",
+      "items": [
+        {
+          "def": "item:ore_t1",
+          "cap": 4
+        },
+        {
+          "def": "item:herb_t1",
+          "cap": 2
+        }
+      ]
+    },
+    {
+      "place": "place:dungeon_t1",
+      "items": [
+        {
+          "def": "item:ore_t1",
+          "cap": 4
+        },
+        {
+          "def": "item:herb_t1",
+          "cap": 2
+        }
+      ]
+    },
+    {
+      "place": "place:wild_t2",
+      "items": [
+        {
+          "def": "item:herb_t2",
+          "cap": 4
+        },
+        {
+          "def": "item:ore_t2",
+          "cap": 2
+        }
+      ]
+    },
+    {
+      "place": "place:wild2_t2",
+      "items": [
+        {
+          "def": "item:ore_t2",
+          "cap": 4
+        },
+        {
+          "def": "item:herb_t2",
+          "cap": 2
+        }
+      ]
+    },
+    {
+      "place": "place:dungeon_t2",
+      "items": [
+        {
+          "def": "item:ore_t2",
+          "cap": 4
+        },
+        {
+          "def": "item:herb_t2",
+          "cap": 2
+        }
+      ]
+    },
+    {
+      "place": "place:wild_t3",
+      "items": [
+        {
+          "def": "item:herb_t3",
+          "cap": 4
+        },
+        {
+          "def": "item:ore_t3",
+          "cap": 2
+        }
+      ]
+    },
+    {
+      "place": "place:wild2_t3",
+      "items": [
+        {
+          "def": "item:ore_t3",
+          "cap": 4
+        },
+        {
+          "def": "item:herb_t3",
+          "cap": 2
+        }
+      ]
+    },
+    {
+      "place": "place:dungeon_t3",
+      "items": [
+        {
+          "def": "item:ore_t3",
+          "cap": 4
+        },
+        {
+          "def": "item:herb_t3",
+          "cap": 2
+        }
+      ]
+    },
+    {
+      "place": "place:wild_t4",
+      "items": [
+        {
+          "def": "item:herb_t4",
+          "cap": 4
+        },
+        {
+          "def": "item:ore_t4",
+          "cap": 2
+        }
+      ]
+    },
+    {
+      "place": "place:wild2_t4",
+      "items": [
+        {
+          "def": "item:ore_t4",
+          "cap": 4
+        },
+        {
+          "def": "item:herb_t4",
+          "cap": 2
+        }
+      ]
+    },
+    {
+      "place": "place:dungeon_t4",
+      "items": [
+        {
+          "def": "item:ore_t4",
+          "cap": 4
+        },
+        {
+          "def": "item:herb_t4",
+          "cap": 2
+        }
+      ]
+    },
+    {
+      "place": "place:wild_t5",
+      "items": [
+        {
+          "def": "item:herb_t5",
+          "cap": 4
+        },
+        {
+          "def": "item:ore_t5",
+          "cap": 2
+        }
+      ]
+    },
+    {
+      "place": "place:wild2_t5",
+      "items": [
+        {
+          "def": "item:ore_t5",
+          "cap": 4
+        },
+        {
+          "def": "item:herb_t5",
+          "cap": 2
+        }
+      ]
+    },
+    {
+      "place": "place:dungeon_t5",
+      "items": [
+        {
+          "def": "item:ore_t5",
+          "cap": 4
+        },
+        {
+          "def": "item:herb_t5",
+          "cap": 2
+        }
+      ]
+    },
+    {
+      "place": "place:wild_t6",
+      "items": [
+        {
+          "def": "item:herb_t6",
+          "cap": 4
+        },
+        {
+          "def": "item:ore_t6",
+          "cap": 2
+        }
+      ]
+    },
+    {
+      "place": "place:wild2_t6",
+      "items": [
+        {
+          "def": "item:ore_t6",
+          "cap": 4
+        },
+        {
+          "def": "item:herb_t6",
+          "cap": 2
+        }
+      ]
+    },
+    {
+      "place": "place:dungeon_t6",
+      "items": [
+        {
+          "def": "item:ore_t6",
+          "cap": 4
+        },
+        {
+          "def": "item:herb_t6",
+          "cap": 2
+        }
+      ]
+    },
+    {
+      "place": "place:wild_t7",
+      "items": [
+        {
+          "def": "item:herb_t7",
+          "cap": 4
+        },
+        {
+          "def": "item:ore_t7",
+          "cap": 2
+        }
+      ]
+    },
+    {
+      "place": "place:wild2_t7",
+      "items": [
+        {
+          "def": "item:ore_t7",
+          "cap": 4
+        },
+        {
+          "def": "item:herb_t7",
+          "cap": 2
+        }
+      ]
+    },
+    {
+      "place": "place:dungeon_t7",
+      "items": [
+        {
+          "def": "item:ore_t7",
+          "cap": 4
+        },
+        {
+          "def": "item:herb_t7",
+          "cap": 2
+        }
+      ]
+    },
+    {
+      "place": "place:wild_t8",
+      "items": [
+        {
+          "def": "item:herb_t8",
+          "cap": 4
+        },
+        {
+          "def": "item:ore_t8",
+          "cap": 2
+        }
+      ]
+    },
+    {
+      "place": "place:wild2_t8",
+      "items": [
+        {
+          "def": "item:ore_t8",
+          "cap": 4
+        },
+        {
+          "def": "item:herb_t8",
+          "cap": 2
+        }
+      ]
+    },
+    {
+      "place": "place:dungeon_t8",
+      "items": [
+        {
+          "def": "item:ore_t8",
+          "cap": 4
+        },
+        {
+          "def": "item:herb_t8",
+          "cap": 2
+        }
+      ]
+    },
+    {
+      "place": "place:wild_t9",
+      "items": [
+        {
+          "def": "item:herb_t9",
+          "cap": 4
+        },
+        {
+          "def": "item:ore_t9",
+          "cap": 2
+        }
+      ]
+    },
+    {
+      "place": "place:wild2_t9",
+      "items": [
+        {
+          "def": "item:ore_t9",
+          "cap": 4
+        },
+        {
+          "def": "item:herb_t9",
+          "cap": 2
+        }
+      ]
+    },
+    {
+      "place": "place:dungeon_t9",
+      "items": [
+        {
+          "def": "item:ore_t9",
+          "cap": 4
+        },
+        {
+          "def": "item:herb_t9",
+          "cap": 2
+        }
+      ]
+    }
+  ],
+  "shop_lists": [
+    {
+      "char": "char:merchant_t3",
+      "items": [
+        {
+          "def": "item:potion_restore_t3_g1",
+          "cap": 4
+        },
+        {
+          "def": "item:potion_restore_t2_g1",
+          "cap": 4
+        },
+        {
+          "def": "item:scroll_strike_t3",
+          "cap": 2
+        },
+        {
+          "def": "item:scroll_guard_t3",
+          "cap": 2
+        },
+        {
+          "def": "item:scroll_move_t3",
+          "cap": 2
+        },
+        {
+          "def": "item:key_t3",
+          "cap": 2
+        },
+        {
+          "def": "item:map_t3",
+          "cap": 2
+        },
+        {
+          "def": "item:herb_t3",
+          "cap": 4
+        },
+        {
+          "def": "item:ore_t3",
+          "cap": 4
+        }
+      ]
+    }
   ]
 }

@@ -8,6 +8,7 @@ import type { Change, ItemInstanceRow } from "../facts/types.ts";
 import { NO_DETAILS, reject } from "../protocol/errors.ts";
 import { itemId } from "../protocol/shapes.ts";
 import { obj, type Out } from "../protocol/validate.ts";
+import { wakeSupply } from "../resources/clock.ts";
 import { emitItem, moveItem } from "../tasks/common.ts";
 import { gatherEvidence } from "../tasks/evidence.ts";
 import { defineVerb } from "./types.ts";
@@ -35,6 +36,8 @@ export const def = defineVerb<TakeArgs, TakeResult>({
     if (it.state !== "available") return reject("ITEM_STATE", { reason: "consumed" }, "args.item");
 
     const m = await moveItem(ctx.w, it, { kind: "char", id: me.id });
+    // [S27] The spot is one item poorer: wake its supply row if it was idle.
+    await wakeSupply(ctx.q, ctx.balance, { kind: "place", id: me.loc }, it.def_id, ctx.tick);
     const deed = await ctx.w.deed({
       actor: me.id,
       verb: "take",

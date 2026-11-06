@@ -316,5 +316,72 @@
    "reward_spec": {"coin": 100, "xp": 300, "potential": 30, "rep": 0, "item_defs": []},
    "duration_ticks": 1440
   }
- ]
+ ],
+  "resource_spots": [
+    {
+      "place": "place:scifi_beacon_field",
+      "items": [
+        {
+          "def": "item:ore_t1",
+          "cap": 4
+        },
+        {
+          "def": "item:herb_t1",
+          "cap": 2
+        }
+      ]
+    },
+    {
+      "place": "place:scifi_rust_belt",
+      "items": [
+        {
+          "def": "item:ore_t2",
+          "cap": 4
+        },
+        {
+          "def": "item:ore_t1",
+          "cap": 3
+        },
+        {
+          "def": "item:herb_t2",
+          "cap": 2
+        }
+      ]
+    }
+  ],
+  "shop_lists": [
+    {
+      "char": "char:scifi_merchant",
+      "items": [
+        {
+          "def": "item:potion_restore_t1_g1",
+          "cap": 4
+        },
+        {
+          "def": "item:scroll_strike_t1",
+          "cap": 2
+        },
+        {
+          "def": "item:scroll_guard_t1",
+          "cap": 2
+        },
+        {
+          "def": "item:key_t1",
+          "cap": 2
+        },
+        {
+          "def": "item:map_t1",
+          "cap": 2
+        },
+        {
+          "def": "item:herb_t1",
+          "cap": 4
+        },
+        {
+          "def": "item:ore_t1",
+          "cap": 4
+        }
+      ]
+    }
+  ]
 }

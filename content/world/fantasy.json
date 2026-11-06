@@ -330,5 +330,85 @@
       "reward_spec": { "coin": 70, "xp": 210, "potential": 21, "rep": 0, "item_defs": [] },
       "duration_ticks": 1440
     }
+  ],
+  "resource_spots": [
+    {
+      "place": "place:fantasy_pier",
+      "items": [
+        {
+          "def": "item:herb_t1",
+          "cap": 4
+        },
+        {
+          "def": "item:ore_t1",
+          "cap": 3
+        }
+      ]
+    },
+    {
+      "place": "place:fantasy_shore",
+      "items": [
+        {
+          "def": "item:herb_t1",
+          "cap": 4
+        },
+        {
+          "def": "item:ore_t1",
+          "cap": 3
+        }
+      ]
+    },
+    {
+      "place": "place:fantasy_fen",
+      "items": [
+        {
+          "def": "item:herb_t1",
+          "cap": 4
+        },
+        {
+          "def": "item:ore_t1",
+          "cap": 4
+        }
+      ]
+    }
+  ],
+  "shop_lists": [
+    {
+      "char": "char:fantasy_merchant",
+      "items": [
+        {
+          "def": "item:potion_restore_t2_g1",
+          "cap": 4
+        },
+        {
+          "def": "item:potion_restore_t1_g1",
+          "cap": 4
+        },
+        {
+          "def": "item:scroll_strike_t2",
+          "cap": 2
+        },
+        {
+          "def": "item:scroll_guard_t2",
+          "cap": 2
+        },
+        {
+          "def": "item:key_t2",
+          "cap": 2
+        },
+        {
+          "def": "item:map_t2",
+          "cap": 2
+        },
+        {
+          "def": "item:herb_t1",
+          "cap": 4
+        },
+        {
+          "def": "item:ore_t1",
+          "cap": 4
+        }
+      ]
+    }
   ]
 }
