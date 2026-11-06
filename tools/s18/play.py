@@ -3,6 +3,7 @@
 import json
 import os
 import re
+import sqlite3
 import sys
 import time
 import urllib.error
@@ -78,7 +79,39 @@ def redact_args(args):
     return out
 
 
-def run(agent, verb, args, base, round_no=None):
+def reserve_request(agent, round_no):
+    """先原子占用一次额度,连不上也算一次请求尝试。"""
+    order = os.path.join(WORK, "派单", f"{round_no}_{agent}.md")
+    limit = 15
+    if os.path.isfile(order):
+        with open(order, encoding="utf-8") as f:
+            limits = re.findall(r"本段最多 (\d+) 次请求。", f.read())
+        if limits:
+            limit = int(limits[-1])
+    db = os.path.join(REPO, "_work", "临时", "S18请求限额.sqlite3")
+    os.makedirs(os.path.dirname(db), exist_ok=True)
+    with sqlite3.connect(db, timeout=30) as conn:
+        conn.execute("CREATE TABLE IF NOT EXISTS counts (round INTEGER, agent TEXT, n INTEGER NOT NULL, PRIMARY KEY (round, agent))")
+        conn.execute("BEGIN IMMEDIATE")
+        row = conn.execute("SELECT n FROM counts WHERE round = ? AND agent = ?", (round_no, agent)).fetchone()
+        if row and row[0] >= limit:
+            return False
+        conn.execute("INSERT INTO counts VALUES (?, ?, 1) ON CONFLICT(round, agent) DO UPDATE SET n = n + 1", (round_no, agent))
+    return True
+
+
+def run(agent, verb, args, base, round_no=None, segment_request=False):
+    # run_round 代取 whoami 和红队调用不占代理额度;代理自己的 whoami 带 --段请求。
+    if agent != "red" and verb == "whoami" and not segment_request and args != {"section": "char"}:
+        sys.stderr.write("参数错:代理请求须带 --段请求\n")
+        return 2
+    if agent != "red" and (verb != "whoami" or segment_request):
+        if round_no is None:
+            sys.stderr.write("参数错:代理请求须带 --轮\n")
+            return 2
+        if not reserve_request(agent, round_no):
+            sys.stdout.write("本段请求已用完\n")
+            return 1
     code = read_code(agent)
     status, raw, ms = post(base, verb, args, code)
     try:
@@ -114,7 +147,7 @@ def run(agent, verb, args, base, round_no=None):
 
 
 def main(argv):
-    base, round_no = DEFAULT_BASE, None
+    base, round_no, segment_request = DEFAULT_BASE, None, False
     args_in = []
     i = 0
     while i < len(argv):
@@ -124,6 +157,9 @@ def main(argv):
         elif argv[i] == "--轮" and i + 1 < len(argv):
             round_no = int(argv[i + 1])
             i += 2
+        elif argv[i] == "--段请求":
+            segment_request = True
+            i += 1
         else:
             args_in.append(argv[i])
             i += 1
@@ -143,7 +179,7 @@ def main(argv):
         sys.stderr.write("参数错:args 必须是 JSON 对象\n")
         return 2
     try:
-        return run(agent, verb, args, base, round_no)
+        return run(agent, verb, args, base, round_no, segment_request)
     except urllib.error.URLError as e:
         sys.stderr.write(f"连不上:{e.reason}\n")
         return 1

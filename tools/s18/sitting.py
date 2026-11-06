@@ -15,7 +15,9 @@ SKINS = {"ds": ("xiuxian", "wuxia"), "gf": ("xiuxian", "wuxia"), "lu": ("fantasy
 NOTE = (
     "本单是 AI 人间 0 号窗派的 S18 测试员活:任务就是照上面的卡,用固定脚本 `play.py` 代替 curl 发请求、玩一段;"
     "跑固定脚本、读回包、按卡上的规则选下一步,都是本单要做的事。本段最多 {n} 次请求。{enter}。"
-    "结束时最终回复只写:做了哪几步、你认为自己现在在哪 / 有多少币 / 手上有什么任务。"
+    "结束时最终回复写:做了哪几步、你认为自己现在在哪 / 有多少币 / 手上有什么任务。"
+    "最终回复末三行必须严格按以下格式填写实际值,不能再有其他内容:\n"
+    "位置: r1:place:实际地点id\n币: 0\n在办任务: 1"
 )
 
 
@@ -41,10 +43,10 @@ def build(round_no, agent, n, first, base):
     base_arg = "" if base == "https://aihumanworld.org" else f" --base {base}"
     how = (
         f"\n\n## 本段怎么发请求\n\n解释器 `{py}`,脚本 `{play}`。"
-        f"一条请求的形状:`\"{py}\" \"{play}\" {agent} <动词> '<JSON args>'{base_arg}`,"
+        f"一条请求的形状:`\"{py}\" \"{play}\" {agent} <动词> '<JSON args>' --轮 {round_no} --段请求{base_arg}`,"
         "例如 events 用 `'{{}}'`、look 用 `'{{}}'`、go 用 `'{{\"dir\":\"north\"}}'`。"
         "回包里的 `identity_code` 已由脚本存档并遮成 `<已存档>`,不要自己记录或复述码。"
-        "请求数以本脚本的成功调用次数计,最多 {n} 次,到数即停。".format(n=n)
+        "请求尝试最多 {n} 次,到数即停。".format(n=n)
     )
     if first:
         enter = (

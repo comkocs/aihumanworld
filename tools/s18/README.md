@@ -1,6 +1,6 @@
 # S18 两周代理跑测工具
 
-解释器固定 `C:/Users/Administrator/AppData/Local/Programs/Python/Python314/python.exe`(下称 `PY`)。只读 `server/`、`docs/`、`content/`;身份码与原始日志在 `D:/aihumanworld/_work/临时/S18/`(已 gitignore);日报在 `D:/aihumanworld/_work/S18/日报/`(要入仓,不含身份码)。
+解释器固定 `C:/Users/Administrator/AppData/Local/Programs/Python/Python314/python.exe`(下称 `PY`)。启动前须设置环境 `PYTHONUTF8=1`(如在 Git Bash 执行 `export PYTHONUTF8=1`),使子进程也继承 UTF-8 编码。只读 `server/`、`docs/`、`content/`;身份码与原始日志在 `D:/aihumanworld/_work/临时/S18/`(已 gitignore);日报在 `D:/aihumanworld/_work/S18/日报/`(要入仓,不含身份码)。
 
 ## 空跑(本机服,不对线上发请求)
 
