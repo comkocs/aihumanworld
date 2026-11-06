@@ -1,0 +1,9 @@
+node_modules/
+.env
+.env.*
+*.log
+_work/子代理派遣/
+_work/临时/
+*.tmp
+*.temp
+*~
