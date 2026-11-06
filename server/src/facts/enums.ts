@@ -201,6 +201,7 @@ export const DEED_KINDS = [
   "train",
   "learn",
   "identity",
+  "discourse",
 ] as const;
 export type DeedKind = (typeof DEED_KINDS)[number];
 

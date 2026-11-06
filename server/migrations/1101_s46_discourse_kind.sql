@@ -1,0 +1,4 @@
+-- aihw.v1 S46: new deed kind `discourse` (论道). The kind list is a CHECK on deeds.kind
+-- (0001_init.sql), so a new kind needs this migration; src/facts/enums.ts DEED_KINDS carries the same value.
+ALTER TABLE deeds DROP CONSTRAINT deeds_kind_check;
+ALTER TABLE deeds ADD CONSTRAINT deeds_kind_check CHECK (kind IN ('travel', 'discover', 'first_found', 'first_clear', 'first_kill', 'combat_win', 'combat_loss', 'combat_draw', 'duel_win', 'bounty_done', 'task_done', 'task_accept', 'task_release', 'bounty_post', 'org_join', 'org_promote', 'org_leave', 'org_expel', 'org_goal', 'relation_offer', 'relation_accept', 'relation_end', 'enmity', 'wanted', 'wanted_end', 'death', 'revive', 'stage_up', 'breakthrough', 'ascend', 'build', 'take', 'give', 'use', 'equip', 'repair', 'trade', 'train', 'learn', 'identity', 'discourse'));

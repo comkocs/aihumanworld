@@ -18,6 +18,7 @@ import { authenticate, touchSeen } from "../identity/auth.ts";
 import { errText, log } from "../log.ts";
 import { ActionError, ERROR_HTTP, NO_DETAILS, reject, type ErrorCode } from "../protocol/errors.ts";
 import { apCost, requireRule } from "../rules/world_rules.ts";
+import { envelopeExtras, type NewSpeech, type Notice } from "./envelope_extras.ts";
 import { findVerb } from "./registry.ts";
 import type { AnyVerbDef, Gate, Services, VerbContext } from "./types.ts";
 
@@ -32,6 +33,10 @@ export interface OkEnvelope {
   result: unknown;
   deed_ids: ID[];
   event_head: Seq;
+  /** S46: direct sentences others said to this char since its previous successful action (≤5, absent when none). */
+  new_speech?: NewSpeech[];
+  /** S46: "entry guide updated", once per char per content/notice.json rev (absent otherwise). */
+  notice?: Notice;
 }
 
 export interface ErrEnvelope {
@@ -73,6 +78,8 @@ export interface RunnerDeps {
 interface Trace {
   tick: Tick | null;
   ap: ApView | null;
+  /** Run after a successful COMMIT (S46: what the envelope showed is remembered only once it is true). */
+  afterCommit?: (() => void)[];
 }
 
 const MAX_ATTEMPTS = 3;
@@ -127,6 +134,8 @@ async function runInTx(deps: RunnerDeps, def: AnyVerbDef, args: unknown, input: 
     const w = new Writer(q, deps.realm, world.tick, world.rules_revision, locked);
 
     let actor: CharRow | null = null;
+    /** The authenticated char's previous successful action tick (null = no char before the handler, e.g. enter create). */
+    let previousSeen: Tick | null = null;
     if (def.auth(args)) {
       actor = await authenticate(q, input.bearer, { lock: true });
       trace.ap = apView(actor, world.tick, perTick);
@@ -142,6 +151,7 @@ async function runInTx(deps: RunnerDeps, def: AnyVerbDef, args: unknown, input: 
         await w.update("char", actor.id, s.state);
         actor = { ...actor, ...s.state };
       }
+      previousSeen = actor.last_seen_tick;
       actor = await touchSeen(w, actor, world.tick, now);
     }
 
@@ -171,6 +181,12 @@ async function runInTx(deps: RunnerDeps, def: AnyVerbDef, args: unknown, input: 
       deed_ids: [...w.deedIds],
       event_head: String(head.rows[0]?.event_head ?? world.event_head),
     };
+    if (previousSeen !== null) {
+      const extras = await envelopeExtras(q, deps.services, deps.services.speech, deps.realm, rules, after.id, previousSeen, world.tick, body.event_head);
+      if (extras.new_speech !== undefined) body.new_speech = extras.new_speech;
+      if (extras.notice !== undefined) body.notice = extras.notice;
+      trace.afterCommit?.push(extras.commit);
+    }
     // Serialise before COMMIT (see DispatchOutput.json).
     return { status: 200, body, json: JSON.stringify(body) };
   });
@@ -212,8 +228,11 @@ export async function dispatch(deps: RunnerDeps, input: DispatchInput): Promise<
   for (let attempt = 1; ; attempt += 1) {
     trace.tick = null;
     trace.ap = null;
+    trace.afterCommit = [];
     try {
-      return await runInTx(deps, def, args, input, trace);
+      const out = await runInTx(deps, def, args, input, trace);
+      for (const done of trace.afterCommit) done();
+      return out;
     } catch (err) {
       if (err instanceof ActionError) return errEnvelope(err, trace);
       if (err instanceof RetryableDbError && attempt < MAX_ATTEMPTS) continue;

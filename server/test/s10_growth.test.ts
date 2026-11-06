@@ -26,6 +26,7 @@ test("S10: neutral combat → training → teaching → breakthrough paths → d
   config.clock.enabled = false;
   const app = await startApp(config);
   const balance = app.services.balance();
+  balance.numbers.combat.newbie_protect_ticks = 0; // S48: this chain spars at tick 0
   const world = () => mustGetRow(app.db, "world", worldId(config.realm));
   const char = (id: string) => mustGetRow(app.db, "char", id);
   const call = async (verb: string, args: object, code: string | null = null): Promise<Json> => {

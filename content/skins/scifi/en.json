@@ -589,6 +589,11 @@
    "flavor": null
   },
   {
+   "key": "deed.discourse",
+   "name": "Exchange",
+   "flavor": null
+  },
+  {
    "key": "tier1",
    "name": "Cadet",
    "flavor": null

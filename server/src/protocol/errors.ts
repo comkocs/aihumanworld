@@ -18,7 +18,7 @@ export interface ErrorDetailsMap {
   AP_EXHAUSTED: { remaining: UInt; required: UInt; next_tick: Tick };
   NOT_FOUND: Record<string, never>;
   NOT_HERE: Record<string, never>;
-  NOT_ALLOWED: { reason: "combat" | "ownership" | "rank" | "registry" | "service" | "faith_locked" | "org" };
+  NOT_ALLOWED: { reason: "combat" | "ownership" | "rank" | "registry" | "service" | "faith_locked" | "org" | "newbie"; until_tick?: Tick };
   EXIT_BLOCKED: { reason: "locked" | "guard" };
   INSUFFICIENT_RESOURCE: {
     resource: "coin" | "potential" | "item" | "vigor";

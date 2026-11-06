@@ -761,7 +761,8 @@
   "hash_rule": "u32=be32(sha256(utf8(seed+'#'+label))[0:4]); j=u32%(2*spread+1)-spread",
   "rule_key": "combat.v1",
   "rule_key_tier": "breakthrough.tier.v1",
-  "rule_key_cycle": "breakthrough.cycle.v1"
+  "rule_key_cycle": "breakthrough.cycle.v1",
+  "newbie_protect_ticks": 5
  },
  "death": {
   "xp_loss_bp": 1000,
@@ -774,7 +775,10 @@
  "wanted": {
   "attack_guard_ticks": 720,
   "kill_player_ticks": 2880,
-  "bounty_coin_pct_of_task_coin": 200
+  "bounty_coin_pct_of_task_coin": 200,
+  "kill_lower_ticks": 2880,
+  "kill_peer_ticks": 240,
+  "kill_higher_ticks": 120
  },
  "npc": {
   "patrol_step_ticks": 5,
@@ -1720,6 +1724,24 @@
     "xp_bp": 1500,
     "potential_bp": 1500,
     "rep_mult": 3
+   },
+   "discourse": {
+    "xp_bp": 5000,
+    "potential_bp": 5000,
+    "rep_mult": 0,
+    "daily_max": 5,
+    "window_ticks": 60,
+    "first_xp_bp": 10000,
+    "first_potential_bp": 10000
+   },
+   "combat_social": {
+    "duel_win_bp": 15000,
+    "duel_lose_bp": 7500,
+    "duel_draw_bp": 10000,
+    "pk_win_bp": 20000,
+    "daily_max": 5,
+    "hunt_mult": 3,
+    "hunt_daily_max": 5
    }
   },
   "build_template_item_defs_max": 1,

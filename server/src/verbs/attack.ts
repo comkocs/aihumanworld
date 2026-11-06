@@ -3,7 +3,7 @@
 import { getRow } from "../facts/store.ts";
 import type { Change, CharRow, ID, Roll } from "../facts/types.ts";
 import { deriveStats, gridNumbers, mulDiv, type NeutralFacts } from "../growth/balance.ts";
-import { firstKill, markWanted } from "../growth/combat_effects.ts";
+import { firstKill, markWanted, settlePkKill, socialCombatReward } from "../growth/combat_effects.ts";
 import { backpack, combatant, neutralFacts } from "../growth/facts.ts";
 import { resolutionSeed, resolveCombat, u32 } from "../growth/settlement.ts";
 import { NO_DETAILS, reject } from "../protocol/errors.ts";
@@ -23,7 +23,8 @@ export interface AttackResult {
 
 export const def = defineVerb<AttackArgs, AttackResult>({
   verb: "attack",
-  summary: "依当前地点战斗规则攻击同地目标。",
+  summary:
+    "依当前地点战斗规则攻击同地目标。与另一位玩家在切磋场较量（每对每天首次：胜得 1.5 件任务修为、负 0.75 件、平 1 件），或在生死斗场击败对方（2 件），都得修为；按双方较低阶的满额任务算，每天至多 5 次。在生死斗场由你发起并击杀玩家会被通缉（红名）并挂系统悬赏：高杀低两天且无奖，同阶四小时、低杀高两小时；击杀红名者不受罚，得红名者阶 6 件任务修为与悬赏币。新角色建角后 5 刻内不能被其他玩家攻击。",
   errors: ["NOT_FOUND", "NOT_HERE", "NOT_ALLOWED", "INSUFFICIENT_RESOURCE"],
   args,
   lock: "world",
@@ -43,6 +44,14 @@ export const def = defineVerb<AttackArgs, AttackResult>({
     const place = await getRow(ctx.q, "place", me.loc);
     if (place === null) throw new Error("combat place missing");
     if (place.combat === "safe" || (place.combat === "pve" && target.kind !== "npc")) return reject("NOT_ALLOWED", { reason: "combat" });
+    // S48 newbie protection: a new participant cannot be attacked by other participants for a few ticks (NPCs go on as usual).
+    const protect = ctx.balance.numbers.combat.newbie_protect_ticks ?? 0;
+    if (protect > 0 && me.kind !== "npc" && target.kind !== "npc") {
+      const until = BigInt(target.created_tick) + BigInt(protect);
+      if (BigInt(ctx.tick) < until) {
+        return reject("NOT_ALLOWED", { reason: "newbie", until_tick: until.toString() });
+      }
+    }
     if (me.vigor === 0) return reject("INSUFFICIENT_RESOURCE", { resource: "vigor", required: 1, available: 0 });
     const actorFacts = await neutralFacts(ctx.q, me);
     const targetFacts = await neutralFacts(ctx.q, target);
@@ -112,6 +121,15 @@ export const def = defineVerb<AttackArgs, AttackResult>({
       await ctx.w.emit({ scope: "self", recipients: [me.id, target.id], type: "item_changed", deed_id: deed.id, data: itemData });
       await ctx.w.emit({ scope: "place", place_id: place.id, type: "item_changed", deed_id: deed.id, data: itemData });
     }
+    // S46 切磋 / PK reward and S48 red name / bounty for fighting another participant (also in this result's changes).
+    const fight = { me: ctx.actor ?? me, target, place, outcome: resolved.outcome, winner: resolved.winner, dead: dead.map((c) => c.id), deed };
+    const loser = resolved.winner === null ? null : resolved.winner === me.id ? target : me;
+    if (place.combat === "pk" && loser !== null && fight.dead.includes(loser.id) && me.kind !== "npc" && target.kind !== "npc") {
+      const winner = resolved.winner === me.id ? (ctx.actor ?? me) : target;
+      changes.push(...await settlePkKill(ctx, { initiator: me.id, winner, loser, place, fight }));
+    } else {
+      changes.push(...await socialCombatReward(ctx, fight));
+    }
     for (const char of dead) {
       const death = await ctx.w.deed({
         actor: char.id, verb: "attack", kind: "death", targets: [char.id], place_id: place.id,
@@ -124,10 +142,6 @@ export const def = defineVerb<AttackArgs, AttackResult>({
         const input = char.id === me.id ? actorInput : targetInput;
         // slay task progress is the task stream's: submit verifies combat deeds itself.
         if (char.kind === "npc") changes.push(...await firstKill(ctx, resolved.winner, input));
-        else if (place.combat === "pk") {
-          const killer = resolved.winner === me.id ? me : target;
-          changes.push(...await markWanted(ctx, killer, place, "kill_player"));
-        }
       }
     }
     if (target.kind === "npc" && target.archetype === "guard") changes.push(...await markWanted(ctx, me, place, "attack_guard"));

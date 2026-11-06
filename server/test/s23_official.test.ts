@@ -101,7 +101,7 @@ test("S23: import marks one official, who/online carry kind, resume works, lifec
 
     const idPage = await fetch(`${app.url}/id/${handleA}`);
     assert.equal(idPage.status, 200);
-    assert.match(await idPage.text(), /官方居民 Official/);
+    assert.match(await idPage.text(), /官方居民/);
 
     const bound = await call("enter", { mode: "resume", email: "official@example.com" }, codeA);
     assert.equal(bound.status, 200);

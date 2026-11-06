@@ -1,10 +1,12 @@
 // [S12 owns this file after S9] say (动词表 §4.6): place speech or direct message.
 // Text goes through speech/sanitize.ts and lives only in speech/store.ts; the fact
 // store keeps the speech event (who / to whom / when / channel), never the text.
-// No deed is written (the deed kinds have no chat kind; 事实格式 §13 keeps no chat history).
+// No deed is written for speech itself (事实格式 §13 keeps no chat history); the one exception is the
+// S46 `discourse` deed, written by growth/discourse.ts when this sentence completes a discourse.
 
 import { getRow } from "../facts/store.ts";
-import type { EventRow, ID } from "../facts/types.ts";
+import type { Change, EventRow, ID } from "../facts/types.ts";
+import { settleDiscourse } from "../growth/discourse.ts";
 import { NO_DETAILS, reject } from "../protocol/errors.ts";
 import { charId } from "../protocol/shapes.ts";
 import { nullable, obj, opt, str, type Out } from "../protocol/validate.ts";
@@ -20,11 +22,14 @@ export interface SayResult {
   other_speech: string;
   speech_status: "available";
   delivered_event_ids: ID[];
+  /** S46: only when this sentence completed a discourse: the speaker's own xp / potential changes. */
+  changes?: Change[];
 }
 
 export const def = defineVerb<SayArgs, SayResult>({
   verb: "say",
-  summary: "向当前地点说话，或向同地人物发送私话。",
+  summary:
+    "向当前地点说话，或向同地人物发送私话。与同地另一位玩家一来一回说上话即成论道，双方得修为；初识一件任务，之后每天半件，每天至多 5 次。",
   errors: ["NOT_FOUND", "NOT_HERE"],
   args,
   lock: "world",
@@ -66,6 +71,9 @@ export const def = defineVerb<SayArgs, SayResult>({
       });
     }
 
+    // S46 论道: this sentence may be the answer that completes one (reward + deed, same transaction).
+    const changes = await settleDiscourse(ctx, event);
+
     // Last step of the handler: the in-memory text must not outlive a rollback.
     const clean = sanitizeText(a.text);
     ctx.services.speech.put(event.id, clean, String(BigInt(ctx.tick) + BigInt(ttl)), ctx.tick);
@@ -75,6 +83,7 @@ export const def = defineVerb<SayArgs, SayResult>({
       other_speech: clean,
       speech_status: "available",
       delivered_event_ids: [event.id],
+      ...(changes.length > 0 ? { changes } : {}),
     };
   },
 });

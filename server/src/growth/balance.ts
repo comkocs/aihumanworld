@@ -6,7 +6,7 @@ import type { CharRow, ItemDefinitionRow, ItemInstanceRow, SkillDefinitionRow, S
 type Numeric = Record<string, number>;
 export interface TierNumbers extends Numeric {
   tier: number; cap_max: number; skill_cap_hard: number; task_potential: number;
-  train_xp: number; train_potential: number; task_xp: number; rep_bounty: number;
+  train_xp: number; train_potential: number; task_xp: number; rep_bounty: number; task_coin: number;
 }
 export interface GridNumbers extends Numeric {
   tier: number; stage: number; xp_need: number; power: number; guard: number;
@@ -34,14 +34,38 @@ export interface Numbers {
     duel_vigor_floor: number; tutorial_dies_on_loss: boolean; tutorial_rating_bp: number;
     wear_loser_bp: number; wear_winner_bp: number; wear_draw_bp: number;
     npc_rating_bp: Record<NpcArchetype, number>; rule_key: string; rule_key_tier: string; rule_key_cycle: string;
+    /** S48: a new char cannot be attacked by other participants for this many ticks after creation (absent = 0). */
+    newbie_protect_ticks?: number;
   };
   death: { xp_loss_bp: number; revive_wait_ticks: number; revive_vigor_bp: number; pk_drop_chance_bp: number; pk_drop_count: number; pk_drop_equipped: boolean };
-  wanted: { attack_guard_ticks: number; kill_player_ticks: number };
+  wanted: {
+    attack_guard_ticks: number; kill_player_ticks: number; bounty_coin_pct_of_task_coin?: number;
+    /** S48: red-name duration by tier relation of the initiator who killed in a pk place (absent = kill_player_ticks). */
+    kill_lower_ticks?: number; kill_peer_ticks?: number; kill_higher_ticks?: number;
+  };
   npc: { monster_respawn_ticks: number; npc_respawn_ticks: number; tutorial_respawn_ticks: number };
   consumables: { table: { tier: number; grade: number; bt_bonus_bp: number }[] };
   economy: { start_coin: number; start_potential: number };
   orgs: { goal_min_target: number; goal_reward_rep: number };
-  tasks: { deed_bonus: { first_kill: { xp_bp: number; potential_bp: number; rep_mult: number } } };
+  tasks: {
+    deed_bonus: {
+      first_kill: { xp_bp: number; potential_bp: number; rep_mult: number };
+      /** S46 论道. Absent in numbers older than balance.v1.1 (S46): no discourse reward then. first_* = 初识 (a pair's first). */
+      discourse?: {
+        xp_bp: number; potential_bp: number; rep_mult: number; daily_max: number; window_ticks: number;
+        first_xp_bp: number; first_potential_bp: number;
+      };
+      /**
+       * S46 切磋 / PK. Absent = no such reward. *_bp apply to xp and potential alike, of the full task value of the
+       * LOWER tier of the two chars; daily_max counts duel and pk rewards together per char per game day.
+       */
+      combat_social?: {
+        duel_win_bp: number; duel_lose_bp: number; duel_draw_bp: number; pk_win_bp: number; daily_max: number;
+        /** S48: killing a red-name pays the red-name tier's task value x pk_win_bp x hunt_mult, hunt_daily_max a day. */
+        hunt_mult: number; hunt_daily_max: number;
+      };
+    };
+  };
 }
 
 export interface Balance {
@@ -119,7 +143,23 @@ export function parseBalance(input: unknown): Balance {
   numbersAt(root, "economy", "start_coin start_potential");
   numbersAt(root, "orgs", "goal_min_target goal_reward_rep");
   numbersAt(root, "tasks.deed_bonus.first_kill", "xp_bp potential_bp rep_mult");
-  const tiers = rowsAt(root, "tiers", "tier cap_max skill_cap_hard task_potential train_xp train_potential task_xp rep_bounty", 9);
+  const deedBonus = record(record(root.tasks, "tasks").deed_bonus, "tasks.deed_bonus");
+  if (deedBonus.discourse !== undefined) {
+    numbersAt(root, "tasks.deed_bonus.discourse", "xp_bp potential_bp rep_mult daily_max window_ticks first_xp_bp first_potential_bp");
+    const d = record(deedBonus.discourse, "tasks.deed_bonus.discourse");
+    for (const key of ["xp_bp", "potential_bp", "first_xp_bp", "first_potential_bp"]) {
+      if ((d[key] as number) > 100000) throw new Error(`tasks.deed_bonus.discourse.${key} exceeds ten tasks`);
+    }
+    if (d.window_ticks === 0) throw new Error("tasks.deed_bonus.discourse.window_ticks must be positive");
+  }
+  if (deedBonus.combat_social !== undefined) {
+    numbersAt(root, "tasks.deed_bonus.combat_social", "duel_win_bp duel_lose_bp duel_draw_bp pk_win_bp daily_max hunt_mult hunt_daily_max");
+    const c = record(deedBonus.combat_social, "tasks.deed_bonus.combat_social");
+    for (const key of ["duel_win_bp", "duel_lose_bp", "duel_draw_bp", "pk_win_bp"]) {
+      if ((c[key] as number) > 100000) throw new Error(`tasks.deed_bonus.combat_social.${key} exceeds ten tasks`);
+    }
+  }
+  const tiers = rowsAt(root, "tiers", "tier cap_max skill_cap_hard task_potential train_xp train_potential task_xp rep_bounty task_coin", 9);
   const grid = rowsAt(root, "grid", "tier stage xp_need power guard speed vigor_max inner_req", 36);
   const prices = rowsAt(root, "tier_prices", "tier learn_coin", 9);
   const potions = rowsAt(root, "consumables.table", "tier grade bt_bonus_bp", 27);

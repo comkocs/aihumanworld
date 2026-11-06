@@ -589,6 +589,11 @@
    "flavor": null
   },
   {
+   "key": "deed.discourse",
+   "name": "交流",
+   "flavor": null
+  },
+  {
    "key": "tier1",
    "name": "学员",
    "flavor": null

@@ -589,6 +589,11 @@
       "flavor": null
     },
     {
+      "key": "deed.discourse",
+      "name": "Long Talk",
+      "flavor": null
+    },
+    {
       "key": "tier1",
       "name": "Neophyte",
       "flavor": null
