@@ -48,7 +48,7 @@ test("S10: neutral combat → training → teaching → breakthrough paths → d
   };
   const assertError = (body: Json, code: string): void => { assert.equal(body.ok, false); assert.equal(body.error.code, code); };
   try {
-    assert.equal((await world()).rules_revision, "balance.v1");
+    assert.equal((await world()).rules_revision, "balance.v1.1");
     assert.deepEqual([(await world()).rules.active_task_max, (await world()).rules.bounty_open_max, (await world()).rules.socket_max], [3, 3, 3]);
     assert.equal((await world()).rules.ap_costs["task.accept"], 1);
     const a = await call("enter", { mode: "create", skin: "xiuxian", door: "api" });

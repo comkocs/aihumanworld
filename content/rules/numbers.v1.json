@@ -1,7 +1,7 @@
 {
  "meta": {
   "schema": "aihw.numbers.v1",
-  "revision_key": "balance.v1",
+  "revision_key": "balance.v1.1",
   "integer_only": true
  },
  "world_rules": {
@@ -44,7 +44,7 @@
    "build": 1,
    "breakthrough": 2
   },
-  "balance_key": "balance.v1"
+  "balance_key": "balance.v1.1"
  },
  "clock": {
   "day_ticks": 1440,
@@ -1707,18 +1707,18 @@
   },
   "deed_bonus": {
    "first_found": {
-    "xp_bp": 10000,
-    "potential_bp": 10000,
+    "xp_bp": 100,
+    "potential_bp": 100,
     "rep_mult": 1
    },
    "first_kill": {
-    "xp_bp": 20000,
-    "potential_bp": 20000,
+    "xp_bp": 1500,
+    "potential_bp": 1500,
     "rep_mult": 2
    },
    "first_clear": {
-    "xp_bp": 30000,
-    "potential_bp": 30000,
+    "xp_bp": 1500,
+    "potential_bp": 1500,
     "rep_mult": 3
    }
   },
