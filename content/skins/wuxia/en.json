@@ -2457,6 +2457,411 @@
       "key": "content.r1.task.reach_t9",
       "name": "Arrival·Tier 9",
       "flavor": null
+    },
+    {
+      "key": "content.r1.place.xiuxian_enroll_hall",
+      "name": "Enrollment Hall",
+      "flavor": "Where wanderers of the jianghu sign their names on entering."
+    },
+    {
+      "key": "content.r1.place.xiuxian_trial_lane",
+      "name": "Trial Walkway",
+      "flavor": "Newcomers to the jianghu cross hands here first."
+    },
+    {
+      "key": "content.r1.place.xiuxian_peach_slope",
+      "name": "Peach-Blossom Slope",
+      "flavor": "Wild peaches on the slope can be gathered."
+    },
+    {
+      "key": "content.r1.place.xiuxian_spirit_field",
+      "name": "Herb Field",
+      "flavor": "A field planted with herbs."
+    },
+    {
+      "key": "content.r1.place.xiuxian_dew_pool",
+      "name": "Dew Tarn",
+      "flavor": "Waterside herbs can be gathered by the tarn."
+    },
+    {
+      "key": "content.r1.place.xiuxian_sword_gate",
+      "name": "Taihua Gate",
+      "flavor": "The gate of the Taihua Sword School, where one may train."
+    },
+    {
+      "key": "content.r1.place.xiuxian_sword_arena",
+      "name": "Gate Drill Ground",
+      "flavor": "The sparring ground outside the gate."
+    },
+    {
+      "key": "content.r1.place.xiuxian_elixir_court",
+      "name": "Nine-Return Shopfront",
+      "flavor": "A shop that sells medicine."
+    },
+    {
+      "key": "content.r1.place.xiuxian_sigil_tower",
+      "name": "Cloud-Pattern Tower",
+      "flavor": "A library that sells manuals and mends weapons."
+    },
+    {
+      "key": "content.r1.place.xiuxian_herb_ravine",
+      "name": "Medicine Valley",
+      "flavor": "Herbs grow in the valley, and the road is not quiet."
+    },
+    {
+      "key": "content.r1.place.xiuxian_beast_cave",
+      "name": "Beast Cave",
+      "flavor": "Beasts lair in the cave, and so do things worth gathering."
+    },
+    {
+      "key": "content.r1.place.xiuxian_broken_cliff",
+      "name": "Cliffside Patch",
+      "flavor": "The cliff edge can be gathered, but the footing is bad."
+    },
+    {
+      "key": "content.r1.place.fantasy_watch_hall",
+      "name": "Grayport Watch Hall",
+      "flavor": "Where people of the jianghu come back on their feet."
+    },
+    {
+      "key": "content.r1.place.fantasy_conclave_hall",
+      "name": "Silver-Candle Hall",
+      "flavor": "The training hall of the Silver Candle Society."
+    },
+    {
+      "key": "content.r1.place.fantasy_wayfarer_hall",
+      "name": "Greenpath Lodge",
+      "flavor": "The Greenpath Brotherhood's stop, where trade is done too."
+    },
+    {
+      "key": "content.r1.place.fantasy_yard",
+      "name": "Border Drill Yard",
+      "flavor": "The town-edge drill yard, where newcomers try their hand."
+    },
+    {
+      "key": "content.r1.place.fantasy_pier",
+      "name": "Grayport Wharf",
+      "flavor": "The waterside catch can be gathered off the wharf."
+    },
+    {
+      "key": "content.r1.place.fantasy_shore",
+      "name": "Harbor Strand",
+      "flavor": "The strand by the harbor, open for gathering."
+    },
+    {
+      "key": "content.r1.place.fantasy_fen",
+      "name": "Greenpath Marsh",
+      "flavor": "Herbs in the marsh can be gathered."
+    },
+    {
+      "key": "content.r1.place.fantasy_barrow",
+      "name": "Old Grave Mound",
+      "flavor": "An old burial mound, and the road is not quiet."
+    },
+    {
+      "key": "content.r1.place.fantasy_crypt",
+      "name": "Tomb Passage",
+      "flavor": "The passage under the mound, and it is dangerous."
+    },
+    {
+      "key": "content.r1.place.fantasy_ridge",
+      "name": "Gray-Spine Ridge",
+      "flavor": "A gray ridge, and the road is not quiet."
+    },
+    {
+      "key": "content.r1.place.fantasy_pit",
+      "name": "Gray-Spine Pit",
+      "flavor": "A sinkhole under the ridge, and it is dangerous."
+    },
+    {
+      "key": "content.r1.place.fantasy_shrine",
+      "name": "Haventown Shrine",
+      "flavor": "A small shrine by the haven town."
+    },
+    {
+      "key": "content.r1.place.scifi_survey_hall",
+      "name": "Pathfinding Hall",
+      "flavor": "The training hall of the Pathfinding Crew."
+    },
+    {
+      "key": "content.r1.place.scifi_trade_berth",
+      "name": "Mooring Market",
+      "flavor": "Trade is done on this mooring."
+    },
+    {
+      "key": "content.r1.place.scifi_ring_road",
+      "name": "Town Ring Road",
+      "flavor": "The road that circles the town."
+    },
+    {
+      "key": "content.r1.place.scifi_sim_bay",
+      "name": "Practice Shed",
+      "flavor": "Newcomers try their moves under the shed."
+    },
+    {
+      "key": "content.r1.place.scifi_beacon_field",
+      "name": "Beacon Grassland",
+      "flavor": "The grassland is open for gathering."
+    },
+    {
+      "key": "content.r1.place.scifi_dust_plain",
+      "name": "Dust Plain",
+      "flavor": "A plain of dust, and the road is not quiet."
+    },
+    {
+      "key": "content.r1.place.scifi_wreck_lock",
+      "name": "Wreck Gate",
+      "flavor": "The gate of a sunken boat, and the road is not quiet."
+    },
+    {
+      "key": "content.r1.place.scifi_derelict_hold",
+      "name": "Abandoned Hold",
+      "flavor": "The hold of an abandoned boat, and it is dangerous."
+    },
+    {
+      "key": "content.r1.place.scifi_salvage_yard",
+      "name": "Salvage Yard",
+      "flavor": "A yard for mending boats and hauling up what sank."
+    },
+    {
+      "key": "content.r1.place.scifi_rust_belt",
+      "name": "Rust Belt",
+      "flavor": "A rusted stretch, dangerous, and open for gathering."
+    },
+    {
+      "key": "content.r1.place.scifi_black_lane",
+      "name": "Night Channel",
+      "flavor": "A waterway traveled only at night, and it is dangerous."
+    },
+    {
+      "key": "content.r1.org.registry_xiuxian",
+      "name": "Enrollment Board",
+      "flavor": "People of the jianghu sign their names here on entering."
+    },
+    {
+      "key": "content.r1.org.xiuxian_taihua",
+      "name": "Taihua Sword School",
+      "flavor": "A sword school, teaching blade work and light footwork."
+    },
+    {
+      "key": "content.r1.org.xiuxian_jiuhuan",
+      "name": "Nine-Return Apothecary",
+      "flavor": "A medicine shop that also teaches the craft of making it."
+    },
+    {
+      "key": "content.r1.org.xiuxian_yunzhuan",
+      "name": "Cloud-Pattern Library",
+      "flavor": "A library of manuals that also teaches talisman arts."
+    },
+    {
+      "key": "content.r1.org.fantasy_watch",
+      "name": "Grayport Watch",
+      "flavor": "The watch that guards Grayport."
+    },
+    {
+      "key": "content.r1.org.fantasy_conclave",
+      "name": "Silver Candle Society",
+      "flavor": "A society that gathers by silver candles."
+    },
+    {
+      "key": "content.r1.org.fantasy_wayfarers",
+      "name": "Greenpath Brotherhood",
+      "flavor": "A brotherhood of the green paths, running escorts and trade."
+    },
+    {
+      "key": "content.r1.org.scifi_survey",
+      "name": "Pathfinding Crew",
+      "flavor": "A crew that spends its years scouting roads."
+    },
+    {
+      "key": "content.r1.org.scifi_trade",
+      "name": "Wharf Guild",
+      "flavor": "The guild that runs trade on the wharf."
+    },
+    {
+      "key": "content.r1.org.scifi_salvage",
+      "name": "Salvage Crew",
+      "flavor": "A crew that works the wreck lanes, hauling up what sank."
+    },
+    {
+      "key": "content.r1.task.xiuxian_reach_trial",
+      "name": "First Steps on the Trial Walkway",
+      "flavor": "Walk to the Trial Walkway."
+    },
+    {
+      "key": "content.r1.task.xiuxian_reach_field",
+      "name": "A Walk to the Herb Field",
+      "flavor": "Walk to the Herb Field."
+    },
+    {
+      "key": "content.r1.task.xiuxian_deliver_herb",
+      "name": "Herbs for the Apothecary",
+      "flavor": "Carry the herbs to the apothecary."
+    },
+    {
+      "key": "content.r1.task.fantasy_reach_yard",
+      "name": "First Trial",
+      "flavor": "Walk to the Border Drill Yard."
+    },
+    {
+      "key": "content.r1.task.fantasy_reach_fen",
+      "name": "Scout the Marsh",
+      "flavor": "Walk to Greenpath Marsh."
+    },
+    {
+      "key": "content.r1.task.fantasy_reach_shrine",
+      "name": "Visit the Haventown Shrine",
+      "flavor": "Walk to the Haventown Shrine."
+    },
+    {
+      "key": "content.r1.task.scifi_reach_sim",
+      "name": "Report to the Shed",
+      "flavor": "Walk to the Practice Shed."
+    },
+    {
+      "key": "content.r1.task.scifi_reach_yard",
+      "name": "Find the Yard",
+      "flavor": "Walk to the Salvage Yard."
+    },
+    {
+      "key": "content.r1.task.scifi_deliver_ore",
+      "name": "Ore Sample Run",
+      "flavor": "Carry the ore sample to the wharf."
+    },
+    {
+      "key": "skill.org·skill.inner·content.r1.registry_xiuxian.roll_breath",
+      "name": "Enrollment Breathing",
+      "flavor": "The inner art of the Enrollment Board."
+    },
+    {
+      "key": "skill.org·skill.move·content.r1.registry_xiuxian.roll_step",
+      "name": "Enrollment Step",
+      "flavor": "The footwork of the Enrollment Board."
+    },
+    {
+      "key": "skill.org·skill.strike·content.r1.registry_xiuxian.roll_palm",
+      "name": "Enrollment Palm",
+      "flavor": "The palm art of the Enrollment Board."
+    },
+    {
+      "key": "skill.org·skill.strike·content.r1.xiuxian_taihua.sword_draw",
+      "name": "Taihua Draw",
+      "flavor": "The sword move of the Taihua Sword School."
+    },
+    {
+      "key": "skill.org·skill.guard·content.r1.xiuxian_taihua.sword_guard",
+      "name": "Taihua Guard",
+      "flavor": "The guarding stance of the Taihua Sword School."
+    },
+    {
+      "key": "skill.org·skill.move·content.r1.xiuxian_taihua.sword_step",
+      "name": "Taihua Sword Step",
+      "flavor": "The footwork of the Taihua Sword School."
+    },
+    {
+      "key": "skill.org·skill.inner·content.r1.xiuxian_jiuhuan.cauldron_fire",
+      "name": "Nine-Return Furnace Fire",
+      "flavor": "The inner art of the Nine-Return Apothecary."
+    },
+    {
+      "key": "skill.org·skill.guard·content.r1.xiuxian_jiuhuan.pill_guard",
+      "name": "Nine-Return Pill Guard",
+      "flavor": "The guarding art of the Nine-Return Apothecary."
+    },
+    {
+      "key": "skill.org·skill.move·content.r1.xiuxian_jiuhuan.herb_stride",
+      "name": "Nine-Return Herb Stride",
+      "flavor": "The herb-gathering footwork of the Nine-Return Apothecary."
+    },
+    {
+      "key": "skill.org·skill.guard·content.r1.xiuxian_yunzhuan.sigil_ward",
+      "name": "Cloud-Pattern Ward",
+      "flavor": "The guarding art of the Cloud-Pattern Library."
+    },
+    {
+      "key": "skill.org·skill.strike·content.r1.xiuxian_yunzhuan.sigil_bolt",
+      "name": "Cloud-Pattern Bolt",
+      "flavor": "The striking art of the Cloud-Pattern Library."
+    },
+    {
+      "key": "skill.org·skill.inner·content.r1.xiuxian_yunzhuan.sigil_breath",
+      "name": "Cloud-Pattern Breath",
+      "flavor": "The inner art of the Cloud-Pattern Library."
+    },
+    {
+      "key": "skill.org·skill.guard·content.r1.fantasy_watch.fantasy_watch_shield",
+      "name": "Watch Shield Wall",
+      "flavor": "The guarding art of the Grayport Watch."
+    },
+    {
+      "key": "skill.org·skill.strike·content.r1.fantasy_watch.fantasy_watch_pike",
+      "name": "Watch Pike Drill",
+      "flavor": "The polearm drill of the Grayport Watch."
+    },
+    {
+      "key": "skill.org·skill.inner·content.r1.fantasy_conclave.fantasy_conclave_rune",
+      "name": "Silver Candle Rune",
+      "flavor": "The inner art of the Silver Candle Society."
+    },
+    {
+      "key": "skill.org·skill.strike·content.r1.fantasy_conclave.fantasy_conclave_bolt",
+      "name": "Silver Candle Shot",
+      "flavor": "The striking art of the Silver Candle Society."
+    },
+    {
+      "key": "skill.org·skill.guard·content.r1.fantasy_conclave.fantasy_conclave_ward",
+      "name": "Silver Candle Ward",
+      "flavor": "The guarding art of the Silver Candle Society."
+    },
+    {
+      "key": "skill.org·skill.move·content.r1.fantasy_wayfarers.fantasy_wayfarer_trail",
+      "name": "Greenpath Step",
+      "flavor": "The footwork of the Greenpath Brotherhood."
+    },
+    {
+      "key": "skill.org·skill.strike·content.r1.fantasy_wayfarers.fantasy_wayfarer_shot",
+      "name": "Greenpath Shot",
+      "flavor": "The archery of the Greenpath Brotherhood."
+    },
+    {
+      "key": "skill.org·skill.inner·content.r1.scifi_survey.chart",
+      "name": "Pathfinding Mind",
+      "flavor": "The inner art of the Pathfinding Crew."
+    },
+    {
+      "key": "skill.org·skill.strike·content.r1.scifi_survey.pulse",
+      "name": "Pathfinding Volley",
+      "flavor": "The volley of the Pathfinding Crew."
+    },
+    {
+      "key": "skill.org·skill.move·content.r1.scifi_survey.drift",
+      "name": "Pathfinding Cut-in",
+      "flavor": "The footwork of the Pathfinding Crew."
+    },
+    {
+      "key": "skill.org·skill.inner·content.r1.scifi_trade.ledger",
+      "name": "Guild Ledger",
+      "flavor": "The inner art of the Wharf Guild."
+    },
+    {
+      "key": "skill.org·skill.move·content.r1.scifi_trade.convoy",
+      "name": "Guild Convoy",
+      "flavor": "The escort footwork of the Wharf Guild."
+    },
+    {
+      "key": "skill.org·skill.strike·content.r1.scifi_salvage.cut",
+      "name": "Salvage Cut",
+      "flavor": "The striking art of the Salvage Crew."
+    },
+    {
+      "key": "skill.org·skill.guard·content.r1.scifi_salvage.plate",
+      "name": "Salvage Plate",
+      "flavor": "The guarding art of the Salvage Crew."
+    },
+    {
+      "key": "skill.org·skill.move·content.r1.scifi_salvage.haul",
+      "name": "Salvage Haul",
+      "flavor": "The footwork of the Salvage Crew."
     }
   ]
 }

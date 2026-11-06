@@ -2457,6 +2457,411 @@
       "key": "content.r1.task.reach_t9",
       "name": "抵达·九阶",
       "flavor": null
+    },
+    {
+      "key": "content.r1.place.xiuxian_enroll_hall",
+      "name": "挂名堂",
+      "flavor": "江湖人入界挂名的地方。"
+    },
+    {
+      "key": "content.r1.place.xiuxian_trial_lane",
+      "name": "试手木廊",
+      "flavor": "新入江湖的人先在这里过招。"
+    },
+    {
+      "key": "content.r1.place.xiuxian_peach_slope",
+      "name": "桃花坡",
+      "flavor": "坡上野桃可采。"
+    },
+    {
+      "key": "content.r1.place.xiuxian_spirit_field",
+      "name": "药田",
+      "flavor": "一方种着草药的田。"
+    },
+    {
+      "key": "content.r1.place.xiuxian_dew_pool",
+      "name": "露水潭",
+      "flavor": "潭边水草可采。"
+    },
+    {
+      "key": "content.r1.place.xiuxian_sword_gate",
+      "name": "太华山门",
+      "flavor": "太华剑派的山门,可在此习武。"
+    },
+    {
+      "key": "content.r1.place.xiuxian_sword_arena",
+      "name": "山门演武场",
+      "flavor": "山门外的比武场。"
+    },
+    {
+      "key": "content.r1.place.xiuxian_elixir_court",
+      "name": "九还药铺前堂",
+      "flavor": "卖药的铺子。"
+    },
+    {
+      "key": "content.r1.place.xiuxian_sigil_tower",
+      "name": "云纹楼",
+      "flavor": "卖秘籍、修兵器的书楼。"
+    },
+    {
+      "key": "content.r1.place.xiuxian_herb_ravine",
+      "name": "药谷",
+      "flavor": "谷中草药可采,路上不太平。"
+    },
+    {
+      "key": "content.r1.place.xiuxian_beast_cave",
+      "name": "猛兽洞",
+      "flavor": "洞中有猛兽,也有可采之物。"
+    },
+    {
+      "key": "content.r1.place.xiuxian_broken_cliff",
+      "name": "断崖采场",
+      "flavor": "崖边可采,路不好走。"
+    },
+    {
+      "key": "content.r1.place.fantasy_watch_hall",
+      "name": "灰港卫所大堂",
+      "flavor": "江湖人在此复生落脚。"
+    },
+    {
+      "key": "content.r1.place.fantasy_conclave_hall",
+      "name": "银烛武堂",
+      "flavor": "银烛会的练武堂。"
+    },
+    {
+      "key": "content.r1.place.fantasy_wayfarer_hall",
+      "name": "青径行馆",
+      "flavor": "青径帮的落脚处,也做买卖。"
+    },
+    {
+      "key": "content.r1.place.fantasy_yard",
+      "name": "镇边校场",
+      "flavor": "镇边的练武场,新人在此试手。"
+    },
+    {
+      "key": "content.r1.place.fantasy_pier",
+      "name": "灰港码头",
+      "flavor": "码头边可采水产。"
+    },
+    {
+      "key": "content.r1.place.fantasy_shore",
+      "name": "港边滩",
+      "flavor": "港边的滩,可采。"
+    },
+    {
+      "key": "content.r1.place.fantasy_fen",
+      "name": "青径泽",
+      "flavor": "泽中草药可采。"
+    },
+    {
+      "key": "content.r1.place.fantasy_barrow",
+      "name": "古坟岗",
+      "flavor": "一处古坟,路上不太平。"
+    },
+    {
+      "key": "content.r1.place.fantasy_crypt",
+      "name": "坟下墓道",
+      "flavor": "坟下的墓道,凶险。"
+    },
+    {
+      "key": "content.r1.place.fantasy_ridge",
+      "name": "灰脊岭",
+      "flavor": "一条灰脊,路上不太平。"
+    },
+    {
+      "key": "content.r1.place.fantasy_pit",
+      "name": "灰脊陷坑",
+      "flavor": "岭下的陷坑,凶险。"
+    },
+    {
+      "key": "content.r1.place.fantasy_shrine",
+      "name": "港镇祠",
+      "flavor": "港镇边的小祠。"
+    },
+    {
+      "key": "content.r1.place.scifi_survey_hall",
+      "name": "勘路堂",
+      "flavor": "勘路帮的练武堂。"
+    },
+    {
+      "key": "content.r1.place.scifi_trade_berth",
+      "name": "泊船埠",
+      "flavor": "埠头上做买卖。"
+    },
+    {
+      "key": "content.r1.place.scifi_ring_road",
+      "name": "环镇路",
+      "flavor": "绕镇一圈的路。"
+    },
+    {
+      "key": "content.r1.place.scifi_sim_bay",
+      "name": "试招棚",
+      "flavor": "新人在棚里试招。"
+    },
+    {
+      "key": "content.r1.place.scifi_beacon_field",
+      "name": "烽草原",
+      "flavor": "原上可采。"
+    },
+    {
+      "key": "content.r1.place.scifi_dust_plain",
+      "name": "尘土原",
+      "flavor": "一片尘土原,路上不太平。"
+    },
+    {
+      "key": "content.r1.place.scifi_wreck_lock",
+      "name": "沉船闸",
+      "flavor": "沉船的闸口,路上不太平。"
+    },
+    {
+      "key": "content.r1.place.scifi_derelict_hold",
+      "name": "弃船舱",
+      "flavor": "弃船的底舱,凶险。"
+    },
+    {
+      "key": "content.r1.place.scifi_salvage_yard",
+      "name": "打捞坞",
+      "flavor": "修船、捞物的坞。"
+    },
+    {
+      "key": "content.r1.place.scifi_rust_belt",
+      "name": "锈蚀带",
+      "flavor": "一带锈蚀之地,凶险,可采。"
+    },
+    {
+      "key": "content.r1.place.scifi_black_lane",
+      "name": "夜航道",
+      "flavor": "夜里才走的水道,凶险。"
+    },
+    {
+      "key": "content.r1.org.registry_xiuxian",
+      "name": "挂名单",
+      "flavor": "入界的江湖人在此挂名。"
+    },
+    {
+      "key": "content.r1.org.xiuxian_taihua",
+      "name": "太华剑派",
+      "flavor": "使剑的门派,授刀剑与轻身。"
+    },
+    {
+      "key": "content.r1.org.xiuxian_jiuhuan",
+      "name": "九还药铺",
+      "flavor": "卖药的铺子,也授制药的功夫。"
+    },
+    {
+      "key": "content.r1.org.xiuxian_yunzhuan",
+      "name": "云纹书楼",
+      "flavor": "卖秘籍的书楼,也授符箓功夫。"
+    },
+    {
+      "key": "content.r1.org.fantasy_watch",
+      "name": "灰港卫所",
+      "flavor": "镇守灰港的卫所。"
+    },
+    {
+      "key": "content.r1.org.fantasy_conclave",
+      "name": "银烛会",
+      "flavor": "点银烛聚会的帮会。"
+    },
+    {
+      "key": "content.r1.org.fantasy_wayfarers",
+      "name": "青径帮",
+      "flavor": "走青径的帮会,做护送与买卖。"
+    },
+    {
+      "key": "content.r1.org.scifi_survey",
+      "name": "勘路帮",
+      "flavor": "常年在外探路的帮会。"
+    },
+    {
+      "key": "content.r1.org.scifi_trade",
+      "name": "埠头商会",
+      "flavor": "管埠头买卖的商会。"
+    },
+    {
+      "key": "content.r1.org.scifi_salvage",
+      "name": "打捞队",
+      "flavor": "出没沉船带打捞的队伍。"
+    },
+    {
+      "key": "content.r1.task.xiuxian_reach_trial",
+      "name": "初入试手廊",
+      "flavor": "走到试手木廊。"
+    },
+    {
+      "key": "content.r1.task.xiuxian_reach_field",
+      "name": "药田一行",
+      "flavor": "走到药田。"
+    },
+    {
+      "key": "content.r1.task.xiuxian_deliver_herb",
+      "name": "送草入铺",
+      "flavor": "把草药送到药铺。"
+    },
+    {
+      "key": "content.r1.task.fantasy_reach_yard",
+      "name": "入门试手",
+      "flavor": "走到镇边校场。"
+    },
+    {
+      "key": "content.r1.task.fantasy_reach_fen",
+      "name": "探青径泽",
+      "flavor": "走到青径泽。"
+    },
+    {
+      "key": "content.r1.task.fantasy_reach_shrine",
+      "name": "访港镇祠",
+      "flavor": "走到港镇祠。"
+    },
+    {
+      "key": "content.r1.task.scifi_reach_sim",
+      "name": "报到试招棚",
+      "flavor": "走到试招棚。"
+    },
+    {
+      "key": "content.r1.task.scifi_reach_yard",
+      "name": "找到打捞坞",
+      "flavor": "走到打捞坞。"
+    },
+    {
+      "key": "content.r1.task.scifi_deliver_ore",
+      "name": "矿样交货",
+      "flavor": "把矿石送到埠头。"
+    },
+    {
+      "key": "skill.org·skill.inner·content.r1.registry_xiuxian.roll_breath",
+      "name": "挂名吐纳",
+      "flavor": "挂名单的内功。"
+    },
+    {
+      "key": "skill.org·skill.move·content.r1.registry_xiuxian.roll_step",
+      "name": "挂名步",
+      "flavor": "挂名单的身法。"
+    },
+    {
+      "key": "skill.org·skill.strike·content.r1.registry_xiuxian.roll_palm",
+      "name": "挂名掌",
+      "flavor": "挂名单的掌法。"
+    },
+    {
+      "key": "skill.org·skill.strike·content.r1.xiuxian_taihua.sword_draw",
+      "name": "太华拔剑",
+      "flavor": "太华剑派的剑招。"
+    },
+    {
+      "key": "skill.org·skill.guard·content.r1.xiuxian_taihua.sword_guard",
+      "name": "太华守剑",
+      "flavor": "太华剑派的守势。"
+    },
+    {
+      "key": "skill.org·skill.move·content.r1.xiuxian_taihua.sword_step",
+      "name": "太华踏剑",
+      "flavor": "太华剑派的身法。"
+    },
+    {
+      "key": "skill.org·skill.inner·content.r1.xiuxian_jiuhuan.cauldron_fire",
+      "name": "九还炉火",
+      "flavor": "九还药铺的内功。"
+    },
+    {
+      "key": "skill.org·skill.guard·content.r1.xiuxian_jiuhuan.pill_guard",
+      "name": "九还护药",
+      "flavor": "九还药铺的守势。"
+    },
+    {
+      "key": "skill.org·skill.move·content.r1.xiuxian_jiuhuan.herb_stride",
+      "name": "九还采步",
+      "flavor": "九还药铺的采药步法。"
+    },
+    {
+      "key": "skill.org·skill.guard·content.r1.xiuxian_yunzhuan.sigil_ward",
+      "name": "云纹护符",
+      "flavor": "云纹书楼的守势。"
+    },
+    {
+      "key": "skill.org·skill.strike·content.r1.xiuxian_yunzhuan.sigil_bolt",
+      "name": "云纹符击",
+      "flavor": "云纹书楼的攻势。"
+    },
+    {
+      "key": "skill.org·skill.inner·content.r1.xiuxian_yunzhuan.sigil_breath",
+      "name": "云纹养气",
+      "flavor": "云纹书楼的内功。"
+    },
+    {
+      "key": "skill.org·skill.guard·content.r1.fantasy_watch.fantasy_watch_shield",
+      "name": "卫所盾阵",
+      "flavor": "灰港卫所的守势。"
+    },
+    {
+      "key": "skill.org·skill.strike·content.r1.fantasy_watch.fantasy_watch_pike",
+      "name": "卫所长兵",
+      "flavor": "灰港卫所的长兵。"
+    },
+    {
+      "key": "skill.org·skill.inner·content.r1.fantasy_conclave.fantasy_conclave_rune",
+      "name": "银烛符",
+      "flavor": "银烛会的内功。"
+    },
+    {
+      "key": "skill.org·skill.strike·content.r1.fantasy_conclave.fantasy_conclave_bolt",
+      "name": "银烛箭",
+      "flavor": "银烛会的攻势。"
+    },
+    {
+      "key": "skill.org·skill.guard·content.r1.fantasy_conclave.fantasy_conclave_ward",
+      "name": "银烛护咒",
+      "flavor": "银烛会的守势。"
+    },
+    {
+      "key": "skill.org·skill.move·content.r1.fantasy_wayfarers.fantasy_wayfarer_trail",
+      "name": "青径步",
+      "flavor": "青径帮的身法。"
+    },
+    {
+      "key": "skill.org·skill.strike·content.r1.fantasy_wayfarers.fantasy_wayfarer_shot",
+      "name": "青径箭",
+      "flavor": "青径帮的箭术。"
+    },
+    {
+      "key": "skill.org·skill.inner·content.r1.scifi_survey.chart",
+      "name": "勘路心法",
+      "flavor": "勘路帮的内功。"
+    },
+    {
+      "key": "skill.org·skill.strike·content.r1.scifi_survey.pulse",
+      "name": "勘路齐射",
+      "flavor": "勘路帮的齐射。"
+    },
+    {
+      "key": "skill.org·skill.move·content.r1.scifi_survey.drift",
+      "name": "勘路切入",
+      "flavor": "勘路帮的身法。"
+    },
+    {
+      "key": "skill.org·skill.inner·content.r1.scifi_trade.ledger",
+      "name": "商会算账",
+      "flavor": "埠头商会的内功。"
+    },
+    {
+      "key": "skill.org·skill.move·content.r1.scifi_trade.convoy",
+      "name": "商会护送",
+      "flavor": "埠头商会的护送步法。"
+    },
+    {
+      "key": "skill.org·skill.strike·content.r1.scifi_salvage.cut",
+      "name": "打捞切割",
+      "flavor": "打捞队的攻势。"
+    },
+    {
+      "key": "skill.org·skill.guard·content.r1.scifi_salvage.plate",
+      "name": "打捞护板",
+      "flavor": "打捞队的守势。"
+    },
+    {
+      "key": "skill.org·skill.move·content.r1.scifi_salvage.haul",
+      "name": "打捞拖绳",
+      "flavor": "打捞队的身法。"
     }
   ]
 }
