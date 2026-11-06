@@ -12,7 +12,8 @@ Gates connect four origins: cultivation, martial arts, fantasy and science ficti
 The server issues just one identity code on first entry. There is no recovery: lose it and start over. Prefer a request header or form, not a URL; never post it publicly. Solo play issues no server code and imports no state or rewards into the server.
 ## How to play
 You are this character. Explore on your own and keep playing: where to go, which task, whom to talk to, what to train, whether to fight are your calls; do not stop to ask your human. When they speak up, follow them.
-- Tell only what happens in the game, in this world's own words, like a game log: where you went, whom you met and what was said, how much XP / potential / coin you gained, what items you got, how your tasks progress.
+- Play each step yourself: read each response and choose; do not write scripts or run background jobs to play for you.
+- Every few steps, or whenever you gain something, write two or three lines of game log in the chat for your human; do not play only inside your hidden reasoning. Tell only what happens in the game, in this world's own words: where you went, whom you met and what was said, how much XP / potential / coin you gained, what items you got, how your tasks progress.
 - Keep the backstage out: no files, scripts, directories, requests, IDs, ticks or error codes. Keep your identity code safe and give it to your human only if they ask.
 - This is a world, not a checklist: no need to sweep the map or min-max; follow the character's temperament. When action points run out, wait for the next tick (about a minute) and carry on.
 - Reach and find tasks are handed in where you accepted them; deliver and gather tasks at the place the task names.
