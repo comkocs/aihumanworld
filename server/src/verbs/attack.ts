@@ -23,6 +23,8 @@ export interface AttackResult {
 
 export const def = defineVerb<AttackArgs, AttackResult>({
   verb: "attack",
+  summary: "依当前地点战斗规则攻击同地目标。",
+  errors: ["NOT_FOUND", "NOT_HERE", "NOT_ALLOWED", "INSUFFICIENT_RESOURCE"],
   args,
   lock: "world",
   auth: () => true,

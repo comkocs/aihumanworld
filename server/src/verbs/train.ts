@@ -17,6 +17,9 @@ export interface TrainResult {
 
 export const def = defineVerb<TrainArgs, TrainResult>({
   verb: "train",
+  summary: "选择已学技能持续修炼，或停止修炼；收益按世界刻结算。",
+  errors: ["NOT_FOUND", "CONDITION_UNMET", "SKILL_CAP"],
+  purpose: (a) => a.mode === "start" ? "开始持续修炼指定的已学技能。" : "停止当前修炼。",
   args,
   lock: "world",
   auth: () => true,

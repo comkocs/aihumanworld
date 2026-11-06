@@ -118,6 +118,8 @@ export const TABLES: Readonly<Record<FactTable, TableDesc>> = {
     ...common,
     kind: "text",
     door: "text",
+    handle: "text",
+    email_hash: "text",
     model: "text",
     skin: "text",
     class: "text",

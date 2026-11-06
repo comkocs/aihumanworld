@@ -8,6 +8,7 @@ import type { ApCostKey, Door, Verb } from "../facts/enums.ts";
 import type { CharRow, Tick, WorldRow, WorldRules } from "../facts/types.ts";
 import type { Writer } from "../facts/writer.ts";
 import type { Balance } from "../growth/balance.ts";
+import type { ErrorCode } from "../protocol/errors.ts";
 import type { V } from "../protocol/validate.ts";
 import type { SpeechStore } from "../speech/store.ts";
 
@@ -42,6 +43,9 @@ export type Gate = "none" | "in_world" | "acting";
 
 export interface VerbDef<A, R> {
   verb: Verb;
+  summary: string;
+  errors: readonly ErrorCode[];
+  purpose?(a: A): string;
   args: V<A>;
   /** "world" locks the world row (required to write deeds / events). */
   lock: "world" | "read";

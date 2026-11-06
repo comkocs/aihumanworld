@@ -48,6 +48,8 @@ const QUERIES: Readonly<Record<ListSection, { table: FactTable; where: string }>
 
 export const def = defineVerb<WhoamiArgs, WhoamiResult>({
   verb: "whoami",
+  summary: "查看自己的角色、背包、技能、关系、任务、声望或悬赏。",
+  errors: ["INVALID_CURSOR"],
   args,
   lock: "read",
   auth: () => true,

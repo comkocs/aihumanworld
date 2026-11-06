@@ -347,6 +347,9 @@ async function abandon(ctx: VerbContext, id: ID): Promise<Edit> {
 
 export const def = defineVerb<TaskArgs, TaskResult>({
   verb: "task",
+  summary: "查看、接取、提交或放弃可核实的任务。",
+  errors: ["NOT_FOUND", "NOT_HERE", "TASK_STATE", "TASK_LIMIT", "CONDITION_UNMET"],
+  purpose: (a) => ({ list: "列出可接或已接任务。", accept: "接取指定任务。", submit: "核验目标并提交任务领取报酬。", abandon: "放弃已接任务。" })[a.op],
   args,
   lock: "world",
   auth: () => true,

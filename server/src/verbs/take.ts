@@ -22,6 +22,8 @@ export interface TakeResult {
 
 export const def = defineVerb<TakeArgs, TakeResult>({
   verb: "take",
+  summary: "拿取当前地点的一件可用地面物实例。",
+  errors: ["NOT_FOUND", "NOT_HERE", "ITEM_STATE"],
   args,
   lock: "world",
   auth: () => true,

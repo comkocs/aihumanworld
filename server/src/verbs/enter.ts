@@ -24,10 +24,13 @@ import type {
   Tick,
 } from "../facts/types.ts";
 import { deriveStats, startValues } from "../growth/balance.ts";
+import { touchSeen } from "../identity/auth.ts";
 import { generateCode, hashCode, type NewCode } from "../identity/code.ts";
+import { hashEmail, normalizeEmail } from "../identity/email.ts";
+import { allocateHandle } from "../identity/handles.ts";
 import { emitBond, membership } from "../orgs/membership.ts";
 import { NO_DETAILS, reject } from "../protocol/errors.ts";
-import { charClass, door, skin } from "../protocol/shapes.ts";
+import { charClass, door, email as emailShape, handle as handleShape, skin } from "../protocol/shapes.ts";
 import { nullable, opt, str, union, type Out } from "../protocol/validate.ts";
 import { requireRule } from "../rules/world_rules.ts";
 import { sanitizeLabel } from "../speech/sanitize.ts";
@@ -47,15 +50,21 @@ const args = union("mode", {
     class: opt(nullable(charClass), undefined),
     door: opt(door, undefined),
     model: opt(nullable(str()), undefined),
+    // S32: continue by handle + email (no bearer code), or bind / rebind / unbind
+    // (null) the email of the authenticated char. Absent → email not involved.
+    handle: opt(nullable(handleShape), undefined),
+    email: opt(nullable(emailShape), undefined),
   },
 });
 export type EnterArgs = Out<typeof args>;
 
 export interface EnterResult {
   char: CharRow;
-  /** Only on create, only once; never stored, logged or re-issued. */
+  /** On create and on handle+email resume, only once; never stored, logged or re-issued. */
   identity_code: string | null;
   created: boolean;
+  /** S32: email binding state after this call; null when email was not involved. */
+  email_bound: boolean | null;
   changes: Change[];
   world: WorldClientView;
 }
@@ -103,6 +112,8 @@ async function create(ctx: VerbContext, a: Extract<EnterArgs, { mode: "create" }
     updated_tick: tick,
     kind: "player",
     door: ctx.door,
+    handle: await allocateHandle(ctx.q),
+    email_hash: null,
     model: sanitizeLabel(a.model, textMax),
     skin: a.skin,
     class: a.class,
@@ -210,7 +221,7 @@ async function create(ctx: VerbContext, a: Extract<EnterArgs, { mode: "create" }
     deed_id: deed.id,
     data: { char_id: charId, from: null, to: "draft", reason: "create" },
   });
-  return { char, identity_code: code.display, created: true, changes, world: worldClientView(world) };
+  return { char, identity_code: code.display, created: true, email_bound: null, changes, world: worldClientView(world) };
 }
 
 /** 产品文档 v1 阵营 = 出身皮: switching is free through tier 3, locked after. */
@@ -236,11 +247,18 @@ async function conversionGuard(ctx: VerbContext, c: CharRow, target: Skin): Prom
   return { from, registry, spawn: ctx.world.spawn_places[target] };
 }
 
-async function resume(ctx: VerbContext, a: Extract<EnterArgs, { mode: "resume" }>): Promise<EnterResult> {
+async function resume(
+  ctx: VerbContext,
+  a: Extract<EnterArgs, { mode: "resume" }>,
+  fresh: { code: NewCode; hash: string } | null,
+): Promise<EnterResult> {
   const c = ctx.actor;
   if (c === null) throw new Error("enter resume: no actor");
   if (a.door !== undefined && a.door !== ctx.door) {
     reject("INVALID_ARGUMENT", { expected: "door of the entry shell (api for /v1/actions)" }, "args.door");
+  }
+  if (fresh !== null && a.email === undefined) {
+    reject("INVALID_ARGUMENT", { expected: "email required with handle" }, "args.email");
   }
   const skin = a.skin ?? c.skin;
   if (a.class !== undefined && a.class !== null && skin !== "fantasy") {
@@ -259,10 +277,15 @@ async function resume(ctx: VerbContext, a: Extract<EnterArgs, { mode: "resume" }
     respawn_place?: CharRow["respawn_place"];
     door?: CharRow["door"];
     model?: CharRow["model"];
+    email_hash?: CharRow["email_hash"];
     state?: "active";
     state_since?: Tick;
     last_yield_tick?: Tick;
   } = {};
+  // S32 bind / rebind / unbind: only the hash is stored, the address never echoed.
+  const emailBound = a.email === undefined ? null : a.email !== null;
+  if (a.email !== undefined && a.email !== null) patch.email_hash = hashEmail(normalizeEmail(a.email));
+  else if (a.email === null) patch.email_hash = null;
   if (conversion !== null) {
     patch.skin = skin;
     patch.origin_region = skin;
@@ -314,6 +337,7 @@ async function resume(ctx: VerbContext, a: Extract<EnterArgs, { mode: "resume" }
   if (patch.respawn_place !== undefined) char.respawn_place = patch.respawn_place;
   if (patch.door !== undefined) char.door = patch.door;
   if (patch.model !== undefined) char.model = patch.model;
+  if (patch.email_hash !== undefined) char.email_hash = patch.email_hash;
   if (restored) {
     char.state = "active";
     char.state_since = ctx.tick;
@@ -347,18 +371,70 @@ async function resume(ctx: VerbContext, a: Extract<EnterArgs, { mode: "resume" }
       data: { char_id: c.id, from: c.state, to: "active", reason: "resume" },
     });
   }
-  return { char, identity_code: null, created: false, changes, world: worldClientView(ctx.world) };
+  return { char, identity_code: fresh === null ? null : fresh.code.display, created: false, email_bound: emailBound, changes, world: worldClientView(ctx.world) };
+}
+
+/** S32 (设计者原话 2026-11-06 19): handle + email, no bearer code → a fresh code. */
+const CODES_PER_CHAR = 20;
+
+async function resumeByHandle(ctx: VerbContext, a: Extract<EnterArgs, { mode: "resume" }>): Promise<EnterResult> {
+  if (a.email === undefined || a.email === null) {
+    reject("INVALID_ARGUMENT", { expected: "email required with handle" }, "args.email");
+  }
+  const byHandle = await selectRows(ctx.q, "char", "handle = $1 AND kind = 'player'", [a.handle]);
+  const found = byHandle[0];
+  // Unknown handle, unbound email and mismatched address answer identically.
+  if (found === undefined) return reject("AUTH_INVALID", NO_DETAILS);
+  const c = await getRow(ctx.q, "char", found.id, { lock: true });
+  if (c === null || c.email_hash !== hashEmail(normalizeEmail(a.email))) return reject("AUTH_INVALID", NO_DETAILS);
+
+  // Lifecycle gate mirrors code resume: past recovery refuses with IDENTITY_EXPIRED.
+  const idents = await selectRows(ctx.q, "identity", "char_id = $1", [c.id]);
+  const withinWindow = idents.some((i) => i.expires_tick === null || BigInt(i.expires_tick) > BigInt(ctx.tick));
+  const draftTtl = ctx.rules.draft_expire_ticks;
+  const draftExpired = c.state === "draft" && draftTtl !== null && Number(ctx.tick) - Number(c.created_tick) >= draftTtl;
+  if (draftExpired || !withinWindow) return reject("IDENTITY_EXPIRED", { can_create: true });
+
+  // A fresh code for this window; old codes stay valid, capped at 20 (oldest retired).
+  const fresh = await freshCode(ctx);
+  const identity: IdentityRow = {
+    id: await ctx.w.newId("identity"),
+    created_tick: ctx.tick,
+    updated_tick: ctx.tick,
+    char_id: c.id,
+    code_hash: fresh.hash,
+    expires_tick: null,
+  };
+  await ctx.w.insert("identity", identity);
+  if (idents.length + 1 > CODES_PER_CHAR) {
+    const oldest = [...idents]
+      .sort((x, y) => (BigInt(x.created_tick) < BigInt(y.created_tick) ? -1 : BigInt(x.created_tick) > BigInt(y.created_tick) ? 1 : x.id < y.id ? -1 : 1))
+      .slice(0, idents.length + 1 - CODES_PER_CHAR)
+      .map((i) => i.id);
+    await ctx.q.query("DELETE FROM identities WHERE id = ANY($1::text[])", [oldest]);
+  }
+  ctx.actor = await touchSeen(ctx.w, c, ctx.tick, ctx.now);
+  return resume(ctx, a, fresh);
 }
 
 export const def = defineVerb<EnterArgs, EnterResult>({
   verb: "enter",
+  summary: "创建角色并领取一次性身份码，或恢复已有角色。",
+  errors: ["NOT_ALLOWED", "CONDITION_UNMET"],
+  purpose: (a) =>
+    a.mode === "create"
+      ? "创建角色并领取短号；身份码只在本次回包显示。"
+      : a.handle !== undefined && a.handle !== null
+        ? "短号 + 邮箱续玩：核验后给本窗口新发一枚身份码（只显示一次），旧码仍有效。"
+        : "用已有身份码恢复角色，可更新展示字段或绑定 / 解绑邮箱。",
   args,
   lock: "world",
-  auth: (a) => a.mode === "resume",
+  auth: (a) => a.mode === "resume" && (a.handle === undefined || a.handle === null),
   costKey: () => "enter",
   gate: () => "none",
   async handler(ctx, a) {
     if (a.mode === "create") return create(ctx, a);
-    return resume(ctx, a);
+    if (a.handle !== undefined && a.handle !== null) return resumeByHandle(ctx, a);
+    return resume(ctx, a, null);
   },
 });

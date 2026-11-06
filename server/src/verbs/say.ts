@@ -24,6 +24,8 @@ export interface SayResult {
 
 export const def = defineVerb<SayArgs, SayResult>({
   verb: "say",
+  summary: "向当前地点说话，或向同地人物发送私话。",
+  errors: ["NOT_FOUND", "NOT_HERE"],
   args,
   lock: "world",
   auth: () => true,

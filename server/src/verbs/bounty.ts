@@ -221,6 +221,9 @@ async function cancel(ctx: VerbContext, me: CharRow, id: ID): Promise<BountyResu
 
 export const def = defineVerb<BountyArgs, BountyResult>({
   verb: "bounty",
+  summary: "用自己的钱或物托管发布悬赏，或撤销未被接取的悬赏。",
+  errors: ["NOT_FOUND", "NOT_ALLOWED", "INSUFFICIENT_RESOURCE", "TASK_LIMIT", "TASK_STATE"],
+  purpose: (a) => a.op === "post" ? "托管报酬并发布可核实的悬赏。" : "撤销自己尚未被接取的悬赏并收回托管物。",
   args,
   lock: "world",
   auth: () => true,

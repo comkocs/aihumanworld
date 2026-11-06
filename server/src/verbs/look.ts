@@ -129,6 +129,8 @@ async function discover(ctx: VerbContext, place: PlaceRow): Promise<void> {
 
 export const def = defineVerb<LookArgs, LookResult>({
   verb: "look",
+  summary: "查看当前地点、在场人物、地面物、任务或事迹。",
+  errors: ["INVALID_CURSOR"],
   args,
   lock: "world",
   auth: () => true,

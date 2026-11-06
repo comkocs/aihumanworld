@@ -13,6 +13,7 @@ import { test } from "node:test";
 import { resolve } from "node:path";
 import { startApp } from "../src/app.ts";
 import { loadConfig, SERVER_ROOT } from "../src/config.ts";
+import { verifyKeySources } from "../src/content/index.ts";
 import { insertRow } from "../src/facts/store.ts";
 import type { Holder, TaskInstanceRow } from "../src/facts/types.ts";
 import { setQuiet } from "../src/log.ts";
@@ -75,6 +76,16 @@ test("S27 chain: first-tick fill → take → 120-tick restock to cap → delive
     assert.equal(groundHerb.length, 4, "wild_t1 starts with cap 4 herb_t1 after the first tick");
     assert.equal(groundOre.length, 2, "wild_t1 starts with cap 2 ore_t1");
     assert.ok((await held(db, { kind: "char", id: MERCHANT }, "r1:item:potion_restore_t2_g1")).length === 4, "merchant_t3 restocked");
+    for (let tier = 4; tier <= 9; tier += 1) {
+      const def = `r1:item:key_t${tier}`;
+      assert.equal((await held(db, { kind: "place", id: `r1:place:dungeon_t${tier}` }, def)).length, 2, `${def} has a same-tier outer-dungeon source`);
+    }
+    // Reuse this imported world: missing and self-locked sources must both be named.
+    await db.query("DELETE FROM s27_supply WHERE def_id = 'r1:item:key_t4'");
+    await assert.rejects(verifyKeySources(db, "r1"), /locked exit content\.r1\.place\.dungeon_t4 in.*key_t4.*no resource spot or merchant/);
+    await db.query("INSERT INTO s27_supply (holder_kind, holder_id, def_id, cap, due_tick) VALUES ('place', 'r1:place:inner_t4', 'r1:item:key_t4', 2, NULL)");
+    await assert.rejects(verifyKeySources(db, "r1"), /locked exit content\.r1\.place\.dungeon_t4 in.*key_t4.*unreachable/);
+    await db.query("UPDATE s27_supply SET holder_id = 'r1:place:dungeon_t4' WHERE def_id = 'r1:item:key_t4'");
 
     // An open system deliver offer for this char (S24-style fixture; the walk below is all verbs).
     const world = (await db.query<{ id: string }>("SELECT id FROM worlds")).rows[0]!.id;
@@ -150,10 +161,16 @@ test("S27 chain: first-tick fill → take → 120-tick restock to cap → delive
     await ok("go", { dir: "south" }, code); // camp_neutral → gate_confluence
     await nextTick();
     await ok("go", { dir: "out" }, code); // gate_confluence → market_neutral
-    const stock = await held(db, { kind: "char", id: MERCHANT }, "r1:item:potion_restore_t2_g1");
-    assert.ok(stock.length > 0, "merchant has stock to sell");
+    const shopResponse = await fetch(`${app.url}/v1/shops/${encodeURIComponent(MERCHANT)}`);
+    assert.equal(shopResponse.status, 200);
+    const shop = await shopResponse.json() as Json;
+    assert.equal(shop.npc.id, MERCHANT);
+    assert.equal(shop.npc.coin, undefined, "shop does not expose the merchant's private coin pool");
+    const offer = shop.items.find((row: Json) => row.item.def_id === "r1:item:potion_restore_t2_g1");
+    assert.ok(offer && offer.price > 0, "public shop exposes a purchasable instance and its price");
     const coin1 = await coinOf(a);
-    const bought = await ok("use", { op: "buy", item: stock[0]!, npc: MERCHANT }, code);
+    const bought = await ok("use", { op: "buy", item: offer.item.id, npc: MERCHANT }, code);
+    assert.equal(bought.result.price, offer.price, "quote and settlement use the same price");
     assert.equal(bought.result.op, "buy");
     assert.ok(bought.result.price > 0, "buy reports a price");
     assert.deepEqual(bought.result.changes.find((c: Json) => c.table === "item")?.after?.holder, { kind: "char", id: a });

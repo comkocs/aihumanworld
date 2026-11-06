@@ -65,6 +65,21 @@ test("S26: html door, play page, web enter, no translation_missing", async (t) =
     assert.match(css.headers.get("content-security-policy") ?? "", /default-src 'self'/);
     const playBody = await play.text();
     const playJs = await js.text();
+    const verbsResponse = await fetch(`${app.url}/v1/verbs`);
+    assert.equal(verbsResponse.status, 200);
+    const catalog = await verbsResponse.json() as {
+      verbs: { verb: string; branches: { selector: Record<string, unknown>; args: { properties: Record<string, object>; required: string[] }; ap_cost: number; purpose: string; common_errors: string[] }[] }[];
+    };
+    assert.equal(catalog.verbs.length, 16);
+    assert.equal(new Set(catalog.verbs.map((entry) => entry.verb)).size, 16);
+    const use = catalog.verbs.find((entry) => entry.verb === "use")!;
+    assert.equal(use.branches.length, 16);
+    const buy = use.branches.find((branch) => branch.selector.op === "buy")!;
+    assert.deepEqual(buy.args.required, ["op", "item", "npc"]);
+    assert.ok(buy.args.properties.item && buy.args.properties.npc);
+    assert.equal(typeof buy.ap_cost, "number");
+    assert.ok(buy.purpose.length > 0 && buy.common_errors.includes("NOT_HERE"));
+    assert.deepEqual(await (await fetch(`${app.url}/v1/actions`)).json(), catalog);
     await t.test("S26: unknown event and task render safely", () => {
       const source = playJs.replace(/main\(\)\.catch\(showError\);\s*$/, "");
       assert.notEqual(source, playJs);
@@ -145,7 +160,7 @@ test("S26: html door, play page, web enter, no translation_missing", async (t) =
       assert.match(publicDefs.headers.get("content-type") ?? "", /^application\/json/);
       assert.deepEqual(await publicDefs.json(), definitions);
       // R08: slugs with an underscore are reachable.
-      for (const slug of ["use-org_join", "use-org_leave", "use-relation_end", "use-relation_accept"]) {
+      for (const slug of ["use-org_join", "use-org_leave", "use-relation_end", "use-relation_accept", "use-buy", "use-sell", "use-repair"]) {
         assert.equal((await fetch(`${app.url}/act/${slug}`)).status, 200, `GET /act/${slug}`);
       }
       for (const item of definitions.items) {

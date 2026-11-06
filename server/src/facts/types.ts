@@ -231,6 +231,10 @@ export type ItemRow = ItemDefinitionRow | ItemInstanceRow;
 export interface CharRow extends CommonFields {
   kind: CharKind;
   door: Door | null;
+  /** S32 public player short id (players only, e.g. A00002); never reused. */
+  handle: string | null;
+  /** S32 continuation token: sha256("aihw-email:" + normalized address), null = unbound. */
+  email_hash: string | null;
   model: string | null;
   skin: Skin;
   class: CharClass | null;
@@ -267,6 +271,7 @@ export interface CharRow extends CommonFields {
 /** Fields of another char visible to observers (事实格式 §12). */
 export const PUBLIC_CHAR_FIELDS = [
   "id",
+  "handle",
   "kind",
   "door",
   "model",

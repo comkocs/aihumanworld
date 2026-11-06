@@ -378,6 +378,8 @@ async function importChars(ctx: FileCtx, file: string, entries: CharEntry[], res
         updated_tick: ctx.tick,
         kind: "npc",
         door: null,
+        handle: null,
+        email_hash: null,
         model: null,
         skin: e.skin,
         class: null,
@@ -574,6 +576,50 @@ async function verifyTaskSources(db: Db): Promise<void> {
       throw new Error(
         `content: task template ${t.content_key} needs ${c.item_def}, but no resource spot or merchant produces it in region ${to.region} or neutral`,
       );
+    }
+  }
+}
+
+/** A key must be producible on the reachable side, never behind its own lock (including key cycles). */
+export async function verifyKeySources(db: Db, realm: string): Promise<void> {
+  const places = await selectRows(db, "place", "split_part(id, ':', 1) = $1", [realm], 'ORDER BY id COLLATE "C"');
+  const world = await getRow(db, "world", worldId(realm));
+  if (world === null) throw new Error("content: world not booted for key source check");
+  const sources = await db.query<{ def_id: string; place_id: string }>(
+    `SELECT s.def_id, CASE WHEN s.holder_kind = 'place' THEN s.holder_id ELSE c.loc END AS place_id
+     FROM s27_supply s LEFT JOIN chars c ON s.holder_kind = 'char' AND c.id = s.holder_id
+     WHERE split_part(s.def_id, ':', 1) = $1`, [realm],
+  );
+  const reached = new Set(Object.values(world.spawn_places));
+  const keys = new Set<string>();
+  let changed = true;
+  while (changed) {
+    changed = false;
+    for (const source of sources.rows) {
+      if (reached.has(source.place_id) && !keys.has(source.def_id)) {
+        keys.add(source.def_id);
+        changed = true;
+      }
+    }
+    for (const place of places) {
+      if (!reached.has(place.id)) continue;
+      for (const exit of place.exits) {
+        if (reached.has(exit.to) || (exit.locked && (exit.key_def === null || !keys.has(exit.key_def)))) continue;
+        reached.add(exit.to);
+        changed = true;
+      }
+    }
+  }
+  for (const place of places) {
+    for (const exit of place.exits) {
+      if (!exit.locked) continue;
+      const name = `content: locked exit ${place.content_key} ${exit.dir} -> ${exit.to} needs ${exit.key_def}`;
+      if (exit.key_def === null || !sources.rows.some((s) => s.def_id === exit.key_def)) {
+        throw new Error(`${name}, but no resource spot or merchant produces its key`);
+      }
+      if (!sources.rows.some((s) => s.def_id === exit.key_def && reached.has(s.place_id))) {
+        throw new Error(`${name}, but its key source is unreachable without passing its own lock or a key cycle`);
+      }
     }
   }
 }
@@ -791,6 +837,7 @@ export async function importWorldContent(
     }
   }
   await verifyTaskSources(db);
+  await verifyKeySources(db, realm);
   const { inserted, skipped } = result;
   log.info("content imported", {
     files: result.files.length,

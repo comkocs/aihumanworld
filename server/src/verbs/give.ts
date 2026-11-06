@@ -24,6 +24,8 @@ export interface GiveResult {
 
 export const def = defineVerb<GiveArgs, GiveResult>({
   verb: "give",
+  summary: "把一件物品实例或一定数量的钱交给同地人物。",
+  errors: ["NOT_FOUND", "NOT_HERE", "ITEM_STATE", "INSUFFICIENT_RESOURCE"],
   args,
   lock: "world",
   auth: () => true,

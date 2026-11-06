@@ -27,6 +27,9 @@ export interface BreakthroughResult {
 
 export const def = defineVerb<BreakthroughArgs, BreakthroughResult>({
   verb: "breakthrough",
+  summary: "条件满足后突破小段、大阶或轮回，可选用同阶突破药。",
+  errors: ["CONDITION_UNMET", "NOT_FOUND", "ITEM_STATE"],
+  purpose: (a) => ({ stage: "突破当前小段。", tier: "从第四段尝试突破到下一大阶。", cycle: "九阶四段完成轮回。" })[a.mode],
   args,
   lock: "world",
   auth: () => true,

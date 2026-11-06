@@ -96,6 +96,7 @@ function placeLine(lex: Lexicon, p: PlaceRow): string {
 function charLine(lex: Lexicon, c: PublicChar): string {
   const parts = [
     `\`${c.id}\``,
+    c.handle === null ? "" : `handle ${c.handle}`,
     facet(lex, `person.${c.kind}`),
     facet(lex, `body.${c.body}`),
     c.archetype === null ? "" : facet(lex, `npc.${c.archetype}`),

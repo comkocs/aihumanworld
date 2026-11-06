@@ -38,6 +38,8 @@ async function guardStops(ctx: VerbContext, guardId: ID, here: PlaceRow, me: Cha
 
 export const def = defineVerb<GoArgs, GoResult>({
   verb: "go",
+  summary: "沿当前地点的指定方向出口移动；锁门须先 use unlock。",
+  errors: ["NOT_FOUND", "EXIT_BLOCKED"],
   args,
   lock: "world",
   auth: () => true,

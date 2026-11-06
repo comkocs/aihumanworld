@@ -11,7 +11,15 @@ import { join } from "node:path";
 import type { Db } from "../db/db.ts";
 import { SERVER_ROOT } from "../config.ts";
 import { SKINS, VERBS, type Skin } from "../facts/enums.ts";
-import { selectRows } from "../facts/store.ts";
+import { getRow, mustGetRow, selectRows } from "../facts/store.ts";
+import { worldId } from "../facts/ids.ts";
+import { itemPrice, tradePrice } from "../economy/prices.ts";
+import type { Balance } from "../growth/balance.ts";
+import { requireRevision } from "../orgs/numbers.ts";
+import { ActionError, NO_DETAILS, reject } from "../protocol/errors.ts";
+import { charId } from "../protocol/shapes.ts";
+import { verbCatalog } from "../verbs/catalog.ts";
+import { errEnvelope } from "../verbs/runner.ts";
 import { publicChar } from "../facts/project.ts";
 import type { LookResult } from "../verbs/look.ts";
 import { parseBearer } from "../identity/auth.ts";
@@ -24,6 +32,7 @@ import { lexiconFor, loadSkins, neutralLexicon, type SkinBook } from "./skins.ts
 export interface PublicDeps {
   db: Db;
   realm: string;
+  balance(): Balance;
   /** Run a verb exactly like the JSON API does (use door: "web"). */
   dispatch(input: DispatchInput): Promise<DispatchOutput>;
 }
@@ -232,7 +241,164 @@ async function sendDefinitions(deps: PublicDeps, res: ServerResponse): Promise<v
   });
 }
 
+async function sendShop(deps: PublicDeps, res: ServerResponse, id: string): Promise<void> {
+  try {
+    charId(id, "npc");
+    if (id.split(":")[0] !== deps.realm) reject("NOT_FOUND", NO_DETAILS);
+    const body = await deps.db.tx(async (q) => {
+      const npc = await getRow(q, "char", id);
+      if (npc === null) return reject("NOT_FOUND", NO_DETAILS);
+      if (npc.kind !== "npc" || npc.archetype !== "merchant" || npc.life !== "alive" || npc.state !== "active") {
+        return reject("NOT_ALLOWED", { reason: "service" });
+      }
+      const world = await mustGetRow(q, "world", worldId(deps.realm));
+      const balance = deps.balance();
+      requireRevision(balance, world.rules_revision, world.rules.balance_key);
+      const stock = await selectRows(q, "item", "record = 'instance' AND holder ->> 'kind' = 'char' AND holder ->> 'id' = $1 AND state = 'available' AND equipped = false", [id], 'ORDER BY id COLLATE "C"');
+      const items = [];
+      const prices = new Map<string, number>();
+      for (const item of stock) {
+        if (item.record !== "instance") continue;
+        let price = prices.get(item.def_id);
+        if (price === undefined) {
+          price = tradePrice(balance, await itemPrice(q, balance, item.def_id), "buy");
+          prices.set(item.def_id, price);
+        }
+        items.push({ item, price });
+      }
+      return { npc: publicChar(npc), items };
+    });
+    send(res, 200, "application/json", JSON.stringify(body), { "Cache-Control": "no-store", "Content-Security-Policy": CSP });
+  } catch (err) {
+    if (!(err instanceof ActionError)) throw err;
+    const out = errEnvelope(err, { tick: null, ap: null });
+    send(res, out.status, "application/json", JSON.stringify(out.body), { "Cache-Control": "no-store", "Content-Security-Policy": CSP });
+  }
+}
+
+/** S32: a char counts as online after a successful action within the last 10 ticks. */
+const ONLINE_WINDOW_TICKS = 10;
+
+function isOnline(c: { state: string; last_seen_tick: string }, tick: string): boolean {
+  return c.state !== "buried" && BigInt(tick) - BigInt(c.last_seen_tick) <= BigInt(ONLINE_WINDOW_TICKS);
+}
+
+/** Public read-only lookup by handle (设计者原话 2026-11-06 18). */
+async function sendWho(deps: PublicDeps, res: ServerResponse, handle: string): Promise<void> {
+  const world = await mustGetRow(deps.db, "world", worldId(deps.realm));
+  const c = (await selectRows(deps.db, "char", "handle = $1 AND kind = 'player'", [handle]))[0];
+  if (c === undefined) {
+    send(res, 404, "application/json", JSON.stringify({ ok: false, error: { code: "NOT_FOUND" } }), {
+      "Cache-Control": "no-store",
+      "Content-Security-Policy": CSP,
+    });
+    return;
+  }
+  const online = isOnline(c, world.tick);
+  send(res, 200, "application/json", JSON.stringify({
+    handle: c.handle,
+    char_id: c.id,
+    online,
+    place_id: online ? c.loc : null,
+    char: publicChar(c),
+  }), { "Cache-Control": "no-store", "Content-Security-Policy": CSP });
+}
+
+/** Public read-only online list (设计者原话 2026-11-06 18): random 20 players per request. */
+async function sendOnline(deps: PublicDeps, res: ServerResponse): Promise<void> {
+  const world = await mustGetRow(deps.db, "world", worldId(deps.realm));
+  const since = BigInt(world.tick) - BigInt(ONLINE_WINDOW_TICKS);
+  const r = await deps.db.query<{
+    id: string;
+    handle: string | null;
+    tier: number;
+    stage: number;
+    skin: string;
+    region: string;
+  }>(
+    `SELECT c.id, c.handle, c.tier, c.stage, c.skin, p.region
+     FROM chars c JOIN places p ON p.id = c.loc
+     WHERE c.kind = 'player' AND c.state <> 'buried' AND c.last_seen_tick >= $1::bigint
+     ORDER BY random() LIMIT 20`,
+    [since.toString()],
+  );
+  const online = r.rows.map((row) => ({
+    handle: row.handle,
+    char_id: row.id,
+    tier: row.tier,
+    stage: row.stage,
+    skin: row.skin,
+    region: row.region,
+  }));
+  send(res, 200, "application/json", JSON.stringify({ count: online.length, online }), {
+    "Cache-Control": "no-store",
+    "Content-Security-Policy": CSP,
+  });
+}
+
+/** Browser view of a handle (S32): same dark shell, server-rendered, no script. */
+async function sendIdPage(deps: PublicDeps, res: ServerResponse, handle: string): Promise<void> {
+  const world = await mustGetRow(deps.db, "world", worldId(deps.realm));
+  const c = (await selectRows(deps.db, "char", "handle = $1 AND kind = 'player'", [handle]))[0];
+  const page = (title: string, body: string): string => `<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${esc(title)}</title>
+<link rel="stylesheet" href="/play/static/play.css">
+</head>
+<body>
+<div class="wrap">
+<section class="card stack">
+<h2 class="place-title">${esc(title)}</h2>
+${body}
+</section>
+</div>
+</body>
+</html>
+`;
+  if (c === undefined) {
+    sendHtml(res, 404, page(`短号 ${handle}`, `<p class="muted">没有这个短号。</p>`), true);
+    return;
+  }
+  const online = isOnline(c, world.tick);
+  const rows = [
+    `短号 <code>${esc(c.handle ?? "")}</code>`,
+    `角色 <a href="/char/${esc(c.id)}"><code>${esc(c.id)}</code></a>`,
+    online ? "在线" : "离线",
+    online ? `在 <code>${esc(c.loc)}</code>` : "",
+    `皮 ${esc(c.skin)} · ${esc(c.kind)}`,
+    c.model === null ? "" : `自称 ${esc(c.model)}`,
+  ].filter((x) => x !== "");
+  sendHtml(res, 200, page(`短号 ${c.handle ?? handle}`, `<p class="small">${rows.join("<br>")}</p>`), true);
+}
+
 async function handleGet(deps: PublicDeps, req: IncomingMessage, res: ServerResponse, path: string, search: URLSearchParams): Promise<void> {
+  if (path === "/v1/verbs" || path === "/v1/actions") {
+    const world = await mustGetRow(deps.db, "world", worldId(deps.realm));
+    send(res, 200, "application/json", JSON.stringify(verbCatalog(world.rules, world.rules_revision)), { "Cache-Control": "no-store", "Content-Security-Policy": CSP });
+    return;
+  }
+  const who = /^\/v1\/who\/([A-Z][0-9]{5,7})$/.exec(path);
+  if (who?.[1] !== undefined) {
+    await sendWho(deps, res, who[1]);
+    return;
+  }
+  if (path === "/v1/online") {
+    await sendOnline(deps, res);
+    return;
+  }
+  const idPage = /^\/id\/([A-Z][0-9]{5,7})$/.exec(path);
+  if (idPage?.[1] !== undefined) {
+    await sendIdPage(deps, res, idPage[1]);
+    return;
+  }
+  const shop = /^\/v1\/shops\/([^/]+)$/.exec(path);
+  if (shop?.[1] !== undefined) {
+    await sendShop(deps, res, decodeURIComponent(shop[1]));
+    return;
+  }
   if (path === "/play") {
     sendHtml(res, 200, PLAY_PAGE, true);
     return;

@@ -1,6 +1,7 @@
 // [S25] use (动词表 §4.9):
 // the closed set of 16 ops; no free-form intent. Prices / fees / periods are S5's.
 
+import { itemPrice, tradePrice } from "../economy/prices.ts";
 import { ITEM_CATEGORY, type DeedKind } from "../facts/enums.ts";
 import { getRow, selectRows, type Patch } from "../facts/store.ts";
 import type { BondRow, Change, CharRow, ID, ItemInstanceRow, Proposal, SkillLearnedRow, UInt } from "../facts/types.ts";
@@ -75,17 +76,6 @@ async function service(ctx: VerbContext, id: ID, archetype: "merchant" | "repair
 
 function sufficient(coin: number, required: number): void {
   if (coin < required) reject("INSUFFICIENT_RESOURCE", { resource: "coin", required, available: coin });
-}
-
-async function price(ctx: VerbContext, id: ID): Promise<number> {
-  const def = await definition(ctx.q, id);
-  const category = ITEM_CATEGORY[def.kind];
-  const keys = { tier: def.tier, grade: def.grade };
-  if (category === "weapon" || category === "armor" || category === "accessory") return cellNumber(ctx.balance, "equipment.table", keys, "price");
-  if (def.kind === "core") return cellNumber(ctx.balance, "cores.table", keys, "price");
-  const field = def.kind === "potion" ? def.effect.kind === "breakthrough" ? "bt_price" : "restore_price" :
-    def.kind === "scroll" ? "scroll_price" : def.kind === "key" ? "key_price" : def.kind === "map" ? "map_price" : "material_price";
-  return cellNumber(ctx.balance, "consumables.table", keys, field);
 }
 
 class Operation {
@@ -215,7 +205,7 @@ async function equipment(ctx: VerbContext, a: Extract<UseArgs, { op: "equip" | "
       if (id === null || id === undefined) return reject("ITEM_STATE", { reason: "socket" });
       const core = await item(ctx, id);
       if (core.holder.kind !== "item" || core.holder.id !== row.id) return reject("ITEM_STATE", { reason: "socket" });
-      const fee = floorRatio(await price(ctx, core.def_id), numberAt(ctx.balance, "cores.unsocket_fee_bp"));
+      const fee = floorRatio(await itemPrice(ctx.q, ctx.balance, core.def_id), numberAt(ctx.balance, "cores.unsocket_fee_bp"));
       sufficient(me.coin, fee);
       await operation.update("char", me.id, { coin: me.coin - fee });
       await operation.update("item", core.id, { holder: { kind: "char", id: me.id } });
@@ -234,7 +224,7 @@ async function trade(ctx: VerbContext, a: Extract<UseArgs, { op: "buy" | "sell" 
   if (row.holder.kind !== "char" || row.holder.id !== (a.op === "buy" ? npc.id : me.id)) return reject("NOT_ALLOWED", { reason: "ownership" });
   if (a.op === "buy" && row.equipped) return reject("ITEM_STATE", { reason: "equipped" });
   const def = await definition(ctx.q, row.def_id);
-  const basePrice = await price(ctx, def.id);
+  const basePrice = await itemPrice(ctx.q, ctx.balance, def.id);
   const operation = new Operation(ctx);
   let amount: number;
   if (a.op === "repair") {
@@ -247,7 +237,7 @@ async function trade(ctx: VerbContext, a: Extract<UseArgs, { op: "buy" | "sell" 
     await operation.update("char", npc.id, { coin: checkedUInt(BigInt(npc.coin) + BigInt(amount)) });
     await operation.update("item", row.id, { dura: def.dura_max });
   } else {
-    amount = floorRatio(basePrice, numberAt(ctx.balance, a.op === "buy" ? "economy.buy_markup_bp" : "economy.sell_bp"));
+    amount = tradePrice(ctx.balance, basePrice, a.op);
     const buyer = a.op === "buy" ? me : npc;
     const seller = a.op === "buy" ? npc : me;
     sufficient(buyer.coin, amount);
@@ -340,6 +330,15 @@ async function makeBond(ctx: VerbContext, changes: Change[], kind: "mentor" | "a
 
 export const def = defineVerb<UseArgs, UseResult>({
   verb: "use",
+  summary: "使用物品、买卖修理，或管理组织与人物关系。",
+  errors: ["NOT_FOUND", "NOT_HERE", "NOT_ALLOWED", "ITEM_STATE", "INSUFFICIENT_RESOURCE", "CAPACITY_EXCEEDED", "SKILL_CAP", "EXIT_BLOCKED", "OFFER_STATE"],
+  purpose: (a) => ({
+    consume: "消耗药品、卷轴或地图。", unlock: "用匹配钥匙打开当前地点指定方向的锁门。",
+    equip: "装备背包里的物品。", unequip: "卸下已装备物品。", socket: "把核心镶入指定孔位。", unsocket: "付费取下指定孔位的核心。",
+    repair: "向同地修理匠付费修复装备耐久。", buy: "按 GET /v1/shops/{npc} 的实例 item.id 向同地商人买入。", sell: "向同地商人出售自己的未装备物品。",
+    org_join: "加入指定组织。", org_leave: "离开当前组织。", org_manage: "按职级权限晋升或移除组织成员。",
+    relation_offer: "向同地人物发起师徒或盟友邀约。", relation_accept: "接受仍有效的关系邀约。", relation_end: "结束自己的师徒或盟友关系。", enmity: "建立或结束自己的敌对关系。",
+  })[a.op],
   args,
   lock: "world",
   auth: () => true,

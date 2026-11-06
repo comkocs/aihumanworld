@@ -26,16 +26,16 @@ import {
   region,
   rewardSpec,
 } from "../protocol/shapes.ts";
-import { bad, grade, nullable, obj, oneOf, opt, stage, str, tier, uint, union, type Out, type V } from "../protocol/validate.ts";
+import { bad, described, grade, nullable, obj, oneOf, opt, stage, str, tier, uint, union, type Out, type V } from "../protocol/validate.ts";
 import { requireRule } from "../rules/world_rules.ts";
 import { sanitizeText } from "../speech/sanitize.ts";
 import { defineVerb } from "./types.ts";
 
 /** content.<realm>.<type>.<local>: a malformed key is INVALID_KEY, not a generic argument error. */
-const contentKey: V<string> = (x, p) => {
+const contentKey: V<string> = described((x, p) => {
   if (typeof x !== "string") return bad(p, "content key string");
   return CONTENT_KEY_RE.test(x) ? x : reject("INVALID_KEY", { expected: "content.<realm>.<type>.<local>" }, p);
-};
+}, { type: "string", pattern: CONTENT_KEY_RE.source, description: "content.<realm>.<type>.<local>" });
 
 const note = opt(nullable(str()), null);
 
@@ -84,6 +84,9 @@ export interface BuildResult {
 
 export const def = defineVerb<BuildArgs, BuildResult>({
   verb: "build",
+  summary: "按事实形状、引用与阶内数值创建地点、物定义或任务模板。",
+  errors: ["INVALID_KEY", "BUILD_INVALID", "DUPLICATE_KEY", "CONDITION_UNMET"],
+  purpose: (a) => ({ place: "创建地点并接到现有建造锚点。", item: "创建物品定义。", task: "创建任务模板。" })[a.kind],
   args,
   lock: "world",
   auth: () => true,

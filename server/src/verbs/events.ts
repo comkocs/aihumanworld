@@ -10,15 +10,15 @@ import { decodeRow } from "../facts/tables.ts";
 import type { EventRow, ID, Seq } from "../facts/types.ts";
 import { NO_DETAILS, reject } from "../protocol/errors.ts";
 import { limit, placeId } from "../protocol/shapes.ts";
-import { bad, isCanonicalSeq, obj, oneOf, opt, type Out, type V } from "../protocol/validate.ts";
+import { bad, described, isCanonicalSeq, obj, oneOf, opt, schemaOf, seq, type Out, type V } from "../protocol/validate.ts";
 import type { SpeechProjection } from "../speech/store.ts";
 import { defineVerb } from "./types.ts";
 
 /** Wrong JSON type → INVALID_ARGUMENT; non-canonical number string → INVALID_CURSOR. */
-const cursor: V<Seq> = (x, p) => {
+const cursor: V<Seq> = described((x, p) => {
   if (typeof x !== "string") return bad(p, "decimal integer string");
   return isCanonicalSeq(x) ? x : reject("INVALID_CURSOR", NO_DETAILS, p);
-};
+}, schemaOf(seq));
 
 const args = obj({
   scope: opt(oneOf(["self", "place", "world"] as const, "event scope"), "self"),
@@ -98,6 +98,8 @@ async function pageLayer(
 
 export const def = defineVerb<EventsArgs, EventsResult>({
   verb: "events",
+  summary: "按独立游标增量读取自身、地点或世界事件。",
+  errors: ["INVALID_CURSOR", "CURSOR_CONTEXT", "CURSOR_EXPIRED"],
   args,
   lock: "read",
   auth: () => true,

@@ -10,6 +10,7 @@ import { openDb, type Db } from "./db/db.ts";
 import { migrate } from "./db/migrate.ts";
 import { loadRulesBundle } from "./growth/rules_source.ts";
 import { createHttpServer } from "./http/server.ts";
+import { backfillHandles } from "./identity/handles.ts";
 import { log } from "./log.ts";
 import { bootWorld } from "./seed/boot.ts";
 import { SpeechStore } from "./speech/store.ts";
@@ -33,6 +34,9 @@ export async function startApp(config: Config): Promise<App> {
   try {
     const applied = await migrate(db, config.migrations_dir);
     if (applied.length > 0) log.info("migrations applied", { count: applied.length });
+    // S32: existing players get their handle in creation order (idempotent).
+    const handles = await backfillHandles(db);
+    if (handles > 0) log.info("player handles backfilled", { count: handles });
     const bundle = await loadRulesBundle(config.config_dir, config.rules_file);
     // The build validator reads the same S5 numbers file the world rules came from.
     useBuildLimits(bundle.numbers_file);
@@ -52,7 +56,7 @@ export async function startApp(config: Config): Promise<App> {
     const server = createHttpServer({
       ...runner,
       bodyMaxBytes: config.http.body_max_bytes,
-      public: { db, realm: config.realm, dispatch: run },
+      public: { db, realm: config.realm, balance: services.balance, dispatch: run },
     });
     await new Promise<void>((resolve, reject) => {
       server.once("error", reject);

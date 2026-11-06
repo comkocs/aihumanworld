@@ -27,6 +27,26 @@ const UI = zh
       copyFail: "复制失败,请手动选中",
       continue: "我已存好,进入",
       exit: "退出",
+      handleLabel: "短号",
+      handleResume: "短号 + 邮箱续玩",
+      handlePh: "如 A00002",
+      emailLabel: "邮箱",
+      newCodeFromEmail: "验证通过。新身份码只显示这一次,请存好;旧码仍然有效。",
+      exportSave: "导出存档",
+      bindEmail: "邮箱(可选)",
+      bindBtn: "绑定邮箱",
+      unbind: "解绑",
+      bound: "已绑定邮箱,可用短号+邮箱续玩",
+      unbound: "未绑定邮箱",
+      onlineTitle: "在线的人",
+      findHandle: "输入短号找人,如 A00002",
+      find: "找",
+      notFoundHandle: "没有这个短号",
+      onlineNow: "在线",
+      offline: "离线",
+      atPlace: "在",
+      whisperPh: "对 TA 说一句(可隔地私语)……",
+      attackHint: "想切磋:需到同一可战之地",
       here: "此处",
       exits: "出口",
       people: "此处的人",
@@ -43,6 +63,10 @@ const UI = zh
       use: "用",
       equip: "装备",
       unequip: "卸下",
+      buy: "买",
+      sell: "卖",
+      repair: "修",
+      stock: "货与价",
       accept: "接取",
       submit: "提交",
       abandon: "放弃",
@@ -151,6 +175,26 @@ const UI = zh
       copyFail: "Copy failed — select it yourself",
       continue: "Saved it — continue",
       exit: "Leave",
+      handleLabel: "Handle",
+      handleResume: "Handle + email",
+      handlePh: "e.g. A00002",
+      emailLabel: "Email",
+      newCodeFromEmail: "Verified. This new code is shown once; keep it. Old codes stay valid.",
+      exportSave: "Export save",
+      bindEmail: "Email (optional)",
+      bindBtn: "Bind email",
+      unbind: "Unbind",
+      bound: "Email bound — handle + email resumes",
+      unbound: "No email bound",
+      onlineTitle: "People online",
+      findHandle: "Find by handle, e.g. A00002",
+      find: "Find",
+      notFoundHandle: "No such handle",
+      onlineNow: "online",
+      offline: "offline",
+      atPlace: "at",
+      whisperPh: "Whisper (works across places)…",
+      attackHint: "To fight: meet at the same contested ground",
       here: "Here",
       exits: "Exits",
       people: "People here",
@@ -167,6 +211,10 @@ const UI = zh
       use: "Use",
       equip: "Equip",
       unequip: "Unequip",
+      buy: "Buy",
+      sell: "Sell",
+      repair: "Repair",
+      stock: "Goods and prices",
       accept: "Accept",
       submit: "Turn in",
       abandon: "Drop",
@@ -278,6 +326,7 @@ let definitionsLoaded = false;
 let cursors = { self: "0", place: null, world: "0" };
 let poll = null;
 let toastTimer = null;
+let hereCombat = "safe";
 
 function t(key) {
   const hit = lex.get(key);
@@ -470,14 +519,22 @@ function renderGate() {
   box.appendChild(el("p", { class: "muted", text: zh ? "文字世界。选一条路进去。" : "A text world. Pick a way in." }));
   const choice = el("div", { class: "row" });
   const form = el("div", { class: "card stack hidden" });
+  const resume = el("div", { class: "card stack hidden" });
+  const byHandle = el("div", { class: "card stack hidden" });
   choice.appendChild(btn(UI.newChar, async () => {
     form.classList.remove("hidden");
     resume.classList.add("hidden");
+    byHandle.classList.add("hidden");
   }));
-  const resume = el("div", { class: "card stack hidden" });
   choice.appendChild(btn(UI.resume, async () => {
     resume.classList.remove("hidden");
     form.classList.add("hidden");
+    byHandle.classList.add("hidden");
+  }, "ghost"));
+  choice.appendChild(btn(UI.handleResume, async () => {
+    byHandle.classList.remove("hidden");
+    form.classList.add("hidden");
+    resume.classList.add("hidden");
   }, "ghost"));
   box.appendChild(choice);
 
@@ -505,6 +562,14 @@ function renderGate() {
   resume.appendChild(el("label", { class: "field" }, [el("span", { text: UI.codePh }), codeIn]));
   resume.appendChild(btn(UI.enter, () => resumeChar(codeIn.value.trim())));
   box.appendChild(resume);
+
+  const handleIn = el("input", { type: "text", maxlength: "8", autocomplete: "off", placeholder: UI.handlePh });
+  const emailIn = el("input", { type: "email", maxlength: "254", autocomplete: "off", placeholder: "a@b.com" });
+  byHandle.appendChild(el("p", { class: "small", text: zh ? "绑定过邮箱的角色可用短号+邮箱续玩,会得到一枚新身份码。" : "A bound handle + email resumes into a fresh identity code." }));
+  byHandle.appendChild(el("label", { class: "field" }, [el("span", { text: UI.handleLabel }), handleIn]));
+  byHandle.appendChild(el("label", { class: "field" }, [el("span", { text: UI.emailLabel }), emailIn]));
+  byHandle.appendChild(btn(UI.enter, () => resumeByHandle(handleIn.value.trim(), emailIn.value.trim())));
+  box.appendChild(byHandle);
   gate.appendChild(box);
 }
 
@@ -521,11 +586,11 @@ async function createChar(skin, cls, model) {
   renderReveal(issued);
 }
 
-function renderReveal(issued) {
+function renderReveal(issued, note) {
   show("reveal");
   clear(reveal);
   const box = el("div", { class: "gate banner stack" });
-  box.appendChild(el("p", { text: UI.codeOnce }));
+  box.appendChild(el("p", { text: note || UI.codeOnce }));
   box.appendChild(el("p", { class: "code", text: issued }));
   const row = el("div", { class: "row" });
   row.appendChild(btn(UI.copy, async () => {
@@ -549,6 +614,19 @@ async function resumeChar(raw) {
   me = out.result.char;
   setSkin(me.skin);
   await bootWorld();
+}
+
+/** Third way in (S32): handle + email, no stored code — a fresh code is issued. */
+async function resumeByHandle(handle, emailAddr) {
+  if (!handle || !emailAddr) return;
+  const out = await call("enter", { mode: "resume", handle, email: emailAddr });
+  const issued = out.result.identity_code;
+  if (!issued) throw new Error("no code issued");
+  code = issued;
+  localStorage.setItem(KEY, issued);
+  me = out.result.char;
+  setSkin(me.skin);
+  renderReveal(issued, UI.newCodeFromEmail);
 }
 
 async function pullAll(section, verb, extra) {
@@ -642,9 +720,11 @@ function renderWorldHead() {
   head.appendChild(el("span", { class: "brand", text: UI.title }));
   if (me) {
     head.appendChild(el("span", { class: "chip on", text: UI.skins[me.skin] || me.skin }));
+    if (me.handle) head.appendChild(el("span", { class: "chip", text: UI.handleLabel + " " + me.handle }));
     head.appendChild(el("span", { class: "chip", text: charName(me) }));
   }
   head.appendChild(el("span", { class: "spacer" }));
+  head.appendChild(btn(UI.exportSave, () => exportSave(), "ghost"));
   head.appendChild(btn(UI.refresh, () => bootWorld(), "ghost"));
   head.appendChild(btn(UI.exit, async () => leave(), "ghost"));
   $("events-title").textContent = UI.events;
@@ -653,6 +733,7 @@ function renderWorldHead() {
 
 function renderWorld(view) {
   renderWorldHead();
+  hereCombat = view.place.combat || "safe";
   $("status").textContent = statLine(view);
   const grid = $("world-view");
   clear(grid);
@@ -684,11 +765,13 @@ function renderWorld(view) {
 
   grid.appendChild(peopleCard(view.people, view.place));
   grid.appendChild(groundCard(view.ground));
-  grid.appendChild(bagCard(view.bag));
+  grid.appendChild(bagCard(view.bag, view.people));
   grid.appendChild(taskCard(UI.tasksOpen, view.openTasks, "open"));
   grid.appendChild(taskCard(UI.tasksMine, view.mine, "mine"));
   grid.appendChild(trainCard(view));
   grid.appendChild(sayCard(view.people));
+  grid.appendChild(onlineCard());
+  grid.appendChild(emailCard());
   $("last-raw").textContent = lastRaw;
 }
 
@@ -713,6 +796,29 @@ function peopleCard(people, place) {
     }
     row.appendChild(actions);
     list.appendChild(row);
+    if (c.kind === "npc" && c.archetype === "merchant" && c.life === "alive" && c.state === "active") {
+      const goods = el("div", { class: "stack hidden" });
+      actions.appendChild(btn(UI.buy, async () => {
+        const response = await fetch("/v1/shops/" + encodeURIComponent(c.id));
+        const shop = await response.json();
+        if (!response.ok) {
+          const error = new Error("shop");
+          error.envelope = shop;
+          throw error;
+        }
+        clear(goods);
+        goods.classList.remove("hidden");
+        goods.appendChild(el("p", { class: "small", text: UI.stock }));
+        if (shop.items.length === 0) empty(goods);
+        for (const offer of shop.items) {
+          const item = el("div", { class: "item" });
+          item.appendChild(el("span", { text: itemName(offer.item) + " · " + UI.coin + " " + offer.price }));
+          item.appendChild(btn(UI.buy, () => act("use", { op: "buy", item: offer.item.id, npc: c.id })));
+          goods.appendChild(item);
+        }
+      }));
+      list.appendChild(goods);
+    }
   }
   card.appendChild(list);
   return card;
@@ -739,7 +845,10 @@ function itemKindOf(inst) {
   return def ? def.kind : null;
 }
 
-function bagCard(items) {
+function bagCard(items, people) {
+  const services = people.filter((c) => c.kind === "npc" && c.life === "alive" && c.state === "active");
+  const merchant = services.find((c) => c.archetype === "merchant");
+  const repairer = services.find((c) => c.archetype === "repairer");
   const card = el("section", { class: "card" });
   card.appendChild(el("h3", { text: UI.bag }));
   const list = el("div", { class: "list" });
@@ -756,6 +865,12 @@ function bagCard(items) {
     const def = defs.get(it.def_id);
     if (!it.equipped && def && ["restore", "learn", "map"].includes(def.effect.kind)) {
       actions.appendChild(btn(UI.use, () => act("use", { op: "consume", item: it.id })));
+    }
+    if (it.state === "available" && !it.equipped && merchant) {
+      actions.appendChild(btn(UI.sell, () => act("use", { op: "sell", item: it.id, npc: merchant.id }), "ghost"));
+    }
+    if (it.state === "available" && def && WEAR.includes(kind) && def.dura_max > 0 && it.dura < def.dura_max && repairer) {
+      actions.appendChild(btn(UI.repair, () => act("use", { op: "repair", item: it.id, npc: repairer.id }), "ghost"));
     }
     row.appendChild(actions);
     list.appendChild(row);
@@ -878,6 +993,131 @@ function sayCard(people) {
     await act("say", { text, target });
     input.value = "";
   }));
+  card.appendChild(row);
+  return card;
+}
+
+/** One-line save export (S32): handle + code, stays in this browser only. */
+function saveLine() {
+  if (zh) return `AI人间存档｜短号 ${me.handle}｜身份码 ${code}（勿外传）｜续玩:把这行交给你的 AI,或在 aihumanworld.org/play 输入`;
+  return `AI Human World save | handle ${me.handle} | code ${code} (keep private) | resume: hand this line to your AI, or enter it at aihumanworld.org/play`;
+}
+
+async function exportSave() {
+  if (!me || !code) return;
+  try {
+    await navigator.clipboard.writeText(saveLine());
+    toast(UI.copied);
+  } catch {
+    toast(UI.copyFail);
+    setDetails({ save: saveLine() });
+  }
+}
+
+/** Direct message row: say with a target works across places (S32). */
+function whisperRow(charId) {
+  const wrap = el("div", { class: "stack" });
+  const row = el("div", { class: "row" });
+  const input = el("input", { type: "text", maxlength: "200", placeholder: UI.whisperPh });
+  row.appendChild(input);
+  row.appendChild(btn(UI.sayBtn, async () => {
+    const text = input.value.trim();
+    if (!text) return;
+    await act("say", { text, target: charId });
+    input.value = "";
+  }));
+  wrap.appendChild(row);
+  return wrap;
+}
+
+async function loadOnlineList(list) {
+  clear(list);
+  const res = await fetch("/v1/online");
+  if (!res.ok) {
+    list.appendChild(el("p", { class: "muted", text: UI.err }));
+    return;
+  }
+  const body = await res.json();
+  const rows = (body.online || []).filter((o) => o.char_id !== me?.id);
+  if (rows.length === 0) {
+    empty(list);
+    return;
+  }
+  for (const o of rows) {
+    const row = el("div", { class: "item stack" });
+    const label = `${o.handle} · ${tx("tier" + o.tier)} ${tx("stage" + o.stage)} · ${UI.skins[o.skin] || o.skin} · ${tx("region." + o.region)}`;
+    row.appendChild(el("span", { text: label }));
+    row.appendChild(whisperRow(o.char_id));
+    list.appendChild(row);
+  }
+}
+
+/** Lookup by handle (S32): public /v1/who, then whisper / attack when allowed. */
+async function showWho(handle, box) {
+  clear(box);
+  if (!/^[A-Z][0-9]{5,7}$/.test(handle)) {
+    box.appendChild(el("p", { class: "muted", text: UI.findHandle }));
+    return;
+  }
+  const res = await fetch("/v1/who/" + handle);
+  const body = await res.json();
+  if (!res.ok) {
+    box.appendChild(el("p", { class: "muted", text: UI.notFoundHandle }));
+    return;
+  }
+  const c = body.char || {};
+  const line = [
+    body.handle,
+    body.online ? UI.onlineNow : UI.offline,
+    body.online ? UI.atPlace + " " + placeIdName(body.place_id) : "",
+    tx("tier" + c.tier) + " " + tx("stage" + c.stage),
+    UI.skins[c.skin] || "",
+  ].filter(Boolean).join(" · ");
+  box.appendChild(el("p", { class: "small", text: line }));
+  if (c.id === me?.id) return;
+  const actionable = body.online && (c.state === "active" || c.state === "draft") && c.life === "alive";
+  if (actionable) box.appendChild(whisperRow(c.id));
+  const canFight = body.online && body.place_id === me?.loc && (hereCombat === "duel" || hereCombat === "pk");
+  if (canFight && actionable) box.appendChild(btn(UI.attack, () => act("attack", { target: c.id }), "danger"));
+  else box.appendChild(el("p", { class: "muted", text: UI.attackHint }));
+}
+
+function onlineCard() {
+  const card = el("section", { class: "card" });
+  card.appendChild(el("h3", { text: UI.onlineTitle }));
+  const top = el("div", { class: "row" });
+  const findIn = el("input", { type: "text", maxlength: "8", placeholder: UI.findHandle });
+  const list = el("div", { class: "list" });
+  const found = el("div", { class: "stack" });
+  top.appendChild(findIn);
+  top.appendChild(btn(UI.find, () => showWho(findIn.value.trim(), found)));
+  top.appendChild(btn(UI.refresh, () => loadOnlineList(list), "ghost"));
+  card.appendChild(top);
+  card.appendChild(list);
+  card.appendChild(found);
+  loadOnlineList(list).catch(showError);
+  return card;
+}
+
+/** Optional email binding (S32): bind / rebind / unbind while signed in. */
+function emailCard() {
+  const card = el("section", { class: "card" });
+  card.appendChild(el("h3", { text: UI.bindEmail }));
+  card.appendChild(el("p", { class: "small", text: me?.email_hash ? UI.bound : UI.unbound }));
+  const row = el("div", { class: "row" });
+  const input = el("input", { type: "email", maxlength: "254", placeholder: "a@b.com" });
+  row.appendChild(input);
+  row.appendChild(btn(UI.bindBtn, async () => {
+    const v = input.value.trim();
+    const out = await call("enter", { mode: "resume", email: v === "" ? null : v });
+    toast(out.result.email_bound ? UI.bound : UI.unbound);
+    await refreshAll();
+  }));
+  row.appendChild(btn(UI.unbind, async () => {
+    await call("enter", { mode: "resume", email: null });
+    toast(UI.unbound);
+    await refreshAll();
+  }, "ghost"));
   card.appendChild(row);
   return card;
 }

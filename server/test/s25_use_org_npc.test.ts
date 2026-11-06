@@ -48,7 +48,7 @@ test("S25 use, organization and NPC acceptance chains", async (t) => {
     const large = def("large", { tier: 9, cap: 825, dura_max: 340 });
     const blade = def("blade", {});
     const npc = (local: string, archetype: NonNullable<CharRow["archetype"]>, patch: Partial<CharRow> = {}): CharRow => ({
-      ...me, id: `r1:char:s25_${local}`, ...stamp, kind: "npc", door: null, model: null, archetype,
+      ...me, id: `r1:char:s25_${local}`, ...stamp, kind: "npc", door: null, model: null, archetype, handle: null, email_hash: null,
       state: "active", vigor: archetype === "tutorial_opponent" ? 600 : 2000, coin: 3000, ...patch,
     });
     const merchant = npc("merchant", "merchant");
