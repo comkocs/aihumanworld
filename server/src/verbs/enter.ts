@@ -229,6 +229,7 @@ async function resume(ctx: VerbContext, a: Extract<EnterArgs, { mode: "resume" }
     model?: CharRow["model"];
     state?: "active";
     state_since?: Tick;
+    last_yield_tick?: Tick;
   } = {};
   if (skin !== c.skin) patch.skin = skin;
   if (cls !== c.class) patch.class = cls;
@@ -238,6 +239,7 @@ async function resume(ctx: VerbContext, a: Extract<EnterArgs, { mode: "resume" }
   if (restored) {
     patch.state = "active";
     patch.state_since = ctx.tick;
+    patch.last_yield_tick = ctx.tick;
   }
   const changes: Change[] = [];
   if (Object.keys(patch).length > 0) {
@@ -252,6 +254,7 @@ async function resume(ctx: VerbContext, a: Extract<EnterArgs, { mode: "resume" }
   if (restored) {
     char.state = "active";
     char.state_since = ctx.tick;
+    char.last_yield_tick = ctx.tick;
     // Revived inside the window: the credential is healthy again, the countdown stops.
     for (const ident of await selectRows(ctx.q, "identity", "char_id = $1 AND expires_tick IS NOT NULL", [c.id])) {
       await ctx.w.update("identity", ident.id, { expires_tick: null });

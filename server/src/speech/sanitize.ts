@@ -9,13 +9,13 @@
 //   - real URLs: scheme URLs (http://, ftp://, ...), mailto: / javascript: /
 //     tel: / sms: / magnet: / data: URIs, Markdown links and images (the label
 //     stays, the destination goes), autolinks, www. hosts, scheme-less domains
-//     (a registered TLD, all-lowercase or ALL-CAPS), e-mail addresses, bare
+//     (a registered TLD, case-insensitive), e-mail addresses, bare
 //     IPv4 addresses, localhost with port or path;
 //   - invisible characters that would hide a URL or code fence from the above
 //     (zero-width space / word joiner / BOM / soft hyphen, bidi overrides), and
 //     control characters other than tab and newline.
 // Ordinary dotted words and numbers survive: 3.5, e.g., i.e., U.S., v1.2.3,
-// Node.js, Mr.Smith, 12:30, "it.So" (a capitalised TLD is not a TLD). File names
+// Node.js, Mr.Smith and 12:30. File names
 // whose extension is also a ccTLD (README.md, main.rs, run.sh, tool.py) are kept
 // unless followed by a path. Nothing is executed, moderated or rewritten otherwise.
 // Not covered on purpose: obfuscated spellings (hxxp, "example dot com", [.]),
@@ -57,9 +57,10 @@ function stripBlocks(text: string): string {
       fence = { ch: run[0] as string, len: run.length };
       continue;
     }
-    if (prevBlank && /^(?: {4}|\t)/.test(line) && line.trim() !== "") continue;
+    const content = line.replace(/^(?: {0,3}>[ \t]?)+/, "");
+    if (prevBlank && /^(?: {4}|\t)/.test(content) && content.trim() !== "") continue;
     out.push(line);
-    prevBlank = line.trim() === "";
+    prevBlank = content.trim() === "";
   }
   return out.join("\n");
 }
@@ -126,16 +127,16 @@ const CCTLD =
 const WEAK_TLD = "md sh py rs pl cc so app";
 const IDN_TLD = "中国 中國 公司 网络 网址 网站 在线 香港 台湾 台灣 新加坡 рф";
 
-/** A TLD must be all-lowercase or ALL-CAPS: "it.So" after a sloppy full stop is not a host. */
+/** Match registered TLDs in any mixture of upper- and lowercase letters. */
 function alt(words: string): string {
   const list = words.split(" ");
-  return `(?:${list.join("|")}|${list.map((w) => w.toUpperCase()).join("|")})`;
+  return `(?:${list.map((word) => [...word].map((ch) => ch.toLowerCase() === ch.toUpperCase() ? ch : `[${ch.toLowerCase()}${ch.toUpperCase()}]`).join("")).join("|")})`;
 }
 
 const LABEL = "[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?";
 const URLCH = "[\\w\\-.~:/?#\\[\\]@!$&'()*+,;=%]";
 const AFTER_TLD = "(?![A-Za-z0-9_-]|\\.[A-Za-z0-9])";
-const HOST = `(?:${LABEL}\\.){1,12}(?:${alt(`${GTLD} ${CCTLD} ${IDN_TLD}`)}|xn--[a-z0-9-]{2,59})`;
+const HOST = `(?:${LABEL}\\.){1,12}(?:${alt(`${GTLD} ${CCTLD} ${IDN_TLD}`)}|[xX][nN]--[A-Za-z0-9-]{2,59})`;
 const HOST_WEAK = `(?:${LABEL}\\.){1,12}${alt(WEAK_TLD)}`;
 const NOT_WORD_BEFORE = "(?<![A-Za-z0-9_-])";
 

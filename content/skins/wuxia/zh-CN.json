@@ -932,6 +932,1531 @@
       "key": "item.charm·tier9",
       "name": "澄心佩",
       "flavor": null
+    },
+    {
+      "key": "content.r1.place.start_wuxia",
+      "name": "青溪镇",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wuxia_hall_escort",
+      "name": "青溪镖局",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wuxia_road_post",
+      "name": "青溪官道",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wuxia_wild_ridge",
+      "name": "青溪岭",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wuxia_hall_martial",
+      "name": "松风武馆",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wuxia_tutorial_lane",
+      "name": "松影木人巷",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wuxia_water_creek",
+      "name": "青溪渡口",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wuxia_hall_herb",
+      "name": "听雨药社",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wuxia_shrine_pine",
+      "name": "松风祠",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wuxia_dungeon_cliff",
+      "name": "断崖栈道",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wuxia_ruin_arena",
+      "name": "残垣斗场",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.wuxia_reach_lane",
+      "name": "初入木人巷",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.wuxia_deliver_herb",
+      "name": "送药入社",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.wuxia_reach_post",
+      "name": "探看官道",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.org.wuxia_escort",
+      "name": "青溪镖局",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.org.wuxia_martial",
+      "name": "松风武馆",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.org.wuxia_herb",
+      "name": "听雨药社",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.org.registry_wuxia",
+      "name": "江湖行籍所",
+      "flavor": null
+    },
+    {
+      "key": "org_rank.wuxia_escort_chief",
+      "name": "总镖头",
+      "flavor": null
+    },
+    {
+      "key": "org_rank.wuxia_martial_instructor",
+      "name": "教头",
+      "flavor": null
+    },
+    {
+      "key": "org_rank.wuxia_herb_keeper",
+      "name": "药社执事",
+      "flavor": null
+    },
+    {
+      "key": "skill.org·skill.strike·content.r1.wuxia_escort.wuxia_escort_saber",
+      "name": "护镖刀法",
+      "flavor": null
+    },
+    {
+      "key": "skill.org·skill.move·content.r1.wuxia_escort.wuxia_escort_step",
+      "name": "护镖步法",
+      "flavor": null
+    },
+    {
+      "key": "skill.org·skill.strike·content.r1.wuxia_martial.wuxia_martial_palm",
+      "name": "松风掌",
+      "flavor": null
+    },
+    {
+      "key": "skill.org·skill.guard·content.r1.wuxia_martial.wuxia_martial_stance",
+      "name": "松风桩",
+      "flavor": null
+    },
+    {
+      "key": "skill.org·skill.inner·content.r1.wuxia_martial.wuxia_martial_breath",
+      "name": "松风吐纳",
+      "flavor": null
+    },
+    {
+      "key": "skill.org·skill.inner·content.r1.wuxia_herb.wuxia_herb_breath",
+      "name": "听雨吐纳",
+      "flavor": null
+    },
+    {
+      "key": "skill.org·skill.guard·content.r1.wuxia_herb.wuxia_herb_ward",
+      "name": "听雨护身",
+      "flavor": null
+    },
+    {
+      "key": "skill.org·skill.inner·content.r1.registry_wuxia.wuxia_registry_breath",
+      "name": "行籍吐纳",
+      "flavor": null
+    },
+    {
+      "key": "skill.org·skill.move·content.r1.registry_wuxia.wuxia_registry_step",
+      "name": "行籍步法",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.market_neutral",
+      "name": "中立集市",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.gate_confluence",
+      "name": "汇流关",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.camp_neutral",
+      "name": "中立营地",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.market_ring",
+      "name": "集市环道",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.arena_neutral",
+      "name": "中立比武场",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild_t1",
+      "name": "野外·一阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild2_t1",
+      "name": "外沿·一阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.dungeon_t1",
+      "name": "秘境·一阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.inner_t1",
+      "name": "秘境深处·一阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild_t2",
+      "name": "野外·二阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild2_t2",
+      "name": "外沿·二阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.dungeon_t2",
+      "name": "秘境·二阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.inner_t2",
+      "name": "秘境深处·二阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild_t3",
+      "name": "野外·三阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild2_t3",
+      "name": "外沿·三阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.dungeon_t3",
+      "name": "秘境·三阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.inner_t3",
+      "name": "秘境深处·三阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild_t4",
+      "name": "野外·四阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild2_t4",
+      "name": "外沿·四阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.dungeon_t4",
+      "name": "秘境·四阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.inner_t4",
+      "name": "秘境深处·四阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild_t5",
+      "name": "野外·五阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild2_t5",
+      "name": "外沿·五阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.dungeon_t5",
+      "name": "秘境·五阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.inner_t5",
+      "name": "秘境深处·五阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild_t6",
+      "name": "野外·六阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild2_t6",
+      "name": "外沿·六阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.dungeon_t6",
+      "name": "秘境·六阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.inner_t6",
+      "name": "秘境深处·六阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild_t7",
+      "name": "野外·七阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild2_t7",
+      "name": "外沿·七阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.dungeon_t7",
+      "name": "秘境·七阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.inner_t7",
+      "name": "秘境深处·七阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild_t8",
+      "name": "野外·八阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild2_t8",
+      "name": "外沿·八阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.dungeon_t8",
+      "name": "秘境·八阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.inner_t8",
+      "name": "秘境深处·八阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild_t9",
+      "name": "野外·九阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild2_t9",
+      "name": "外沿·九阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.dungeon_t9",
+      "name": "秘境·九阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.inner_t9",
+      "name": "秘境深处·九阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t1_g1",
+      "name": "刃兵·一阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t1_g2",
+      "name": "刃兵·一阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t1_g3",
+      "name": "刃兵·一阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t2_g1",
+      "name": "刃兵·二阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t2_g2",
+      "name": "刃兵·二阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t2_g3",
+      "name": "刃兵·二阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t3_g1",
+      "name": "刃兵·三阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t3_g2",
+      "name": "刃兵·三阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t3_g3",
+      "name": "刃兵·三阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t4_g1",
+      "name": "刃兵·四阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t4_g2",
+      "name": "刃兵·四阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t4_g3",
+      "name": "刃兵·四阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t5_g1",
+      "name": "刃兵·五阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t5_g2",
+      "name": "刃兵·五阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t5_g3",
+      "name": "刃兵·五阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t6_g1",
+      "name": "刃兵·六阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t6_g2",
+      "name": "刃兵·六阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t6_g3",
+      "name": "刃兵·六阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t7_g1",
+      "name": "刃兵·七阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t7_g2",
+      "name": "刃兵·七阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t7_g3",
+      "name": "刃兵·七阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t8_g1",
+      "name": "刃兵·八阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t8_g2",
+      "name": "刃兵·八阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t8_g3",
+      "name": "刃兵·八阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t9_g1",
+      "name": "刃兵·九阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t9_g2",
+      "name": "刃兵·九阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t9_g3",
+      "name": "刃兵·九阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t1_g1",
+      "name": "轻甲·一阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t1_g2",
+      "name": "轻甲·一阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t1_g3",
+      "name": "轻甲·一阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t2_g1",
+      "name": "轻甲·二阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t2_g2",
+      "name": "轻甲·二阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t2_g3",
+      "name": "轻甲·二阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t3_g1",
+      "name": "轻甲·三阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t3_g2",
+      "name": "轻甲·三阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t3_g3",
+      "name": "轻甲·三阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t4_g1",
+      "name": "轻甲·四阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t4_g2",
+      "name": "轻甲·四阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t4_g3",
+      "name": "轻甲·四阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t5_g1",
+      "name": "轻甲·五阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t5_g2",
+      "name": "轻甲·五阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t5_g3",
+      "name": "轻甲·五阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t6_g1",
+      "name": "轻甲·六阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t6_g2",
+      "name": "轻甲·六阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t6_g3",
+      "name": "轻甲·六阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t7_g1",
+      "name": "轻甲·七阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t7_g2",
+      "name": "轻甲·七阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t7_g3",
+      "name": "轻甲·七阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t8_g1",
+      "name": "轻甲·八阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t8_g2",
+      "name": "轻甲·八阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t8_g3",
+      "name": "轻甲·八阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t9_g1",
+      "name": "轻甲·九阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t9_g2",
+      "name": "轻甲·九阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t9_g3",
+      "name": "轻甲·九阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t1_g1",
+      "name": "指环·一阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t1_g2",
+      "name": "指环·一阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t1_g3",
+      "name": "指环·一阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t2_g1",
+      "name": "指环·二阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t2_g2",
+      "name": "指环·二阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t2_g3",
+      "name": "指环·二阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t3_g1",
+      "name": "指环·三阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t3_g2",
+      "name": "指环·三阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t3_g3",
+      "name": "指环·三阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t4_g1",
+      "name": "指环·四阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t4_g2",
+      "name": "指环·四阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t4_g3",
+      "name": "指环·四阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t5_g1",
+      "name": "指环·五阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t5_g2",
+      "name": "指环·五阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t5_g3",
+      "name": "指环·五阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t6_g1",
+      "name": "指环·六阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t6_g2",
+      "name": "指环·六阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t6_g3",
+      "name": "指环·六阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t7_g1",
+      "name": "指环·七阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t7_g2",
+      "name": "指环·七阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t7_g3",
+      "name": "指环·七阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t8_g1",
+      "name": "指环·八阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t8_g2",
+      "name": "指环·八阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t8_g3",
+      "name": "指环·八阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t9_g1",
+      "name": "指环·九阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t9_g2",
+      "name": "指环·九阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t9_g3",
+      "name": "指环·九阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t1_g1",
+      "name": "回元药·一阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t1_g2",
+      "name": "回元药·一阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t1_g3",
+      "name": "回元药·一阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_bt_t1",
+      "name": "破关药·一阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t2_g1",
+      "name": "回元药·二阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t2_g2",
+      "name": "回元药·二阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t2_g3",
+      "name": "回元药·二阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_bt_t2",
+      "name": "破关药·二阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t3_g1",
+      "name": "回元药·三阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t3_g2",
+      "name": "回元药·三阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t3_g3",
+      "name": "回元药·三阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_bt_t3",
+      "name": "破关药·三阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t4_g1",
+      "name": "回元药·四阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t4_g2",
+      "name": "回元药·四阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t4_g3",
+      "name": "回元药·四阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_bt_t4",
+      "name": "破关药·四阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t5_g1",
+      "name": "回元药·五阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t5_g2",
+      "name": "回元药·五阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t5_g3",
+      "name": "回元药·五阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_bt_t5",
+      "name": "破关药·五阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t6_g1",
+      "name": "回元药·六阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t6_g2",
+      "name": "回元药·六阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t6_g3",
+      "name": "回元药·六阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_bt_t6",
+      "name": "破关药·六阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t7_g1",
+      "name": "回元药·七阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t7_g2",
+      "name": "回元药·七阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t7_g3",
+      "name": "回元药·七阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_bt_t7",
+      "name": "破关药·七阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t8_g1",
+      "name": "回元药·八阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t8_g2",
+      "name": "回元药·八阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t8_g3",
+      "name": "回元药·八阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_bt_t8",
+      "name": "破关药·八阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t9_g1",
+      "name": "回元药·九阶·普通",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t9_g2",
+      "name": "回元药·九阶·精良",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t9_g3",
+      "name": "回元药·九阶·传说",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_bt_t9",
+      "name": "破关药·九阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_strike_t1",
+      "name": "攻法秘籍·一阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_guard_t1",
+      "name": "守法秘籍·一阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_move_t1",
+      "name": "身法秘籍·一阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_inner_t1",
+      "name": "内功秘籍·一阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_strike_t2",
+      "name": "攻法秘籍·二阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_guard_t2",
+      "name": "守法秘籍·二阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_move_t2",
+      "name": "身法秘籍·二阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_inner_t2",
+      "name": "内功秘籍·二阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_strike_t3",
+      "name": "攻法秘籍·三阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_guard_t3",
+      "name": "守法秘籍·三阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_move_t3",
+      "name": "身法秘籍·三阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_inner_t3",
+      "name": "内功秘籍·三阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_strike_t4",
+      "name": "攻法秘籍·四阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_guard_t4",
+      "name": "守法秘籍·四阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_move_t4",
+      "name": "身法秘籍·四阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_inner_t4",
+      "name": "内功秘籍·四阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_strike_t5",
+      "name": "攻法秘籍·五阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_guard_t5",
+      "name": "守法秘籍·五阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_move_t5",
+      "name": "身法秘籍·五阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_inner_t5",
+      "name": "内功秘籍·五阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_strike_t6",
+      "name": "攻法秘籍·六阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_guard_t6",
+      "name": "守法秘籍·六阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_move_t6",
+      "name": "身法秘籍·六阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_inner_t6",
+      "name": "内功秘籍·六阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_strike_t7",
+      "name": "攻法秘籍·七阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_guard_t7",
+      "name": "守法秘籍·七阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_move_t7",
+      "name": "身法秘籍·七阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_inner_t7",
+      "name": "内功秘籍·七阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_strike_t8",
+      "name": "攻法秘籍·八阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_guard_t8",
+      "name": "守法秘籍·八阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_move_t8",
+      "name": "身法秘籍·八阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_inner_t8",
+      "name": "内功秘籍·八阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_strike_t9",
+      "name": "攻法秘籍·九阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_guard_t9",
+      "name": "守法秘籍·九阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_move_t9",
+      "name": "身法秘籍·九阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_inner_t9",
+      "name": "内功秘籍·九阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.map_t1",
+      "name": "舆图·一阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.map_t2",
+      "name": "舆图·二阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.map_t3",
+      "name": "舆图·三阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.map_t4",
+      "name": "舆图·四阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.map_t5",
+      "name": "舆图·五阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.map_t6",
+      "name": "舆图·六阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.map_t7",
+      "name": "舆图·七阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.map_t8",
+      "name": "舆图·八阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.map_t9",
+      "name": "舆图·九阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.key_t1",
+      "name": "钥匙·一阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.key_t2",
+      "name": "钥匙·二阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.key_t3",
+      "name": "钥匙·三阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.key_t4",
+      "name": "钥匙·四阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.key_t5",
+      "name": "钥匙·五阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.key_t6",
+      "name": "钥匙·六阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.key_t7",
+      "name": "钥匙·七阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.key_t8",
+      "name": "钥匙·八阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.key_t9",
+      "name": "钥匙·九阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ore_t1",
+      "name": "矿石·一阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ore_t2",
+      "name": "矿石·二阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ore_t3",
+      "name": "矿石·三阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ore_t4",
+      "name": "矿石·四阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ore_t5",
+      "name": "矿石·五阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ore_t6",
+      "name": "矿石·六阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ore_t7",
+      "name": "矿石·七阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ore_t8",
+      "name": "矿石·八阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ore_t9",
+      "name": "矿石·九阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.herb_t1",
+      "name": "草药·一阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.herb_t2",
+      "name": "草药·二阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.herb_t3",
+      "name": "草药·三阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.herb_t4",
+      "name": "草药·四阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.herb_t5",
+      "name": "草药·五阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.herb_t6",
+      "name": "草药·六阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.herb_t7",
+      "name": "草药·七阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.herb_t8",
+      "name": "草药·八阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.herb_t9",
+      "name": "草药·九阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.deliver_t1",
+      "name": "送物·一阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.deliver_t2",
+      "name": "送物·二阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.deliver_t3",
+      "name": "送物·三阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.deliver_t4",
+      "name": "送物·四阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.deliver_t5",
+      "name": "送物·五阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.deliver_t6",
+      "name": "送物·六阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.deliver_t7",
+      "name": "送物·七阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.deliver_t8",
+      "name": "送物·八阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.deliver_t9",
+      "name": "送物·九阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.find_t1",
+      "name": "寻人·一阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.find_t2",
+      "name": "寻人·二阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.find_t3",
+      "name": "寻人·三阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.find_t4",
+      "name": "寻人·四阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.find_t5",
+      "name": "寻人·五阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.find_t6",
+      "name": "寻人·六阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.find_t7",
+      "name": "寻人·七阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.find_t8",
+      "name": "寻人·八阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.find_t9",
+      "name": "寻人·九阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.slay_t1",
+      "name": "除敌·一阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.slay_t2",
+      "name": "除敌·二阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.slay_t3",
+      "name": "除敌·三阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.slay_t4",
+      "name": "除敌·四阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.slay_t5",
+      "name": "除敌·五阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.slay_t6",
+      "name": "除敌·六阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.slay_t7",
+      "name": "除敌·七阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.slay_t8",
+      "name": "除敌·八阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.slay_t9",
+      "name": "除敌·九阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.gather_t1",
+      "name": "采集·一阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.gather_t2",
+      "name": "采集·二阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.gather_t3",
+      "name": "采集·三阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.gather_t4",
+      "name": "采集·四阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.gather_t5",
+      "name": "采集·五阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.gather_t6",
+      "name": "采集·六阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.gather_t7",
+      "name": "采集·七阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.gather_t8",
+      "name": "采集·八阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.gather_t9",
+      "name": "采集·九阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.reach_t1",
+      "name": "抵达·一阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.reach_t2",
+      "name": "抵达·二阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.reach_t3",
+      "name": "抵达·三阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.reach_t4",
+      "name": "抵达·四阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.reach_t5",
+      "name": "抵达·五阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.reach_t6",
+      "name": "抵达·六阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.reach_t7",
+      "name": "抵达·七阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.reach_t8",
+      "name": "抵达·八阶",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.reach_t9",
+      "name": "抵达·九阶",
+      "flavor": null
     }
   ]
 }

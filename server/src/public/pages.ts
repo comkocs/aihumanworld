@@ -285,7 +285,7 @@ async function biography(q: Queryable, lex: Lexicon, ref: string): Promise<PageD
   const reps = byCreation(await selectRows(q, "reputation", "char_id = $1 AND scope = 'world'", [who.id]));
   const wanted = byCreation(await selectRows(q, "wanted", "char_id = $1 AND state = 'active'", [who.id]));
   const lines = header(`传记 Biography ${who.id}`, lex, "公开字段与公开事迹。余额、体力、身份凭据不在此页。");
-  lines.push(`- ${charLine(lex, who)}`, "", `origin ${facet(lex, `region.${row.origin_region}`)}`, "");
+  lines.push(`- ${charLine(lex, who)}`, "");
   lines.push("## 关系 Bonds", "");
   if (bonds.length === 0) lines.push("(none)", "");
   for (const b of bonds) lines.push(`- ${bondLine(lex, b)}`);

@@ -1,0 +1,334 @@
+{
+  "schema": "aihw.content.v1",
+  "places": [
+    {
+      "local": "fantasy_watch_hall",
+      "region": "fantasy",
+      "kind": "hall",
+      "features": ["respawn"],
+      "tier": 1,
+      "danger": "safe",
+      "combat": "safe",
+      "owner_org": "org:fantasy_watch",
+      "exits": [
+        { "dir": "south", "to": "place:start_fantasy" },
+        { "dir": "east", "to": "place:fantasy_conclave_hall" },
+        { "dir": "west", "to": "place:fantasy_shrine" }
+      ]
+    },
+    {
+      "local": "fantasy_conclave_hall",
+      "region": "fantasy",
+      "kind": "hall",
+      "features": ["training"],
+      "tier": 1,
+      "danger": "safe",
+      "combat": "safe",
+      "owner_org": "org:fantasy_conclave",
+      "exits": [
+        { "dir": "west", "to": "place:fantasy_watch_hall" }
+      ]
+    },
+    {
+      "local": "fantasy_wayfarer_hall",
+      "region": "fantasy",
+      "kind": "hall",
+      "features": ["trade"],
+      "tier": 1,
+      "danger": "safe",
+      "combat": "safe",
+      "owner_org": "org:fantasy_wayfarers",
+      "exits": [
+        { "dir": "north", "to": "place:start_fantasy" },
+        { "dir": "south", "to": "place:fantasy_shore" }
+      ]
+    },
+    {
+      "local": "fantasy_yard",
+      "region": "fantasy",
+      "kind": "arena",
+      "features": ["tutorial"],
+      "tier": 1,
+      "danger": "low",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        { "dir": "west", "to": "place:start_fantasy" },
+        { "dir": "north", "to": "place:fantasy_ridge" }
+      ]
+    },
+    {
+      "local": "fantasy_pier",
+      "region": "fantasy",
+      "kind": "water",
+      "features": ["resource"],
+      "tier": 1,
+      "danger": "low",
+      "combat": "safe",
+      "owner_org": null,
+      "exits": [
+        { "dir": "north", "to": "place:start_fantasy" },
+        { "dir": "south", "to": "place:fantasy_shore" }
+      ]
+    },
+    {
+      "local": "fantasy_shore",
+      "region": "fantasy",
+      "kind": "road",
+      "features": ["resource"],
+      "tier": 1,
+      "danger": "low",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        { "dir": "north", "to": "place:fantasy_pier" },
+        { "dir": "east", "to": "place:fantasy_fen" }
+      ]
+    },
+    {
+      "local": "fantasy_fen",
+      "region": "fantasy",
+      "kind": "wilderness",
+      "features": ["resource"],
+      "tier": 1,
+      "danger": "low",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        { "dir": "west", "to": "place:fantasy_shore" },
+        { "dir": "north", "to": "place:fantasy_barrow" }
+      ]
+    },
+    {
+      "local": "fantasy_barrow",
+      "region": "fantasy",
+      "kind": "dungeon",
+      "features": [],
+      "tier": 1,
+      "danger": "medium",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        { "dir": "south", "to": "place:fantasy_fen" },
+        { "dir": "down", "to": "place:fantasy_crypt" }
+      ]
+    },
+    {
+      "local": "fantasy_crypt",
+      "region": "fantasy",
+      "kind": "dungeon",
+      "features": [],
+      "tier": 1,
+      "danger": "high",
+      "combat": "pk",
+      "owner_org": null,
+      "exits": [
+        { "dir": "up", "to": "place:fantasy_barrow" }
+      ]
+    },
+    {
+      "local": "fantasy_ridge",
+      "region": "fantasy",
+      "kind": "wilderness",
+      "features": [],
+      "tier": 1,
+      "danger": "medium",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        { "dir": "south", "to": "place:fantasy_yard" },
+        { "dir": "east", "to": "place:fantasy_pit" }
+      ]
+    },
+    {
+      "local": "fantasy_pit",
+      "region": "fantasy",
+      "kind": "ruin",
+      "features": [],
+      "tier": 1,
+      "danger": "high",
+      "combat": "pk",
+      "owner_org": null,
+      "exits": [
+        { "dir": "west", "to": "place:fantasy_ridge" }
+      ]
+    },
+    {
+      "local": "fantasy_shrine",
+      "region": "fantasy",
+      "kind": "shrine",
+      "features": [],
+      "tier": 1,
+      "danger": "safe",
+      "combat": "safe",
+      "owner_org": null,
+      "exits": [
+        { "dir": "east", "to": "place:fantasy_watch_hall" }
+      ]
+    }
+  ],
+  "place_links": [
+    { "place": "place:start_fantasy", "dir": "west", "to": "place:fantasy_watch_hall" },
+    { "place": "place:start_fantasy", "dir": "south", "to": "place:fantasy_wayfarer_hall" },
+    { "place": "place:start_fantasy", "dir": "east", "to": "place:fantasy_yard" },
+    { "place": "place:start_fantasy", "dir": "down", "to": "place:fantasy_pier" }
+  ],
+  "chars": [
+    {
+      "local": "fantasy_master",
+      "skin": "fantasy",
+      "origin_region": "fantasy",
+      "body": "humanoid",
+      "archetype": "master",
+      "tier": 2,
+      "stage": 1,
+      "loc": "place:fantasy_conclave_hall",
+      "respawn_place": "place:fantasy_conclave_hall"
+    },
+    {
+      "local": "fantasy_merchant",
+      "skin": "fantasy",
+      "origin_region": "fantasy",
+      "body": "humanoid",
+      "archetype": "merchant",
+      "tier": 2,
+      "stage": 1,
+      "loc": "place:fantasy_wayfarer_hall",
+      "respawn_place": "place:fantasy_wayfarer_hall"
+    },
+    {
+      "local": "fantasy_repairer",
+      "skin": "fantasy",
+      "origin_region": "fantasy",
+      "body": "humanoid",
+      "archetype": "repairer",
+      "tier": 2,
+      "stage": 1,
+      "loc": "place:start_fantasy",
+      "respawn_place": "place:start_fantasy"
+    },
+    {
+      "local": "fantasy_guard",
+      "skin": "fantasy",
+      "origin_region": "fantasy",
+      "body": "humanoid",
+      "archetype": "guard",
+      "tier": 2,
+      "stage": 1,
+      "loc": "place:fantasy_watch_hall",
+      "respawn_place": "place:fantasy_watch_hall"
+    },
+    {
+      "local": "fantasy_quest_giver",
+      "skin": "fantasy",
+      "origin_region": "fantasy",
+      "body": "humanoid",
+      "archetype": "quest_giver",
+      "tier": 2,
+      "stage": 1,
+      "loc": "place:start_fantasy",
+      "respawn_place": "place:start_fantasy"
+    },
+    {
+      "local": "fantasy_patroller",
+      "skin": "fantasy",
+      "origin_region": "fantasy",
+      "body": "humanoid",
+      "archetype": "patroller",
+      "tier": 2,
+      "stage": 1,
+      "loc": "place:fantasy_shore",
+      "respawn_place": "place:fantasy_shore",
+      "patrol_route": ["place:fantasy_shore", "place:fantasy_fen", "place:fantasy_shore", "place:fantasy_pier"]
+    },
+    {
+      "local": "fantasy_monster",
+      "skin": "fantasy",
+      "origin_region": "fantasy",
+      "body": "beast",
+      "archetype": "monster",
+      "tier": 1,
+      "stage": 1,
+      "loc": "place:fantasy_fen",
+      "respawn_place": "place:fantasy_fen"
+    },
+    {
+      "local": "fantasy_tutorial",
+      "skin": "fantasy",
+      "origin_region": "fantasy",
+      "body": "construct",
+      "archetype": "tutorial_opponent",
+      "tier": 1,
+      "stage": 1,
+      "loc": "place:fantasy_yard",
+      "respawn_place": "place:fantasy_yard"
+    }
+  ],
+  "orgs": [
+    {
+      "local": "fantasy_watch",
+      "region": "fantasy",
+      "hall": "place:fantasy_watch_hall",
+      "ranks": [
+        { "rank": 0, "key": "org_rank.member", "can_promote": false, "can_expel": false },
+        { "rank": 1, "key": "org_rank.fantasy_warden", "can_promote": true, "can_expel": true }
+      ]
+    },
+    {
+      "local": "fantasy_conclave",
+      "region": "fantasy",
+      "hall": "place:fantasy_conclave_hall",
+      "ranks": [
+        { "rank": 0, "key": "org_rank.member", "can_promote": false, "can_expel": false },
+        { "rank": 1, "key": "org_rank.fantasy_candle", "can_promote": true, "can_expel": true }
+      ]
+    },
+    {
+      "local": "fantasy_wayfarers",
+      "region": "fantasy",
+      "hall": "place:fantasy_wayfarer_hall",
+      "ranks": [
+        { "rank": 0, "key": "org_rank.member", "can_promote": false, "can_expel": false },
+        { "rank": 1, "key": "org_rank.fantasy_pathfinder", "can_promote": true, "can_expel": true }
+      ]
+    }
+  ],
+  "org_skills": [
+    { "org": "org:fantasy_watch", "local": "fantasy_watch_shield", "base": "guard", "tier": 1 },
+    { "org": "org:fantasy_watch", "local": "fantasy_watch_pike", "base": "strike", "tier": 1 },
+    { "org": "org:fantasy_conclave", "local": "fantasy_conclave_rune", "base": "inner", "tier": 1 },
+    { "org": "org:fantasy_conclave", "local": "fantasy_conclave_bolt", "base": "strike", "tier": 1 },
+    { "org": "org:fantasy_conclave", "local": "fantasy_conclave_ward", "base": "guard", "tier": 1 },
+    { "org": "org:fantasy_wayfarers", "local": "fantasy_wayfarer_trail", "base": "move", "tier": 1 },
+    { "org": "org:fantasy_wayfarers", "local": "fantasy_wayfarer_shot", "base": "strike", "tier": 1 }
+  ],
+  "tasks": [
+    {
+      "local": "fantasy_reach_yard",
+      "tpl": "reach",
+      "tier": 1,
+      "stage": 1,
+      "condition": { "tpl": "reach", "mode": "place", "place": "place:fantasy_yard" },
+      "reward_spec": { "coin": 70, "xp": 210, "potential": 21, "rep": 0, "item_defs": [] },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "fantasy_reach_fen",
+      "tpl": "reach",
+      "tier": 1,
+      "stage": 1,
+      "condition": { "tpl": "reach", "mode": "place", "place": "place:fantasy_fen" },
+      "reward_spec": { "coin": 70, "xp": 210, "potential": 21, "rep": 0, "item_defs": [] },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "fantasy_reach_shrine",
+      "tpl": "reach",
+      "tier": 1,
+      "stage": 1,
+      "condition": { "tpl": "reach", "mode": "place", "place": "place:fantasy_shrine" },
+      "reward_spec": { "coin": 70, "xp": 210, "potential": 21, "rep": 0, "item_defs": [] },
+      "duration_ticks": 1440
+    }
+  ]
+}

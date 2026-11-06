@@ -44,6 +44,8 @@ test("S13 chain: place page → biography → no code → 304 → web form look"
     assert.match(bioBody, new RegExp(`传记 Biography ${me.id.replaceAll(":", "\\:")}`));
     assert.match(bioBody, /修士 `person\.player`/);
     assert.match(bioBody, /skin: xiuxian\/zh-CN/);
+    assert.doesNotMatch(bioBody, /origin(?:_region|\s)/);
+    assert.doesNotMatch(bioBody, /(?:^|\s)coin(?:\s|:)/);
 
     // The code and its hash appear in none of the public responses.
     const chronicle = await (await fetch(`${app.url}/chronicle`)).text();

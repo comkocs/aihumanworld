@@ -5,7 +5,7 @@
 // taskBuriedPhase (right after identity_lifecycle, so a burial is settled in the
 // same tick; 事实格式 §6 「入土时释放在办任务并退款／归还托管」): buried chars, read
 // as facts (S11 code is not called) — accepted tasks they held go back to open
-// (their personal system offers expire), their open bounties are cancelled with
+// (their personal system offers expire), their open / accepted bounties are cancelled with
 // the escrow refunded to them. Player coin is conserved: escrow moves back to the
 // issuer's balance, nothing is created or destroyed.
 
@@ -81,7 +81,7 @@ export const taskBuriedPhase: ClockPhase = {
       const deedId = await releaseDeed(c, t, [r.change], audience);
       await emitTaskChanged(c.w, r.task, deedId, audience);
     }
-    const lost = `state = 'open' AND ((issuer ->> 'kind' = 'char' AND issuer ->> 'id' IN ${BURIED}) OR eligible_char IN ${BURIED})`;
+    const lost = `state IN ('open', 'accepted') AND ((issuer ->> 'kind' = 'char' AND issuer ->> 'id' IN ${BURIED}) OR eligible_char IN ${BURIED})`;
     for (const t of await rows(c, lost)) {
       await endTask(c, t, t.issuer.kind === "char" ? "cancelled" : "expired");
     }

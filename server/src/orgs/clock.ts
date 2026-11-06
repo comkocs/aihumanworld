@@ -64,6 +64,10 @@ async function creditTasks(ctx: ClockCtx, orgs: Map<ID, OrgRow>): Promise<void> 
         const ended = await selectRows(ctx.q, "deed", "kind IN ('org_leave', 'org_expel') AND seq < $1 AND result -> 'changes' @> $2::jsonb", [deed.seq, JSON.stringify([{ table: "bond", id: bond.id, after: { state: "ended" } }])], "LIMIT 1");
         if (ended.length > 0) continue;
         org = orgs.get(bond.b);
+        if (org === undefined) {
+          org = await getRow(ctx.q, "org", bond.b) ?? undefined;
+          if (org !== undefined) orgs.set(org.id, org);
+        }
         if (org !== undefined) break;
       }
       if (org === undefined || org.goal.week !== week || org.goal.settled) continue;
@@ -77,7 +81,8 @@ async function creditTasks(ctx: ClockCtx, orgs: Map<ID, OrgRow>): Promise<void> 
       orgs.set(org.id, await settle(ctx, { ...org, goal }));
     }
   }
-  await ctx.q.query("INSERT INTO s25_org_clock (realm, through_seq) VALUES ($1, $2) ON CONFLICT (realm) DO UPDATE SET through_seq = EXCLUDED.through_seq", [ctx.world.realm, through]);
+  const scannedThrough = deeds.at(-1)?.seq;
+  if (scannedThrough !== undefined) await ctx.q.query("INSERT INTO s25_org_clock (realm, through_seq) VALUES ($1, $2) ON CONFLICT (realm) DO UPDATE SET through_seq = EXCLUDED.through_seq", [ctx.world.realm, scannedThrough]);
 }
 
 export const orgGoalPhase: ClockPhase = {
@@ -86,7 +91,11 @@ export const orgGoalPhase: ClockPhase = {
   async run(ctx) {
     requireRevision(ctx.balance, ctx.world.rules_revision, ctx.rules.balance_key);
     const currentWeek = checkedUInt(BigInt(ctx.to_tick) / periodAt(ctx.balance, "clock.week_ticks"));
-    const rows = await selectRows(ctx.q, "org", "id LIKE $1", [`${ctx.world.realm}:org:%`], 'ORDER BY id COLLATE "C" FOR UPDATE');
+    const rows = await selectRows(ctx.q, "org", `id LIKE $1 AND (
+      NOT EXISTS (SELECT 1 FROM s25_org_roster WHERE org_id = orgs.id) OR
+      (goal ->> 'week')::bigint < $2::bigint OR
+      ((goal ->> 'settled')::boolean = false AND (goal ->> 'progress')::numeric >= (goal ->> 'target')::numeric))`,
+      [`${ctx.world.realm}:org:%`, currentWeek], 'ORDER BY id COLLATE "C"');
     const orgs = new Map(rows.map((org) => [org.id, org]));
     for (const org of rows) {
       const initialized = await ctx.q.query("SELECT 1 FROM s25_org_roster WHERE org_id = $1", [org.id]);

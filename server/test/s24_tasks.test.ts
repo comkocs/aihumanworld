@@ -9,7 +9,9 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { startApp } from "../src/app.ts";
 import { loadConfig } from "../src/config.ts";
-import { insertRow } from "../src/facts/store.ts";
+import { insertRow, mustGetRow } from "../src/facts/store.ts";
+import { Writer } from "../src/facts/writer.ts";
+import { taskBuriedPhase } from "../src/tasks/clock.ts";
 import type { Holder, ItemDefinitionRow, ItemInstanceRow, TaskTemplateRow } from "../src/facts/types.ts";
 import { setQuiet } from "../src/log.ts";
 
@@ -238,6 +240,61 @@ test("S24 chain: deliver task → daily decay → bounty escrow / payout / refun
     const gift = await call("give", { target: b, asset: { kind: "coin", amount: 10 } }, codeA);
     assert.equal(gift.body.error.code, "NOT_HERE");
     assert.equal(gift.body.ap.remaining, gift.body.ap.per_tick);
+    assert.equal(await totalCoin(), total);
+
+    await nextTick();
+    await ok("go", { dir: "north" }, codeB);
+    const given = await ok("give", { target: b, asset: { kind: "coin", amount: 10 } }, codeA);
+    assert.ok(given.result.changes.every((c: Json) => c.table !== "char" || c.id === a));
+    const giveDeed = await mustGetRow(db, "deed", given.deed_ids[0]);
+    assert.ok(giveDeed.result.changes.every((c) => c.table !== "char" || !Object.hasOwn(c.after, "coin")));
+    for (const credential of [codeA, codeB]) {
+      const seen = await ok("look", { section: "deeds", page: { after: `r1:deed:d${BigInt(giveDeed.seq) - 1n}`, through: giveDeed.seq } }, credential);
+      assert.ok(seen.result.rows.find((d: Json) => d.id === giveDeed.id));
+      assert.ok(seen.result.rows.find((d: Json) => d.id === giveDeed.id).result.changes.every((c: Json) => c.table !== "char" || !Object.hasOwn(c.after, "coin")));
+    }
+    const giftEvents = await db.query<Json>("SELECT scope, recipients, data FROM events WHERE deed_id = $1 AND type = 'fact_changed'", [giveDeed.id]);
+    assert.equal(giftEvents.rows.length, 2);
+    for (const e of giftEvents.rows) {
+      assert.equal(e.scope, "self");
+      assert.equal(e.recipients.length, 1);
+      assert.ok(e.data.changes.every((c: Json) => c.id === e.recipients[0]));
+    }
+    assert.equal(await totalCoin(), total);
+
+    await nextTick();
+    const post = async (code: string, coin: number): Promise<Json> => (await ok("bounty", {
+      op: "post", condition: { tpl: "reach", mode: "place", place: MARKET },
+      reward: { coin, items: [] }, expires_tick: String(now + 500n),
+    }, code)).result.task;
+    const issuerBefore = await coinOf(a);
+    const open = await post(codeA, 10);
+    const held = await post(codeA, 20);
+    await ok("task", { op: "accept", id: held.id }, codeB);
+    const independent = await post(codeB, 5);
+    await nextTick();
+    await ok("task", { op: "accept", id: independent.id }, codeA);
+    await db.query("UPDATE chars SET state = 'buried' WHERE id = $1", [a]);
+    const release = async (): Promise<void> => {
+      await db.tx(async (q) => {
+        const world = await mustGetRow(q, "world", "r1:world:main", { lock: true });
+        const w = new Writer(q, "r1", world.tick, world.rules_revision, true);
+        await taskBuriedPhase.run({ q, w, world, rules: world.rules, balance: app.services.balance(), from_tick: world.tick, to_tick: world.tick, now: new Date() });
+      });
+    };
+    await release();
+    for (const id of [open.id, held.id]) {
+      const t = await mustGetRow(db, "task", id);
+      assert.equal(t.record === "instance" && t.state, "cancelled");
+      assert.deepEqual(t.record === "instance" && t.escrow, { coin: 0, items: [] });
+    }
+    const reopened = await mustGetRow(db, "task", independent.id);
+    assert.equal(reopened.record === "instance" && reopened.state, "open");
+    assert.equal(reopened.record === "instance" && reopened.taker, null);
+    assert.equal(await coinOf(a), issuerBefore);
+    assert.equal(await totalCoin(), total);
+    await release();
+    assert.equal(await coinOf(a), issuerBefore);
     assert.equal(await totalCoin(), total);
   } finally {
     await app.close();

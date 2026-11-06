@@ -1,0 +1,320 @@
+{
+ "schema": "aihw.content.v1",
+ "places": [
+  {
+   "local": "scifi_survey_hall",
+   "region": "scifi",
+   "kind": "hall",
+   "features": ["training"],
+   "tier": 1,
+   "danger": "safe",
+   "combat": "safe",
+   "owner_org": "org:scifi_survey",
+   "exits": [
+    {"dir": "out", "to": "place:start_scifi"},
+    {"dir": "north", "to": "place:scifi_trade_berth"}
+   ]
+  },
+  {
+   "local": "scifi_trade_berth",
+   "region": "scifi",
+   "kind": "market",
+   "features": ["trade"],
+   "tier": 1,
+   "danger": "safe",
+   "combat": "safe",
+   "owner_org": "org:scifi_trade",
+   "exits": [
+    {"dir": "south", "to": "place:scifi_survey_hall"},
+    {"dir": "east", "to": "place:scifi_ring_road"}
+   ]
+  },
+  {
+   "local": "scifi_ring_road",
+   "region": "scifi",
+   "kind": "road",
+   "features": [],
+   "tier": 1,
+   "danger": "low",
+   "combat": "pve",
+   "owner_org": null,
+   "exits": [
+    {"dir": "west", "to": "place:scifi_trade_berth"},
+    {"dir": "east", "to": "place:scifi_beacon_field"},
+    {"dir": "north", "to": "place:scifi_sim_bay"}
+   ]
+  },
+  {
+   "local": "scifi_sim_bay",
+   "region": "scifi",
+   "kind": "arena",
+   "features": ["tutorial"],
+   "tier": 1,
+   "danger": "safe",
+   "combat": "pve",
+   "owner_org": null,
+   "exits": [
+    {"dir": "south", "to": "place:scifi_ring_road"}
+   ]
+  },
+  {
+   "local": "scifi_beacon_field",
+   "region": "scifi",
+   "kind": "wilderness",
+   "features": ["resource"],
+   "tier": 1,
+   "danger": "low",
+   "combat": "pve",
+   "owner_org": null,
+   "exits": [
+    {"dir": "west", "to": "place:scifi_ring_road"},
+    {"dir": "east", "to": "place:scifi_dust_plain"},
+    {"dir": "north", "to": "place:scifi_wreck_lock"}
+   ]
+  },
+  {
+   "local": "scifi_dust_plain",
+   "region": "scifi",
+   "kind": "wilderness",
+   "features": [],
+   "tier": 1,
+   "danger": "medium",
+   "combat": "pve",
+   "owner_org": null,
+   "exits": [
+    {"dir": "west", "to": "place:scifi_beacon_field"},
+    {"dir": "north", "to": "place:scifi_salvage_yard"}
+   ]
+  },
+  {
+   "local": "scifi_wreck_lock",
+   "region": "scifi",
+   "kind": "ruin",
+   "features": [],
+   "tier": 1,
+   "danger": "medium",
+   "combat": "pve",
+   "owner_org": null,
+   "exits": [
+    {"dir": "south", "to": "place:scifi_beacon_field"},
+    {"dir": "in", "to": "place:scifi_derelict_hold"}
+   ]
+  },
+  {
+   "local": "scifi_derelict_hold",
+   "region": "scifi",
+   "kind": "dungeon",
+   "features": [],
+   "tier": 1,
+   "danger": "high",
+   "combat": "pve",
+   "owner_org": null,
+   "exits": [
+    {"dir": "out", "to": "place:scifi_wreck_lock"}
+   ]
+  },
+  {
+   "local": "scifi_salvage_yard",
+   "region": "scifi",
+   "kind": "ruin",
+   "features": ["repair"],
+   "tier": 1,
+   "danger": "low",
+   "combat": "safe",
+   "owner_org": "org:scifi_salvage",
+   "exits": [
+    {"dir": "south", "to": "place:scifi_dust_plain"},
+    {"dir": "east", "to": "place:scifi_rust_belt"},
+    {"dir": "north", "to": "place:scifi_black_lane"}
+   ]
+  },
+  {
+   "local": "scifi_rust_belt",
+   "region": "scifi",
+   "kind": "wilderness",
+   "features": ["resource"],
+   "tier": 2,
+   "danger": "high",
+   "combat": "pk",
+   "owner_org": null,
+   "exits": [
+    {"dir": "west", "to": "place:scifi_salvage_yard"}
+   ]
+  },
+  {
+   "local": "scifi_black_lane",
+   "region": "scifi",
+   "kind": "road",
+   "features": [],
+   "tier": 2,
+   "danger": "high",
+   "combat": "pk",
+   "owner_org": null,
+   "exits": [
+    {"dir": "south", "to": "place:scifi_salvage_yard"}
+   ]
+  }
+ ],
+ "place_links": [
+  {"place": "place:start_scifi", "dir": "in", "to": "place:scifi_survey_hall"}
+ ],
+ "chars": [
+  {
+   "local": "scifi_master",
+   "skin": "scifi",
+   "origin_region": "scifi",
+   "body": "humanoid",
+   "archetype": "master",
+   "tier": 3,
+   "stage": 1,
+   "loc": "place:scifi_survey_hall",
+   "respawn_place": "place:scifi_survey_hall"
+  },
+  {
+   "local": "scifi_merchant",
+   "skin": "scifi",
+   "origin_region": "scifi",
+   "body": "humanoid",
+   "archetype": "merchant",
+   "tier": 1,
+   "stage": 1,
+   "loc": "place:scifi_trade_berth",
+   "respawn_place": "place:scifi_trade_berth"
+  },
+  {
+   "local": "scifi_repairer",
+   "skin": "scifi",
+   "origin_region": "scifi",
+   "body": "construct",
+   "archetype": "repairer",
+   "tier": 1,
+   "stage": 1,
+   "loc": "place:scifi_salvage_yard",
+   "respawn_place": "place:scifi_salvage_yard"
+  },
+  {
+   "local": "scifi_guard",
+   "skin": "scifi",
+   "origin_region": "scifi",
+   "body": "humanoid",
+   "archetype": "guard",
+   "tier": 2,
+   "stage": 1,
+   "loc": "place:start_scifi",
+   "respawn_place": "place:start_scifi"
+  },
+  {
+   "local": "scifi_quest_giver",
+   "skin": "scifi",
+   "origin_region": "scifi",
+   "body": "humanoid",
+   "archetype": "quest_giver",
+   "tier": 1,
+   "stage": 1,
+   "loc": "place:start_scifi",
+   "respawn_place": "place:start_scifi"
+  },
+  {
+   "local": "scifi_patroller",
+   "skin": "scifi",
+   "origin_region": "scifi",
+   "body": "humanoid",
+   "archetype": "patroller",
+   "tier": 2,
+   "stage": 1,
+   "loc": "place:scifi_ring_road",
+   "respawn_place": "place:scifi_ring_road",
+   "patrol_route": ["place:scifi_ring_road", "place:scifi_beacon_field", "place:scifi_dust_plain", "place:scifi_beacon_field"]
+  },
+  {
+   "local": "scifi_monster",
+   "skin": "scifi",
+   "origin_region": "scifi",
+   "body": "construct",
+   "archetype": "monster",
+   "tier": 1,
+   "stage": 1,
+   "loc": "place:scifi_derelict_hold",
+   "respawn_place": "place:scifi_derelict_hold"
+  },
+  {
+   "local": "scifi_tutorial",
+   "skin": "scifi",
+   "origin_region": "scifi",
+   "body": "construct",
+   "archetype": "tutorial_opponent",
+   "tier": 1,
+   "stage": 1,
+   "loc": "place:scifi_sim_bay",
+   "respawn_place": "place:scifi_sim_bay"
+  }
+ ],
+ "orgs": [
+  {
+   "local": "scifi_survey",
+   "region": "scifi",
+   "hall": "place:scifi_survey_hall",
+   "ranks": [
+    {"rank": 0, "key": "org_rank.member", "can_promote": false, "can_expel": false},
+    {"rank": 1, "key": "org_rank.scifi_survey_lead", "can_promote": true, "can_expel": true}
+   ]
+  },
+  {
+   "local": "scifi_trade",
+   "region": "scifi",
+   "hall": "place:scifi_trade_berth",
+   "ranks": [
+    {"rank": 0, "key": "org_rank.member", "can_promote": false, "can_expel": false},
+    {"rank": 1, "key": "org_rank.scifi_trade_broker", "can_promote": true, "can_expel": false}
+   ]
+  },
+  {
+   "local": "scifi_salvage",
+   "region": "scifi",
+   "hall": "place:scifi_salvage_yard",
+   "ranks": [
+    {"rank": 0, "key": "org_rank.member", "can_promote": false, "can_expel": false},
+    {"rank": 1, "key": "org_rank.scifi_salvage_boss", "can_promote": true, "can_expel": true}
+   ]
+  }
+ ],
+ "org_skills": [
+  {"org": "org:scifi_survey", "local": "chart", "base": "inner", "tier": 1},
+  {"org": "org:scifi_survey", "local": "pulse", "base": "strike", "tier": 1},
+  {"org": "org:scifi_survey", "local": "drift", "base": "move", "tier": 2},
+  {"org": "org:scifi_trade", "local": "ledger", "base": "inner", "tier": 1},
+  {"org": "org:scifi_trade", "local": "convoy", "base": "move", "tier": 1},
+  {"org": "org:scifi_salvage", "local": "cut", "base": "strike", "tier": 1},
+  {"org": "org:scifi_salvage", "local": "plate", "base": "guard", "tier": 1},
+  {"org": "org:scifi_salvage", "local": "haul", "base": "move", "tier": 2}
+ ],
+ "tasks": [
+  {
+   "local": "scifi_reach_sim",
+   "tpl": "reach",
+   "tier": 1,
+   "stage": 1,
+   "condition": {"tpl": "reach", "mode": "place", "place": "place:scifi_sim_bay"},
+   "reward_spec": {"coin": 70, "xp": 210, "potential": 21, "rep": 0, "item_defs": []},
+   "duration_ticks": 1440
+  },
+  {
+   "local": "scifi_reach_yard",
+   "tpl": "reach",
+   "tier": 1,
+   "stage": 1,
+   "condition": {"tpl": "reach", "mode": "place", "place": "place:scifi_salvage_yard"},
+   "reward_spec": {"coin": 70, "xp": 210, "potential": 21, "rep": 0, "item_defs": []},
+   "duration_ticks": 1440
+  },
+  {
+   "local": "scifi_deliver_ore",
+   "tpl": "deliver",
+   "tier": 1,
+   "stage": 1,
+   "condition": {"tpl": "deliver", "item_def": "item:ore_t1", "count": 2, "to_place": "place:scifi_trade_berth", "to_char": null},
+   "reward_spec": {"coin": 100, "xp": 300, "potential": 30, "rep": 0, "item_defs": []},
+   "duration_ticks": 1440
+  }
+ ]
+}

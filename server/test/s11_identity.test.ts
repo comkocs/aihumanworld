@@ -11,6 +11,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { test } from "node:test";
 import { identityPhase } from "../src/identity/lifecycle.ts";
+import { yieldPhase } from "../src/growth/clock.ts";
 import { CROCKFORD, checkSymbols, normalizeCode } from "../src/identity/code.ts";
 import { mustGetRow } from "../src/facts/store.ts";
 import { worldId } from "../src/facts/ids.ts";
@@ -43,6 +44,7 @@ test("S11 identity: code, resume, promotion, draft TTL, dormant, bury, revive, w
       http: { host: "127.0.0.1", port: 0, body_max_bytes: 65536 },
       db: { driver: "pglite", pglite_dir: "memory", pool_max: 1 },
       rules_file: "../../content/rules/numbers.v1.json",
+      content_dir: null,
       clock: { max_catchup_ticks_per_tx: 8 },
     }),
   );
@@ -159,6 +161,12 @@ test("S11 identity: code, resume, promotion, draft TTL, dormant, bury, revive, w
     const lastA = Number(promoted.body.result.char.last_seen_tick);
     await advanceTo(lastA + DORMANT);
     assert.equal((await charState(meA)).state, "dormant");
+    await app.db.query("UPDATE chars SET train_skill = 'inner', last_yield_tick = 0 WHERE id = $1", [meA]);
+    const awake = await call("enter", { mode: "resume" }, codeA);
+    assert.equal(awake.status, 200);
+    assert.equal(awake.body.result.char.last_yield_tick, String(lastA + DORMANT));
+    assert.equal((await mustGetRow(app.db, "char", meA)).last_yield_tick, awake.body.result.char.last_yield_tick);
+    await app.db.query("UPDATE chars SET state = 'dormant', last_seen_tick = $1::bigint WHERE id = $2", [String(lastA), meA]);
 
     // --- dormant → buried, revive window scheduled from the bury tick ---
     await advanceTo(lastA + BURY);
@@ -179,6 +187,15 @@ test("S11 identity: code, resume, promotion, draft TTL, dormant, bury, revive, w
     assert.equal(revive.body.result.char.state, "active");
     assert.equal(revive.body.result.char.id, meA);
     assert.equal((await identityOf(meA)).expires, null); // countdown stopped
+    assert.equal(revive.body.result.char.last_yield_tick, String(lastA + BURY));
+    assert.equal((await mustGetRow(app.db, "char", meA)).last_yield_tick, revive.body.result.char.last_yield_tick);
+    await app.db.tx(async (q) => {
+      const world = await mustGetRow(q, "world", wid, { lock: true });
+      const to = (BigInt(world.tick) + 1n).toString();
+      const w = new Writer(q, "r1", to, world.rules_revision, true);
+      await yieldPhase.run({ q, w, world, rules: world.rules, balance: app.services.balance(), from_tick: world.tick, to_tick: to, now: new Date() });
+    });
+    assert.equal((await mustGetRow(app.db, "char", meA)).xp, revive.body.result.char.xp);
     const ev = await call("events", {}, codeA);
     assert.equal(ev.body.result.events.some((e: Json) => e.type === "identity_state" && e.data.reason === "resume" && e.data.to === "active"), true);
 

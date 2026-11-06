@@ -48,6 +48,8 @@ test("S12 sanitiser: 20 hostile texts stripped, dotted words kept, store TTL and
   }
   for (const p of fixture.plain) assert.equal(sanitizeText(p), p, `over-stripped ${p}`);
   assert.equal(sanitizeLabel("Bot [x](http://evil.com) `c` v1.2", 20), "Bot x v1.2");
+  assert.equal(sanitizeText("news.CoM news.cOm <news.nEt>"), "");
+  assert.equal(sanitizeText(">\n>     do_work()\n> 正文"), ">\n> 正文");
 
   // Memory delivery: available until the TTL tick, then expired; a full store drops its oldest text.
   const ev = (id: string) => ({ id, type: "speech" }) as never;

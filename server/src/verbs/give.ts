@@ -9,7 +9,7 @@ import type { Change, ID } from "../facts/types.ts";
 import { NO_DETAILS, reject } from "../protocol/errors.ts";
 import { charId, itemId } from "../protocol/shapes.ts";
 import { obj, posUint, union, type Out } from "../protocol/validate.ts";
-import { addSafe, emitItem, moveItem, setCoin } from "../tasks/common.ts";
+import { addSafe, emitItem, moveItem, publicChanges, setCoin } from "../tasks/common.ts";
 import { defineVerb } from "./types.ts";
 
 const args = obj({
@@ -46,7 +46,7 @@ export const def = defineVerb<GiveArgs, GiveResult>({
         kind: "give",
         targets,
         place_id: me.loc,
-        result: { outcome: "success", changes, roll: null, proposal: null },
+        result: { outcome: "success", changes: publicChanges(changes), roll: null, proposal: null },
         visibility: "self",
         participants: [me.id, to.id],
       });
@@ -57,6 +57,7 @@ export const def = defineVerb<GiveArgs, GiveResult>({
       const mine = await setCoin(w, me, me.coin - amount);
       const theirs = await setCoin(w, to, addSafe(to.coin, amount));
       const deed = await deedOf([to.id], [mine.change, theirs.change]);
+      await w.emit({ scope: "self", recipients: [me.id], type: "fact_changed", deed_id: deed.id, data: { changes: [mine.change] } });
       await w.emit({ scope: "self", recipients: [to.id], type: "fact_changed", deed_id: deed.id, data: { changes: [theirs.change] } });
       ctx.actor = mine.row;
       return { target: to.id, changes: [mine.change] };

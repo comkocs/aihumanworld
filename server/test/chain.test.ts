@@ -16,7 +16,8 @@ type Json = any;
 
 test("S9 chain: enter → whoami → look → events → budget", async () => {
   setQuiet(true);
-  const config = await loadConfig({ ...process.env, AIHW_DB_DRIVER: "pglite", AIHW_PGLITE_DIR: "memory", AIHW_PORT: "0" });
+  // Clean world: seed only, no content/world import.
+  const config = await loadConfig({ ...process.env, AIHW_DB_DRIVER: "pglite", AIHW_PGLITE_DIR: "memory", AIHW_PORT: "0", AIHW_CONTENT_DIR: "null" });
   const app = await startApp(config);
   try {
     const call = async (verb: string, args: object, code?: string): Promise<{ status: number; body: Json }> => {

@@ -932,6 +932,1531 @@
       "key": "item.charm·tier9",
       "name": "Clear-Heart Pendant",
       "flavor": null
+    },
+    {
+      "key": "content.r1.place.start_wuxia",
+      "name": "Qingxi Town",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wuxia_hall_escort",
+      "name": "Qingxi Escort Agency",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wuxia_road_post",
+      "name": "Qingxi Post Road",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wuxia_wild_ridge",
+      "name": "Qingxi Ridge",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wuxia_hall_martial",
+      "name": "Pinewind Martial Hall",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wuxia_tutorial_lane",
+      "name": "Pine-Shadow Wooden Dummy Lane",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wuxia_water_creek",
+      "name": "Qingxi Ferry",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wuxia_hall_herb",
+      "name": "Listening Rain Herb Society",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wuxia_shrine_pine",
+      "name": "Pinewind Shrine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wuxia_dungeon_cliff",
+      "name": "Broken-Cliff Walkway",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wuxia_ruin_arena",
+      "name": "Ruined Dueling Ground",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.wuxia_reach_lane",
+      "name": "First Steps in the Dummy Lane",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.wuxia_deliver_herb",
+      "name": "Delivering Herbs to the Society",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.wuxia_reach_post",
+      "name": "Checking the Post Road",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.org.wuxia_escort",
+      "name": "Qingxi Escort Agency",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.org.wuxia_martial",
+      "name": "Pinewind Martial Hall",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.org.wuxia_herb",
+      "name": "Listening Rain Herb Society",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.org.registry_wuxia",
+      "name": "Jianghu Registry",
+      "flavor": null
+    },
+    {
+      "key": "org_rank.wuxia_escort_chief",
+      "name": "Chief Escort",
+      "flavor": null
+    },
+    {
+      "key": "org_rank.wuxia_martial_instructor",
+      "name": "Instructor",
+      "flavor": null
+    },
+    {
+      "key": "org_rank.wuxia_herb_keeper",
+      "name": "Herb Society Steward",
+      "flavor": null
+    },
+    {
+      "key": "skill.org·skill.strike·content.r1.wuxia_escort.wuxia_escort_saber",
+      "name": "Escort Saber",
+      "flavor": null
+    },
+    {
+      "key": "skill.org·skill.move·content.r1.wuxia_escort.wuxia_escort_step",
+      "name": "Escort Footwork",
+      "flavor": null
+    },
+    {
+      "key": "skill.org·skill.strike·content.r1.wuxia_martial.wuxia_martial_palm",
+      "name": "Pinewind Palm",
+      "flavor": null
+    },
+    {
+      "key": "skill.org·skill.guard·content.r1.wuxia_martial.wuxia_martial_stance",
+      "name": "Pinewind Stance",
+      "flavor": null
+    },
+    {
+      "key": "skill.org·skill.inner·content.r1.wuxia_martial.wuxia_martial_breath",
+      "name": "Pinewind Breathing",
+      "flavor": null
+    },
+    {
+      "key": "skill.org·skill.inner·content.r1.wuxia_herb.wuxia_herb_breath",
+      "name": "Listening Rain Breathing",
+      "flavor": null
+    },
+    {
+      "key": "skill.org·skill.guard·content.r1.wuxia_herb.wuxia_herb_ward",
+      "name": "Listening Rain Guard",
+      "flavor": null
+    },
+    {
+      "key": "skill.org·skill.inner·content.r1.registry_wuxia.wuxia_registry_breath",
+      "name": "Registry Breathing",
+      "flavor": null
+    },
+    {
+      "key": "skill.org·skill.move·content.r1.registry_wuxia.wuxia_registry_step",
+      "name": "Registry Footwork",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.market_neutral",
+      "name": "Neutral Market",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.gate_confluence",
+      "name": "Confluence Gate",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.camp_neutral",
+      "name": "Neutral Camp",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.market_ring",
+      "name": "Market Ring",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.arena_neutral",
+      "name": "Neutral Dueling Ground",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild_t1",
+      "name": "Wilds·Tier 1",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild2_t1",
+      "name": "Outer Wilds·Tier 1",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.dungeon_t1",
+      "name": "Secluded Grounds·Tier 1",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.inner_t1",
+      "name": "Inner Grounds·Tier 1",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild_t2",
+      "name": "Wilds·Tier 2",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild2_t2",
+      "name": "Outer Wilds·Tier 2",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.dungeon_t2",
+      "name": "Secluded Grounds·Tier 2",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.inner_t2",
+      "name": "Inner Grounds·Tier 2",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild_t3",
+      "name": "Wilds·Tier 3",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild2_t3",
+      "name": "Outer Wilds·Tier 3",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.dungeon_t3",
+      "name": "Secluded Grounds·Tier 3",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.inner_t3",
+      "name": "Inner Grounds·Tier 3",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild_t4",
+      "name": "Wilds·Tier 4",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild2_t4",
+      "name": "Outer Wilds·Tier 4",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.dungeon_t4",
+      "name": "Secluded Grounds·Tier 4",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.inner_t4",
+      "name": "Inner Grounds·Tier 4",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild_t5",
+      "name": "Wilds·Tier 5",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild2_t5",
+      "name": "Outer Wilds·Tier 5",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.dungeon_t5",
+      "name": "Secluded Grounds·Tier 5",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.inner_t5",
+      "name": "Inner Grounds·Tier 5",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild_t6",
+      "name": "Wilds·Tier 6",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild2_t6",
+      "name": "Outer Wilds·Tier 6",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.dungeon_t6",
+      "name": "Secluded Grounds·Tier 6",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.inner_t6",
+      "name": "Inner Grounds·Tier 6",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild_t7",
+      "name": "Wilds·Tier 7",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild2_t7",
+      "name": "Outer Wilds·Tier 7",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.dungeon_t7",
+      "name": "Secluded Grounds·Tier 7",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.inner_t7",
+      "name": "Inner Grounds·Tier 7",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild_t8",
+      "name": "Wilds·Tier 8",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild2_t8",
+      "name": "Outer Wilds·Tier 8",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.dungeon_t8",
+      "name": "Secluded Grounds·Tier 8",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.inner_t8",
+      "name": "Inner Grounds·Tier 8",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild_t9",
+      "name": "Wilds·Tier 9",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.wild2_t9",
+      "name": "Outer Wilds·Tier 9",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.dungeon_t9",
+      "name": "Secluded Grounds·Tier 9",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.place.inner_t9",
+      "name": "Inner Grounds·Tier 9",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t1_g1",
+      "name": "Bladed Weapon·Tier 1·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t1_g2",
+      "name": "Bladed Weapon·Tier 1·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t1_g3",
+      "name": "Bladed Weapon·Tier 1·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t2_g1",
+      "name": "Bladed Weapon·Tier 2·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t2_g2",
+      "name": "Bladed Weapon·Tier 2·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t2_g3",
+      "name": "Bladed Weapon·Tier 2·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t3_g1",
+      "name": "Bladed Weapon·Tier 3·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t3_g2",
+      "name": "Bladed Weapon·Tier 3·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t3_g3",
+      "name": "Bladed Weapon·Tier 3·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t4_g1",
+      "name": "Bladed Weapon·Tier 4·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t4_g2",
+      "name": "Bladed Weapon·Tier 4·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t4_g3",
+      "name": "Bladed Weapon·Tier 4·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t5_g1",
+      "name": "Bladed Weapon·Tier 5·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t5_g2",
+      "name": "Bladed Weapon·Tier 5·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t5_g3",
+      "name": "Bladed Weapon·Tier 5·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t6_g1",
+      "name": "Bladed Weapon·Tier 6·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t6_g2",
+      "name": "Bladed Weapon·Tier 6·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t6_g3",
+      "name": "Bladed Weapon·Tier 6·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t7_g1",
+      "name": "Bladed Weapon·Tier 7·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t7_g2",
+      "name": "Bladed Weapon·Tier 7·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t7_g3",
+      "name": "Bladed Weapon·Tier 7·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t8_g1",
+      "name": "Bladed Weapon·Tier 8·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t8_g2",
+      "name": "Bladed Weapon·Tier 8·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t8_g3",
+      "name": "Bladed Weapon·Tier 8·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t9_g1",
+      "name": "Bladed Weapon·Tier 9·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t9_g2",
+      "name": "Bladed Weapon·Tier 9·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.weapon_t9_g3",
+      "name": "Bladed Weapon·Tier 9·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t1_g1",
+      "name": "Light Armor·Tier 1·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t1_g2",
+      "name": "Light Armor·Tier 1·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t1_g3",
+      "name": "Light Armor·Tier 1·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t2_g1",
+      "name": "Light Armor·Tier 2·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t2_g2",
+      "name": "Light Armor·Tier 2·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t2_g3",
+      "name": "Light Armor·Tier 2·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t3_g1",
+      "name": "Light Armor·Tier 3·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t3_g2",
+      "name": "Light Armor·Tier 3·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t3_g3",
+      "name": "Light Armor·Tier 3·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t4_g1",
+      "name": "Light Armor·Tier 4·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t4_g2",
+      "name": "Light Armor·Tier 4·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t4_g3",
+      "name": "Light Armor·Tier 4·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t5_g1",
+      "name": "Light Armor·Tier 5·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t5_g2",
+      "name": "Light Armor·Tier 5·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t5_g3",
+      "name": "Light Armor·Tier 5·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t6_g1",
+      "name": "Light Armor·Tier 6·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t6_g2",
+      "name": "Light Armor·Tier 6·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t6_g3",
+      "name": "Light Armor·Tier 6·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t7_g1",
+      "name": "Light Armor·Tier 7·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t7_g2",
+      "name": "Light Armor·Tier 7·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t7_g3",
+      "name": "Light Armor·Tier 7·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t8_g1",
+      "name": "Light Armor·Tier 8·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t8_g2",
+      "name": "Light Armor·Tier 8·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t8_g3",
+      "name": "Light Armor·Tier 8·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t9_g1",
+      "name": "Light Armor·Tier 9·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t9_g2",
+      "name": "Light Armor·Tier 9·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.armor_t9_g3",
+      "name": "Light Armor·Tier 9·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t1_g1",
+      "name": "Ring·Tier 1·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t1_g2",
+      "name": "Ring·Tier 1·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t1_g3",
+      "name": "Ring·Tier 1·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t2_g1",
+      "name": "Ring·Tier 2·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t2_g2",
+      "name": "Ring·Tier 2·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t2_g3",
+      "name": "Ring·Tier 2·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t3_g1",
+      "name": "Ring·Tier 3·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t3_g2",
+      "name": "Ring·Tier 3·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t3_g3",
+      "name": "Ring·Tier 3·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t4_g1",
+      "name": "Ring·Tier 4·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t4_g2",
+      "name": "Ring·Tier 4·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t4_g3",
+      "name": "Ring·Tier 4·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t5_g1",
+      "name": "Ring·Tier 5·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t5_g2",
+      "name": "Ring·Tier 5·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t5_g3",
+      "name": "Ring·Tier 5·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t6_g1",
+      "name": "Ring·Tier 6·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t6_g2",
+      "name": "Ring·Tier 6·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t6_g3",
+      "name": "Ring·Tier 6·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t7_g1",
+      "name": "Ring·Tier 7·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t7_g2",
+      "name": "Ring·Tier 7·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t7_g3",
+      "name": "Ring·Tier 7·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t8_g1",
+      "name": "Ring·Tier 8·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t8_g2",
+      "name": "Ring·Tier 8·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t8_g3",
+      "name": "Ring·Tier 8·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t9_g1",
+      "name": "Ring·Tier 9·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t9_g2",
+      "name": "Ring·Tier 9·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ring_t9_g3",
+      "name": "Ring·Tier 9·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t1_g1",
+      "name": "Restoring Medicine·Tier 1·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t1_g2",
+      "name": "Restoring Medicine·Tier 1·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t1_g3",
+      "name": "Restoring Medicine·Tier 1·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_bt_t1",
+      "name": "Breakthrough Medicine·Tier 1",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t2_g1",
+      "name": "Restoring Medicine·Tier 2·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t2_g2",
+      "name": "Restoring Medicine·Tier 2·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t2_g3",
+      "name": "Restoring Medicine·Tier 2·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_bt_t2",
+      "name": "Breakthrough Medicine·Tier 2",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t3_g1",
+      "name": "Restoring Medicine·Tier 3·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t3_g2",
+      "name": "Restoring Medicine·Tier 3·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t3_g3",
+      "name": "Restoring Medicine·Tier 3·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_bt_t3",
+      "name": "Breakthrough Medicine·Tier 3",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t4_g1",
+      "name": "Restoring Medicine·Tier 4·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t4_g2",
+      "name": "Restoring Medicine·Tier 4·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t4_g3",
+      "name": "Restoring Medicine·Tier 4·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_bt_t4",
+      "name": "Breakthrough Medicine·Tier 4",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t5_g1",
+      "name": "Restoring Medicine·Tier 5·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t5_g2",
+      "name": "Restoring Medicine·Tier 5·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t5_g3",
+      "name": "Restoring Medicine·Tier 5·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_bt_t5",
+      "name": "Breakthrough Medicine·Tier 5",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t6_g1",
+      "name": "Restoring Medicine·Tier 6·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t6_g2",
+      "name": "Restoring Medicine·Tier 6·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t6_g3",
+      "name": "Restoring Medicine·Tier 6·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_bt_t6",
+      "name": "Breakthrough Medicine·Tier 6",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t7_g1",
+      "name": "Restoring Medicine·Tier 7·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t7_g2",
+      "name": "Restoring Medicine·Tier 7·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t7_g3",
+      "name": "Restoring Medicine·Tier 7·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_bt_t7",
+      "name": "Breakthrough Medicine·Tier 7",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t8_g1",
+      "name": "Restoring Medicine·Tier 8·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t8_g2",
+      "name": "Restoring Medicine·Tier 8·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t8_g3",
+      "name": "Restoring Medicine·Tier 8·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_bt_t8",
+      "name": "Breakthrough Medicine·Tier 8",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t9_g1",
+      "name": "Restoring Medicine·Tier 9·Common",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t9_g2",
+      "name": "Restoring Medicine·Tier 9·Fine",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_restore_t9_g3",
+      "name": "Restoring Medicine·Tier 9·Legendary",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.potion_bt_t9",
+      "name": "Breakthrough Medicine·Tier 9",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_strike_t1",
+      "name": "Offense Manual·Tier 1",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_guard_t1",
+      "name": "Defense Manual·Tier 1",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_move_t1",
+      "name": "Movement Manual·Tier 1",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_inner_t1",
+      "name": "Inner Discipline Manual·Tier 1",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_strike_t2",
+      "name": "Offense Manual·Tier 2",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_guard_t2",
+      "name": "Defense Manual·Tier 2",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_move_t2",
+      "name": "Movement Manual·Tier 2",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_inner_t2",
+      "name": "Inner Discipline Manual·Tier 2",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_strike_t3",
+      "name": "Offense Manual·Tier 3",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_guard_t3",
+      "name": "Defense Manual·Tier 3",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_move_t3",
+      "name": "Movement Manual·Tier 3",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_inner_t3",
+      "name": "Inner Discipline Manual·Tier 3",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_strike_t4",
+      "name": "Offense Manual·Tier 4",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_guard_t4",
+      "name": "Defense Manual·Tier 4",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_move_t4",
+      "name": "Movement Manual·Tier 4",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_inner_t4",
+      "name": "Inner Discipline Manual·Tier 4",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_strike_t5",
+      "name": "Offense Manual·Tier 5",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_guard_t5",
+      "name": "Defense Manual·Tier 5",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_move_t5",
+      "name": "Movement Manual·Tier 5",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_inner_t5",
+      "name": "Inner Discipline Manual·Tier 5",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_strike_t6",
+      "name": "Offense Manual·Tier 6",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_guard_t6",
+      "name": "Defense Manual·Tier 6",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_move_t6",
+      "name": "Movement Manual·Tier 6",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_inner_t6",
+      "name": "Inner Discipline Manual·Tier 6",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_strike_t7",
+      "name": "Offense Manual·Tier 7",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_guard_t7",
+      "name": "Defense Manual·Tier 7",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_move_t7",
+      "name": "Movement Manual·Tier 7",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_inner_t7",
+      "name": "Inner Discipline Manual·Tier 7",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_strike_t8",
+      "name": "Offense Manual·Tier 8",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_guard_t8",
+      "name": "Defense Manual·Tier 8",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_move_t8",
+      "name": "Movement Manual·Tier 8",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_inner_t8",
+      "name": "Inner Discipline Manual·Tier 8",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_strike_t9",
+      "name": "Offense Manual·Tier 9",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_guard_t9",
+      "name": "Defense Manual·Tier 9",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_move_t9",
+      "name": "Movement Manual·Tier 9",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.scroll_inner_t9",
+      "name": "Inner Discipline Manual·Tier 9",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.map_t1",
+      "name": "Map·Tier 1",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.map_t2",
+      "name": "Map·Tier 2",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.map_t3",
+      "name": "Map·Tier 3",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.map_t4",
+      "name": "Map·Tier 4",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.map_t5",
+      "name": "Map·Tier 5",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.map_t6",
+      "name": "Map·Tier 6",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.map_t7",
+      "name": "Map·Tier 7",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.map_t8",
+      "name": "Map·Tier 8",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.map_t9",
+      "name": "Map·Tier 9",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.key_t1",
+      "name": "Key·Tier 1",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.key_t2",
+      "name": "Key·Tier 2",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.key_t3",
+      "name": "Key·Tier 3",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.key_t4",
+      "name": "Key·Tier 4",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.key_t5",
+      "name": "Key·Tier 5",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.key_t6",
+      "name": "Key·Tier 6",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.key_t7",
+      "name": "Key·Tier 7",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.key_t8",
+      "name": "Key·Tier 8",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.key_t9",
+      "name": "Key·Tier 9",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ore_t1",
+      "name": "Ore·Tier 1",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ore_t2",
+      "name": "Ore·Tier 2",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ore_t3",
+      "name": "Ore·Tier 3",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ore_t4",
+      "name": "Ore·Tier 4",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ore_t5",
+      "name": "Ore·Tier 5",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ore_t6",
+      "name": "Ore·Tier 6",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ore_t7",
+      "name": "Ore·Tier 7",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ore_t8",
+      "name": "Ore·Tier 8",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.ore_t9",
+      "name": "Ore·Tier 9",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.herb_t1",
+      "name": "Herb·Tier 1",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.herb_t2",
+      "name": "Herb·Tier 2",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.herb_t3",
+      "name": "Herb·Tier 3",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.herb_t4",
+      "name": "Herb·Tier 4",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.herb_t5",
+      "name": "Herb·Tier 5",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.herb_t6",
+      "name": "Herb·Tier 6",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.herb_t7",
+      "name": "Herb·Tier 7",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.herb_t8",
+      "name": "Herb·Tier 8",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.item.herb_t9",
+      "name": "Herb·Tier 9",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.deliver_t1",
+      "name": "Delivery·Tier 1",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.deliver_t2",
+      "name": "Delivery·Tier 2",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.deliver_t3",
+      "name": "Delivery·Tier 3",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.deliver_t4",
+      "name": "Delivery·Tier 4",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.deliver_t5",
+      "name": "Delivery·Tier 5",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.deliver_t6",
+      "name": "Delivery·Tier 6",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.deliver_t7",
+      "name": "Delivery·Tier 7",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.deliver_t8",
+      "name": "Delivery·Tier 8",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.deliver_t9",
+      "name": "Delivery·Tier 9",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.find_t1",
+      "name": "Search·Tier 1",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.find_t2",
+      "name": "Search·Tier 2",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.find_t3",
+      "name": "Search·Tier 3",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.find_t4",
+      "name": "Search·Tier 4",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.find_t5",
+      "name": "Search·Tier 5",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.find_t6",
+      "name": "Search·Tier 6",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.find_t7",
+      "name": "Search·Tier 7",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.find_t8",
+      "name": "Search·Tier 8",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.find_t9",
+      "name": "Search·Tier 9",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.slay_t1",
+      "name": "Defeat·Tier 1",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.slay_t2",
+      "name": "Defeat·Tier 2",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.slay_t3",
+      "name": "Defeat·Tier 3",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.slay_t4",
+      "name": "Defeat·Tier 4",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.slay_t5",
+      "name": "Defeat·Tier 5",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.slay_t6",
+      "name": "Defeat·Tier 6",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.slay_t7",
+      "name": "Defeat·Tier 7",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.slay_t8",
+      "name": "Defeat·Tier 8",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.slay_t9",
+      "name": "Defeat·Tier 9",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.gather_t1",
+      "name": "Gathering·Tier 1",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.gather_t2",
+      "name": "Gathering·Tier 2",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.gather_t3",
+      "name": "Gathering·Tier 3",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.gather_t4",
+      "name": "Gathering·Tier 4",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.gather_t5",
+      "name": "Gathering·Tier 5",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.gather_t6",
+      "name": "Gathering·Tier 6",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.gather_t7",
+      "name": "Gathering·Tier 7",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.gather_t8",
+      "name": "Gathering·Tier 8",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.gather_t9",
+      "name": "Gathering·Tier 9",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.reach_t1",
+      "name": "Arrival·Tier 1",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.reach_t2",
+      "name": "Arrival·Tier 2",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.reach_t3",
+      "name": "Arrival·Tier 3",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.reach_t4",
+      "name": "Arrival·Tier 4",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.reach_t5",
+      "name": "Arrival·Tier 5",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.reach_t6",
+      "name": "Arrival·Tier 6",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.reach_t7",
+      "name": "Arrival·Tier 7",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.reach_t8",
+      "name": "Arrival·Tier 8",
+      "flavor": null
+    },
+    {
+      "key": "content.r1.task.reach_t9",
+      "name": "Arrival·Tier 9",
+      "flavor": null
     }
   ]
 }

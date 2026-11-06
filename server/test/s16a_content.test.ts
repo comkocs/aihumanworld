@@ -1,5 +1,6 @@
 // The one S16a acceptance chain (设计者 11-06: no complex or duplicated tests):
-// start (boot imports content/world/neutral.json) → neutral place count 30..50
+// start (boot imports only neutral.json, copied into a temp content dir as in
+// test/s16b_*) → neutral place count 30..50
 // → 81 equipment definitions (3 kinds × 9 tiers × 3 grades) → 9 monster tiers
 // → 5 task templates per tier → market_neutral reaches all four start places
 // over the exit graph → importing again inserts nothing → orgs / org skills from
@@ -7,7 +8,7 @@
 // inserts nothing.
 
 import assert from "node:assert/strict";
-import { mkdir, rm, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, rm, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
@@ -19,9 +20,15 @@ import { mustGetRow } from "../src/facts/store.ts";
 import { loadRulesBundle } from "../src/growth/rules_source.ts";
 import { setQuiet } from "../src/log.ts";
 
+const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
+
 test("S16a content: neutral import, connectivity, idempotence", async () => {
   setQuiet(true);
-  const config = await loadConfig({ ...process.env, AIHW_DB_DRIVER: "pglite", AIHW_PGLITE_DIR: "memory", AIHW_PORT: "0" });
+  // Neutral content only: the four origin files (S16b) stay out of this world.
+  const contentDir = join(REPO, "_work", "临时", `s16a_content_${process.pid}`);
+  await mkdir(contentDir, { recursive: true });
+  await copyFile(join(REPO, "content/world/neutral.json"), join(contentDir, "neutral.json"));
+  const config = await loadConfig({ ...process.env, AIHW_DB_DRIVER: "pglite", AIHW_PGLITE_DIR: "memory", AIHW_PORT: "0", AIHW_CONTENT_DIR: contentDir });
   const app = await startApp(config);
   try {
     // Neutral places: seed market + imported set, inside the 30..50 band.
@@ -75,12 +82,12 @@ test("S16a content: neutral import, connectivity, idempotence", async () => {
 
     // Idempotence: importing the same files again inserts nothing.
     const bundle = await loadRulesBundle(config.config_dir, config.rules_file);
-    const again = await importWorldContent(app.db, config.realm, bundle);
+    const again = await importWorldContent(app.db, config.realm, bundle, contentDir);
     assert.equal(again.inserted.place + again.inserted.item + again.inserted.task + again.inserted.char + again.inserted.skill + again.inserted.exit, 0);
 
     // Orgs + org skills (minimal temp file, neutral.json untouched): a new org whose
     // hall it owns, and two org skills added to the seed's registry org (not rebuilt).
-    const scratch = join(resolve(dirname(fileURLToPath(import.meta.url)), "..", ".."), "_work", "临时", `s16a_orgs_${process.pid}`);
+    const scratch = join(REPO, "_work", "临时", `s16a_orgs_${process.pid}`);
     await mkdir(scratch, { recursive: true });
     try {
       const member = { rank: 0, key: "org_rank.member", can_promote: false, can_expel: false };
@@ -121,6 +128,10 @@ test("S16a content: neutral import, connectivity, idempotence", async () => {
       await rm(scratch, { recursive: true, force: true });
     }
   } finally {
-    await app.close();
+    try {
+      await app.close();
+    } finally {
+      await rm(contentDir, { recursive: true, force: true });
+    }
   }
 });

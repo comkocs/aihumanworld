@@ -1,0 +1,535 @@
+{
+  "schema": "aihw.content.v1",
+  "places": [
+    {
+      "local": "wuxia_hall_escort",
+      "region": "wuxia",
+      "kind": "hall",
+      "features": [
+        "trade"
+      ],
+      "tier": 1,
+      "danger": "safe",
+      "combat": "safe",
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:start_wuxia"
+        },
+        {
+          "dir": "east",
+          "to": "place:wuxia_road_post"
+        }
+      ],
+      "owner_org": "org:wuxia_escort"
+    },
+    {
+      "local": "wuxia_road_post",
+      "region": "wuxia",
+      "kind": "road",
+      "features": [],
+      "tier": 1,
+      "danger": "safe",
+      "combat": "safe",
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:wuxia_hall_escort"
+        },
+        {
+          "dir": "east",
+          "to": "place:wuxia_wild_ridge"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "wuxia_wild_ridge",
+      "region": "wuxia",
+      "kind": "wilderness",
+      "features": [
+        "resource"
+      ],
+      "tier": 1,
+      "danger": "low",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:wuxia_road_post"
+        },
+        {
+          "dir": "north",
+          "to": "place:wuxia_hall_martial"
+        },
+        {
+          "dir": "south",
+          "to": "place:wuxia_water_creek"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "wuxia_hall_martial",
+      "region": "wuxia",
+      "kind": "hall",
+      "features": [
+        "training"
+      ],
+      "tier": 1,
+      "danger": "safe",
+      "combat": "safe",
+      "exits": [
+        {
+          "dir": "south",
+          "to": "place:wuxia_wild_ridge"
+        },
+        {
+          "dir": "east",
+          "to": "place:wuxia_tutorial_lane"
+        }
+      ],
+      "owner_org": "org:wuxia_martial"
+    },
+    {
+      "local": "wuxia_tutorial_lane",
+      "region": "wuxia",
+      "kind": "road",
+      "features": [
+        "training",
+        "tutorial"
+      ],
+      "tier": 1,
+      "danger": "safe",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:wuxia_hall_martial"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "wuxia_water_creek",
+      "region": "wuxia",
+      "kind": "water",
+      "features": [
+        "resource"
+      ],
+      "tier": 1,
+      "danger": "low",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "north",
+          "to": "place:wuxia_wild_ridge"
+        },
+        {
+          "dir": "east",
+          "to": "place:wuxia_hall_herb"
+        },
+        {
+          "dir": "south",
+          "to": "place:wuxia_shrine_pine"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "wuxia_hall_herb",
+      "region": "wuxia",
+      "kind": "hall",
+      "features": [
+        "repair",
+        "resource"
+      ],
+      "tier": 1,
+      "danger": "safe",
+      "combat": "safe",
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:wuxia_water_creek"
+        }
+      ],
+      "owner_org": "org:wuxia_herb"
+    },
+    {
+      "local": "wuxia_shrine_pine",
+      "region": "wuxia",
+      "kind": "shrine",
+      "features": [],
+      "tier": 1,
+      "danger": "low",
+      "combat": "pve",
+      "exits": [
+        {
+          "dir": "north",
+          "to": "place:wuxia_water_creek"
+        },
+        {
+          "dir": "down",
+          "to": "place:wuxia_dungeon_cliff"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "wuxia_dungeon_cliff",
+      "region": "wuxia",
+      "kind": "dungeon",
+      "features": [],
+      "tier": 1,
+      "danger": "high",
+      "combat": "pk",
+      "exits": [
+        {
+          "dir": "up",
+          "to": "place:wuxia_shrine_pine"
+        },
+        {
+          "dir": "east",
+          "to": "place:wuxia_ruin_arena"
+        }
+      ],
+      "owner_org": null
+    },
+    {
+      "local": "wuxia_ruin_arena",
+      "region": "wuxia",
+      "kind": "ruin",
+      "features": [],
+      "tier": 1,
+      "danger": "high",
+      "combat": "pk",
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:wuxia_dungeon_cliff"
+        }
+      ],
+      "owner_org": null
+    }
+  ],
+  "place_links": [
+    {
+      "place": "place:start_wuxia",
+      "dir": "east",
+      "to": "place:wuxia_hall_escort"
+    },
+    {
+      "place": "place:start_wuxia",
+      "dir": "north",
+      "to": "place:wuxia_hall_martial"
+    }
+  ],
+  "items": [],
+  "tasks": [
+    {
+      "local": "wuxia_reach_lane",
+      "tpl": "reach",
+      "tier": 1,
+      "stage": 1,
+      "condition": {
+        "tpl": "reach",
+        "mode": "place",
+        "place": "place:wuxia_tutorial_lane"
+      },
+      "reward_spec": {
+        "coin": 70,
+        "xp": 210,
+        "potential": 21,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "wuxia_deliver_herb",
+      "tpl": "deliver",
+      "tier": 1,
+      "stage": 1,
+      "condition": {
+        "tpl": "deliver",
+        "item_def": "item:herb_t1",
+        "count": 2,
+        "to_place": "place:wuxia_hall_herb",
+        "to_char": null
+      },
+      "reward_spec": {
+        "coin": 100,
+        "xp": 300,
+        "potential": 30,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "wuxia_reach_post",
+      "tpl": "reach",
+      "tier": 1,
+      "stage": 1,
+      "condition": {
+        "tpl": "reach",
+        "mode": "place",
+        "place": "place:wuxia_road_post"
+      },
+      "reward_spec": {
+        "coin": 70,
+        "xp": 210,
+        "potential": 21,
+        "rep": 0,
+        "item_defs": []
+      },
+      "duration_ticks": 1440
+    }
+  ],
+  "chars": [
+    {
+      "local": "wuxia_master_t1",
+      "skin": "wuxia",
+      "origin_region": "wuxia",
+      "body": "humanoid",
+      "archetype": "master",
+      "tier": 1,
+      "stage": 1,
+      "loc": "place:wuxia_hall_martial",
+      "respawn_place": "place:wuxia_hall_martial"
+    },
+    {
+      "local": "wuxia_master_t2",
+      "skin": "wuxia",
+      "origin_region": "wuxia",
+      "body": "humanoid",
+      "archetype": "master",
+      "tier": 2,
+      "stage": 1,
+      "loc": "place:wuxia_hall_martial",
+      "respawn_place": "place:wuxia_hall_martial"
+    },
+    {
+      "local": "wuxia_master_t3",
+      "skin": "wuxia",
+      "origin_region": "wuxia",
+      "body": "humanoid",
+      "archetype": "master",
+      "tier": 3,
+      "stage": 1,
+      "loc": "place:start_wuxia",
+      "respawn_place": "place:start_wuxia"
+    },
+    {
+      "local": "wuxia_merchant",
+      "skin": "wuxia",
+      "origin_region": "wuxia",
+      "body": "humanoid",
+      "archetype": "merchant",
+      "tier": 1,
+      "stage": 1,
+      "loc": "place:wuxia_hall_escort",
+      "respawn_place": "place:wuxia_hall_escort"
+    },
+    {
+      "local": "wuxia_repairer",
+      "skin": "wuxia",
+      "origin_region": "wuxia",
+      "body": "humanoid",
+      "archetype": "repairer",
+      "tier": 1,
+      "stage": 1,
+      "loc": "place:wuxia_hall_herb",
+      "respawn_place": "place:wuxia_hall_herb"
+    },
+    {
+      "local": "wuxia_guard",
+      "skin": "wuxia",
+      "origin_region": "wuxia",
+      "body": "humanoid",
+      "archetype": "guard",
+      "tier": 2,
+      "stage": 1,
+      "loc": "place:start_wuxia",
+      "respawn_place": "place:start_wuxia"
+    },
+    {
+      "local": "wuxia_quest_giver",
+      "skin": "wuxia",
+      "origin_region": "wuxia",
+      "body": "humanoid",
+      "archetype": "quest_giver",
+      "tier": 1,
+      "stage": 1,
+      "loc": "place:start_wuxia",
+      "respawn_place": "place:start_wuxia"
+    },
+    {
+      "local": "wuxia_patroller",
+      "skin": "wuxia",
+      "origin_region": "wuxia",
+      "body": "humanoid",
+      "archetype": "patroller",
+      "tier": 1,
+      "stage": 1,
+      "loc": "place:wuxia_road_post",
+      "respawn_place": "place:wuxia_road_post",
+      "patrol_route": [
+        "place:wuxia_road_post",
+        "place:wuxia_wild_ridge",
+        "place:wuxia_water_creek",
+        "place:wuxia_wild_ridge"
+      ]
+    },
+    {
+      "local": "wuxia_monster",
+      "skin": "wuxia",
+      "origin_region": "wuxia",
+      "body": "beast",
+      "archetype": "monster",
+      "tier": 1,
+      "stage": 1,
+      "loc": "place:wuxia_wild_ridge",
+      "respawn_place": "place:wuxia_wild_ridge"
+    },
+    {
+      "local": "wuxia_tutorial_opponent",
+      "skin": "wuxia",
+      "origin_region": "wuxia",
+      "body": "construct",
+      "archetype": "tutorial_opponent",
+      "tier": 1,
+      "stage": 1,
+      "loc": "place:wuxia_tutorial_lane",
+      "respawn_place": "place:wuxia_tutorial_lane"
+    }
+  ],
+  "orgs": [
+    {
+      "local": "wuxia_escort",
+      "region": "wuxia",
+      "hall": "place:wuxia_hall_escort",
+      "ranks": [
+        {
+          "rank": 0,
+          "key": "org_rank.member",
+          "can_promote": false,
+          "can_expel": false
+        },
+        {
+          "rank": 1,
+          "key": "org_rank.wuxia_escort_chief",
+          "can_promote": true,
+          "can_expel": true
+        }
+      ]
+    },
+    {
+      "local": "wuxia_martial",
+      "region": "wuxia",
+      "hall": "place:wuxia_hall_martial",
+      "ranks": [
+        {
+          "rank": 0,
+          "key": "org_rank.member",
+          "can_promote": false,
+          "can_expel": false
+        },
+        {
+          "rank": 1,
+          "key": "org_rank.wuxia_martial_instructor",
+          "can_promote": true,
+          "can_expel": true
+        }
+      ]
+    },
+    {
+      "local": "wuxia_herb",
+      "region": "wuxia",
+      "hall": "place:wuxia_hall_herb",
+      "ranks": [
+        {
+          "rank": 0,
+          "key": "org_rank.member",
+          "can_promote": false,
+          "can_expel": false
+        },
+        {
+          "rank": 1,
+          "key": "org_rank.wuxia_herb_keeper",
+          "can_promote": true,
+          "can_expel": true
+        }
+      ]
+    },
+    {
+      "local": "registry_wuxia",
+      "region": "wuxia",
+      "hall": "place:start_wuxia",
+      "ranks": [
+        {
+          "rank": 0,
+          "key": "org_rank.member",
+          "can_promote": false,
+          "can_expel": false
+        }
+      ]
+    }
+  ],
+  "org_skills": [
+    {
+      "org": "org:wuxia_escort",
+      "local": "wuxia_escort_saber",
+      "base": "strike",
+      "tier": 1
+    },
+    {
+      "org": "org:wuxia_escort",
+      "local": "wuxia_escort_step",
+      "base": "move",
+      "tier": 1
+    },
+    {
+      "org": "org:wuxia_martial",
+      "local": "wuxia_martial_palm",
+      "base": "strike",
+      "tier": 1
+    },
+    {
+      "org": "org:wuxia_martial",
+      "local": "wuxia_martial_stance",
+      "base": "guard",
+      "tier": 1
+    },
+    {
+      "org": "org:wuxia_martial",
+      "local": "wuxia_martial_breath",
+      "base": "inner",
+      "tier": 1
+    },
+    {
+      "org": "org:wuxia_herb",
+      "local": "wuxia_herb_breath",
+      "base": "inner",
+      "tier": 1
+    },
+    {
+      "org": "org:wuxia_herb",
+      "local": "wuxia_herb_ward",
+      "base": "guard",
+      "tier": 1
+    },
+    {
+      "org": "org:registry_wuxia",
+      "local": "wuxia_registry_breath",
+      "base": "inner",
+      "tier": 1
+    },
+    {
+      "org": "org:registry_wuxia",
+      "local": "wuxia_registry_step",
+      "base": "move",
+      "tier": 1
+    }
+  ]
+}

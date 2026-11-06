@@ -49,8 +49,8 @@ export const def = defineVerb<BreakthroughArgs, BreakthroughResult>({
       const definition = await itemDefinition(ctx.q, row.def_id);
       if (definition.kind !== "potion" || definition.effect.kind !== "breakthrough" || definition.tier !== me.tier) return reject("ITEM_STATE", { reason: "type" });
       const numbers = ctx.balance.numbers.consumables.table.find((r) => r.tier === definition.tier && r.grade === definition.grade);
-      if (numbers === undefined || definition.effect.bonus !== numbers.bt_bonus_bp) return reject("ITEM_STATE", { reason: "type" });
-      bonus = numbers.bt_bonus_bp;
+      if (numbers === undefined || definition.effect.bonus > numbers.bt_bonus_bp) return reject("ITEM_STATE", { reason: "type" });
+      bonus = definition.effect.bonus;
       item = row;
     }
     const seed = await resolutionSeed(ctx.q, ctx.world.rules_revision, ctx.world.realm, ctx.tick, me.id, null);

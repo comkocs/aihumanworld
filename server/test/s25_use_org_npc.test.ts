@@ -190,6 +190,8 @@ test("S25 use, organization and NPC acceptance chains", async (t) => {
       await phase(orgGoalPhase, "2");
       assert.deepEqual(await mustGetRow(app.db, "org", org.id), settled);
       assert.equal((await selectRows(app.db, "reputation", "char_id = $1 AND org_id = $2", [A.id, org.id]))[0]?.value, -5);
+      await phase(orgGoalPhase, "3");
+      assert.deepEqual(await mustGetRow(app.db, "org", org.id), settled);
       await phase(orgGoalPhase, "10080");
       const next = (await mustGetRow(app.db, "org", org.id)).goal;
       assert.equal(next.week, 1);
@@ -208,6 +210,12 @@ test("S25 use, organization and NPC acceptance chains", async (t) => {
       assert.equal((await mustGetRow(app.db, "char", patrol.id)).loc, "r1:place:market_neutral");
       await phase(npcPhase, "5");
       assert.equal((await mustGetRow(app.db, "char", patrol.id)).patrol_index, 1);
+      const travel = await selectRows(app.db, "deed", "kind = 'travel' AND targets @> $1::jsonb", [JSON.stringify([patrol.id])]);
+      assert.ok(travel.length > 0);
+      assert.ok(travel.every((d) => d.result.changes.every((c) => !Object.hasOwn(c.after, "patrol_index"))));
+      const idle = await mustGetRow(app.db, "char", repairer.id);
+      await phase(npcPhase, "6");
+      assert.deepEqual(await mustGetRow(app.db, "char", repairer.id), idle);
       await phase(npcPhase, "29");
       assert.equal((await mustGetRow(app.db, "char", monster.id)).life, "dead");
       await phase(npcPhase, "30");

@@ -12,6 +12,7 @@ import { getRow, mustGetRow, updateRow } from "../facts/store.ts";
 import type { Tick, WorldRow } from "../facts/types.ts";
 import { Writer } from "../facts/writer.ts";
 import type { Balance } from "../growth/balance.ts";
+import type { GrowthClockCtx } from "../growth/clock.ts";
 import { errText, log } from "../log.ts";
 import { nextTick } from "./budget.ts";
 import { PHASES } from "./phases.ts";
@@ -57,9 +58,9 @@ export class Clock {
     this.now = opts.now ?? (() => new Date());
   }
 
-  private isDue(w: WorldRow): boolean {
+  private isDue(w: WorldRow, at = this.now().getTime()): boolean {
     const due = tickDueAt(w);
-    return due !== null && this.now().getTime() >= due;
+    return due !== null && at >= due;
   }
 
   /** Advance every due tick; concurrent callers share one run. Returns ticks advanced. */
@@ -73,25 +74,32 @@ export class Clock {
 
   private async run(): Promise<number> {
     const id = worldId(this.opts.realm);
+    // One offline interval keeps its training allowance across transaction batches.
+    const throughTime = this.now().getTime();
+    let trainPeriods = new Map<string, number>();
     let total = 0;
     for (;;) {
       const peek = await getRow(this.db, "world", id);
-      if (peek === null || !this.isDue(peek)) return total;
-      const n = await this.db.tx(async (q) => {
+      if (peek === null || !this.isDue(peek, throughTime)) return total;
+      const result = await this.db.tx(async (q) => {
         let w = await mustGetRow(q, "world", id, { lock: true });
+        const periods = new Map(trainPeriods);
+        const due = Math.max(0, Math.floor((throughTime - Date.parse(w.tick_started_at)) / ((w.rules.tick_seconds as number) * 1000)));
+        const throughTick = (BigInt(w.tick) + BigInt(due)).toString();
         let k = 0;
-        while (k < this.opts.maxCatchupPerTx && this.isDue(w)) {
-          w = await this.step(q, w);
+        while (k < this.opts.maxCatchupPerTx && this.isDue(w, throughTime)) {
+          w = await this.step(q, w, periods, throughTick);
           k += 1;
         }
-        return k;
+        return { count: k, periods };
       });
-      total += n;
-      if (n === 0) return total;
+      trainPeriods = result.periods;
+      total += result.count;
+      if (result.count === 0) return total;
     }
   }
 
-  private async step(q: Queryable, world: WorldRow): Promise<WorldRow> {
+  private async step(q: Queryable, world: WorldRow, trainPeriods: Map<string, number>, throughTick: WorldRow["tick"]): Promise<WorldRow> {
     const from = world.tick;
     const to = nextTick(from);
     // The new tick's calendar first, so every phase sees this tick's day / week.
@@ -100,8 +108,9 @@ export class Clock {
     const view: WorldRow = { ...world, day_index: dayIndex, week_index: weekIndex };
     const w = new Writer(q, world.realm, to, world.rules_revision, true);
     const now = this.now();
+    const ctx: GrowthClockCtx = { q, w, world: view, rules: world.rules, balance: this.opts.balance(), from_tick: from, to_tick: to, now, train_periods: trainPeriods, train_through_tick: throughTick };
     for (const phase of PHASES) {
-      await phase.run({ q, w, world: view, rules: world.rules, balance: this.opts.balance(), from_tick: from, to_tick: to, now });
+      await phase.run(ctx);
     }
     await updateRow(
       q,

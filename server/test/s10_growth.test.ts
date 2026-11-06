@@ -4,16 +4,18 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
 import { startApp } from "../src/app.ts";
+import { Clock } from "../src/clock/scheduler.ts";
 import { loadConfig } from "../src/config.ts";
 import { worldId } from "../src/facts/ids.ts";
 import { mustGetRow, selectRows } from "../src/facts/store.ts";
-import type { Change, CharRow, ItemDefinitionRow, ItemInstanceRow, WorldRow } from "../src/facts/types.ts";
+import type { Change, CharRow, ItemDefinitionRow, ItemInstanceRow, TaskInstanceRow, WorldRow } from "../src/facts/types.ts";
 import { Writer } from "../src/facts/writer.ts";
 import { deriveStats, equipmentCapacity, gridNumbers } from "../src/growth/balance.ts";
 import { wantedPhase, yieldPhase } from "../src/growth/clock.ts";
 import { combatant, learnedSkill, neutralFacts, skillDefinition } from "../src/growth/facts.ts";
 import { resolveBreakthrough, resolveCombat, u32 } from "../src/growth/settlement.ts";
 import { setQuiet } from "../src/log.ts";
+import { slayEvidence } from "../src/tasks/evidence.ts";
 import type { Queryable } from "../src/db/db.ts";
 
 type Json = any;
@@ -113,6 +115,10 @@ test("S10: neutral combat → training → teaching → breakthrough paths → d
     assert.equal((await learnedSkill(app.db, actor, innerDef.id))?.level, 1);
     await phase("10");
     assert.equal((await char(actor)).xp, 2); // cannot collect twice
+    await fixture(async (_q, w) => { await w.update("char", target, { vigor: 2000 }); });
+    const idle = await char(target);
+    await phase("11");
+    assert.deepEqual(await char(target), idle);
     await phase("20");
     assert.equal((await learnedSkill(app.db, actor, innerDef.id))?.level, 1);
     assert.equal((await char(actor)).potential, 1); // cap never spends again
@@ -122,6 +128,19 @@ test("S10: neutral combat → training → teaching → breakthrough paths → d
     assert.equal((await char(actor)).last_yield_tick, "2020");
     assert.equal((await call("train", { mode: "stop" }, code)).ok, true);
     assertError(await call("train", { mode: "stop" }, code), "CONDITION_UNMET");
+    const beforeCatchup = await char(actor);
+    const catchupWorld = await world();
+    const missedTicks = 145 * balance.numbers.clock.train_period_ticks;
+    const caughtAt = new Date(Date.parse(catchupWorld.tick_started_at) + missedTicks * (catchupWorld.rules.tick_seconds as number) * 1000);
+    await fixture(async (_q, w, row) => {
+      await w.update("char", actor, { train_skill: "inner", last_yield_tick: row.tick });
+    });
+    const clock = new Clock(app.db, { realm: config.realm, maxCatchupPerTx: 64, balance: () => balance, now: () => caughtAt });
+    assert.equal(await clock.advanceDue(), missedTicks);
+    assert.equal((await char(actor)).xp - beforeCatchup.xp, 144 * balance.numbers.tiers[0]!.train_xp);
+    assert.equal((await char(actor)).last_yield_tick, (await world()).tick);
+    assert.equal(await clock.advanceDue(), 0);
+    await fixture(async (_q, w) => { await w.update("char", actor, { train_skill: null }); });
 
     assertError(await call("learn", { master: teacher, skill: "inner", payment: "coin" }, code), "TEACHER_REQUIRED");
     await fixture(async (_q, w) => {
@@ -134,6 +153,16 @@ test("S10: neutral combat → training → teaching → breakthrough paths → d
     assert.deepEqual([learned.result.skill.level, learned.result.skill.cap, learned.result.paid.coin], [3, 6, 600]);
     assert.equal((await char(actor)).coin, 0);
     assert.equal((await char(teacher)).coin, 600);
+    assert.ok(learned.result.changes.every((c: Change) => c.table !== "char" || c.id === actor));
+    const sharedLearn = (await selectRows(app.db, "deed", "verb = 'learn' AND actor = $1", [actor]))[0]!;
+    assert.ok(sharedLearn.result.changes.every((c) => c.table !== "char" || !Object.hasOwn(c.after, "coin")));
+    const balances = await selectRows(app.db, "event", "type = 'fact_changed' AND deed_id = $1", [sharedLearn.id]);
+    assert.equal(balances.length, 2);
+    for (const event of balances) {
+      assert.equal(event.scope, "self");
+      assert.equal(event.recipients.length, 1);
+      if (event.type === "fact_changed") assert.ok(event.data.changes.every((c) => c.id === event.recipients[0]));
+    }
     await fixture(async (_q, w, row) => {
       await w.insert("bond", { id: await w.newId("bond"), created_tick: row.tick, updated_tick: row.tick, kind: "mentor", a: teacher, b: actor, state: "active", weight: 0, rank: null, since_tick: row.tick, ended_tick: null });
     });
@@ -153,7 +182,7 @@ test("S10: neutral combat → training → teaching → breakthrough paths → d
     const bt = async (mode: "tier" | "cycle", success: boolean, item: string | null = null): Promise<Json> => {
       const tier = mode === "cycle" ? 9 : 1;
       const row = await world();
-      const bonus = item === null ? 0 : 1000;
+      const bonus = item === null ? 0 : 500;
       let tick = BigInt(row.tick) + 1n;
       let fixedSeed = "";
       for (let tries = 0; tries < 10000; tries += 1, tick += 1n) {
@@ -178,7 +207,7 @@ test("S10: neutral combat → training → teaching → breakthrough paths → d
     assert.equal(tierSuccess.result.stage, 1);
     let potion = "";
     await fixture(async (_q, w, row) => {
-      const def: ItemDefinitionRow = { id: await w.newId("item"), created_tick: row.tick, updated_tick: row.tick, record: "definition", content_key: "content.r1.item.s10_potion", kind: "potion", tier: 1, grade: 1, element: "none", slots: 0, cap: 0, dura_max: 0, modifiers: { vigor: 0, power: 0, guard: 0, speed: 0 }, effect: { kind: "breakthrough", bonus: 1000 }, by: null };
+      const def: ItemDefinitionRow = { id: await w.newId("item"), created_tick: row.tick, updated_tick: row.tick, record: "definition", content_key: "content.r1.item.s10_potion", kind: "potion", tier: 1, grade: 1, element: "none", slots: 0, cap: 0, dura_max: 0, modifiers: { vigor: 0, power: 0, guard: 0, speed: 0 }, effect: { kind: "breakthrough", bonus: 500 }, by: null };
       await w.insert("item", def);
       potion = await w.newId("item");
       await w.insert("item", { id: potion, created_tick: row.tick, updated_tick: row.tick, record: "instance", def_id: def.id, holder: { kind: "char", id: actor }, state: "available", equipped: false, dura: 0, sockets: [] });
@@ -229,6 +258,9 @@ test("S10: neutral combat → training → teaching → breakthrough paths → d
     assert.equal(pk.ok, true);
     const dead = await char(target);
     assert.deepEqual([dead.life, dead.tier, dead.xp], ["dead", 1, 639]);
+    const slay = { accepted_seq: "0", condition: { tpl: "slay", target, archetype: null, tier: 1, count: 1 } } as TaskInstanceRow;
+    assert.equal((await slayEvidence(app.db, await char(actor), slay)).length, 1);
+    assert.deepEqual(await slayEvidence(app.db, await char(actor), { ...slay, condition: { tpl: "slay", target, archetype: null, tier: 2, count: 1 } }), []);
     assert.equal((await selectRows(app.db, "item", "record = 'instance' AND holder ->> 'kind' = 'place' AND holder ->> 'id' = $1", [loc])).length, 1);
     assert.equal((await selectRows(app.db, "item", "record = 'instance' AND holder ->> 'kind' = 'char' AND holder ->> 'id' = $1", [target])).length, 1);
     await phase(dead.revive_tick as string);
@@ -252,6 +284,15 @@ test("S10: neutral combat → training → teaching → breakthrough paths → d
     }
     assert.ok((await neutralFacts(app.db, await char(actor))).equipment.every((e) => (e.instance as ItemInstanceRow).dura <= e.definition.dura_max));
     assert.equal((await char(actor) as CharRow).state, "active");
+    await fixture(async (_q, w) => { await w.update("char", actor, { loc: "r1:place:market_neutral" }); });
+    const beforeLook = await char(actor);
+    assert.equal((await call("look", {}, code)).ok, true);
+    const afterLook = await char(actor);
+    assert.ok(afterLook.xp > beforeLook.xp);
+    assert.equal((await call("look", {}, code)).ok, true);
+    assert.equal((await char(actor)).xp, afterLook.xp);
+    const rewards = await selectRows(app.db, "event", "type = 'reward_granted' AND recipients @> $1::jsonb", [JSON.stringify([actor])]);
+    assert.equal(rewards.filter((e) => e.type === "reward_granted" && e.data.reward.coin === 0 && e.data.reward.xp === afterLook.xp - beforeLook.xp).length, 1);
   } finally {
     await app.close();
   }

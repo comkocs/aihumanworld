@@ -7,6 +7,7 @@ import { learnedSkill, skillDefinition } from "../growth/facts.ts";
 import { NO_DETAILS, reject } from "../protocol/errors.ts";
 import { charId, skillKey } from "../protocol/shapes.ts";
 import { obj, oneOf, type Out } from "../protocol/validate.ts";
+import { publicChanges } from "../tasks/common.ts";
 import { defineVerb } from "./types.ts";
 
 const args = obj({ master: charId, skill: skillKey, payment: oneOf(["bond", "coin"] as const, "payment") });
@@ -76,13 +77,13 @@ export const def = defineVerb<LearnArgs, LearnResult>({
     else push(await ctx.w.update("skill", old.id, { level: nextLevel, cap }));
     const deed = await ctx.w.deed({
       actor: me.id, verb: "learn", kind: "learn", targets: [master.id, skill.id], place_id: me.loc,
-      result: { outcome: "success", changes, roll: null, proposal: null }, visibility: "self", participants: [me.id, master.id],
+      result: { outcome: "success", changes: publicChanges(changes), roll: null, proposal: null }, visibility: "self", participants: [me.id, master.id],
     });
     await ctx.w.emit({ scope: "self", recipients: [me.id], type: "skill_changed", deed_id: deed.id, data: { char_id: me.id, skill: definition.key, level: nextLevel, cap } });
     for (const who of [me.id, master.id]) {
       const visible = changes.filter((c) => c.table === "char" && c.id === who);
       if (visible.length > 0) await ctx.w.emit({ scope: "self", recipients: [who], type: "fact_changed", deed_id: deed.id, data: { changes: visible } });
     }
-    return { skill, paid: { coin, potential: 0, items: [] }, changes };
+    return { skill, paid: { coin, potential: 0, items: [] }, changes: changes.filter((c) => c.table !== "char" || c.id === me.id) };
   },
 });

@@ -100,13 +100,8 @@ export async function slayEvidence(q: Queryable, char: CharRow, t: TaskInstanceR
     if (victim === null) continue;
     const died = d.result.changes.some((ch) => ch.table === "char" && ch.id === victim && ch.after.life === "dead");
     if (!died) continue;
-    let ok: boolean;
-    if (c.target !== null) {
-      ok = victim === c.target;
-    } else {
-      const v = snap ?? (await getRow(q, "char", victim));
-      ok = v !== null && v.archetype === c.archetype && v.tier === c.tier;
-    }
+    const ok = snap !== null && snap.tier === c.tier &&
+      (c.target !== null ? victim === c.target : snap.archetype === c.archetype);
     if (ok) out.push(d.id);
     if (out.length >= c.count) break;
   }

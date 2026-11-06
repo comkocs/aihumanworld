@@ -1,0 +1,375 @@
+{
+  "schema": "aihw.content.v1",
+  "places": [
+    {
+      "local": "xiuxian_enroll_hall",
+      "region": "xiuxian",
+      "kind": "hall",
+      "features": ["training"],
+      "tier": 1,
+      "danger": "safe",
+      "combat": "safe",
+      "owner_org": "org:registry_xiuxian",
+      "exits": [
+        { "dir": "south", "to": "place:start_xiuxian" },
+        { "dir": "north", "to": "place:xiuxian_trial_lane" }
+      ]
+    },
+    {
+      "local": "xiuxian_trial_lane",
+      "region": "xiuxian",
+      "kind": "road",
+      "features": ["tutorial"],
+      "tier": 1,
+      "danger": "safe",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        { "dir": "south", "to": "place:xiuxian_enroll_hall" },
+        { "dir": "north", "to": "place:xiuxian_peach_slope" }
+      ]
+    },
+    {
+      "local": "xiuxian_peach_slope",
+      "region": "xiuxian",
+      "kind": "wilderness",
+      "features": ["resource"],
+      "tier": 1,
+      "danger": "low",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        { "dir": "south", "to": "place:xiuxian_trial_lane" },
+        { "dir": "north", "to": "place:xiuxian_spirit_field" },
+        { "dir": "west", "to": "place:xiuxian_sword_gate" },
+        { "dir": "east", "to": "place:xiuxian_elixir_court" }
+      ]
+    },
+    {
+      "local": "xiuxian_spirit_field",
+      "region": "xiuxian",
+      "kind": "wilderness",
+      "features": ["resource"],
+      "tier": 1,
+      "danger": "low",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        { "dir": "south", "to": "place:xiuxian_peach_slope" },
+        { "dir": "east", "to": "place:xiuxian_dew_pool" }
+      ]
+    },
+    {
+      "local": "xiuxian_dew_pool",
+      "region": "xiuxian",
+      "kind": "water",
+      "features": ["resource"],
+      "tier": 1,
+      "danger": "low",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        { "dir": "west", "to": "place:xiuxian_spirit_field" }
+      ]
+    },
+    {
+      "local": "xiuxian_sword_gate",
+      "region": "xiuxian",
+      "kind": "hall",
+      "features": ["training"],
+      "tier": 1,
+      "danger": "safe",
+      "combat": "safe",
+      "owner_org": "org:xiuxian_taihua",
+      "exits": [
+        { "dir": "east", "to": "place:xiuxian_peach_slope" },
+        { "dir": "west", "to": "place:xiuxian_sword_arena" },
+        { "dir": "north", "to": "place:xiuxian_broken_cliff" }
+      ]
+    },
+    {
+      "local": "xiuxian_sword_arena",
+      "region": "xiuxian",
+      "kind": "arena",
+      "features": [],
+      "tier": 1,
+      "danger": "medium",
+      "combat": "pk",
+      "owner_org": null,
+      "exits": [
+        { "dir": "east", "to": "place:xiuxian_sword_gate" }
+      ]
+    },
+    {
+      "local": "xiuxian_elixir_court",
+      "region": "xiuxian",
+      "kind": "hall",
+      "features": ["trade"],
+      "tier": 1,
+      "danger": "safe",
+      "combat": "safe",
+      "owner_org": "org:xiuxian_jiuhuan",
+      "exits": [
+        { "dir": "west", "to": "place:xiuxian_peach_slope" },
+        { "dir": "east", "to": "place:xiuxian_sigil_tower" },
+        { "dir": "north", "to": "place:xiuxian_herb_ravine" }
+      ]
+    },
+    {
+      "local": "xiuxian_sigil_tower",
+      "region": "xiuxian",
+      "kind": "hall",
+      "features": ["repair", "trade"],
+      "tier": 1,
+      "danger": "safe",
+      "combat": "safe",
+      "owner_org": "org:xiuxian_yunzhuan",
+      "exits": [
+        { "dir": "west", "to": "place:xiuxian_elixir_court" }
+      ]
+    },
+    {
+      "local": "xiuxian_herb_ravine",
+      "region": "xiuxian",
+      "kind": "wilderness",
+      "features": ["resource"],
+      "tier": 1,
+      "danger": "medium",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        { "dir": "south", "to": "place:xiuxian_elixir_court" },
+        { "dir": "down", "to": "place:xiuxian_beast_cave" }
+      ]
+    },
+    {
+      "local": "xiuxian_beast_cave",
+      "region": "xiuxian",
+      "kind": "dungeon",
+      "features": ["resource"],
+      "tier": 1,
+      "danger": "high",
+      "combat": "pk",
+      "owner_org": null,
+      "exits": [
+        { "dir": "up", "to": "place:xiuxian_herb_ravine" }
+      ]
+    },
+    {
+      "local": "xiuxian_broken_cliff",
+      "region": "xiuxian",
+      "kind": "wilderness",
+      "features": ["resource"],
+      "tier": 1,
+      "danger": "medium",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        { "dir": "south", "to": "place:xiuxian_sword_gate" }
+      ]
+    }
+  ],
+  "place_links": [
+    { "place": "place:start_xiuxian", "dir": "north", "to": "place:xiuxian_enroll_hall" }
+  ],
+  "chars": [
+    {
+      "local": "xiuxian_master",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "humanoid",
+      "archetype": "master",
+      "tier": 3,
+      "stage": 1,
+      "loc": "place:xiuxian_enroll_hall",
+      "respawn_place": "place:xiuxian_enroll_hall",
+      "patrol_route": []
+    },
+    {
+      "local": "xiuxian_merchant",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "humanoid",
+      "archetype": "merchant",
+      "tier": 2,
+      "stage": 1,
+      "loc": "place:start_xiuxian",
+      "respawn_place": "place:start_xiuxian",
+      "patrol_route": []
+    },
+    {
+      "local": "xiuxian_repairer",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "humanoid",
+      "archetype": "repairer",
+      "tier": 2,
+      "stage": 1,
+      "loc": "place:xiuxian_sigil_tower",
+      "respawn_place": "place:xiuxian_sigil_tower",
+      "patrol_route": []
+    },
+    {
+      "local": "xiuxian_guard",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "humanoid",
+      "archetype": "guard",
+      "tier": 2,
+      "stage": 1,
+      "loc": "place:xiuxian_sword_gate",
+      "respawn_place": "place:xiuxian_sword_gate",
+      "patrol_route": []
+    },
+    {
+      "local": "xiuxian_quest_giver",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "humanoid",
+      "archetype": "quest_giver",
+      "tier": 2,
+      "stage": 1,
+      "loc": "place:xiuxian_elixir_court",
+      "respawn_place": "place:xiuxian_elixir_court",
+      "patrol_route": []
+    },
+    {
+      "local": "xiuxian_patroller",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "humanoid",
+      "archetype": "patroller",
+      "tier": 2,
+      "stage": 1,
+      "loc": "place:start_xiuxian",
+      "respawn_place": "place:start_xiuxian",
+      "patrol_route": ["place:start_xiuxian", "place:xiuxian_enroll_hall", "place:xiuxian_trial_lane"]
+    },
+    {
+      "local": "xiuxian_monster",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "beast",
+      "archetype": "monster",
+      "tier": 1,
+      "stage": 1,
+      "loc": "place:xiuxian_herb_ravine",
+      "respawn_place": "place:xiuxian_herb_ravine",
+      "patrol_route": []
+    },
+    {
+      "local": "xiuxian_tutorial",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "construct",
+      "archetype": "tutorial_opponent",
+      "tier": 1,
+      "stage": 1,
+      "loc": "place:xiuxian_trial_lane",
+      "respawn_place": "place:xiuxian_trial_lane",
+      "patrol_route": []
+    },
+    {
+      "local": "xiuxian_master_t1",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "humanoid",
+      "archetype": "master",
+      "tier": 1,
+      "stage": 4,
+      "loc": "place:start_xiuxian",
+      "respawn_place": "place:start_xiuxian",
+      "patrol_route": []
+    },
+    {
+      "local": "xiuxian_master_t2",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "humanoid",
+      "archetype": "master",
+      "tier": 2,
+      "stage": 1,
+      "loc": "place:xiuxian_sword_gate",
+      "respawn_place": "place:xiuxian_sword_gate",
+      "patrol_route": []
+    }
+  ],
+  "orgs": [
+    {
+      "local": "registry_xiuxian",
+      "region": "xiuxian",
+      "hall": "place:start_xiuxian",
+      "ranks": [{ "rank": 0, "key": "org_rank.member", "can_promote": false, "can_expel": false }]
+    },
+    {
+      "local": "xiuxian_taihua",
+      "region": "xiuxian",
+      "hall": "place:xiuxian_sword_gate",
+      "ranks": [
+        { "rank": 0, "key": "org_rank.member", "can_promote": false, "can_expel": false },
+        { "rank": 1, "key": "org_rank.xiuxian_sword_elder", "can_promote": true, "can_expel": true }
+      ]
+    },
+    {
+      "local": "xiuxian_jiuhuan",
+      "region": "xiuxian",
+      "hall": "place:xiuxian_elixir_court",
+      "ranks": [
+        { "rank": 0, "key": "org_rank.member", "can_promote": false, "can_expel": false },
+        { "rank": 1, "key": "org_rank.xiuxian_elixir_elder", "can_promote": true, "can_expel": true }
+      ]
+    },
+    {
+      "local": "xiuxian_yunzhuan",
+      "region": "xiuxian",
+      "hall": "place:xiuxian_sigil_tower",
+      "ranks": [
+        { "rank": 0, "key": "org_rank.member", "can_promote": false, "can_expel": false },
+        { "rank": 1, "key": "org_rank.xiuxian_sigil_elder", "can_promote": true, "can_expel": true }
+      ]
+    }
+  ],
+  "org_skills": [
+    { "org": "org:registry_xiuxian", "local": "roll_breath", "base": "inner", "tier": 1 },
+    { "org": "org:registry_xiuxian", "local": "roll_step", "base": "move", "tier": 1 },
+    { "org": "org:registry_xiuxian", "local": "roll_palm", "base": "strike", "tier": 1 },
+    { "org": "org:xiuxian_taihua", "local": "sword_draw", "base": "strike", "tier": 1 },
+    { "org": "org:xiuxian_taihua", "local": "sword_guard", "base": "guard", "tier": 1 },
+    { "org": "org:xiuxian_taihua", "local": "sword_step", "base": "move", "tier": 1 },
+    { "org": "org:xiuxian_jiuhuan", "local": "cauldron_fire", "base": "inner", "tier": 1 },
+    { "org": "org:xiuxian_jiuhuan", "local": "pill_guard", "base": "guard", "tier": 1 },
+    { "org": "org:xiuxian_jiuhuan", "local": "herb_stride", "base": "move", "tier": 1 },
+    { "org": "org:xiuxian_yunzhuan", "local": "sigil_ward", "base": "guard", "tier": 1 },
+    { "org": "org:xiuxian_yunzhuan", "local": "sigil_bolt", "base": "strike", "tier": 1 },
+    { "org": "org:xiuxian_yunzhuan", "local": "sigil_breath", "base": "inner", "tier": 1 }
+  ],
+  "tasks": [
+    {
+      "local": "xiuxian_reach_trial",
+      "tpl": "reach",
+      "tier": 1,
+      "stage": 1,
+      "condition": { "tpl": "reach", "mode": "place", "place": "place:xiuxian_trial_lane" },
+      "reward_spec": { "coin": 70, "xp": 210, "potential": 21, "rep": 0, "item_defs": [] },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "xiuxian_reach_field",
+      "tpl": "reach",
+      "tier": 1,
+      "stage": 1,
+      "condition": { "tpl": "reach", "mode": "place", "place": "place:xiuxian_spirit_field" },
+      "reward_spec": { "coin": 70, "xp": 210, "potential": 21, "rep": 0, "item_defs": [] },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "xiuxian_deliver_herb",
+      "tpl": "deliver",
+      "tier": 1,
+      "stage": 1,
+      "condition": { "tpl": "deliver", "item_def": "item:herb_t1", "count": 2, "to_place": "place:xiuxian_elixir_court", "to_char": "char:xiuxian_quest_giver" },
+      "reward_spec": { "coin": 100, "xp": 300, "potential": 30, "rep": 0, "item_defs": [] },
+      "duration_ticks": 1440
+    }
+  ]
+}
