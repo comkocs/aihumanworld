@@ -1085,207 +1085,207 @@
     },
     {
       "key": "content.r1.place.market_neutral",
-      "name": "Neutral Market",
+      "name": "Four-Roads Market",
       "flavor": null
     },
     {
       "key": "content.r1.place.gate_confluence",
-      "name": "Confluence Gate",
+      "name": "Gate of Four Roads",
       "flavor": null
     },
     {
       "key": "content.r1.place.camp_neutral",
-      "name": "Neutral Camp",
+      "name": "Rest Horse Post",
       "flavor": null
     },
     {
       "key": "content.r1.place.market_ring",
-      "name": "Market Ring",
+      "name": "Outer Market Loop",
       "flavor": null
     },
     {
       "key": "content.r1.place.arena_neutral",
-      "name": "Neutral Dueling Ground",
+      "name": "Still-Blade Ring",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild_t1",
-      "name": "Wilds·Tier 1",
+      "name": "Shallow Grass Mead",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild2_t1",
-      "name": "Outer Wilds·Tier 1",
+      "name": "East Grass Slope",
       "flavor": null
     },
     {
       "key": "content.r1.place.dungeon_t1",
-      "name": "Secluded Grounds·Tier 1",
+      "name": "Earthen Kiln Cave",
       "flavor": null
     },
     {
       "key": "content.r1.place.inner_t1",
-      "name": "Inner Grounds·Tier 1",
+      "name": "Inner Kiln Room",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild_t2",
-      "name": "Wilds·Tier 2",
+      "name": "Reed Marsh",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild2_t2",
-      "name": "Outer Wilds·Tier 2",
+      "name": "Outer Reed Strand",
       "flavor": null
     },
     {
       "key": "content.r1.place.dungeon_t2",
-      "name": "Secluded Grounds·Tier 2",
+      "name": "Reed-Root Cave",
       "flavor": null
     },
     {
       "key": "content.r1.place.inner_t2",
-      "name": "Inner Grounds·Tier 2",
+      "name": "Inner Reed Room",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild_t3",
-      "name": "Wilds·Tier 3",
+      "name": "Rubble Ridge",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild2_t3",
-      "name": "Outer Wilds·Tier 3",
+      "name": "East Rubble Crest",
       "flavor": null
     },
     {
       "key": "content.r1.place.dungeon_t3",
-      "name": "Secluded Grounds·Tier 3",
+      "name": "Stone Grotto",
       "flavor": null
     },
     {
       "key": "content.r1.place.inner_t3",
-      "name": "Inner Grounds·Tier 3",
+      "name": "Inner Stone Room",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild_t4",
-      "name": "Wilds·Tier 4",
+      "name": "Black Pine Wood",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild2_t4",
-      "name": "Outer Wilds·Tier 4",
+      "name": "Pine Wood Verge",
       "flavor": null
     },
     {
       "key": "content.r1.place.dungeon_t4",
-      "name": "Secluded Grounds·Tier 4",
+      "name": "Pine-Root Cave",
       "flavor": null
     },
     {
       "key": "content.r1.place.inner_t4",
-      "name": "Inner Grounds·Tier 4",
+      "name": "Inner Pine Room",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild_t5",
-      "name": "Wilds·Tier 5",
+      "name": "Broken Cliff Flat",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild2_t5",
-      "name": "Outer Wilds·Tier 5",
+      "name": "Outer Cliff Shelf",
       "flavor": null
     },
     {
       "key": "content.r1.place.dungeon_t5",
-      "name": "Secluded Grounds·Tier 5",
+      "name": "Cliff-Face Cave",
       "flavor": null
     },
     {
       "key": "content.r1.place.inner_t5",
-      "name": "Inner Grounds·Tier 5",
+      "name": "Inner Cliff Room",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild_t6",
-      "name": "Wilds·Tier 6",
+      "name": "Miasma Vale",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild2_t6",
-      "name": "Outer Wilds·Tier 6",
+      "name": "Outer Miasma Slope",
       "flavor": null
     },
     {
       "key": "content.r1.place.dungeon_t6",
-      "name": "Secluded Grounds·Tier 6",
+      "name": "Miasma Cave",
       "flavor": null
     },
     {
       "key": "content.r1.place.inner_t6",
-      "name": "Inner Grounds·Tier 6",
+      "name": "Inner Miasma Room",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild_t7",
-      "name": "Wilds·Tier 7",
+      "name": "Bone-Dry Strand",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild2_t7",
-      "name": "Outer Wilds·Tier 7",
+      "name": "East Bone Shore",
       "flavor": null
     },
     {
       "key": "content.r1.place.dungeon_t7",
-      "name": "Secluded Grounds·Tier 7",
+      "name": "White Bone Cave",
       "flavor": null
     },
     {
       "key": "content.r1.place.inner_t7",
-      "name": "Inner Grounds·Tier 7",
+      "name": "Inner Bone Room",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild_t8",
-      "name": "Wilds·Tier 8",
+      "name": "Utter Waste",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild2_t8",
-      "name": "Outer Wilds·Tier 8",
+      "name": "Eastern Verge of the Waste",
       "flavor": null
     },
     {
       "key": "content.r1.place.dungeon_t8",
-      "name": "Secluded Grounds·Tier 8",
+      "name": "Utter Waste Cave",
       "flavor": null
     },
     {
       "key": "content.r1.place.inner_t8",
-      "name": "Inner Grounds·Tier 8",
+      "name": "Inner Waste Chamber",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild_t9",
-      "name": "Wilds·Tier 9",
+      "name": "End of the Jianghu",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild2_t9",
-      "name": "Outer Wilds·Tier 9",
+      "name": "East Bank of the End",
       "flavor": null
     },
     {
       "key": "content.r1.place.dungeon_t9",
-      "name": "Secluded Grounds·Tier 9",
+      "name": "Ancient Confluence Cave",
       "flavor": null
     },
     {
       "key": "content.r1.place.inner_t9",
-      "name": "Inner Grounds·Tier 9",
+      "name": "Inner Ancient Hall",
       "flavor": null
     },
     {

@@ -1085,207 +1085,207 @@
     },
     {
       "key": "content.r1.place.market_neutral",
-      "name": "中立集市",
+      "name": "归墟集",
       "flavor": null
     },
     {
       "key": "content.r1.place.gate_confluence",
-      "name": "汇流关",
+      "name": "四界关",
       "flavor": null
     },
     {
       "key": "content.r1.place.camp_neutral",
-      "name": "中立营地",
+      "name": "歇马驿",
       "flavor": null
     },
     {
       "key": "content.r1.place.market_ring",
-      "name": "集市环道",
+      "name": "集外环道",
       "flavor": null
     },
     {
       "key": "content.r1.place.arena_neutral",
-      "name": "中立比武场",
+      "name": "止戈擂",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild_t1",
-      "name": "野外·一阶",
+      "name": "浅草甸",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild2_t1",
-      "name": "外沿·一阶",
+      "name": "草甸东坡",
       "flavor": null
     },
     {
       "key": "content.r1.place.dungeon_t1",
-      "name": "秘境·一阶",
+      "name": "土窑洞",
       "flavor": null
     },
     {
       "key": "content.r1.place.inner_t1",
-      "name": "秘境深处·一阶",
+      "name": "窑洞内室",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild_t2",
-      "name": "野外·二阶",
+      "name": "芦苇荡",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild2_t2",
-      "name": "外沿·二阶",
+      "name": "苇荡外滩",
       "flavor": null
     },
     {
       "key": "content.r1.place.dungeon_t2",
-      "name": "秘境·二阶",
+      "name": "芦根洞",
       "flavor": null
     },
     {
       "key": "content.r1.place.inner_t2",
-      "name": "秘境深处·二阶",
+      "name": "芦洞内室",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild_t3",
-      "name": "野外·三阶",
+      "name": "乱石岗",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild2_t3",
-      "name": "外沿·三阶",
+      "name": "石岗东岭",
       "flavor": null
     },
     {
       "key": "content.r1.place.dungeon_t3",
-      "name": "秘境·三阶",
+      "name": "乱石窟",
       "flavor": null
     },
     {
       "key": "content.r1.place.inner_t3",
-      "name": "秘境深处·三阶",
+      "name": "石窟内室",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild_t4",
-      "name": "野外·四阶",
+      "name": "黑松林",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild2_t4",
-      "name": "外沿·四阶",
+      "name": "松林外缘",
       "flavor": null
     },
     {
       "key": "content.r1.place.dungeon_t4",
-      "name": "秘境·四阶",
+      "name": "松根洞",
       "flavor": null
     },
     {
       "key": "content.r1.place.inner_t4",
-      "name": "秘境深处·四阶",
+      "name": "松洞内室",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild_t5",
-      "name": "野外·五阶",
+      "name": "断崖坪",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild2_t5",
-      "name": "外沿·五阶",
+      "name": "断崖外台",
       "flavor": null
     },
     {
       "key": "content.r1.place.dungeon_t5",
-      "name": "秘境·五阶",
+      "name": "崖壁洞",
       "flavor": null
     },
     {
       "key": "content.r1.place.inner_t5",
-      "name": "秘境深处·五阶",
+      "name": "崖洞内室",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild_t6",
-      "name": "野外·六阶",
+      "name": "瘴气谷",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild2_t6",
-      "name": "外沿·六阶",
+      "name": "瘴谷外坡",
       "flavor": null
     },
     {
       "key": "content.r1.place.dungeon_t6",
-      "name": "秘境·六阶",
+      "name": "瘴谷洞",
       "flavor": null
     },
     {
       "key": "content.r1.place.inner_t6",
-      "name": "秘境深处·六阶",
+      "name": "瘴洞内室",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild_t7",
-      "name": "野外·七阶",
+      "name": "枯骨滩",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild2_t7",
-      "name": "外沿·七阶",
+      "name": "骨滩东岸",
       "flavor": null
     },
     {
       "key": "content.r1.place.dungeon_t7",
-      "name": "秘境·七阶",
+      "name": "白骨洞",
       "flavor": null
     },
     {
       "key": "content.r1.place.inner_t7",
-      "name": "秘境深处·七阶",
+      "name": "骨洞内室",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild_t8",
-      "name": "野外·八阶",
+      "name": "焦土荒原",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild2_t8",
-      "name": "外沿·八阶",
+      "name": "焦土东陲",
       "flavor": null
     },
     {
       "key": "content.r1.place.dungeon_t8",
-      "name": "秘境·八阶",
+      "name": "焦土洞",
       "flavor": null
     },
     {
       "key": "content.r1.place.inner_t8",
-      "name": "秘境深处·八阶",
+      "name": "焦洞内室",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild_t9",
-      "name": "野外·九阶",
+      "name": "江湖尽头",
       "flavor": null
     },
     {
       "key": "content.r1.place.wild2_t9",
-      "name": "外沿·九阶",
+      "name": "尽头东岸",
       "flavor": null
     },
     {
       "key": "content.r1.place.dungeon_t9",
-      "name": "秘境·九阶",
+      "name": "归墟古洞",
       "flavor": null
     },
     {
       "key": "content.r1.place.inner_t9",
-      "name": "秘境深处·九阶",
+      "name": "古洞内殿",
       "flavor": null
     },
     {
