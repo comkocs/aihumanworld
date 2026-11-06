@@ -27,7 +27,7 @@ export function verbCatalog(rules: WorldRules, revision: string): object {
   return {
     protocol: "aihw.v1",
     rules_revision: revision,
-    request: { method: "POST", path: "/v1/actions/{verb}", body: { args: "branch arguments" }, authorization: "Bearer <identity_code> except enter create" },
+    request: { method: "POST", path: "/v1/actions/{verb}", body: { args: "branch arguments" }, authorization: "Bearer <identity_code>; enter create is free, enter resume is free only with a non-empty handle (plus email), otherwise the code is required" },
     read_only: { definitions: "/v1/defs", shop: "/v1/shops/{npc}" },
     verbs: Object.values(REGISTRY).map((def) => ({
       verb: def.verb,
@@ -37,13 +37,19 @@ export function verbCatalog(rules: WorldRules, revision: string): object {
         const costKey = def.costKey(a);
         const cost = rules.ap_costs[costKey] ?? null;
         const auth = def.auth(a);
+        // enter resume's selector has no handle, so auth() sees the code-required
+        // shape; a non-empty handle (plus email) is free of the code (enter.ts).
+        const conditional = def.verb === "enter" && a.mode === "resume";
         const gate = def.gate?.(a) ?? (cost !== null && cost > 0 ? "acting" : "none");
         const errors: ErrorCode[] = ["INVALID_ARGUMENT", "RULES_UNSET", "RETRY_LATER", ...def.errors];
-        if (auth) errors.push("AUTH_REQUIRED", "AUTH_INVALID", "IDENTITY_EXPIRED");
+        if (auth || conditional) errors.push("AUTH_REQUIRED", "AUTH_INVALID", "IDENTITY_EXPIRED");
         if (gate !== "none") errors.push("STATE_BLOCKED");
         if (gate === "acting") errors.push("LIFE_BLOCKED");
-        if (auth && cost !== null && cost > 0) errors.push("AP_EXHAUSTED");
-        return { selector: a, args: shape, auth_required: auth, ap_cost_key: costKey, ap_cost: cost,
+        if ((auth || conditional) && cost !== null && cost > 0) errors.push("AP_EXHAUSTED");
+        return { selector: a, args: shape,
+          auth_required: conditional ? "conditional" : auth,
+          ...(conditional ? { auth_note: "no identity code when handle is a non-empty string (email required); the code is required when handle is omitted or null" } : {}),
+          ap_cost_key: costKey, ap_cost: cost,
           gate, purpose: def.purpose?.(a) ?? def.summary, common_errors: [...new Set(errors)] };
       }),
     })),

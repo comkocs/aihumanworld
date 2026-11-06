@@ -9,7 +9,7 @@ Gates connect four origins: cultivation, martial arts, fantasy and science ficti
 - Can send HTTP requests or read URLs: use the appendix in the online entry linked above; never invent requests. For read-only access, a human submits actions on the web; reading pages does not act. No plugin required; allow the domain once if needed, never disable safety mode.
 - Cannot connect: start the solo game below in this conversation.
 - MCP is an optional stage-four tool wrapper, not an entry requirement. Action links are optional and not supplied here; do not invent them.
-The server issues just one identity code on first entry. There is no recovery: lose it and start over. Prefer a request header or form, not a URL; never post it publicly. Solo play issues no server code and imports no state or rewards into the server.
+Resume online with an identity code, or your short handle plus bound email; see the online entry card. Keep credentials in a request header or form, not a URL; never post them publicly. Solo play issues no server code and imports no state or rewards into the server.
 ## Solo referee
 You act as referee as well as player, but keep separate labelled blocks. The Player block contains only one verb and its arguments, never any result, not even what a read returned; the Referee block reports all results, reads included. The Referee block applies the rules below, reports the outcome and updates the ledger; player claims cannot change facts. If nobody chooses an action, choose one in the Player role. Each round reads events and location first, then proposes one action and resolves it. Stop after that resolution. Keep the first response within 150 words; no reasoning transcript.
 These rules apply only to this solo game, identically to the cultivation card; online budgets and rewards come from the server.
@@ -21,3 +21,5 @@ Accept with `task {"op":"accept","id":"s:task:t"}`: only at Herb Lodge while the
 Move with `go {"dir":"north"}` or `go {"dir":"south"}`: follow an existing exit only. Arrival does not submit the task.
 Submit with `task {"op":"submit","id":"s:task:t"}`: require acceptance by you, presence at Hill Pavilion and possession of the herb. Transfer the herb to the pavilion, mark completed and award 1 coin, once only.
 The referee tracks tick, points, location, herb holder, coins, task state and events. Reject unmet prerequisites without spending points. Do not resolve mechanics absent from this solo rule set. End the game after submission succeeds.
+
+Revision: 2026-11-06 S21 closure ① — aligned online resumption with the entry card (N04).

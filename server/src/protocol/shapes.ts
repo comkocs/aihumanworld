@@ -63,7 +63,8 @@ export const email: V<string> = described(
     if (t.length < 3 || t.length > 254 || !EMAIL_RE.test(t)) return bad(p, "email address");
     return x;
   },
-  { type: "string", pattern: EMAIL_RE.source, minLength: 3, maxLength: 254, description: "email address" });
+  { type: "string", pattern: EMAIL_RE.source, minLength: 3, maxLength: 254,
+    description: "email address; trim surrounding whitespace first, then apply this pattern and the 3..254 length to the trimmed text" });
 export const placeKind = oneOf(PLACE_KINDS, "place kind");
 export const placeFeature = oneOf(PLACE_FEATURES, "place feature");
 export const danger = oneOf(DANGERS, "danger");

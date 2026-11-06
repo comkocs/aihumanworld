@@ -1,10 +1,10 @@
 // Shared list paging of non-event lists (动词表 §2), weakly consistent. Order is
-// creation order as the IDs' numeric natural order (0 号窗 11-06; ID format
-// unchanged): length first, then bytes — within one table allocated locals share
-// `<realm>:<type>:<letter>`, so r1:deed:d2 < r1:deed:d10. Seed / import locals
-// (named, with an underscore) sort by the same key. The first request pins
-// `through` to world.deed_head; a later page whose through differs from the
-// current head reports snapshot_changed.
+// (length(id), id COLLATE "C"), not creation time (0 号窗 11-06; ID format
+// unchanged). Only numeric allocated locals that share `<realm>:<type>:<letter>`
+// match numeric order, so r1:deed:d2 < r1:deed:d10. Named seed / import locals
+// (with an underscore) use the same length-then-bytes key and are not ordered by
+// when they were created. The first request pins `through` to world.deed_head; a
+// later page whose through differs from the current head reports snapshot_changed.
 
 import type { Queryable } from "../db/db.ts";
 import { reject } from "../protocol/errors.ts";

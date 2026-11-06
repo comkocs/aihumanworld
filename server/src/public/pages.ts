@@ -4,7 +4,9 @@
 // to the public field whitelist before rendering.
 // Deeds are filtered by visibility (S9 开口⑤): chronicle = world only,
 // place page = place + world, biography = deeds the char authored or is named in.
-// Lists follow creation order (numeric seq / local number), never ID text order.
+// Lists are not true creation order. Deeds sort by numeric seq. Other public
+// lists sort by trailing digits (0 when an ID has none), then by ID bytes, so a
+// named ID is not ordered by when it was created.
 
 import type { Queryable } from "../db/db.ts";
 import { ITEM_CATEGORY, SKINS, type ItemKind, type Region, type Skin } from "../facts/enums.ts";
@@ -49,7 +51,7 @@ function isRegion(v: string): v is Region {
   return (REGION_KEYS as readonly string[]).includes(v);
 }
 
-/** Numeric creation order: trailing digits of an ID local, ties broken by the ID. */
+/** Sort key, not creation time: trailing digits (0 if none), then the ID bytes. */
 export function creationOrder(id: string): [number, string] {
   const m = /(\d+)$/.exec(id);
   return [m?.[1] !== undefined ? Number(m[1]) : 0, id];
@@ -185,7 +187,7 @@ async function regionPage(q: Queryable, lex: Lexicon, ref: string): Promise<Page
   const lines = header(
     `区 Region ${facet(lex, `region.${ref}`)}`,
     lex,
-    "本区地点,按创建顺序(数字自然序)排列。",
+    "本区地点,按 ID 末尾数字(没有则为 0)再按 ID 字节序排列;数字分配 ID 即数字序,命名 ID 不按创建先后。",
   );
   lines.push("## 地点 Places", "");
   if (places.length === 0) lines.push("(none)", "");
