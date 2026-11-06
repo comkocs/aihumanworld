@@ -1,19 +1,24 @@
-// [S46] 论道 (discourse): a small public reward for two participants talking to each other.
+// [S46 / S51] 论道 (discourse): talking to each other pays, by time, a little faster than training does.
 //
-// Rule (设计者 11-07 「偶遇奖励选 A 论道」): two different participating chars (player / official,
-// never NPCs) at the same place; one speaks to the other first (direct, or place channel while the
-// other is there); the other answers within `window_ticks` (direct to the first speaker, or on the
-// place channel). The second sentence makes the discourse. Both get xp / potential = their own
-// tier's full task value × a rate (numbers `tasks.deed_bonus.discourse`), through the same
-// creditGrowth path as the world-first bonuses: the pair's very first discourse (初识) pays
-// `first_xp_bp` / `first_potential_bp` (half a task), every later one `xp_bp` / `potential_bp`
-// (a fifth of a task). One world-visible `discourse` deed names both in `targets`; each gets a
-// `reward_granted` event, and the answering speaker's `say` result carries its own `changes`. A pair
-// pays once per game day, a char at most `daily_max` times per game day (初识 and later alike);
-// past that, speech goes on and nothing is paid.
+// Rule (设计者 11-07 「偶遇奖励选 A 论道」, 01:5x 「交流奖励不要限制次数…交流的收益要刚好大于练级收益一点」):
+// two different participating chars (player / official, never NPCs) at the same place; one speaks to the other
+// first (direct, or place channel while the other is there); the other answers within `window_ticks`
+// (direct to the first speaker, or on the place channel). The second sentence makes a discourse, and every
+// discourse pays, without any count limit and without "once per pair per day".
 //
-// Weak constraint (产品文档第一节): nobody asks whether two chars share an owner; the daily caps
-// alone bound the farm. State is read from the fact tables, so a restart forgets nothing.
+// What it pays is time: each of the two gets, from their own tier, the full-attendance day (`daily_xp_full`, and
+// the same recipe for potential) x `talk_rate_bp` (1.1) / day_ticks per tick since THEIR OWN previous discourse
+// reward, at most `talk_accrue_max_ticks` ticks (an hour). So the fastest anybody can earn by talking is 1.1 x
+// the full-attendance training rate, however many partners and lines there are; a long silence is paid for one
+// hour only. The previous reward is read from the char's own `reward_granted` events (social.kind = discourse),
+// which also carry the fraction left over (`carry`, in 1/(10000 x day_ticks) units) so no rate is lost to rounding;
+// a char with no reward yet counts from its creation. A pair's very first discourse (初识) adds half a task
+// (`first_xp_bp` / `first_potential_bp` of the tier's full task value) once per pair, ever, and is also written
+// as one world-visible `discourse` deed naming both; ordinary talk writes no deed, only the two reward events.
+// The answering speaker's `say` result carries its own `changes`.
+//
+// Weak constraint (产品文档第一节): nobody asks whether two chars share an owner; the time rate alone bounds it.
+// State is read from the fact tables, so a restart forgets nothing.
 
 import type { DbRow, Queryable } from "../db/db.ts";
 import { countRows, getRow } from "../facts/store.ts";
@@ -87,16 +92,47 @@ async function firstSpeakers(ctx: VerbContext, me: CharRow, speech: EventRow, lo
   return heard;
 }
 
-function rewardOf(ctx: VerbContext, c: CharRow, xpBp: number, potentialBp: number, repMult: number): Reward {
+type Social = { kind: "discourse" | "duel" | "pk" | "hunt"; with: ID; carry?: { xp?: number; potential?: number } };
+
+interface Accrual {
+  reward: Reward;
+  /** What is left over after paying whole points; stored in the reward event for the next accrual. */
+  carry: { xp: number; potential: number };
+}
+
+/**
+ * What `c` earns by this discourse: the time since its own previous discourse reward (capped), plus the 初识 bonus.
+ * Integer arithmetic only: units are 1/(10000 x day_ticks) of a point.
+ */
+async function accrue(ctx: VerbContext, c: CharRow, rule: DiscourseRule, firstMeeting: boolean): Promise<Accrual> {
+  const n = ctx.balance.numbers;
   const t = tierNumbers(ctx.balance, c.tier);
+  const cap = rule.talk_accrue_max_ticks;
+  const recent = await eventsSince(ctx.q, { inbox: c.id }, BigInt(ctx.tick) - BigInt(cap));
+  const last = recent.find((e) => e.type === "reward_granted" && e.data.social !== undefined && e.data.social.kind === "discourse");
+  const base = last === undefined ? BigInt(c.created_tick) : BigInt(last.tick);
+  const gap = BigInt(ctx.tick) - base;
+  const ticks = Number(gap < 0n ? 0n : gap > BigInt(cap) ? BigInt(cap) : gap);
+  const carried = last !== undefined && last.type === "reward_granted" ? ((last.data.social as Social | undefined)?.carry ?? {}) : {};
+
+  const unit = 10000 * n.clock.day_ticks;
+  // Full-attendance day, same recipe as tiers[].daily_xp_full = 3 task_xp + 144 train_xp (数值表 §3.1).
+  const dayPotential = (n.tasks.supply_per_char ?? 3) * t.task_potential + Math.floor(n.clock.day_ticks / n.clock.train_period_ticks) * t.train_potential;
+  const xpUnits = t.daily_xp_full * rule.talk_rate_bp * ticks + (carried.xp ?? 0);
+  const potentialUnits = dayPotential * rule.talk_rate_bp * ticks + (carried.potential ?? 0);
+  let xp = Math.floor(xpUnits / unit);
+  let potential = Math.floor(potentialUnits / unit);
+  if (firstMeeting) {
+    xp += mulDiv(t.task_xp, rule.first_xp_bp, 10000);
+    potential += mulDiv(t.task_potential, rule.first_potential_bp, 10000);
+  }
   return {
-    coin: 0,
-    xp: mulDiv(t.task_xp, xpBp, 10000),
-    potential: mulDiv(t.task_potential, potentialBp, 10000),
-    rep: t.rep_bounty * repMult,
-    items: [],
+    reward: { coin: 0, xp, potential, rep: t.rep_bounty * rule.rep_mult, items: [] },
+    carry: { xp: xpUnits % unit, potential: potentialUnits % unit },
   };
 }
+
+type DiscourseRule = NonNullable<VerbContext["balance"]["numbers"]["tasks"]["deed_bonus"]["discourse"]>;
 
 /**
  * Called by `say` right after its speech event is written, inside the same transaction:
@@ -109,7 +145,6 @@ export async function settleDiscourse(ctx: VerbContext, speech: EventRow): Promi
   const first = ctx.actor;
   const own: Change[] = [];
   if (rule === undefined || first === null || first.kind === "npc" || speech.type !== "speech") return own;
-  if (rule.daily_max === 0) return own;
   let me: CharRow = first;
   const replyTo = speech.data.channel === "direct" ? speech.data.target : null;
 
@@ -121,48 +156,49 @@ export async function settleDiscourse(ctx: VerbContext, speech: EventRow): Promi
     .slice(0, CANDIDATE_CAP);
   if (wanted.length === 0) return own;
 
-  const dayStart = (BigInt(ctx.world.day_index) * BigInt(ctx.balance.numbers.clock.day_ticks)).toString();
-  const todays = (ids: ID[]): Promise<number> =>
-    countRows(ctx.q, "deed", "kind = 'discourse' AND tick >= $1 AND participants @> $2::jsonb", [dayStart, JSON.stringify(ids)]);
   const everMet = (ids: ID[]): Promise<number> =>
     countRows(ctx.q, "deed", "kind = 'discourse' AND participants @> $1::jsonb", [JSON.stringify(ids)]);
-  let myCount = await todays([me.id]);
 
   for (const [otherId] of wanted) {
-    if (myCount >= rule.daily_max) return own;
     const other = await getRow(ctx.q, "char", otherId, { lock: true });
     if (other === null || other.kind === "npc" || other.id === me.id) continue;
     if ((other.state !== "draft" && other.state !== "active") || other.life !== "alive" || other.loc !== me.loc) continue;
-    if ((await todays([other.id])) >= rule.daily_max) continue;
-    // 初识 = the pair's first discourse ever; later ones pay once per game day.
+    // 初识 = the pair's first discourse ever (only that one is a deed).
     const firstMeeting = (await everMet([me.id, other.id])) === 0;
-    if (!firstMeeting && (await todays([me.id, other.id])) > 0) continue;
-    const xpBp = firstMeeting ? rule.first_xp_bp : rule.xp_bp;
-    const potentialBp = firstMeeting ? rule.first_potential_bp : rule.potential_bp;
-    if (xpBp === 0 && potentialBp === 0 && rule.rep_mult === 0) continue;
+    const mine = await accrue(ctx, me, rule, firstMeeting);
+    const theirs = await accrue(ctx, other, rule, firstMeeting);
+    const pays = (a: Accrual): boolean => a.reward.xp > 0 || a.reward.potential > 0 || a.reward.rep > 0;
+    if (!pays(mine) && !pays(theirs)) continue;
 
-    const mine = rewardOf(ctx, me, xpBp, potentialBp, rule.rep_mult);
-    const theirs = rewardOf(ctx, other, xpBp, potentialBp, rule.rep_mult);
     const changes: Change[] = [];
-    const g1 = await creditGrowth(ctx.q, ctx.w, me, mine);
-    me = g1.row;
-    changes.push(...g1.changes);
-    own.push(...g1.changes);
-    const g2 = await creditGrowth(ctx.q, ctx.w, other, theirs);
-    changes.push(...g2.changes);
-    const deed = await ctx.w.deed({
-      actor: me.id,
-      verb: "say",
-      kind: "discourse",
-      targets: [me.id, other.id],
-      place_id: me.loc,
-      result: { outcome: "success", changes: publicChanges(changes), roll: null, proposal: null },
-      visibility: "world",
-      participants: [me.id, other.id],
-    });
-    await ctx.w.emit({ scope: "self", recipients: [me.id], type: "reward_granted", deed_id: deed.id, data: { char_id: me.id, source: deed.id, reward: mine, social: { kind: "discourse", with: other.id } } });
-    await ctx.w.emit({ scope: "self", recipients: [other.id], type: "reward_granted", deed_id: deed.id, data: { char_id: other.id, source: deed.id, reward: theirs, social: { kind: "discourse", with: me.id } } });
-    myCount += 1;
+    if (pays(mine)) {
+      const g = await creditGrowth(ctx.q, ctx.w, me, mine.reward);
+      me = g.row;
+      changes.push(...g.changes);
+      own.push(...g.changes);
+    }
+    if (pays(theirs)) changes.push(...(await creditGrowth(ctx.q, ctx.w, other, theirs.reward)).changes);
+    const deed = firstMeeting
+      ? await ctx.w.deed({
+          actor: me.id,
+          verb: "say",
+          kind: "discourse",
+          targets: [me.id, other.id],
+          place_id: me.loc,
+          result: { outcome: "success", changes: publicChanges(changes), roll: null, proposal: null },
+          visibility: "world",
+          participants: [me.id, other.id],
+        })
+      : null;
+    const source = deed === null ? speech.id : deed.id;
+    for (const [who, partner, got] of [[me, other, mine], [other, me, theirs]] as [CharRow, CharRow, Accrual][]) {
+      if (!pays(got)) continue;
+      const social: Social = { kind: "discourse", with: partner.id, carry: got.carry };
+      await ctx.w.emit({
+        scope: "self", recipients: [who.id], type: "reward_granted", deed_id: deed === null ? null : deed.id,
+        data: { char_id: who.id, source, reward: got.reward, social },
+      });
+    }
     ctx.actor = me;
   }
   return own;

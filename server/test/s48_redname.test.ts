@@ -29,7 +29,7 @@ test("S48: newbie window, red name by tier relation, hunting a red name", async 
   const tierRow = (t: number): Json => numbers.tiers.find((r: Json) => r.tier === t);
   const rule = numbers.tasks.deed_bonus.combat_social;
   const wantedRule = numbers.wanted;
-  assert.equal(numbers.meta.revision_key, "balance.v1.1");
+  assert.equal(numbers.meta.revision_key, "balance.v1.2");
   assert.equal(numbers.combat.newbie_protect_ticks, 5);
   assert.deepEqual([wantedRule.kill_lower_ticks, wantedRule.kill_peer_ticks, wantedRule.kill_higher_ticks], [2880, 240, 120]);
   assert.deepEqual([rule.hunt_mult, rule.hunt_daily_max], [3, 5]);

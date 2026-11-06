@@ -6,7 +6,7 @@ import type { CharRow, ItemDefinitionRow, ItemInstanceRow, SkillDefinitionRow, S
 type Numeric = Record<string, number>;
 export interface TierNumbers extends Numeric {
   tier: number; cap_max: number; skill_cap_hard: number; task_potential: number;
-  train_xp: number; train_potential: number; task_xp: number; rep_bounty: number; task_coin: number;
+  train_xp: number; train_potential: number; task_xp: number; rep_bounty: number; task_coin: number; daily_xp_full: number;
 }
 export interface GridNumbers extends Numeric {
   tier: number; stage: number; xp_need: number; power: number; guard: number;
@@ -48,12 +48,18 @@ export interface Numbers {
   economy: { start_coin: number; start_potential: number };
   orgs: { goal_min_target: number; goal_reward_rep: number };
   tasks: {
+    supply_per_char?: number;
     deed_bonus: {
       first_kill: { xp_bp: number; potential_bp: number; rep_mult: number };
-      /** S46 论道. Absent in numbers older than balance.v1.1 (S46): no discourse reward then. first_* = 初识 (a pair's first). */
+      /**
+       * S46 / S51 论道: talking pays by time, no count limit. Per discourse each of the two gets their tier's
+       * full-attendance day x talk_rate_bp / day_ticks per tick since their own previous discourse reward (at most
+       * talk_accrue_max_ticks); the pair's first ever (初识) adds first_* of the tier's full task value.
+       * Absent = no discourse reward.
+       */
       discourse?: {
-        xp_bp: number; potential_bp: number; rep_mult: number; daily_max: number; window_ticks: number;
-        first_xp_bp: number; first_potential_bp: number;
+        rep_mult: number; window_ticks: number; first_xp_bp: number; first_potential_bp: number;
+        talk_rate_bp: number; talk_accrue_max_ticks: number;
       };
       /**
        * S46 切磋 / PK. Absent = no such reward. *_bp apply to xp and potential alike, of the full task value of the
@@ -145,12 +151,12 @@ export function parseBalance(input: unknown): Balance {
   numbersAt(root, "tasks.deed_bonus.first_kill", "xp_bp potential_bp rep_mult");
   const deedBonus = record(record(root.tasks, "tasks").deed_bonus, "tasks.deed_bonus");
   if (deedBonus.discourse !== undefined) {
-    numbersAt(root, "tasks.deed_bonus.discourse", "xp_bp potential_bp rep_mult daily_max window_ticks first_xp_bp first_potential_bp");
+    numbersAt(root, "tasks.deed_bonus.discourse", "rep_mult window_ticks first_xp_bp first_potential_bp talk_rate_bp talk_accrue_max_ticks");
     const d = record(deedBonus.discourse, "tasks.deed_bonus.discourse");
-    for (const key of ["xp_bp", "potential_bp", "first_xp_bp", "first_potential_bp"]) {
-      if ((d[key] as number) > 100000) throw new Error(`tasks.deed_bonus.discourse.${key} exceeds ten tasks`);
+    for (const key of ["first_xp_bp", "first_potential_bp", "talk_rate_bp"]) {
+      if ((d[key] as number) > 100000) throw new Error(`tasks.deed_bonus.discourse.${key} exceeds ten tasks / ten times training`);
     }
-    if (d.window_ticks === 0) throw new Error("tasks.deed_bonus.discourse.window_ticks must be positive");
+    if (d.window_ticks === 0 || d.talk_accrue_max_ticks === 0) throw new Error("tasks.deed_bonus.discourse ticks must be positive");
   }
   if (deedBonus.combat_social !== undefined) {
     numbersAt(root, "tasks.deed_bonus.combat_social", "duel_win_bp duel_lose_bp duel_draw_bp pk_win_bp daily_max hunt_mult hunt_daily_max");
@@ -159,7 +165,7 @@ export function parseBalance(input: unknown): Balance {
       if ((c[key] as number) > 100000) throw new Error(`tasks.deed_bonus.combat_social.${key} exceeds ten tasks`);
     }
   }
-  const tiers = rowsAt(root, "tiers", "tier cap_max skill_cap_hard task_potential train_xp train_potential task_xp rep_bounty task_coin", 9);
+  const tiers = rowsAt(root, "tiers", "tier cap_max skill_cap_hard task_potential train_xp train_potential task_xp rep_bounty task_coin daily_xp_full", 9);
   const grid = rowsAt(root, "grid", "tier stage xp_need power guard speed vigor_max inner_req", 36);
   const prices = rowsAt(root, "tier_prices", "tier learn_coin", 9);
   const potions = rowsAt(root, "consumables.table", "tier grade bt_bonus_bp", 27);

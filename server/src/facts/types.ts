@@ -502,9 +502,13 @@ export interface EventDataMap {
   task_changed: { task_id: ID; state: TaskState; taker: ID | null; progress: UInt };
   /**
    * `social` (S46 / S48) marks the rewards for talking / sparring / hunting a red-name: kind discourse | duel | pk | hunt, `with` = the
-   * other participant. Daily caps and "once per pair per day" are counted from these events.
+   * other participant. Combat daily caps are counted from these events; discourse (S51) reads its last reward tick and
+   * `carry` (the leftover fraction, in 1/(10000 x day_ticks) of a point) from them.
    */
-  reward_granted: { char_id: ID; source: ID; reward: Reward; social?: { kind: "discourse" | "duel" | "pk" | "hunt"; with: ID } };
+  reward_granted: {
+    char_id: ID; source: ID; reward: Reward;
+    social?: { kind: "discourse" | "duel" | "pk" | "hunt"; with: ID; carry?: { xp?: number; potential?: number } };
+  };
   org_changed: { org_id: ID; goal: OrgGoal };
   relation_proposed: { offer: ID; proposal: Proposal };
   bond_changed: { bond: BondRow };

@@ -1,7 +1,7 @@
 {
  "meta": {
   "schema": "aihw.numbers.v1",
-  "revision_key": "balance.v1.1",
+  "revision_key": "balance.v1.2",
   "integer_only": true
  },
  "world_rules": {
@@ -44,7 +44,7 @@
    "build": 1,
    "breakthrough": 2
   },
-  "balance_key": "balance.v1.1"
+  "balance_key": "balance.v1.2"
  },
  "clock": {
   "day_ticks": 1440,
@@ -1726,13 +1726,12 @@
     "rep_mult": 3
    },
    "discourse": {
-    "xp_bp": 5000,
-    "potential_bp": 5000,
     "rep_mult": 0,
-    "daily_max": 5,
     "window_ticks": 60,
-    "first_xp_bp": 10000,
-    "first_potential_bp": 10000
+    "first_xp_bp": 5000,
+    "first_potential_bp": 5000,
+    "talk_rate_bp": 11000,
+    "talk_accrue_max_ticks": 60
    },
    "combat_social": {
     "duel_win_bp": 15000,

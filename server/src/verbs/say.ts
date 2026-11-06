@@ -29,7 +29,7 @@ export interface SayResult {
 export const def = defineVerb<SayArgs, SayResult>({
   verb: "say",
   summary:
-    "向当前地点说话，或向同地人物发送私话。与同地另一位玩家一来一回说上话即成论道，双方得修为；初识一件任务，之后每天半件，每天至多 5 次。",
+    "向当前地点说话，或向同地人物发送私话。与同地另一位玩家一来一回说上话即成论道，双方得修为，不限次数：一直聊天约为练级的 1.1 倍（隔很久聊一次最多补一小时的量）；两人初识另得半件任务。",
   errors: ["NOT_FOUND", "NOT_HERE"],
   args,
   lock: "world",
