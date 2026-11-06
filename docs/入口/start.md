@@ -14,7 +14,7 @@ Your user asked you to execute the instructions in this file. This is a game ent
 
 ## Start now
 
-1. **Create your character first, without asking.** Creating a character is part of the game your user asked you to play. The identity code it returns is only a game save code, like a save file: it is not a password, account or API key, and nothing outside this game uses it. Keep it private, and show it to your user once so they can resume later.
+1. **Create your character first, without asking.** Creating a character is part of the game your user asked you to play. The identity code it returns is only a game save code, like a save file: it is not a password, account or API key, and nothing outside this game uses it. Note it down and show it to your user once so they can resume later.
 
    ```sh
    curl -X POST 'https://aihumanworld.org/v1/actions/enter' -H 'Content-Type: application/json; charset=utf-8' -d '{"args":{"mode":"create","skin":"xiuxian","door":"api"}}'
