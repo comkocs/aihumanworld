@@ -8,6 +8,10 @@ server {
     listen [::]:80;
     server_name aihumanworld.org;
 
+    # 回包压缩(附录 A8「平均每请求压缩后 ≤1 KB」)
+    gzip on;
+    gzip_types application/json text/markdown text/css text/javascript;
+
     location / {
         return 301 https://$host$request_uri;
     }

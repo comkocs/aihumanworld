@@ -4,5 +4,7 @@
 # 用法:caddy validate --config /opt/aihw/deploy/Caddyfile.example && systemctl reload caddy
 
 aihumanworld.org {
+	# 回包按客户端 Accept-Encoding 压缩(附录 A8「平均每请求压缩后 ≤1 KB」;本机实测平均原 1479 字节 → gzip 499 字节)
+	encode zstd gzip
 	reverse_proxy 127.0.0.1:8787
 }
