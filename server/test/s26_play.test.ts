@@ -53,6 +53,8 @@ test("S26: html door, play page, web enter, no translation_missing", async (t) =
     assert.match(home.headers.get("content-type") ?? "", /^text\/html/);
     const homeBody = await home.text();
     assert.match(homeBody, /href="\/play"/);
+    assert.match(homeBody, /https:\/\/aihumanworld\.org\/start\.md/);
+    assert.match(homeBody, /https:\/\/aihumanworld\.org\/mcp/);
 
     const play = await fetch(`${app.url}/play`);
     assert.equal(play.status, 200);

@@ -6,6 +6,8 @@
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from "node:http";
 import { parseBearer } from "../identity/auth.ts";
 import { errText, log } from "../log.ts";
+import { handleEntry } from "../entry/routes.ts";
+import { handleMcp } from "../mcp/server.ts";
 import { ActionError } from "../protocol/errors.ts";
 import { handlePublic, type PublicDeps } from "../public/routes.ts";
 import { dispatch, errEnvelope, outcomeUnknown, type DispatchOutput, type RunnerDeps } from "../verbs/runner.ts";
@@ -104,12 +106,14 @@ export function createHttpServer(deps: HttpDeps): Server {
       log.info("http", { method: req.method ?? "", route, status: res.statusCode, ms: Math.round(performance.now() - started) });
     };
     const isAction = path.startsWith(ACTION_PREFIX);
-    const work = isAction
-      ? handleAction(deps, req, res, path.slice(ACTION_PREFIX.length)).then(() => {
-          const v = path.slice(ACTION_PREFIX.length);
-          done(VERB_RE.test(v) ? `action:${v}` : "action:?");
-        })
-      : handlePublic(deps.public, req, res).then(() => done("public"));
+    const work = path === "/mcp"
+      ? handleMcp(deps, req, res).then(() => done("mcp"))
+      : handleEntry(req, res, path).then((hit) => (hit ? done("entry") : isAction
+        ? handleAction(deps, req, res, path.slice(ACTION_PREFIX.length)).then(() => {
+            const v = path.slice(ACTION_PREFIX.length);
+            done(VERB_RE.test(v) ? `action:${v}` : "action:?");
+          })
+        : handlePublic(deps.public, req, res).then(() => done("public"))));
     work.catch((err: unknown) => {
       log.error("http handler failed", { err: errText(err) });
       if (res.headersSent) {

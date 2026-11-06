@@ -39,6 +39,7 @@ const UI = zh
       bound: "已绑定邮箱,可用短号+邮箱续玩",
       unbound: "未绑定邮箱",
       onlineTitle: "在线的人",
+      official: "官方居民 Official",
       findHandle: "输入短号找人,如 A00002",
       find: "找",
       notFoundHandle: "没有这个短号",
@@ -187,6 +188,7 @@ const UI = zh
       bound: "Email bound — handle + email resumes",
       unbound: "No email bound",
       onlineTitle: "People online",
+      official: "官方居民 Official",
       findHandle: "Find by handle, e.g. A00002",
       find: "Find",
       notFoundHandle: "No such handle",
@@ -1072,7 +1074,7 @@ async function loadOnlineList(list) {
   }
   for (const o of rows) {
     const row = el("div", { class: "item stack" });
-    const label = `${o.handle} · ${tx("tier" + o.tier)} ${tx("stage" + o.stage)} · ${UI.skins[o.skin] || o.skin} · ${tx("region." + o.region)}`;
+    const label = `${o.handle}${o.kind === "official" ? " · " + UI.official : ""} · ${tx("tier" + o.tier)} ${tx("stage" + o.stage)} · ${UI.skins[o.skin] || o.skin} · ${tx("region." + o.region)}`;
     row.appendChild(el("span", { text: label }));
     row.appendChild(whisperRow(o.char_id));
     list.appendChild(row);
@@ -1095,6 +1097,7 @@ async function showWho(handle, box) {
   const c = body.char || {};
   const line = [
     body.handle,
+    (body.kind === "official" || c.kind === "official") ? UI.official : "",
     body.online ? UI.onlineNow : UI.offline,
     body.online ? UI.atPlace + " " + placeIdName(body.place_id) : "",
     tx("tier" + c.tier) + " " + tx("stage" + c.stage),

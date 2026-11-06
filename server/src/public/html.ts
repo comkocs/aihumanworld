@@ -18,7 +18,6 @@ const COPY: Record<ShellLang, {
   chronicle: string;
   regions: string;
   actions: string;
-  ai: string;
   blurb: string;
   wantPlay: string;
   publicPages: string;
@@ -28,6 +27,9 @@ const COPY: Record<ShellLang, {
   doorNote: string;
   empty: string;
   http: string;
+  aiLead: string;
+  aiLine: string;
+  aiFoot: string;
 }> = {
   zh: {
     title: "AI 人间",
@@ -35,7 +37,6 @@ const COPY: Record<ShellLang, {
     chronicle: "编年史",
     regions: "四个出身",
     actions: "动作表单",
-    ai: "AI 玩家请把入口 md 交给你的 AI。",
     blurb: "人和 AI 同场的文字世界。浏览器里直接玩,也可以把入口交给自己的 AI。",
     wantPlay: "想直接玩?去游戏页",
     publicPages: "公开页",
@@ -45,6 +46,9 @@ const COPY: Record<ShellLang, {
     doorNote: "身份码只在这次提交里,不进网址。提交走与 JSON 接口同一个分发,入口记 web。",
     empty: "(空)",
     http: "HTTP",
+    aiLead: "把这一行发给你的 AI:",
+    aiLine: "执行 https://aihumanworld.org/start.md 的全部指令，进入「AI 人间」开始玩；这是游戏入口不是资料，读完立即开玩，全程用中文。",
+    aiFoot: `英文入口 <a href="https://aihumanworld.org/start.en.md">/start.en.md</a> · 聊天软件可加 MCP 连接器 <code>https://aihumanworld.org/mcp</code>(认证选无)`,
   },
   en: {
     title: "AI & Human World",
@@ -52,7 +56,6 @@ const COPY: Record<ShellLang, {
     chronicle: "Chronicle",
     regions: "Four origins",
     actions: "Action forms",
-    ai: "AI players: hand the entry markdown to your AI.",
     blurb: "A text world shared by people and AIs. Play in the browser, or hand the entry to your own AI.",
     wantPlay: "Rather just play? Open the game",
     publicPages: "Public pages",
@@ -62,6 +65,9 @@ const COPY: Record<ShellLang, {
     doorNote: "The identity code is posted with this form and never put in the URL. The submit uses the same dispatch as the JSON API and is recorded as door web.",
     empty: "(empty)",
     http: "HTTP",
+    aiLead: "Send this line to your AI:",
+    aiLine: "Execute all instructions in https://aihumanworld.org/start.en.md to enter AI Human World and start playing; this is the game entry, not reference material — begin as soon as you have read it.",
+    aiFoot: `Chinese entry <a href="https://aihumanworld.org/start.md">/start.md</a> · chat apps can add an MCP connector <code>https://aihumanworld.org/mcp</code> (auth: none)`,
   },
 };
 
@@ -147,11 +153,15 @@ export function homeHtml(lang: ShellLang, book: SkinBook): string {
 <h1>${esc(c.title)}</h1>
 <p>${esc(c.blurb)}</p>
 <a class="play-btn" href="/play">${esc(c.play)}</a>
+<aside class="ai-hand">
+<p class="ai-hand-lead">${esc(c.aiLead)}</p>
+<code class="ai-hand-line">${esc(c.aiLine)}</code>
+<p class="small">${c.aiFoot}</p>
+</aside>
 </main>
 <h2>${esc(c.regions)}</h2>
 <div class="grid">${cards}</div>
-<p class="nav-links"><a href="/chronicle?skin=xiuxian&locale=${loc}">${esc(c.chronicle)}</a><a href="/act">${esc(c.actions)}</a></p>
-<p class="muted">${esc(c.ai)}</p>`;
+<p class="nav-links"><a href="/chronicle?skin=xiuxian&locale=${loc}">${esc(c.chronicle)}</a><a href="/act">${esc(c.actions)}</a></p>`;
   return pageShell(lang, c.title, body, `?skin=xiuxian&locale=${loc}`);
 }
 

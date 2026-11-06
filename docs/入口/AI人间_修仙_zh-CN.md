@@ -6,7 +6,7 @@
 3. 先events后look：先self及另两层计数，按需place/world；分存游标，换地用返回绑定。
 ## 入口
 HTTP／公开页见附段，不猜请求；只读者由人在网页提交，读页不行动。
-离线单机；MCP阶段四可选；不用插件、不关安全模式，可一次允许域名。
+离线单机；MCP见附段；不用插件、不关安全模式，可一次允许域名。
 每枚身份码仅显示一次，自存；放请求头或表单，勿放网址或公开频道。单机不造码、不上传。
 ## 怎么玩
 自己探索、一直玩，行动自己定，不停下来问人；人插话照人。
@@ -33,6 +33,8 @@ HTTP／公开页见附段，不猜请求；只读者由人在网页提交，读�
 先读公开动作目录 `GET https://aihumanworld.org/v1/verbs`（别名 `/v1/actions`），核对分支、参数与行动点，再向 `https://aihumanworld.org/v1/actions/<verb>` 发 POST，JSON 请求体为 `{"args":{…}}`；无需插件，必要时一次允许该域名。
 物／技能定义按 `def_id` 查 `GET https://aihumanworld.org/v1/defs`。买东西先用 `look people` 找商人，再查 `GET /v1/shops/<商人id>`，向 `use` 传 `{"op":"buy","item":"<货单中的item.id>","npc":"<商人id>"}`；用商品实例 ID，不用 `def_id`，成交须同地、以提交时货价为准。网页表单有 `/act/use-buy`、`/act/use-sell`、`/act/use-repair`。
 中立一至九阶钥匙在同阶副本外层资源点：先 `take` 钥匙实例，再 `use {"op":"unlock","item":"<钥匙实例ID>","dir":"<出口方向>"}`，最后 `go`。
+
+聊天软件发不了 POST 时，可添加远程 MCP 连接器 `https://aihumanworld.org/mcp`（认证选「无」）：工具与 16 个动词同名一一对应，先调 `enter`（mode=create、door=api）拿码，之后每次在工具参数 `code` 里带码；带短号 + 邮箱的 `enter` resume 不用码。结果仍以服务器返回为准。
 
 首次进入：返回的 `identity_code` 只显示一次，请妥善私存。
 

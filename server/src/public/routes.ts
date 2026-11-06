@@ -286,7 +286,7 @@ function isOnline(c: { state: string; last_seen_tick: string }, tick: string): b
 /** Public read-only lookup by handle (设计者原话 2026-11-06 18). */
 async function sendWho(deps: PublicDeps, res: ServerResponse, handle: string): Promise<void> {
   const world = await mustGetRow(deps.db, "world", worldId(deps.realm));
-  const c = (await selectRows(deps.db, "char", "handle = $1 AND kind = 'player'", [handle]))[0];
+  const c = (await selectRows(deps.db, "char", "handle = $1 AND kind IN ('player', 'official')", [handle]))[0];
   if (c === undefined) {
     send(res, 404, "application/json", JSON.stringify({ ok: false, error: { code: "NOT_FOUND" } }), {
       "Cache-Control": "no-store",
@@ -298,6 +298,7 @@ async function sendWho(deps: PublicDeps, res: ServerResponse, handle: string): P
   send(res, 200, "application/json", JSON.stringify({
     handle: c.handle,
     char_id: c.id,
+    kind: c.kind,
     online,
     place_id: online ? c.loc : null,
     char: publicChar(c),
@@ -311,20 +312,22 @@ async function sendOnline(deps: PublicDeps, res: ServerResponse): Promise<void> 
   const r = await deps.db.query<{
     id: string;
     handle: string | null;
+    kind: string;
     tier: number;
     stage: number;
     skin: string;
     region: string;
   }>(
-    `SELECT c.id, c.handle, c.tier, c.stage, c.skin, p.region
+    `SELECT c.id, c.handle, c.kind, c.tier, c.stage, c.skin, p.region
      FROM chars c JOIN places p ON p.id = c.loc
-     WHERE c.kind = 'player' AND c.state <> 'buried' AND c.last_seen_tick >= $1::bigint
+     WHERE c.kind IN ('player', 'official') AND c.state <> 'buried' AND c.last_seen_tick >= $1::bigint
      ORDER BY random() LIMIT 20`,
     [since.toString()],
   );
   const online = r.rows.map((row) => ({
     handle: row.handle,
     char_id: row.id,
+    kind: row.kind,
     tier: row.tier,
     stage: row.stage,
     skin: row.skin,
@@ -339,7 +342,7 @@ async function sendOnline(deps: PublicDeps, res: ServerResponse): Promise<void> 
 /** Browser view of a handle (S32): same dark shell, server-rendered, no script. */
 async function sendIdPage(deps: PublicDeps, res: ServerResponse, handle: string): Promise<void> {
   const world = await mustGetRow(deps.db, "world", worldId(deps.realm));
-  const c = (await selectRows(deps.db, "char", "handle = $1 AND kind = 'player'", [handle]))[0];
+  const c = (await selectRows(deps.db, "char", "handle = $1 AND kind IN ('player', 'official')", [handle]))[0];
   const page = (title: string, body: string): string => `<!doctype html>
 <html lang="zh-CN">
 <head>
@@ -366,6 +369,7 @@ ${body}
   const rows = [
     `短号 <code>${esc(c.handle ?? "")}</code>`,
     `角色 <a href="/char/${esc(c.id)}"><code>${esc(c.id)}</code></a>`,
+    c.kind === "official" ? "官方居民 Official" : "",
     online ? "在线" : "离线",
     online ? `在 <code>${esc(c.loc)}</code>` : "",
     `皮 ${esc(c.skin)} · ${esc(c.kind)}`,

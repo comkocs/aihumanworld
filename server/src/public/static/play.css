@@ -89,6 +89,29 @@ textarea { min-height: 72px; resize: vertical; }
 .hero { text-align: center; padding: 36px 8px 18px; }
 .hero h1 { font-size: 40px; line-height: 1.2; margin: 0 0 10px; font-weight: 750; }
 .hero p { color: var(--muted); margin: 0 auto 22px; max-width: 38em; }
+.ai-hand {
+  text-align: left;
+  max-width: 46em;
+  margin: 22px auto 0;
+  background: var(--card);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 14px 16px 12px;
+  box-shadow: var(--shadow);
+}
+.ai-hand-lead { margin: 0 0 8px; color: var(--text); font-weight: 650; }
+.ai-hand-line {
+  display: block;
+  user-select: all;
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: 15px;
+  line-height: 1.5;
+  background: #10161f;
+  border-radius: 10px;
+  padding: 10px 12px;
+  word-break: break-word;
+}
+.ai-hand .small { margin: 8px 0 0; }
 .play-btn {
   display: inline-block;
   background: var(--accent);

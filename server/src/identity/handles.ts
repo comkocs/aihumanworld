@@ -1,6 +1,6 @@
 // [S32] Player handles (设计者原话 2026-11-06 18): one uppercase letter plus
 // a counter — at least 5 digits zero-padded, at most 7 — A00001 … A9999999,
-// then B00001 …, up to Z9999999. Only player chars get one; it is public,
+// then B00001 …, up to Z9999999. Player and official chars get one; it is public,
 // globally unique and never reused. Numbering comes from the aihw_handle_seq
 // sequence (migration 1000). Existing players are backfilled in creation
 // order (created_tick, then numeric ID local) at startup — idempotent, and
@@ -29,7 +29,7 @@ export async function allocateHandle(q: Queryable): Promise<string> {
   return handleOf(Number(n));
 }
 
-/** Assigns handles to player chars that lack one, oldest first; returns the count. */
+/** Assigns handles to player / official chars that lack one, oldest first; returns the count. */
 export async function backfillHandles(q: Queryable): Promise<number> {
   const r = await q.query<{ rn: unknown }>(`
     WITH ordered AS (
@@ -39,7 +39,7 @@ export async function backfillHandles(q: Queryable): Promise<number> {
           id
       ) AS rn
       FROM chars
-      WHERE kind = 'player' AND handle IS NULL
+      WHERE kind IN ('player', 'official') AND handle IS NULL
     )
     UPDATE chars c
     SET handle = chr(65 + ((o.rn - 1) / 9999999)::int)

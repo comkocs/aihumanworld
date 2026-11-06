@@ -381,7 +381,7 @@ async function resumeByHandle(ctx: VerbContext, a: Extract<EnterArgs, { mode: "r
   if (a.email === undefined || a.email === null) {
     reject("INVALID_ARGUMENT", { expected: "email required with handle" }, "args.email");
   }
-  const byHandle = await selectRows(ctx.q, "char", "handle = $1 AND kind = 'player'", [a.handle]);
+  const byHandle = await selectRows(ctx.q, "char", "handle = $1 AND kind IN ('player', 'official')", [a.handle]);
   const found = byHandle[0];
   // Unknown handle, unbound email and mismatched address answer identically.
   if (found === undefined) return reject("AUTH_INVALID", NO_DETAILS);

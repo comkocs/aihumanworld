@@ -11,6 +11,7 @@ import { migrate } from "./db/migrate.ts";
 import { loadRulesBundle } from "./growth/rules_source.ts";
 import { createHttpServer } from "./http/server.ts";
 import { backfillHandles } from "./identity/handles.ts";
+import { importOfficialsFile } from "./identity/officials.ts";
 import { log } from "./log.ts";
 import { bootWorld } from "./seed/boot.ts";
 import { SpeechStore } from "./speech/store.ts";
@@ -37,6 +38,10 @@ export async function startApp(config: Config): Promise<App> {
     // S32: existing players get their handle in creation order (idempotent).
     const handles = await backfillHandles(db);
     if (handles > 0) log.info("player handles backfilled", { count: handles });
+    // S23: listed live players become official residents. Missing / empty file is a no-op.
+    // AIHW_OFFICIALS_FILE overrides the repo file (tests); unset uses content/officials.json.
+    const officialsFile = process.env.AIHW_OFFICIALS_FILE;
+    await importOfficialsFile(db, officialsFile !== undefined && officialsFile !== "" ? officialsFile : undefined);
     const bundle = await loadRulesBundle(config.config_dir, config.rules_file);
     // The build validator reads the same S5 numbers file the world rules came from.
     useBuildLimits(bundle.numbers_file);
