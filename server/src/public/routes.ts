@@ -317,8 +317,10 @@ async function sendOnline(deps: PublicDeps, res: ServerResponse): Promise<void> 
     stage: number;
     skin: string;
     region: string;
+    total: string;
   }>(
-    `SELECT c.id, c.handle, c.kind, c.tier, c.stage, c.skin, p.region
+    `SELECT c.id, c.handle, c.kind, c.tier, c.stage, c.skin, p.region,
+            count(*) OVER () AS total
      FROM chars c JOIN places p ON p.id = c.loc
      WHERE c.kind IN ('player', 'official') AND c.state <> 'buried' AND c.last_seen_tick >= $1::bigint
      ORDER BY random() LIMIT 20`,
@@ -333,7 +335,8 @@ async function sendOnline(deps: PublicDeps, res: ServerResponse): Promise<void> 
     skin: row.skin,
     region: row.region,
   }));
-  send(res, 200, "application/json", JSON.stringify({ count: online.length, online }), {
+  const total = r.rows[0] === undefined ? 0 : Number(r.rows[0].total);
+  send(res, 200, "application/json", JSON.stringify({ count: online.length, total, online }), {
     "Cache-Control": "no-store",
     "Content-Security-Policy": CSP,
   });
@@ -512,9 +515,12 @@ async function handlePlay(deps: PublicDeps, req: IncomingMessage, res: ServerRes
   const out = await deps.dispatch({ verb, body, bearer: parseBearer(req.headers.authorization), door: "web" });
   if (verb === "look" && out.body.ok && (body as { args?: { section?: string } })?.args?.section === "place") {
     const result = out.body.result as LookResult;
-    const people = await selectRows(deps.db, "char", "loc = $1 AND state <> 'buried'", [result.place.id]);
+    // NPCs are few, so the page gets every one. Players and official residents are
+    // shuffled down to 20 so a crowded place cannot freeze the browser (S44).
+    const people = await selectRows(deps.db, "char", "loc = $1 AND state <> 'buried' AND (kind = 'npc' OR id IN (SELECT id FROM chars WHERE loc = $1 AND state <> 'buried' AND kind IN ('player', 'official') ORDER BY random() LIMIT 20))", [result.place.id]);
+    const counted = await deps.db.query<{ n: string }>("SELECT count(*) AS n FROM chars WHERE loc = $1 AND state <> 'buried'", [result.place.id]);
     const items = await selectRows(deps.db, "item", "record = 'instance' AND holder ->> 'kind' = 'place' AND holder ->> 'id' = $1 AND state = 'available'", [result.place.id]);
-    const enriched = { ...out.body, result: { ...result, people: people.map(publicChar), items } };
+    const enriched = { ...out.body, result: { ...result, people: people.map(publicChar), people_total: Number(counted.rows[0]?.n ?? 0), items } };
     send(res, out.status, "application/json", JSON.stringify(enriched), { "Cache-Control": "no-store", "Content-Security-Policy": CSP });
     return;
   }

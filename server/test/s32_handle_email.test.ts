@@ -66,6 +66,8 @@ test("S32 chain: handles, who/online/id pages, email bind, handle resume, unifor
 
     const online = (await (await fetch(`${app.url}/v1/online`)).json()) as Json;
     assert.ok(online.count <= 20);
+    assert.equal(typeof online.total, "number");
+    assert.ok(online.total >= online.count);
     const onlineHandles = online.online.map((o: Json) => o.handle);
     assert.ok(onlineHandles.includes("A00003"));
     assert.equal(onlineHandles.includes("A00001"), false); // buried legacy players are not online

@@ -51,6 +51,23 @@ const UI = zh
       here: "此处",
       exits: "出口",
       people: "此处的人",
+      peopleShown: "此处共 {n} 人,随机显示 {k} 位",
+      reshuffle: "换一批",
+      onlineShown: "全服在线 {n} 人,随机显示 {k} 位",
+      raw: "原始数据",
+      evWhat: "什么事",
+      evWho: "谁",
+      evTo: "对谁",
+      evWhere: "在哪",
+      evTick: "第几刻",
+      officialShort: "官方居民",
+      saidTo: "对",
+      said: "说",
+      someone: "有人",
+      unknownPlace: "未知地点",
+      anItem: "物品",
+      aTask: "一项差事",
+      taskNeed: "完成差事要求",
       things: "此处的物",
       bag: "背包",
       skills: "已学",
@@ -200,6 +217,23 @@ const UI = zh
       here: "Here",
       exits: "Exits",
       people: "People here",
+      peopleShown: "{n} here, {k} shown at random",
+      reshuffle: "Another draw",
+      onlineShown: "{n} online, {k} shown at random",
+      raw: "Raw data",
+      evWhat: "What",
+      evWho: "Who",
+      evTo: "Toward",
+      evWhere: "Where",
+      evTick: "Tick",
+      officialShort: "Official resident",
+      saidTo: "to",
+      said: "said",
+      someone: "Someone",
+      unknownPlace: "an unknown place",
+      anItem: "an item",
+      aTask: "a task",
+      taskNeed: "Complete the task objective",
       things: "Things here",
       bag: "Pack",
       skills: "Learned",
@@ -475,9 +509,15 @@ function charName(c) {
   if (c.archetype) return tx("npc." + c.archetype);
   return tx("person." + c.kind);
 }
+/** Short name for a list row: handle or name, with the official-resident mark. */
+function shortName(c) {
+  if (!c) return "";
+  const base = c.handle || charName(c);
+  return c.kind === "official" ? base + " · " + UI.officialShort : base;
+}
 function itemName(inst) {
   const def = defs.get(inst.def_id);
-  if (!def) return zh ? "物品" : "an item";
+  if (!def) return UI.anItem;
   return translated(def.content_key, translated("item." + def.kind + "·tier" + def.tier,
     translated("item." + def.kind, zh ? "物品" : "an item")));
 }
@@ -502,13 +542,13 @@ function translated(key, fallback) {
   return hit && hit.name && !hit.missing ? hit.name : fallback;
 }
 function placeIdName(id) {
-  return translated(places.get(id), zh ? "未知地点" : "an unknown place");
+  return translated(places.get(id), UI.unknownPlace);
 }
 function personIdName(id) {
-  return id === me?.id ? UI.you : names.get(id) || (zh ? "有人" : "Someone");
+  return id === me?.id ? UI.you : names.get(id) || UI.someone;
 }
 function itemDefName(id) {
-  return defs.has(id) ? itemName({ def_id: id }) : (zh ? "物品" : "an item");
+  return defs.has(id) ? itemName({ def_id: id }) : UI.anItem;
 }
 /** Skin coin name (stat.coin); the hardcoded word is only a fallback. */
 function coinWord() {
@@ -695,6 +735,7 @@ async function refreshAll() {
   const lookPlace = await call("look", { section: "place" });
   const place = lookPlace.result.place;
   const people = lookPlace.result.people;
+  const peopleTotal = lookPlace.result.people_total;
   const ground = lookPlace.result.items;
   const openTasks = await pullAll(undefined, "task", { op: "list", filter: "available" });
   const mine = await pullAll(undefined, "task", { op: "list", filter: "accepted" });
@@ -706,6 +747,7 @@ async function refreshAll() {
     tick: skills.out.tick,
     place,
     people: people.filter((c) => c.id !== me.id),
+    peopleTotal,
     ground,
     openTasks: openTasks.rows,
     mine: mine.rows,
@@ -783,7 +825,7 @@ function renderWorld(view) {
   here.appendChild(exits);
   grid.appendChild(here);
 
-  grid.appendChild(peopleCard(view.people, view.place));
+  grid.appendChild(peopleCard(view.people, view.place, view.peopleTotal));
   grid.appendChild(groundCard(view.ground));
   grid.appendChild(bagCard(view.bag, view.people));
   grid.appendChild(taskCard(UI.tasksOpen, view.openTasks, "open"));
@@ -795,16 +837,22 @@ function renderWorld(view) {
   $("last-raw").textContent = lastRaw;
 }
 
-function peopleCard(people, place) {
+function peopleCard(people, place, total) {
   const card = el("section", { class: "card" });
-  card.appendChild(el("h3", { text: UI.people }));
+  const head = el("div", { class: "row" });
+  head.appendChild(el("h3", { text: UI.people }));
+  if (typeof total === "number") {
+    head.appendChild(el("span", { class: "small", text: UI.peopleShown.replace("{n}", total).replace("{k}", people.length) }));
+    head.appendChild(btn(UI.reshuffle, () => refreshAll(), "ghost"));
+  }
+  card.appendChild(head);
   const list = el("div", { class: "list" });
   if (people.length === 0) empty(list);
   const canFight = place.combat === "duel" || place.combat === "pk" || place.combat === "pve";
   for (const c of people) {
-    names.set(c.id, charName(c));
+    names.set(c.id, shortName(c));
     const row = el("div", { class: "item" });
-    const label = charName(c) + " · " + tx("tier" + c.tier) + " " + tx("stage" + c.stage);
+    const label = shortName(c) + " · " + tx("tier" + c.tier) + " " + tx("stage" + c.stage);
     row.appendChild(el("span", { text: label }));
     const actions = el("span", { class: "row" });
     const actionable = c.life === "alive" && (c.state === "active" || c.state === "draft");
@@ -931,7 +979,7 @@ function taskConditionLine(condition) {
     if (zh) return (c.tpl === "gather" ? "收集 " : "送 ") + count + " 份 " + item + " 到 " + destination;
     return (c.tpl === "gather" ? "Gather " : "Deliver ") + count + " " + item + " to " + destination;
   }
-  return zh ? "完成差事要求" : "Complete the task objective";
+  return UI.taskNeed;
 }
 
 function taskCard(title, rows, mode) {
@@ -949,10 +997,7 @@ function taskCard(title, rows, mode) {
       (task.reward ? " · " + UI.reward + " " + task.reward.coin + (zh ? " 币" : " coin") : "");
     const block = el("div");
     block.appendChild(el("span", { text }));
-    const details = el("details", { class: "raw" });
-    details.appendChild(el("summary", { text: UI.detail }));
-    details.appendChild(el("pre", { text: JSON.stringify(task, null, 2) }));
-    block.appendChild(details);
+    block.appendChild(taskDetail(task));
     row.appendChild(block);
     if (mode === "open") {
       const accept = btn(UI.accept, () => act("task", { op: "accept", id: task.id }));
@@ -1059,7 +1104,7 @@ function whisperRow(charId) {
   return wrap;
 }
 
-async function loadOnlineList(list) {
+async function loadOnlineList(list, note) {
   clear(list);
   const res = await fetch("/v1/online");
   if (!res.ok) {
@@ -1067,12 +1112,15 @@ async function loadOnlineList(list) {
     return;
   }
   const body = await res.json();
+  if (note) note.textContent = UI.onlineShown.replace("{n}", body.total ?? body.count ?? 0).replace("{k}", body.count ?? 0);
   const rows = (body.online || []).filter((o) => o.char_id !== me?.id);
   if (rows.length === 0) {
     empty(list);
     return;
   }
   for (const o of rows) {
+    const shown = o.handle || UI.someone;
+    names.set(o.char_id, o.kind === "official" ? shown + " · " + UI.officialShort : shown);
     const row = el("div", { class: "item stack" });
     const label = `${o.handle}${o.kind === "official" ? " · " + UI.official : ""} · ${tx("tier" + o.tier)} ${tx("stage" + o.stage)} · ${UI.skins[o.skin] || o.skin} · ${tx("region." + o.region)}`;
     row.appendChild(el("span", { text: label }));
@@ -1114,18 +1162,22 @@ async function showWho(handle, box) {
 
 function onlineCard() {
   const card = el("section", { class: "card" });
-  card.appendChild(el("h3", { text: UI.onlineTitle }));
+  const head = el("div", { class: "row" });
+  head.appendChild(el("h3", { text: UI.onlineTitle }));
+  const note = el("span", { class: "small", text: "" });
+  head.appendChild(note);
+  card.appendChild(head);
   const top = el("div", { class: "row" });
   const findIn = el("input", { type: "text", maxlength: "8", placeholder: UI.findHandle });
   const list = el("div", { class: "list" });
   const found = el("div", { class: "stack" });
   top.appendChild(findIn);
   top.appendChild(btn(UI.find, () => showWho(findIn.value.trim(), found)));
-  top.appendChild(btn(UI.refresh, () => loadOnlineList(list), "ghost"));
+  top.appendChild(btn(UI.reshuffle, () => loadOnlineList(list, note), "ghost"));
   card.appendChild(top);
   card.appendChild(list);
   card.appendChild(found);
-  loadOnlineList(list).catch(showError);
+  loadOnlineList(list, note).catch(showError);
   return card;
 }
 
@@ -1167,7 +1219,15 @@ function eventLine(ev, reward) {
   const who = personIdName(d.char_id);
   if (ev.type === "speech") {
     const said = ev.other_speech || (ev.speech_status === "expired" ? UI.speechExpired : "");
-    return personIdName(d.speaker) + (said ? ": " + said : (zh ? "说了话" : " spoke"));
+    const speaker = personIdName(d.speaker);
+    if (d.channel === "direct" && d.target) {
+      const to = personIdName(d.target);
+      const head = d.speaker === me?.id
+        ? (zh ? UI.you + UI.saidTo + to + UI.said : UI.you + " " + UI.saidTo + " " + to)
+        : (zh ? speaker + UI.saidTo + UI.you + UI.said : speaker + " " + UI.saidTo + " " + UI.you);
+      return said ? head + (zh ? ":" : ": ") + said : head;
+    }
+    return speaker + (said ? (zh ? ":" : ": ") + said : (zh ? "说了话" : " spoke"));
   }
   if (ev.type === "moved") return zh ? who + "来到" + placeIdName(d.to) : who + " arrived at " + placeIdName(d.to);
   if (ev.type === "discovered") {
@@ -1176,7 +1236,7 @@ function eventLine(ev, reward) {
   }
   if (ev.type === "task_changed") {
     const task = tasks.get(d.task_id);
-    const objective = task ? taskConditionLine(task.condition) : (zh ? "一项差事" : "a task");
+    const objective = task ? taskConditionLine(task.condition) : UI.aTask;
     const words = zh ? { open: "出现差事", accepted: "接下差事", completed: "完成差事", cancelled: "放弃差事", expired: "差事已过期" } :
       { open: "Task available", accepted: "Accepted task", completed: "Completed task", cancelled: "Dropped task", expired: "Task expired" };
     return (words[d.state] || (zh ? "差事有了变化" : "A task changed")) + ": " + objective;
@@ -1209,6 +1269,76 @@ function eventLine(ev, reward) {
     return zh ? "世界发生了变化" : "The world changed";
   }
   return zh ? "发生了一件事" : "Something happened";
+}
+
+const EVENT_WORDS = zh ? {
+  speech: "说话", moved: "移动", discovered: "探得地点", task_changed: "差事变化",
+  item_changed: "物品变化", identity_state: "身份变化", skill_changed: "功法进展",
+  reward_granted: "获得报酬", reputation_changed: "声望变化", org_changed: "组织变化",
+  relation_proposed: "结交邀约", bond_changed: "关系变化", wanted_changed: "悬赏变化",
+  combat_resolved: "战斗", life_changed: "生死变化", progressed: "突破", built: "建造",
+  tick_yield: "修行收获", fact_changed: "世界变化",
+} : {
+  speech: "Speech", moved: "Movement", discovered: "Discovery", task_changed: "Task change",
+  item_changed: "Item change", identity_state: "Identity change", skill_changed: "Skill progress",
+  reward_granted: "Reward", reputation_changed: "Reputation change", org_changed: "Organization change",
+  relation_proposed: "A proposal", bond_changed: "Relationship change", wanted_changed: "Wanted change",
+  combat_resolved: "Combat", life_changed: "Life change", progressed: "Advancement", built: "Building",
+  tick_yield: "Practice yield", fact_changed: "World change",
+};
+
+function eventFacts(ev) {
+  const d = ev.data || {};
+  const ids = [d.char_id, d.speaker, d.attacker].filter((id) => typeof id === "string");
+  const toward = [d.target, d.to_char].filter((id) => typeof id === "string");
+  if (d.channel === "direct" && typeof d.target === "string") toward.push(d.target);
+  const where = d.place_id || d.to || (ev.scope === "place" ? me?.loc : null);
+  return {
+    what: EVENT_WORDS[ev.type] || ev.type,
+    who: [...new Set(ids)].map(personIdName).join(zh ? "、" : ", "),
+    toward: [...new Set(toward)].map(personIdName).join(zh ? "、" : ", "),
+    where: typeof where === "string" ? placeIdName(where) : "",
+    tick: typeof ev.tick === "string" ? ev.tick : "",
+  };
+}
+
+function readableBlock(pairs) {
+  const box = el("div", { class: "stack" });
+  for (const [label, value] of pairs) {
+    if (!value) continue;
+    box.appendChild(el("p", { class: "small", text: label + (zh ? ":" : ": ") + value }));
+  }
+  return box;
+}
+
+function rawFold(value) {
+  const raw = el("details", { class: "raw" });
+  raw.appendChild(el("summary", { text: UI.raw }));
+  raw.appendChild(el("pre", { text: JSON.stringify(value, null, 2) }));
+  return raw;
+}
+
+function eventDetail(ev) {
+  const f = eventFacts(ev);
+  const details = el("details", { class: "raw" });
+  details.appendChild(el("summary", { text: UI.detail }));
+  details.appendChild(readableBlock([
+    [UI.evWhat, f.what], [UI.evWho, f.who], [UI.evTo, f.toward], [UI.evWhere, f.where], [UI.evTick, f.tick],
+  ]));
+  details.appendChild(rawFold(ev));
+  return details;
+}
+
+function taskDetail(task) {
+  const details = el("details", { class: "raw" });
+  details.appendChild(el("summary", { text: UI.detail }));
+  details.appendChild(readableBlock([
+    [UI.evWhat, taskConditionLine(task.condition)],
+    [UI.evWhere, placeIdName(task.offer_place)],
+    [UI.reward, task.reward ? task.reward.coin + (zh ? " 币" : " coin") : ""],
+  ]));
+  details.appendChild(rawFold(task));
+  return details;
 }
 
 async function pullEvents(reset) {
@@ -1277,10 +1407,7 @@ async function pullEvents(reset) {
     if (duplicateKey) displayed.add(duplicateKey);
     const row = el("div", { class: "item" });
     row.appendChild(el("span", { text: eventLine(ev, rewards.get(ev.id)) }));
-    const details = el("details", { class: "raw" });
-    details.appendChild(el("summary", { text: UI.detail }));
-    details.appendChild(el("pre", { text: JSON.stringify(ev, null, 2) }));
-    row.appendChild(details);
+    row.appendChild(eventDetail(ev));
     box.appendChild(row);
     if (box.childNodes.length >= 12) break;
   }

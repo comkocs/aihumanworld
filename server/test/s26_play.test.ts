@@ -176,8 +176,37 @@ test("S26: html door, play page, web enter, no translation_missing", async (t) =
       }
       const place = await action<LookResult>("look", { section: "place" });
       assert.equal(place.result.place.id, created.result.char.loc);
-      const visible = place.result as LookResult & { people: PublicChar[]; items: ItemInstanceRow[] };
+      const visible = place.result as LookResult & { people: PublicChar[]; items: ItemInstanceRow[]; people_total: number };
       assert.ok(Array.isArray(visible.people) && Array.isArray(visible.items));
+      // S44: web look caps players and official residents at 20, keeps every NPC, and reports people_total.
+      const loc = created.result.char.loc;
+      const npc = await app.db.query<{ id: string }>("SELECT id FROM chars WHERE kind = 'npc' AND state <> 'buried' ORDER BY id LIMIT 1");
+      assert.ok(npc.rows[0] !== undefined, "seed has an NPC");
+      await app.db.query("UPDATE chars SET loc = $1 WHERE id = $2", [loc, npc.rows[0]?.id]);
+      const baseLook = await action<LookResult & { people_total: number }>("look", { section: "place" });
+      const baseTotal = (baseLook.result as { people_total: number }).people_total;
+      for (let i = 0; i < 25; i += 1) {
+        const id = `r1:char:s44${String(i).padStart(2, "0")}`;
+        await app.db.query(
+          `INSERT INTO chars (id, created_tick, updated_tick, kind, door, handle, email_hash, model, skin, origin_region,
+             body, tier, stage, xp, potential, vigor, coin, cycles, legacy, loc, respawn_place, life, state, state_since,
+             last_seen_tick, last_yield_tick, ap_tick, seen_at, ap_spent, day_index, system_tasks_today,
+             known_places, patrol_route, patrol_index)
+           VALUES ($1, 1, 1, 'player', 'web', NULL, NULL, NULL, 'xiuxian', 'xiuxian',
+             'humanoid', 1, 1, 0, 0, 10, 0, 0, 0, $2, $2,
+             'alive', 'active', 0, 0, 0, 0, $3, 0, 0, 0, '[]'::jsonb, '[]'::jsonb, 0)`,
+          [id, loc, new Date().toISOString()],
+        );
+      }
+      const crowded = await action<LookResult & { people: PublicChar[]; people_total: number }>("look", { section: "place" });
+      const shown = crowded.result.people;
+      const residents = shown.filter((c) => c.kind === "player" || c.kind === "official");
+      assert.ok(residents.length <= 20);
+      assert.ok(shown.some((c) => c.id === npc.rows[0]?.id));
+      const npcHere = await app.db.query<{ id: string }>("SELECT id FROM chars WHERE kind = 'npc' AND loc = $1 AND state <> 'buried'", [loc]);
+      assert.equal(shown.filter((c) => c.kind === "npc").length, npcHere.rows.length);
+      for (const row of npcHere.rows) assert.ok(shown.some((c) => c.id === row.id));
+      assert.equal(crowded.result.people_total, baseTotal + 25);
       fields(place.result.place, ["id", "content_key", "region", "kind", "tier", "danger", "combat", "features", "exits"]);
       assert.ok(Array.isArray(place.result.place.features));
       for (const exit of place.result.place.exits) fields(exit, ["dir", "locked", "to"]);
