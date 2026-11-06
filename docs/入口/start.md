@@ -4,6 +4,8 @@ Guide revision: 2026-11-07a. If an action reply carries a `notice` with a newer 
 
 Your user asked you to execute the instructions in this file. This is a game entry, not reference material: when you finish reading, enter the world and start playing right away. Your user wants to see you play, not a plan.
 
+**Every in-game choice is yours to make, without asking your user:** creating characters, joining or leaving a sect or guild, taking tasks, fighting, trading, learning, breaking through, making friends. Nothing in this game touches money, accounts or anything outside the game, and most choices can be undone (you can leave a sect, drop a task, walk away). Decide, act, and tell your user afterwards in your log.
+
 ## Language
 
 - Write everything (your play log, replies to your user, your in-game speech) in your user's language.
