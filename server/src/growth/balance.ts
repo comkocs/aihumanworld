@@ -14,7 +14,7 @@ export interface GridNumbers extends Numeric {
 }
 export interface Numbers {
   meta: { schema: string; revision_key: string; integer_only: boolean };
-  clock: { train_period_ticks: number; train_catchup_max_periods: number; vigor_regen_bp_per_tick: number };
+  clock: { day_ticks: number; week_ticks: number; train_period_ticks: number; train_catchup_max_periods: number; vigor_regen_bp_per_tick: number };
   tiers: TierNumbers[];
   grid: GridNumbers[];
   tier_prices: { tier: number; learn_coin: number }[];
@@ -106,7 +106,7 @@ export function parseBalance(input: unknown): Balance {
     else if (typeof v === "object" && v !== null) Object.values(v).forEach(visit);
   };
   visit(root);
-  numbersAt(root, "clock", "train_period_ticks train_catchup_max_periods vigor_regen_bp_per_tick");
+  numbersAt(root, "clock", "day_ticks week_ticks train_period_ticks train_catchup_max_periods vigor_regen_bp_per_tick");
   numbersAt(root, "stats", "skill_bp_per_level");
   numbersAt(root, "skills", "cap_initial level_initial level_cost_mult train_levelup_per_yield learn_cap_gain learn_level_gain learn_bond_coin");
   numbersAt(root, "breakthrough", "stage_success_bp tier_base_bp decay_bp_per_tier floor_bp cap_bp fail_xp_loss_bp");
@@ -143,7 +143,7 @@ export function parseBalance(input: unknown): Balance {
   for (const rule of [n.combat.rule_key, n.combat.rule_key_tier, n.combat.rule_key_cycle]) {
     if (typeof rule !== "string" || !/^[a-z][a-z0-9_]*(\.[a-z0-9_]+)*$/.test(rule)) throw new Error("invalid roll rule key");
   }
-  if (n.clock.train_period_ticks === 0 || n.clock.train_catchup_max_periods === 0 ||
+  if (n.clock.day_ticks === 0 || n.clock.week_ticks === 0 || n.clock.train_period_ticks === 0 || n.clock.train_catchup_max_periods === 0 ||
       n.skills.eff_level_rule !== "max_by_base" || n.skills.level_initial !== 0 || n.economy.start_potential !== 0 ||
       n.breakthrough.item_tier_rule !== "equal" || n.breakthrough.stage_success_bp !== 10000 ||
       n.breakthrough.floor_bp > n.breakthrough.cap_bp || n.breakthrough.cap_bp > 10000 ||

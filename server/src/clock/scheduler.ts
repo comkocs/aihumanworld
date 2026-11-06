@@ -28,10 +28,9 @@ export interface ClockOptions {
 
 /** S5 calendar of a tick (数值表 clock.day_ticks / week_ticks), floored. */
 export function calendarOf(balance: Balance, tick: Tick): { day_index: number; week_index: number } {
-  const clock = balance.numbers.clock as unknown as Record<string, unknown>;
   const per = (k: "day_ticks" | "week_ticks"): bigint => {
-    const v = clock[k];
-    if (typeof v !== "number" || !Number.isSafeInteger(v) || v <= 0) throw new Error(`S5 clock.${k} missing`);
+    const v = balance.numbers.clock[k];
+    if (!Number.isSafeInteger(v) || v <= 0) throw new Error(`S5 clock.${k} missing`);
     return BigInt(v);
   };
   const t = BigInt(tick);
@@ -80,6 +79,7 @@ export class Clock {
     for (;;) {
       const peek = await getRow(this.db, "world", id);
       if (peek === null || !this.isDue(peek, throughTime)) return total;
+      const started = performance.now();
       const result = await this.db.tx(async (q) => {
         let w = await mustGetRow(q, "world", id, { lock: true });
         const due = Math.max(0, Math.floor((throughTime - Date.parse(w.tick_started_at)) / ((w.rules.tick_seconds as number) * 1000)));
@@ -92,6 +92,10 @@ export class Clock {
         return k;
       });
       total += result;
+      if (result > 0) {
+        const ms = Math.round(performance.now() - started);
+        log.info("tick", result > 1 ? { advanced: result, ms, avg_ms: Math.round(ms / result) } : { advanced: result, ms });
+      }
       if (result === 0) return total;
     }
   }
@@ -144,8 +148,7 @@ export class Clock {
   private async loop(): Promise<void> {
     let delay = IDLE_POLL_MS;
     try {
-      const advanced = await this.advanceDue();
-      if (advanced > 0) log.info("tick", { advanced });
+      await this.advanceDue();
       const w = await getRow(this.db, "world", worldId(this.opts.realm));
       const due = w === null ? null : tickDueAt(w);
       if (due !== null) delay = Math.min(60_000, Math.max(20, due - this.now().getTime()));
