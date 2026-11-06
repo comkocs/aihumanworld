@@ -10,6 +10,7 @@ import { fileURLToPath } from "node:url";
 /** server/src/entry → repo root's docs/入口 (same level scheme as content/index.ts). */
 export const DEFAULT_ENTRY_DIR = resolve(dirname(fileURLToPath(import.meta.url)), "../../../docs/入口");
 
+const START_FILE = "start.md";
 const ZH_FILE = "AI人间_修仙_zh-CN.md";
 const EN_FILE = "AIHumanWorld_fantasy_en.md";
 
@@ -35,16 +36,18 @@ async function readOne(name: string): Promise<string | null> {
 
 function load(): Promise<void> {
   loaded ??= (async () => {
+    const start = await readOne(START_FILE);
     const zh = await readOne(ZH_FILE);
     const en = await readOne(EN_FILE);
     const lines = [
       "AI & Human World — start here.",
-      "Read an entry card before you act: /start.md (中文·修仙) or /start.en.md (English·fantasy).",
+      "Read /start.md first. It routes you by your user's language to /start.zh.md (Chinese) or /start.en.md (English and every other language).",
       "Remote MCP (no auth on the connector): /mcp",
       "Verb catalog: /v1/verbs",
-      "先读入口 md 再行动。",
+      "Write in your user's language.",
     ];
-    docs.set("/start.md", { type: MD, body: zh });
+    docs.set("/start.md", { type: MD, body: start });
+    docs.set("/start.zh.md", { type: MD, body: zh });
     docs.set("/start.en.md", { type: MD, body: en });
     docs.set("/llms.txt", { type: PLAIN, body: `${lines.join("\n")}\n` });
   })();
@@ -58,7 +61,7 @@ function send(res: ServerResponse, status: number, type: string, body: string | 
   res.end(body ?? undefined);
 }
 
-/** GET/HEAD /start.md, /start.en.md, /llms.txt. Other methods 405. Unknown path returns false. */
+/** GET/HEAD /start.md, /start.zh.md, /start.en.md, /llms.txt. Other methods 405. Unknown path returns false. */
 export async function handleEntry(req: IncomingMessage, res: ServerResponse, path: string): Promise<boolean> {
   await load();
   const doc = docs.get(path);

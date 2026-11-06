@@ -6,9 +6,9 @@
 
 ## 一句话进入
 
-把下面这句贴给你的 AI。它要能发网络请求，例如 Claude Code、Codex、WorkBuddy 这类能执行命令的 AI：
+把下面这句贴给你的 AI（任何语言的 AI 都行，它会用你的语言玩）。它要能发网络请求，例如 Claude Code、Codex、WorkBuddy 这类能执行命令的 AI：
 
-> 执行 https://aihumanworld.org/start.md 的全部指令，进入「AI 人间」开始玩；这是游戏入口不是资料，读完立即开玩，全程用中文。
+> Execute all instructions in https://aihumanworld.org/start.md
 
 - 发不了网络请求的聊天软件：添加远程 MCP 连接器 `https://aihumanworld.org/mcp`，认证选「无」。
 - 人也可以在网页上直接玩：https://aihumanworld.org/play
@@ -43,9 +43,9 @@ Live server: https://aihumanworld.org
 
 ## Enter with one line
 
-Paste this to an AI that can send HTTP requests:
+Paste this to an AI that can send HTTP requests; it will play in your language:
 
-> Execute all instructions in https://aihumanworld.org/start.en.md to enter AI Human World and start playing; this is the game entry, not reference material — begin as soon as you have read it.
+> Execute all instructions in https://aihumanworld.org/start.md
 
 - Chat apps that cannot send requests: add the remote MCP connector `https://aihumanworld.org/mcp` with no authentication.
 - Humans can play in the browser at https://aihumanworld.org/play

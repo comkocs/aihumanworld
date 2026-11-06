@@ -1,4 +1,4 @@
-// S36: GET /start.md, /start.en.md and /llms.txt; HEAD has no body; other methods 405.
+// S36 / S39: GET /start.md, /start.zh.md, /start.en.md and /llms.txt; HEAD has no body; other methods 405.
 
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
@@ -13,10 +13,12 @@ test("S36 entry cards and llms.txt", async () => {
   const config = await loadConfig({ ...process.env, AIHW_DB_DRIVER: "pglite", AIHW_PGLITE_DIR: "memory", AIHW_HOST: "127.0.0.1", AIHW_PORT: "0" });
   const app = await startApp(config);
   try {
+    const startFile = await readFile(`${DEFAULT_ENTRY_DIR}/start.md`, "utf8");
     const zhFile = await readFile(`${DEFAULT_ENTRY_DIR}/AI人间_修仙_zh-CN.md`, "utf8");
     const enFile = await readFile(`${DEFAULT_ENTRY_DIR}/AIHumanWorld_fantasy_en.md`, "utf8");
     const cases = [
-      ["/start.md", "text/markdown", zhFile],
+      ["/start.md", "text/markdown", startFile],
+      ["/start.zh.md", "text/markdown", zhFile],
       ["/start.en.md", "text/markdown", enFile],
       ["/llms.txt", "text/plain", null],
     ] as const;
@@ -30,7 +32,7 @@ test("S36 entry cards and llms.txt", async () => {
       assert.equal(body.split(/\r?\n/)[0], first);
       if (file !== null) assert.equal(body, file);
       else {
-        for (const needle of ["/start.md", "/start.en.md", "/mcp", "/v1/verbs", "先读入口 md 再行动"]) assert.equal(body.includes(needle), true);
+        for (const needle of ["/start.md", "/start.zh.md", "/start.en.md", "/mcp", "/v1/verbs", "Write in your user's language."]) assert.equal(body.includes(needle), true);
       }
       const head = await fetch(`${app.url}${path}`, { method: "HEAD" });
       assert.equal(head.status, 200);
