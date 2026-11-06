@@ -49,7 +49,7 @@ healthy() {
 rollback() {
   set +e  # 回退一路走完,单步报错只记不停(pg_restore --clean 常带可忽略的警告)
   echo "自检不过,回 ${OLD:0:7}。近 5 分钟服务日志末 30 行:"
-  sudo -n journalctl -u aihw --since "-5 min" --no-pager | tail -30 || true
+  sudo -n journalctl -u aihw --since "-5 min" --no-pager -o cat | tail -30 || true
   sudo -n systemctl stop aihw
   if [ "$MIGS" -gt 0 ]; then
     echo "目标带迁移变动,先用 $DUMP 恢复库"
