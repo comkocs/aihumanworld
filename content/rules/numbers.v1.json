@@ -1,0 +1,2054 @@
+{
+ "meta": {
+  "schema": "aihw.numbers.v1",
+  "revision_key": "balance.v1",
+  "integer_only": true
+ },
+ "world_rules": {
+  "tick_seconds": 60,
+  "ap_per_tick": 3,
+  "draft_expire_ticks": 10080,
+  "dormant_after_ticks": 43200,
+  "bury_after_ticks": 129600,
+  "revive_window_ticks": 525600,
+  "speech_ttl_ticks": 1440,
+  "page_size": 20,
+  "text_max_chars": 200,
+  "build_min_tier": 3,
+  "bounty_open_max": 3,
+  "active_task_max": 3,
+  "socket_max": 3,
+  "ap_costs": {
+   "enter": 0,
+   "look": 0,
+   "events": 0,
+   "whoami": 0,
+   "go": 1,
+   "say": 1,
+   "take": 1,
+   "give": 1,
+   "use": 1,
+   "attack": 2,
+   "train": 1,
+   "learn": 1,
+   "task": {
+    "list": 0,
+    "accept": 1,
+    "submit": 1,
+    "abandon": 1
+   },
+   "bounty": {
+    "post": 1,
+    "cancel": 1
+   },
+   "build": 1,
+   "breakthrough": 2
+  },
+  "balance_key": "balance.v1"
+ },
+ "clock": {
+  "day_ticks": 1440,
+  "week_ticks": 10080,
+  "train_period_ticks": 10,
+  "train_catchup_max_periods": 144,
+  "vigor_regen_bp_per_tick": 200,
+  "proposal_ttl_ticks": 1440,
+  "task_duration_default_ticks": 1440,
+  "task_duration_min_ticks": 60,
+  "task_duration_max_ticks": 10080,
+  "bounty_expire_min_ticks": 60,
+  "bounty_expire_max_ticks": 20160
+ },
+ "tiers": [
+  {
+   "tier": 1,
+   "unit": 1000,
+   "cap_max": 200,
+   "skill_cap_hard": 12,
+   "task_xp": 300,
+   "task_potential": 30,
+   "task_coin": 100,
+   "train_xp": 2,
+   "train_potential": 1,
+   "rep_bounty": 1,
+   "tier_up_success_bp": 9500,
+   "pace_days_x100": 75,
+   "daily_xp_full": 1188
+  },
+  {
+   "tier": 2,
+   "unit": 1800,
+   "cap_max": 300,
+   "skill_cap_hard": 16,
+   "task_xp": 450,
+   "task_potential": 45,
+   "task_coin": 150,
+   "train_xp": 3,
+   "train_potential": 2,
+   "rep_bounty": 2,
+   "tier_up_success_bp": 8800,
+   "pace_days_x100": 150,
+   "daily_xp_full": 1782
+  },
+  {
+   "tier": 3,
+   "unit": 3200,
+   "cap_max": 440,
+   "skill_cap_hard": 20,
+   "task_xp": 680,
+   "task_potential": 68,
+   "task_coin": 230,
+   "train_xp": 5,
+   "train_potential": 3,
+   "rep_bounty": 3,
+   "tier_up_success_bp": 8100,
+   "pace_days_x100": 250,
+   "daily_xp_full": 2760
+  },
+  {
+   "tier": 4,
+   "unit": 5800,
+   "cap_max": 660,
+   "skill_cap_hard": 24,
+   "task_xp": 1000,
+   "task_potential": 100,
+   "task_coin": 330,
+   "train_xp": 7,
+   "train_potential": 4,
+   "rep_bounty": 5,
+   "tier_up_success_bp": 7400,
+   "pace_days_x100": 350,
+   "daily_xp_full": 4008
+  },
+  {
+   "tier": 5,
+   "unit": 10500,
+   "cap_max": 1000,
+   "skill_cap_hard": 28,
+   "task_xp": 1500,
+   "task_potential": 150,
+   "task_coin": 500,
+   "train_xp": 10,
+   "train_potential": 5,
+   "rep_bounty": 8,
+   "tier_up_success_bp": 6700,
+   "pace_days_x100": 500,
+   "daily_xp_full": 5940
+  },
+  {
+   "tier": 6,
+   "unit": 18900,
+   "cap_max": 1500,
+   "skill_cap_hard": 32,
+   "task_xp": 2300,
+   "task_potential": 230,
+   "task_coin": 770,
+   "train_xp": 15,
+   "train_potential": 8,
+   "rep_bounty": 12,
+   "tier_up_success_bp": 6000,
+   "pace_days_x100": 700,
+   "daily_xp_full": 9060
+  },
+  {
+   "tier": 7,
+   "unit": 34000,
+   "cap_max": 2200,
+   "skill_cap_hard": 36,
+   "task_xp": 3400,
+   "task_potential": 340,
+   "task_coin": 1100,
+   "train_xp": 23,
+   "train_potential": 12,
+   "rep_bounty": 18,
+   "tier_up_success_bp": 5300,
+   "pace_days_x100": 900,
+   "daily_xp_full": 13512
+  },
+  {
+   "tier": 8,
+   "unit": 61000,
+   "cap_max": 3300,
+   "skill_cap_hard": 40,
+   "task_xp": 5100,
+   "task_potential": 510,
+   "task_coin": 1700,
+   "train_xp": 34,
+   "train_potential": 17,
+   "rep_bounty": 27,
+   "tier_up_success_bp": 4600,
+   "pace_days_x100": 1100,
+   "daily_xp_full": 20196
+  },
+  {
+   "tier": 9,
+   "unit": 110000,
+   "cap_max": 5000,
+   "skill_cap_hard": 44,
+   "task_xp": 7700,
+   "task_potential": 770,
+   "task_coin": 2600,
+   "train_xp": 51,
+   "train_potential": 26,
+   "rep_bounty": 40,
+   "tier_up_success_bp": 3900,
+   "pace_days_x100": 1400,
+   "daily_xp_full": 30444
+  }
+ ],
+ "tier_prices": [
+  {
+   "tier": 1,
+   "learn_coin": 600,
+   "org_join_fee": 200,
+   "org_leave_coin": 500,
+   "wanted_bounty_coin": 200,
+   "npc_coin_float": 3000
+  },
+  {
+   "tier": 2,
+   "learn_coin": 900,
+   "org_join_fee": 300,
+   "org_leave_coin": 750,
+   "wanted_bounty_coin": 300,
+   "npc_coin_float": 4500
+  },
+  {
+   "tier": 3,
+   "learn_coin": 1380,
+   "org_join_fee": 460,
+   "org_leave_coin": 1150,
+   "wanted_bounty_coin": 460,
+   "npc_coin_float": 6900
+  },
+  {
+   "tier": 4,
+   "learn_coin": 1980,
+   "org_join_fee": 660,
+   "org_leave_coin": 1650,
+   "wanted_bounty_coin": 660,
+   "npc_coin_float": 9900
+  },
+  {
+   "tier": 5,
+   "learn_coin": 3000,
+   "org_join_fee": 1000,
+   "org_leave_coin": 2500,
+   "wanted_bounty_coin": 1000,
+   "npc_coin_float": 15000
+  },
+  {
+   "tier": 6,
+   "learn_coin": 4620,
+   "org_join_fee": 1540,
+   "org_leave_coin": 3850,
+   "wanted_bounty_coin": 1540,
+   "npc_coin_float": 23100
+  },
+  {
+   "tier": 7,
+   "learn_coin": 6600,
+   "org_join_fee": 2200,
+   "org_leave_coin": 5500,
+   "wanted_bounty_coin": 2200,
+   "npc_coin_float": 33000
+  },
+  {
+   "tier": 8,
+   "learn_coin": 10200,
+   "org_join_fee": 3400,
+   "org_leave_coin": 8500,
+   "wanted_bounty_coin": 3400,
+   "npc_coin_float": 51000
+  },
+  {
+   "tier": 9,
+   "learn_coin": 15600,
+   "org_join_fee": 5200,
+   "org_leave_coin": 13000,
+   "wanted_bounty_coin": 5200,
+   "npc_coin_float": 78000
+  }
+ ],
+ "stages": [
+  {
+   "stage": 1,
+   "stat_factor_bp": 10000,
+   "xp_factor_bp": 8000
+  },
+  {
+   "stage": 2,
+   "stat_factor_bp": 10500,
+   "xp_factor_bp": 9500
+  },
+  {
+   "stage": 3,
+   "stat_factor_bp": 11000,
+   "xp_factor_bp": 11000
+  },
+  {
+   "stage": 4,
+   "stat_factor_bp": 11500,
+   "xp_factor_bp": 12500
+  }
+ ],
+ "grid": [
+  {
+   "tier": 1,
+   "stage": 1,
+   "xp_need": 710,
+   "power": 400,
+   "guard": 350,
+   "speed": 250,
+   "vigor_max": 2000,
+   "rating": 1000,
+   "inner_req": 1
+  },
+  {
+   "tier": 1,
+   "stage": 2,
+   "xp_need": 850,
+   "power": 420,
+   "guard": 367,
+   "speed": 263,
+   "vigor_max": 2100,
+   "rating": 1050,
+   "inner_req": 2
+  },
+  {
+   "tier": 1,
+   "stage": 3,
+   "xp_need": 980,
+   "power": 440,
+   "guard": 385,
+   "speed": 275,
+   "vigor_max": 2200,
+   "rating": 1100,
+   "inner_req": 3
+  },
+  {
+   "tier": 1,
+   "stage": 4,
+   "xp_need": 1100,
+   "power": 460,
+   "guard": 402,
+   "speed": 288,
+   "vigor_max": 2300,
+   "rating": 1150,
+   "inner_req": 4
+  },
+  {
+   "tier": 2,
+   "stage": 1,
+   "xp_need": 2100,
+   "power": 720,
+   "guard": 630,
+   "speed": 450,
+   "vigor_max": 3600,
+   "rating": 1800,
+   "inner_req": 5
+  },
+  {
+   "tier": 2,
+   "stage": 2,
+   "xp_need": 2500,
+   "power": 756,
+   "guard": 661,
+   "speed": 473,
+   "vigor_max": 3780,
+   "rating": 1890,
+   "inner_req": 6
+  },
+  {
+   "tier": 2,
+   "stage": 3,
+   "xp_need": 2900,
+   "power": 792,
+   "guard": 693,
+   "speed": 495,
+   "vigor_max": 3960,
+   "rating": 1980,
+   "inner_req": 7
+  },
+  {
+   "tier": 2,
+   "stage": 4,
+   "xp_need": 3300,
+   "power": 828,
+   "guard": 724,
+   "speed": 518,
+   "vigor_max": 4140,
+   "rating": 2070,
+   "inner_req": 8
+  },
+  {
+   "tier": 3,
+   "stage": 1,
+   "xp_need": 5500,
+   "power": 1280,
+   "guard": 1120,
+   "speed": 800,
+   "vigor_max": 6400,
+   "rating": 3200,
+   "inner_req": 9
+  },
+  {
+   "tier": 3,
+   "stage": 2,
+   "xp_need": 6600,
+   "power": 1344,
+   "guard": 1176,
+   "speed": 840,
+   "vigor_max": 6720,
+   "rating": 3360,
+   "inner_req": 10
+  },
+  {
+   "tier": 3,
+   "stage": 3,
+   "xp_need": 7600,
+   "power": 1408,
+   "guard": 1232,
+   "speed": 880,
+   "vigor_max": 7040,
+   "rating": 3520,
+   "inner_req": 11
+  },
+  {
+   "tier": 3,
+   "stage": 4,
+   "xp_need": 8600,
+   "power": 1472,
+   "guard": 1288,
+   "speed": 920,
+   "vigor_max": 7360,
+   "rating": 3680,
+   "inner_req": 12
+  },
+  {
+   "tier": 4,
+   "stage": 1,
+   "xp_need": 11000,
+   "power": 2320,
+   "guard": 2030,
+   "speed": 1450,
+   "vigor_max": 11600,
+   "rating": 5800,
+   "inner_req": 13
+  },
+  {
+   "tier": 4,
+   "stage": 2,
+   "xp_need": 13000,
+   "power": 2436,
+   "guard": 2131,
+   "speed": 1523,
+   "vigor_max": 12180,
+   "rating": 6090,
+   "inner_req": 14
+  },
+  {
+   "tier": 4,
+   "stage": 3,
+   "xp_need": 15000,
+   "power": 2552,
+   "guard": 2233,
+   "speed": 1595,
+   "vigor_max": 12760,
+   "rating": 6380,
+   "inner_req": 15
+  },
+  {
+   "tier": 4,
+   "stage": 4,
+   "xp_need": 18000,
+   "power": 2668,
+   "guard": 2334,
+   "speed": 1668,
+   "vigor_max": 13340,
+   "rating": 6670,
+   "inner_req": 16
+  },
+  {
+   "tier": 5,
+   "stage": 1,
+   "xp_need": 24000,
+   "power": 4200,
+   "guard": 3675,
+   "speed": 2625,
+   "vigor_max": 21000,
+   "rating": 10500,
+   "inner_req": 17
+  },
+  {
+   "tier": 5,
+   "stage": 2,
+   "xp_need": 28000,
+   "power": 4410,
+   "guard": 3858,
+   "speed": 2757,
+   "vigor_max": 22050,
+   "rating": 11025,
+   "inner_req": 18
+  },
+  {
+   "tier": 5,
+   "stage": 3,
+   "xp_need": 33000,
+   "power": 4620,
+   "guard": 4042,
+   "speed": 2888,
+   "vigor_max": 23100,
+   "rating": 11550,
+   "inner_req": 19
+  },
+  {
+   "tier": 5,
+   "stage": 4,
+   "xp_need": 37000,
+   "power": 4830,
+   "guard": 4226,
+   "speed": 3019,
+   "vigor_max": 24150,
+   "rating": 12075,
+   "inner_req": 20
+  },
+  {
+   "tier": 6,
+   "stage": 1,
+   "xp_need": 51000,
+   "power": 7560,
+   "guard": 6615,
+   "speed": 4725,
+   "vigor_max": 37800,
+   "rating": 18900,
+   "inner_req": 21
+  },
+  {
+   "tier": 6,
+   "stage": 2,
+   "xp_need": 60000,
+   "power": 7938,
+   "guard": 6945,
+   "speed": 4962,
+   "vigor_max": 39690,
+   "rating": 19845,
+   "inner_req": 22
+  },
+  {
+   "tier": 6,
+   "stage": 3,
+   "xp_need": 70000,
+   "power": 8316,
+   "guard": 7276,
+   "speed": 5198,
+   "vigor_max": 41580,
+   "rating": 20790,
+   "inner_req": 23
+  },
+  {
+   "tier": 6,
+   "stage": 4,
+   "xp_need": 79000,
+   "power": 8694,
+   "guard": 7607,
+   "speed": 5434,
+   "vigor_max": 43470,
+   "rating": 21735,
+   "inner_req": 24
+  },
+  {
+   "tier": 7,
+   "stage": 1,
+   "xp_need": 97000,
+   "power": 13600,
+   "guard": 11900,
+   "speed": 8500,
+   "vigor_max": 68000,
+   "rating": 34000,
+   "inner_req": 25
+  },
+  {
+   "tier": 7,
+   "stage": 2,
+   "xp_need": 120000,
+   "power": 14280,
+   "guard": 12495,
+   "speed": 8925,
+   "vigor_max": 71400,
+   "rating": 35700,
+   "inner_req": 26
+  },
+  {
+   "tier": 7,
+   "stage": 3,
+   "xp_need": 130000,
+   "power": 14960,
+   "guard": 13090,
+   "speed": 9350,
+   "vigor_max": 74800,
+   "rating": 37400,
+   "inner_req": 27
+  },
+  {
+   "tier": 7,
+   "stage": 4,
+   "xp_need": 150000,
+   "power": 15640,
+   "guard": 13685,
+   "speed": 9775,
+   "vigor_max": 78200,
+   "rating": 39100,
+   "inner_req": 28
+  },
+  {
+   "tier": 8,
+   "stage": 1,
+   "xp_need": 180000,
+   "power": 24400,
+   "guard": 21350,
+   "speed": 15250,
+   "vigor_max": 122000,
+   "rating": 61000,
+   "inner_req": 29
+  },
+  {
+   "tier": 8,
+   "stage": 2,
+   "xp_need": 210000,
+   "power": 25620,
+   "guard": 22417,
+   "speed": 16013,
+   "vigor_max": 128100,
+   "rating": 64050,
+   "inner_req": 30
+  },
+  {
+   "tier": 8,
+   "stage": 3,
+   "xp_need": 240000,
+   "power": 26840,
+   "guard": 23485,
+   "speed": 16775,
+   "vigor_max": 134200,
+   "rating": 67100,
+   "inner_req": 31
+  },
+  {
+   "tier": 8,
+   "stage": 4,
+   "xp_need": 280000,
+   "power": 28060,
+   "guard": 24552,
+   "speed": 17538,
+   "vigor_max": 140300,
+   "rating": 70150,
+   "inner_req": 32
+  },
+  {
+   "tier": 9,
+   "stage": 1,
+   "xp_need": 340000,
+   "power": 44000,
+   "guard": 38500,
+   "speed": 27500,
+   "vigor_max": 220000,
+   "rating": 110000,
+   "inner_req": 33
+  },
+  {
+   "tier": 9,
+   "stage": 2,
+   "xp_need": 400000,
+   "power": 46200,
+   "guard": 40425,
+   "speed": 28875,
+   "vigor_max": 231000,
+   "rating": 115500,
+   "inner_req": 34
+  },
+  {
+   "tier": 9,
+   "stage": 3,
+   "xp_need": 470000,
+   "power": 48400,
+   "guard": 42350,
+   "speed": 30250,
+   "vigor_max": 242000,
+   "rating": 121000,
+   "inner_req": 35
+  },
+  {
+   "tier": 9,
+   "stage": 4,
+   "xp_need": 530000,
+   "power": 50600,
+   "guard": 44275,
+   "speed": 31625,
+   "vigor_max": 253000,
+   "rating": 126500,
+   "inner_req": 36
+  }
+ ],
+ "stats": {
+  "power_share_bp": 4000,
+  "guard_share_bp": 3500,
+  "vigor_per_rating": 2,
+  "skill_bp_per_level": 27
+ },
+ "skills": {
+  "cap_initial": 8,
+  "level_initial": 0,
+  "level_cost_mult": 1,
+  "train_levelup_per_yield": 1,
+  "inner_req_offset": 1,
+  "eff_level_rule": "max_by_base",
+  "learn_cap_gain": 5,
+  "learn_level_gain": 2,
+  "learn_coin_pct_of_task_coin": 600,
+  "learn_bond_coin": 0
+ },
+ "breakthrough": {
+  "stage_success_bp": 10000,
+  "tier_base_bp": 9500,
+  "decay_bp_per_tier": 700,
+  "floor_bp": 1000,
+  "cap_bp": 9500,
+  "fail_xp_loss_bp": 2000,
+  "item_tier_rule": "equal"
+ },
+ "cycle": {
+  "legacy_gain": 100,
+  "legacy_cap": 1000,
+  "legacy_bp_per_point": 1,
+  "skill_keep_bp": 5000,
+  "potential_keep_bp": 0,
+  "xp_after": 0
+ },
+ "combat": {
+  "roll_spread_bp": 1500,
+  "draw_margin_bp": 200,
+  "loss_base_bp": 2500,
+  "loss_gap_pct": 100,
+  "loss_cap_bp": 10000,
+  "winner_recoil_bp": 500,
+  "draw_loss_bp": 1000,
+  "vigor_factor_floor_bp": 7000,
+  "duel_vigor_floor": 1,
+  "tutorial_dies_on_loss": true,
+  "tutorial_rating_bp": 3000,
+  "wear_loser_bp": 400,
+  "wear_winner_bp": 100,
+  "wear_draw_bp": 200,
+  "npc_rating_bp": {
+   "master": 10000,
+   "merchant": 10000,
+   "repairer": 10000,
+   "guard": 10000,
+   "quest_giver": 10000,
+   "patroller": 10000,
+   "monster": 10000,
+   "tutorial_opponent": 3000
+  },
+  "body_rating_bp": {
+   "humanoid": 10000,
+   "beast": 10000,
+   "undead": 10000,
+   "construct": 10000,
+   "spirit": 10000
+  },
+  "seed_format": "{rules_revision}:{realm}:{tick}:{deed_seq}:{actor}:{target_or_dash}",
+  "hash_rule": "u32=be32(sha256(utf8(seed+'#'+label))[0:4]); j=u32%(2*spread+1)-spread",
+  "rule_key": "combat.v1",
+  "rule_key_tier": "breakthrough.tier.v1",
+  "rule_key_cycle": "breakthrough.cycle.v1"
+ },
+ "death": {
+  "xp_loss_bp": 1000,
+  "revive_wait_ticks": 10,
+  "revive_vigor_bp": 5000,
+  "pk_drop_chance_bp": 5000,
+  "pk_drop_count": 1,
+  "pk_drop_equipped": false
+ },
+ "wanted": {
+  "attack_guard_ticks": 720,
+  "kill_player_ticks": 2880,
+  "bounty_coin_pct_of_task_coin": 200
+ },
+ "npc": {
+  "patrol_step_ticks": 5,
+  "monster_respawn_ticks": 30,
+  "npc_respawn_ticks": 60,
+  "tutorial_respawn_ticks": 1,
+  "resource_respawn_ticks": 120,
+  "merchant_restock_ticks": 1440,
+  "master_skill_level_rule": "skill_cap_hard",
+  "coin_float_pct_of_task_coin": 3000,
+  "coin_reset_ticks": 1440
+ },
+ "equipment": {
+  "positions": {
+   "weapon": 1,
+   "armor": 1,
+   "accessory": 2
+  },
+  "main_stat": {
+   "weapon": "power",
+   "armor": "guard",
+   "accessory": "speed"
+  },
+  "vigor_budget_ratio": 2,
+  "broken_modifier_zero": true,
+  "repair_full_bp": 2000,
+  "grades": [
+   {
+    "grade": 1,
+    "mod_share_bp": 400,
+    "cap_share_bp": 1650,
+    "slots": 1,
+    "price_bp": 6000
+   },
+   {
+    "grade": 2,
+    "mod_share_bp": 500,
+    "cap_share_bp": 1900,
+    "slots": 2,
+    "price_bp": 7800
+   },
+   {
+    "grade": 3,
+    "mod_share_bp": 600,
+    "cap_share_bp": 2200,
+    "slots": 3,
+    "price_bp": 10200
+   }
+  ],
+  "table": [
+   {
+    "tier": 1,
+    "grade": 1,
+    "budget": 40,
+    "cap": 33,
+    "dura_max": 100,
+    "slots": 1,
+    "price": 600
+   },
+   {
+    "tier": 1,
+    "grade": 2,
+    "budget": 50,
+    "cap": 38,
+    "dura_max": 110,
+    "slots": 2,
+    "price": 780
+   },
+   {
+    "tier": 1,
+    "grade": 3,
+    "budget": 60,
+    "cap": 44,
+    "dura_max": 120,
+    "slots": 3,
+    "price": 1020
+   },
+   {
+    "tier": 2,
+    "grade": 1,
+    "budget": 72,
+    "cap": 50,
+    "dura_max": 130,
+    "slots": 1,
+    "price": 1080
+   },
+   {
+    "tier": 2,
+    "grade": 2,
+    "budget": 90,
+    "cap": 57,
+    "dura_max": 140,
+    "slots": 2,
+    "price": 1404
+   },
+   {
+    "tier": 2,
+    "grade": 3,
+    "budget": 108,
+    "cap": 66,
+    "dura_max": 150,
+    "slots": 3,
+    "price": 1836
+   },
+   {
+    "tier": 3,
+    "grade": 1,
+    "budget": 128,
+    "cap": 73,
+    "dura_max": 160,
+    "slots": 1,
+    "price": 1920
+   },
+   {
+    "tier": 3,
+    "grade": 2,
+    "budget": 160,
+    "cap": 84,
+    "dura_max": 170,
+    "slots": 2,
+    "price": 2496
+   },
+   {
+    "tier": 3,
+    "grade": 3,
+    "budget": 192,
+    "cap": 97,
+    "dura_max": 180,
+    "slots": 3,
+    "price": 3264
+   },
+   {
+    "tier": 4,
+    "grade": 1,
+    "budget": 232,
+    "cap": 109,
+    "dura_max": 190,
+    "slots": 1,
+    "price": 3480
+   },
+   {
+    "tier": 4,
+    "grade": 2,
+    "budget": 290,
+    "cap": 125,
+    "dura_max": 200,
+    "slots": 2,
+    "price": 4524
+   },
+   {
+    "tier": 4,
+    "grade": 3,
+    "budget": 348,
+    "cap": 145,
+    "dura_max": 210,
+    "slots": 3,
+    "price": 5916
+   },
+   {
+    "tier": 5,
+    "grade": 1,
+    "budget": 420,
+    "cap": 165,
+    "dura_max": 220,
+    "slots": 1,
+    "price": 6300
+   },
+   {
+    "tier": 5,
+    "grade": 2,
+    "budget": 525,
+    "cap": 190,
+    "dura_max": 230,
+    "slots": 2,
+    "price": 8190
+   },
+   {
+    "tier": 5,
+    "grade": 3,
+    "budget": 630,
+    "cap": 220,
+    "dura_max": 240,
+    "slots": 3,
+    "price": 10710
+   },
+   {
+    "tier": 6,
+    "grade": 1,
+    "budget": 756,
+    "cap": 248,
+    "dura_max": 250,
+    "slots": 1,
+    "price": 11340
+   },
+   {
+    "tier": 6,
+    "grade": 2,
+    "budget": 945,
+    "cap": 285,
+    "dura_max": 260,
+    "slots": 2,
+    "price": 14742
+   },
+   {
+    "tier": 6,
+    "grade": 3,
+    "budget": 1134,
+    "cap": 330,
+    "dura_max": 270,
+    "slots": 3,
+    "price": 19278
+   },
+   {
+    "tier": 7,
+    "grade": 1,
+    "budget": 1360,
+    "cap": 363,
+    "dura_max": 280,
+    "slots": 1,
+    "price": 20400
+   },
+   {
+    "tier": 7,
+    "grade": 2,
+    "budget": 1700,
+    "cap": 418,
+    "dura_max": 290,
+    "slots": 2,
+    "price": 26520
+   },
+   {
+    "tier": 7,
+    "grade": 3,
+    "budget": 2040,
+    "cap": 484,
+    "dura_max": 300,
+    "slots": 3,
+    "price": 34680
+   },
+   {
+    "tier": 8,
+    "grade": 1,
+    "budget": 2440,
+    "cap": 545,
+    "dura_max": 310,
+    "slots": 1,
+    "price": 36600
+   },
+   {
+    "tier": 8,
+    "grade": 2,
+    "budget": 3050,
+    "cap": 627,
+    "dura_max": 320,
+    "slots": 2,
+    "price": 47580
+   },
+   {
+    "tier": 8,
+    "grade": 3,
+    "budget": 3660,
+    "cap": 726,
+    "dura_max": 330,
+    "slots": 3,
+    "price": 62220
+   },
+   {
+    "tier": 9,
+    "grade": 1,
+    "budget": 4400,
+    "cap": 825,
+    "dura_max": 340,
+    "slots": 1,
+    "price": 66000
+   },
+   {
+    "tier": 9,
+    "grade": 2,
+    "budget": 5500,
+    "cap": 950,
+    "dura_max": 350,
+    "slots": 2,
+    "price": 85800
+   },
+   {
+    "tier": 9,
+    "grade": 3,
+    "budget": 6600,
+    "cap": 1100,
+    "dura_max": 360,
+    "slots": 3,
+    "price": 112200
+   }
+  ]
+ },
+ "cores": {
+  "unsocket_fee_bp": 2000,
+  "grades": [
+   {
+    "grade": 1,
+    "mod_share_bp": 70,
+    "cap_share_bp": 300,
+    "price_bp": 800
+   },
+   {
+    "grade": 2,
+    "mod_share_bp": 90,
+    "cap_share_bp": 340,
+    "price_bp": 1040
+   },
+   {
+    "grade": 3,
+    "mod_share_bp": 110,
+    "cap_share_bp": 400,
+    "price_bp": 1360
+   }
+  ],
+  "table": [
+   {
+    "tier": 1,
+    "grade": 1,
+    "budget": 7,
+    "cap": 6,
+    "price": 80
+   },
+   {
+    "tier": 1,
+    "grade": 2,
+    "budget": 9,
+    "cap": 7,
+    "price": 104
+   },
+   {
+    "tier": 1,
+    "grade": 3,
+    "budget": 11,
+    "cap": 8,
+    "price": 136
+   },
+   {
+    "tier": 2,
+    "grade": 1,
+    "budget": 12,
+    "cap": 9,
+    "price": 144
+   },
+   {
+    "tier": 2,
+    "grade": 2,
+    "budget": 16,
+    "cap": 10,
+    "price": 187
+   },
+   {
+    "tier": 2,
+    "grade": 3,
+    "budget": 19,
+    "cap": 12,
+    "price": 244
+   },
+   {
+    "tier": 3,
+    "grade": 1,
+    "budget": 22,
+    "cap": 13,
+    "price": 256
+   },
+   {
+    "tier": 3,
+    "grade": 2,
+    "budget": 28,
+    "cap": 15,
+    "price": 332
+   },
+   {
+    "tier": 3,
+    "grade": 3,
+    "budget": 35,
+    "cap": 18,
+    "price": 435
+   },
+   {
+    "tier": 4,
+    "grade": 1,
+    "budget": 40,
+    "cap": 20,
+    "price": 464
+   },
+   {
+    "tier": 4,
+    "grade": 2,
+    "budget": 52,
+    "cap": 22,
+    "price": 603
+   },
+   {
+    "tier": 4,
+    "grade": 3,
+    "budget": 63,
+    "cap": 26,
+    "price": 788
+   },
+   {
+    "tier": 5,
+    "grade": 1,
+    "budget": 73,
+    "cap": 30,
+    "price": 840
+   },
+   {
+    "tier": 5,
+    "grade": 2,
+    "budget": 94,
+    "cap": 34,
+    "price": 1092
+   },
+   {
+    "tier": 5,
+    "grade": 3,
+    "budget": 115,
+    "cap": 40,
+    "price": 1428
+   },
+   {
+    "tier": 6,
+    "grade": 1,
+    "budget": 132,
+    "cap": 45,
+    "price": 1512
+   },
+   {
+    "tier": 6,
+    "grade": 2,
+    "budget": 170,
+    "cap": 51,
+    "price": 1965
+   },
+   {
+    "tier": 6,
+    "grade": 3,
+    "budget": 207,
+    "cap": 60,
+    "price": 2570
+   },
+   {
+    "tier": 7,
+    "grade": 1,
+    "budget": 238,
+    "cap": 66,
+    "price": 2720
+   },
+   {
+    "tier": 7,
+    "grade": 2,
+    "budget": 306,
+    "cap": 75,
+    "price": 3536
+   },
+   {
+    "tier": 7,
+    "grade": 3,
+    "budget": 374,
+    "cap": 88,
+    "price": 4624
+   },
+   {
+    "tier": 8,
+    "grade": 1,
+    "budget": 427,
+    "cap": 99,
+    "price": 4880
+   },
+   {
+    "tier": 8,
+    "grade": 2,
+    "budget": 549,
+    "cap": 112,
+    "price": 6344
+   },
+   {
+    "tier": 8,
+    "grade": 3,
+    "budget": 671,
+    "cap": 132,
+    "price": 8296
+   },
+   {
+    "tier": 9,
+    "grade": 1,
+    "budget": 770,
+    "cap": 150,
+    "price": 8800
+   },
+   {
+    "tier": 9,
+    "grade": 2,
+    "budget": 990,
+    "cap": 170,
+    "price": 11440
+   },
+   {
+    "tier": 9,
+    "grade": 3,
+    "budget": 1210,
+    "cap": 200,
+    "price": 14960
+   }
+  ]
+ },
+ "consumables": {
+  "grades": [
+   {
+    "grade": 1,
+    "restore_bp": 6000,
+    "restore_price_bp": 300,
+    "bt_bonus_bp": 1000,
+    "bt_price_bp": 1000,
+    "scroll_levels": 2,
+    "scroll_price_bp": 800,
+    "key_price_bp": 500,
+    "map_price_bp": 1500,
+    "material_price_bp": 60
+   },
+   {
+    "grade": 2,
+    "restore_bp": 8000,
+    "restore_price_bp": 390,
+    "bt_bonus_bp": 2000,
+    "bt_price_bp": 1300,
+    "scroll_levels": 4,
+    "scroll_price_bp": 1040,
+    "key_price_bp": 650,
+    "map_price_bp": 1950,
+    "material_price_bp": 78
+   },
+   {
+    "grade": 3,
+    "restore_bp": 10000,
+    "restore_price_bp": 510,
+    "bt_bonus_bp": 3000,
+    "bt_price_bp": 1700,
+    "scroll_levels": 6,
+    "scroll_price_bp": 1360,
+    "key_price_bp": 850,
+    "map_price_bp": 2550,
+    "material_price_bp": 102
+   }
+  ],
+  "table": [
+   {
+    "tier": 1,
+    "grade": 1,
+    "restore_vigor": 1200,
+    "restore_price": 30,
+    "bt_bonus_bp": 1000,
+    "bt_price": 100,
+    "scroll_levels": 2,
+    "scroll_price": 80,
+    "key_price": 50,
+    "map_price": 150,
+    "material_price": 6
+   },
+   {
+    "tier": 1,
+    "grade": 2,
+    "restore_vigor": 1600,
+    "restore_price": 39,
+    "bt_bonus_bp": 2000,
+    "bt_price": 130,
+    "scroll_levels": 4,
+    "scroll_price": 104,
+    "key_price": 65,
+    "map_price": 195,
+    "material_price": 7
+   },
+   {
+    "tier": 1,
+    "grade": 3,
+    "restore_vigor": 2000,
+    "restore_price": 51,
+    "bt_bonus_bp": 3000,
+    "bt_price": 170,
+    "scroll_levels": 6,
+    "scroll_price": 136,
+    "key_price": 85,
+    "map_price": 255,
+    "material_price": 10
+   },
+   {
+    "tier": 2,
+    "grade": 1,
+    "restore_vigor": 2160,
+    "restore_price": 54,
+    "bt_bonus_bp": 1000,
+    "bt_price": 180,
+    "scroll_levels": 2,
+    "scroll_price": 144,
+    "key_price": 90,
+    "map_price": 270,
+    "material_price": 10
+   },
+   {
+    "tier": 2,
+    "grade": 2,
+    "restore_vigor": 2880,
+    "restore_price": 70,
+    "bt_bonus_bp": 2000,
+    "bt_price": 234,
+    "scroll_levels": 4,
+    "scroll_price": 187,
+    "key_price": 117,
+    "map_price": 351,
+    "material_price": 14
+   },
+   {
+    "tier": 2,
+    "grade": 3,
+    "restore_vigor": 3600,
+    "restore_price": 91,
+    "bt_bonus_bp": 3000,
+    "bt_price": 306,
+    "scroll_levels": 6,
+    "scroll_price": 244,
+    "key_price": 153,
+    "map_price": 459,
+    "material_price": 18
+   },
+   {
+    "tier": 3,
+    "grade": 1,
+    "restore_vigor": 3840,
+    "restore_price": 96,
+    "bt_bonus_bp": 1000,
+    "bt_price": 320,
+    "scroll_levels": 2,
+    "scroll_price": 256,
+    "key_price": 160,
+    "map_price": 480,
+    "material_price": 19
+   },
+   {
+    "tier": 3,
+    "grade": 2,
+    "restore_vigor": 5120,
+    "restore_price": 124,
+    "bt_bonus_bp": 2000,
+    "bt_price": 416,
+    "scroll_levels": 4,
+    "scroll_price": 332,
+    "key_price": 208,
+    "map_price": 624,
+    "material_price": 24
+   },
+   {
+    "tier": 3,
+    "grade": 3,
+    "restore_vigor": 6400,
+    "restore_price": 163,
+    "bt_bonus_bp": 3000,
+    "bt_price": 544,
+    "scroll_levels": 6,
+    "scroll_price": 435,
+    "key_price": 272,
+    "map_price": 816,
+    "material_price": 32
+   },
+   {
+    "tier": 4,
+    "grade": 1,
+    "restore_vigor": 6960,
+    "restore_price": 174,
+    "bt_bonus_bp": 1000,
+    "bt_price": 580,
+    "scroll_levels": 2,
+    "scroll_price": 464,
+    "key_price": 290,
+    "map_price": 870,
+    "material_price": 34
+   },
+   {
+    "tier": 4,
+    "grade": 2,
+    "restore_vigor": 9280,
+    "restore_price": 226,
+    "bt_bonus_bp": 2000,
+    "bt_price": 754,
+    "scroll_levels": 4,
+    "scroll_price": 603,
+    "key_price": 377,
+    "map_price": 1131,
+    "material_price": 45
+   },
+   {
+    "tier": 4,
+    "grade": 3,
+    "restore_vigor": 11600,
+    "restore_price": 295,
+    "bt_bonus_bp": 3000,
+    "bt_price": 986,
+    "scroll_levels": 6,
+    "scroll_price": 788,
+    "key_price": 493,
+    "map_price": 1479,
+    "material_price": 59
+   },
+   {
+    "tier": 5,
+    "grade": 1,
+    "restore_vigor": 12600,
+    "restore_price": 315,
+    "bt_bonus_bp": 1000,
+    "bt_price": 1050,
+    "scroll_levels": 2,
+    "scroll_price": 840,
+    "key_price": 525,
+    "map_price": 1575,
+    "material_price": 63
+   },
+   {
+    "tier": 5,
+    "grade": 2,
+    "restore_vigor": 16800,
+    "restore_price": 409,
+    "bt_bonus_bp": 2000,
+    "bt_price": 1365,
+    "scroll_levels": 4,
+    "scroll_price": 1092,
+    "key_price": 682,
+    "map_price": 2047,
+    "material_price": 81
+   },
+   {
+    "tier": 5,
+    "grade": 3,
+    "restore_vigor": 21000,
+    "restore_price": 535,
+    "bt_bonus_bp": 3000,
+    "bt_price": 1785,
+    "scroll_levels": 6,
+    "scroll_price": 1428,
+    "key_price": 892,
+    "map_price": 2677,
+    "material_price": 107
+   },
+   {
+    "tier": 6,
+    "grade": 1,
+    "restore_vigor": 22680,
+    "restore_price": 567,
+    "bt_bonus_bp": 1000,
+    "bt_price": 1890,
+    "scroll_levels": 2,
+    "scroll_price": 1512,
+    "key_price": 945,
+    "map_price": 2835,
+    "material_price": 113
+   },
+   {
+    "tier": 6,
+    "grade": 2,
+    "restore_vigor": 30240,
+    "restore_price": 737,
+    "bt_bonus_bp": 2000,
+    "bt_price": 2457,
+    "scroll_levels": 4,
+    "scroll_price": 1965,
+    "key_price": 1228,
+    "map_price": 3685,
+    "material_price": 147
+   },
+   {
+    "tier": 6,
+    "grade": 3,
+    "restore_vigor": 37800,
+    "restore_price": 963,
+    "bt_bonus_bp": 3000,
+    "bt_price": 3213,
+    "scroll_levels": 6,
+    "scroll_price": 2570,
+    "key_price": 1606,
+    "map_price": 4819,
+    "material_price": 192
+   },
+   {
+    "tier": 7,
+    "grade": 1,
+    "restore_vigor": 40800,
+    "restore_price": 1020,
+    "bt_bonus_bp": 1000,
+    "bt_price": 3400,
+    "scroll_levels": 2,
+    "scroll_price": 2720,
+    "key_price": 1700,
+    "map_price": 5100,
+    "material_price": 204
+   },
+   {
+    "tier": 7,
+    "grade": 2,
+    "restore_vigor": 54400,
+    "restore_price": 1326,
+    "bt_bonus_bp": 2000,
+    "bt_price": 4420,
+    "scroll_levels": 4,
+    "scroll_price": 3536,
+    "key_price": 2210,
+    "map_price": 6630,
+    "material_price": 265
+   },
+   {
+    "tier": 7,
+    "grade": 3,
+    "restore_vigor": 68000,
+    "restore_price": 1734,
+    "bt_bonus_bp": 3000,
+    "bt_price": 5780,
+    "scroll_levels": 6,
+    "scroll_price": 4624,
+    "key_price": 2890,
+    "map_price": 8670,
+    "material_price": 346
+   },
+   {
+    "tier": 8,
+    "grade": 1,
+    "restore_vigor": 73200,
+    "restore_price": 1830,
+    "bt_bonus_bp": 1000,
+    "bt_price": 6100,
+    "scroll_levels": 2,
+    "scroll_price": 4880,
+    "key_price": 3050,
+    "map_price": 9150,
+    "material_price": 366
+   },
+   {
+    "tier": 8,
+    "grade": 2,
+    "restore_vigor": 97600,
+    "restore_price": 2379,
+    "bt_bonus_bp": 2000,
+    "bt_price": 7930,
+    "scroll_levels": 4,
+    "scroll_price": 6344,
+    "key_price": 3965,
+    "map_price": 11895,
+    "material_price": 475
+   },
+   {
+    "tier": 8,
+    "grade": 3,
+    "restore_vigor": 122000,
+    "restore_price": 3111,
+    "bt_bonus_bp": 3000,
+    "bt_price": 10370,
+    "scroll_levels": 6,
+    "scroll_price": 8296,
+    "key_price": 5185,
+    "map_price": 15555,
+    "material_price": 622
+   },
+   {
+    "tier": 9,
+    "grade": 1,
+    "restore_vigor": 132000,
+    "restore_price": 3300,
+    "bt_bonus_bp": 1000,
+    "bt_price": 11000,
+    "scroll_levels": 2,
+    "scroll_price": 8800,
+    "key_price": 5500,
+    "map_price": 16500,
+    "material_price": 660
+   },
+   {
+    "tier": 9,
+    "grade": 2,
+    "restore_vigor": 176000,
+    "restore_price": 4290,
+    "bt_bonus_bp": 2000,
+    "bt_price": 14300,
+    "scroll_levels": 4,
+    "scroll_price": 11440,
+    "key_price": 7150,
+    "map_price": 21450,
+    "material_price": 858
+   },
+   {
+    "tier": 9,
+    "grade": 3,
+    "restore_vigor": 220000,
+    "restore_price": 5610,
+    "bt_bonus_bp": 3000,
+    "bt_price": 18700,
+    "scroll_levels": 6,
+    "scroll_price": 14960,
+    "key_price": 9350,
+    "map_price": 28050,
+    "material_price": 1122
+   }
+  ]
+ },
+ "economy": {
+  "sell_bp": 4000,
+  "buy_markup_bp": 10000,
+  "key_consumed": true,
+  "start_coin": 0,
+  "start_potential": 0,
+  "bounty_min_coin": 1,
+  "bond_weight_initial": 0
+ },
+ "tasks": {
+  "decay_step_bp": 2000,
+  "item_min_pct_bp": 4000,
+  "supply_per_char": 3,
+  "rep_system": 0,
+  "tpl_bp": {
+   "deliver": 10000,
+   "find": 8000,
+   "slay": 14000,
+   "gather": 11000,
+   "reach": 7000
+  },
+  "count_max": {
+   "deliver": 3,
+   "find": 1,
+   "slay": 3,
+   "gather": 6,
+   "reach": 1
+  },
+  "deed_bonus": {
+   "first_found": {
+    "xp_bp": 10000,
+    "potential_bp": 10000,
+    "rep_mult": 1
+   },
+   "first_kill": {
+    "xp_bp": 20000,
+    "potential_bp": 20000,
+    "rep_mult": 2
+   },
+   "first_clear": {
+    "xp_bp": 30000,
+    "potential_bp": 30000,
+    "rep_mult": 3
+   }
+  },
+  "build_template_item_defs_max": 1,
+  "build_template_item_grade_max": 1
+ },
+ "task_rewards": [
+  {
+   "tier": 1,
+   "tpl": "deliver",
+   "coin": 100,
+   "xp": 300,
+   "potential": 30
+  },
+  {
+   "tier": 1,
+   "tpl": "find",
+   "coin": 80,
+   "xp": 240,
+   "potential": 24
+  },
+  {
+   "tier": 1,
+   "tpl": "slay",
+   "coin": 140,
+   "xp": 420,
+   "potential": 42
+  },
+  {
+   "tier": 1,
+   "tpl": "gather",
+   "coin": 110,
+   "xp": 330,
+   "potential": 33
+  },
+  {
+   "tier": 1,
+   "tpl": "reach",
+   "coin": 70,
+   "xp": 210,
+   "potential": 21
+  },
+  {
+   "tier": 2,
+   "tpl": "deliver",
+   "coin": 150,
+   "xp": 450,
+   "potential": 45
+  },
+  {
+   "tier": 2,
+   "tpl": "find",
+   "coin": 120,
+   "xp": 360,
+   "potential": 36
+  },
+  {
+   "tier": 2,
+   "tpl": "slay",
+   "coin": 210,
+   "xp": 630,
+   "potential": 63
+  },
+  {
+   "tier": 2,
+   "tpl": "gather",
+   "coin": 165,
+   "xp": 495,
+   "potential": 49
+  },
+  {
+   "tier": 2,
+   "tpl": "reach",
+   "coin": 105,
+   "xp": 315,
+   "potential": 31
+  },
+  {
+   "tier": 3,
+   "tpl": "deliver",
+   "coin": 230,
+   "xp": 680,
+   "potential": 68
+  },
+  {
+   "tier": 3,
+   "tpl": "find",
+   "coin": 184,
+   "xp": 544,
+   "potential": 54
+  },
+  {
+   "tier": 3,
+   "tpl": "slay",
+   "coin": 322,
+   "xp": 952,
+   "potential": 95
+  },
+  {
+   "tier": 3,
+   "tpl": "gather",
+   "coin": 253,
+   "xp": 748,
+   "potential": 74
+  },
+  {
+   "tier": 3,
+   "tpl": "reach",
+   "coin": 161,
+   "xp": 476,
+   "potential": 47
+  },
+  {
+   "tier": 4,
+   "tpl": "deliver",
+   "coin": 330,
+   "xp": 1000,
+   "potential": 100
+  },
+  {
+   "tier": 4,
+   "tpl": "find",
+   "coin": 264,
+   "xp": 800,
+   "potential": 80
+  },
+  {
+   "tier": 4,
+   "tpl": "slay",
+   "coin": 462,
+   "xp": 1400,
+   "potential": 140
+  },
+  {
+   "tier": 4,
+   "tpl": "gather",
+   "coin": 363,
+   "xp": 1100,
+   "potential": 110
+  },
+  {
+   "tier": 4,
+   "tpl": "reach",
+   "coin": 231,
+   "xp": 700,
+   "potential": 70
+  },
+  {
+   "tier": 5,
+   "tpl": "deliver",
+   "coin": 500,
+   "xp": 1500,
+   "potential": 150
+  },
+  {
+   "tier": 5,
+   "tpl": "find",
+   "coin": 400,
+   "xp": 1200,
+   "potential": 120
+  },
+  {
+   "tier": 5,
+   "tpl": "slay",
+   "coin": 700,
+   "xp": 2100,
+   "potential": 210
+  },
+  {
+   "tier": 5,
+   "tpl": "gather",
+   "coin": 550,
+   "xp": 1650,
+   "potential": 165
+  },
+  {
+   "tier": 5,
+   "tpl": "reach",
+   "coin": 350,
+   "xp": 1050,
+   "potential": 105
+  },
+  {
+   "tier": 6,
+   "tpl": "deliver",
+   "coin": 770,
+   "xp": 2300,
+   "potential": 230
+  },
+  {
+   "tier": 6,
+   "tpl": "find",
+   "coin": 616,
+   "xp": 1840,
+   "potential": 184
+  },
+  {
+   "tier": 6,
+   "tpl": "slay",
+   "coin": 1078,
+   "xp": 3220,
+   "potential": 322
+  },
+  {
+   "tier": 6,
+   "tpl": "gather",
+   "coin": 847,
+   "xp": 2530,
+   "potential": 253
+  },
+  {
+   "tier": 6,
+   "tpl": "reach",
+   "coin": 539,
+   "xp": 1610,
+   "potential": 161
+  },
+  {
+   "tier": 7,
+   "tpl": "deliver",
+   "coin": 1100,
+   "xp": 3400,
+   "potential": 340
+  },
+  {
+   "tier": 7,
+   "tpl": "find",
+   "coin": 880,
+   "xp": 2720,
+   "potential": 272
+  },
+  {
+   "tier": 7,
+   "tpl": "slay",
+   "coin": 1540,
+   "xp": 4760,
+   "potential": 476
+  },
+  {
+   "tier": 7,
+   "tpl": "gather",
+   "coin": 1210,
+   "xp": 3740,
+   "potential": 374
+  },
+  {
+   "tier": 7,
+   "tpl": "reach",
+   "coin": 770,
+   "xp": 2380,
+   "potential": 238
+  },
+  {
+   "tier": 8,
+   "tpl": "deliver",
+   "coin": 1700,
+   "xp": 5100,
+   "potential": 510
+  },
+  {
+   "tier": 8,
+   "tpl": "find",
+   "coin": 1360,
+   "xp": 4080,
+   "potential": 408
+  },
+  {
+   "tier": 8,
+   "tpl": "slay",
+   "coin": 2380,
+   "xp": 7140,
+   "potential": 714
+  },
+  {
+   "tier": 8,
+   "tpl": "gather",
+   "coin": 1870,
+   "xp": 5610,
+   "potential": 561
+  },
+  {
+   "tier": 8,
+   "tpl": "reach",
+   "coin": 1190,
+   "xp": 3570,
+   "potential": 357
+  },
+  {
+   "tier": 9,
+   "tpl": "deliver",
+   "coin": 2600,
+   "xp": 7700,
+   "potential": 770
+  },
+  {
+   "tier": 9,
+   "tpl": "find",
+   "coin": 2080,
+   "xp": 6160,
+   "potential": 616
+  },
+  {
+   "tier": 9,
+   "tpl": "slay",
+   "coin": 3640,
+   "xp": 10780,
+   "potential": 1078
+  },
+  {
+   "tier": 9,
+   "tpl": "gather",
+   "coin": 2860,
+   "xp": 8470,
+   "potential": 847
+  },
+  {
+   "tier": 9,
+   "tpl": "reach",
+   "coin": 1820,
+   "xp": 5390,
+   "potential": 539
+  }
+ ],
+ "orgs": {
+  "join_fee_pct_of_task_coin": 200,
+  "leave_coin_pct_of_task_coin": 500,
+  "leave_rep_loss": 10,
+  "goal_per_head_system_tasks": 5,
+  "goal_per_head_deliver_items": 8,
+  "goal_min_target": 3,
+  "goal_reward_rep": 5
+ }
+}
