@@ -9,6 +9,7 @@ import { deriveStats } from "../growth/balance.ts";
 import { neutralFacts } from "../growth/facts.ts";
 import { PAGE_DEFAULT, limit, page } from "../protocol/shapes.ts";
 import { obj, oneOf, opt, type Out } from "../protocol/validate.ts";
+import { nextBreakthrough, type NextBreakthrough } from "./breakthrough.ts";
 import { defineVerb } from "./types.ts";
 
 const SECTIONS = ["char", "items", "skills", "bonds", "tasks", "reputation", "wanted"] as const;
@@ -24,6 +25,8 @@ export type WhoamiArgs = Out<typeof args>;
 
 export interface WhoamiResult {
   char: CharRow;
+  /** Present only for section=char: whether a breakthrough would clear stage/tier/xp/training right now. */
+  next_breakthrough?: NextBreakthrough;
   derived: Stats;
   section: Section;
   rows: unknown[];
@@ -59,7 +62,8 @@ export const def = defineVerb<WhoamiArgs, WhoamiResult>({
     const me = ctx.actor;
     if (me === null) throw new Error("whoami without actor");
     // Skills and equipped items (with cores) count, exactly as in combat inputs.
-    const derived = deriveStats(ctx.balance, me, await neutralFacts(ctx.q, me));
+    const facts = await neutralFacts(ctx.q, me);
+    const derived = deriveStats(ctx.balance, me, facts);
     const counts = {} as Record<ListSection, number>;
     for (const s of Object.keys(QUERIES) as ListSection[]) {
       counts[s] = await countRows(ctx.q, QUERIES[s].table, QUERIES[s].where, [me.id]);
@@ -67,6 +71,7 @@ export const def = defineVerb<WhoamiArgs, WhoamiResult>({
     if (a.section === "char") {
       return {
         char: me,
+        next_breakthrough: nextBreakthrough(ctx.balance, me, facts),
         derived,
         section: "char",
         rows: [],

@@ -1,8 +1,8 @@
 // Stage, tier and cycle use one deterministic S5 primitive; failure is committed.
 
 import { getRow } from "../facts/store.ts";
-import type { Change, ItemInstanceRow, Roll, Stage, Tier, UInt } from "../facts/types.ts";
-import { addUInt, deriveStats, effectiveLevels, equipmentCapacity, gridNumbers, mulDiv, tierNumbers } from "../growth/balance.ts";
+import type { Change, CharRow, ItemInstanceRow, Roll, Stage, Tier, UInt } from "../facts/types.ts";
+import { addUInt, deriveStats, effectiveLevels, equipmentCapacity, gridNumbers, mulDiv, tierNumbers, type Balance, type NeutralFacts } from "../growth/balance.ts";
 import { combatant, itemDefinition, neutralFacts } from "../growth/facts.ts";
 import { resolutionSeed, resolveBreakthrough } from "../growth/settlement.ts";
 import { NO_DETAILS, reject } from "../protocol/errors.ts";
@@ -15,6 +15,22 @@ const args = obj({
   item: opt(nullable(itemId), null),
 });
 export type BreakthroughArgs = Out<typeof args>;
+
+/** Same gate breakthrough uses for stage / tier / xp / training. ready means a call now would not be refused on those. */
+export interface NextBreakthrough {
+  mode: BreakthroughArgs["mode"] | null;
+  ready: boolean;
+  xp_need: UInt;
+  inner_req: UInt;
+}
+
+export function nextBreakthrough(balance: Balance, me: Pick<CharRow, "tier" | "stage" | "xp">, facts: NeutralFacts): NextBreakthrough {
+  const mode: NextBreakthrough["mode"] = me.stage < 4 ? "stage" : me.tier < 9 ? "tier" : "cycle";
+  const grid = gridNumbers(balance, me.tier, me.stage);
+  const ready = me.xp >= grid.xp_need && effectiveLevels(facts).inner >= grid.inner_req;
+  return { mode, ready, xp_need: grid.xp_need, inner_req: grid.inner_req };
+}
+
 export interface BreakthroughResult {
   mode: BreakthroughArgs["mode"];
   outcome: "success" | "failure";
@@ -38,11 +54,14 @@ export const def = defineVerb<BreakthroughArgs, BreakthroughResult>({
     const me = ctx.actor;
     if (me === null) throw new Error("breakthrough without actor");
     if (a.mode === "stage" ? me.stage >= 4 : a.mode === "tier" ? me.stage !== 4 || me.tier >= 9 : me.tier !== 9 || me.stage !== 4) return reject("CONDITION_UNMET", { reason: a.mode === "cycle" ? "tier" : "stage" });
-    const grid = gridNumbers(ctx.balance, me.tier, me.stage);
-    if (me.xp < grid.xp_need) return reject("CONDITION_UNMET", { reason: "xp", required: grid.xp_need, have: me.xp });
     const facts = await neutralFacts(ctx.q, me);
-    const inner = facts.skills.find((s) => s.definition.base === "inner");
-    if (effectiveLevels(facts).inner < grid.inner_req) return reject("CONDITION_UNMET", { reason: "training", skill: "inner", required: grid.inner_req, level: inner?.learned.level ?? 0, cap: inner?.learned.cap ?? 0 });
+    const gate = nextBreakthrough(ctx.balance, me, facts);
+    if (me.xp < gate.xp_need) return reject("CONDITION_UNMET", { reason: "xp", required: gate.xp_need, have: me.xp });
+    if (!gate.ready) {
+      const inner = facts.skills.find((s) => s.definition.base === "inner");
+      return reject("CONDITION_UNMET", { reason: "training", skill: "inner", required: gate.inner_req, level: inner?.learned.level ?? 0, cap: inner?.learned.cap ?? 0 });
+    }
+    const grid = gridNumbers(ctx.balance, me.tier, me.stage);
     let item: ItemInstanceRow | null = null;
     let bonus = 0;
     if (a.item !== null) {

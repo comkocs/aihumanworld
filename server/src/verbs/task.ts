@@ -206,7 +206,7 @@ async function submit(ctx: VerbContext, id: ID): Promise<Edit> {
   if (isExpired(t, tick)) return reject("TASK_STATE", { state: "expired" }, "args.id");
   const c = t.condition;
   const at = c.tpl === "deliver" || c.tpl === "gather" ? c.to_place : t.offer_place;
-  if (me.loc !== at) return reject("CONDITION_UNMET", { reason: "location" }, "args.id");
+  if (me.loc !== at) return reject("CONDITION_UNMET", { reason: "location", place_id: at }, "args.id");
   const n = taskNumbers(ctx.balance);
 
   const changes: Change[] = [];

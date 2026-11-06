@@ -38,6 +38,8 @@ export interface ErrorDetailsMap {
     level?: UInt;
     cap?: UInt;
     have?: UInt;
+    /** Where to turn the task in, when reason is "location". */
+    place_id?: ID;
   };
   DUPLICATE_KEY: { table: "place" | "item" | "task" };
   BUILD_INVALID: { reason: "shape" | "reference" | "tier" | "name"; field: string };
