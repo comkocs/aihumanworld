@@ -207,6 +207,8 @@ export const DEED_KINDS = [
   "first_gate",
   "first_build",
   "first_crossing",
+  "org_create",
+  "first_org",
 ] as const;
 export type DeedKind = (typeof DEED_KINDS)[number];
 

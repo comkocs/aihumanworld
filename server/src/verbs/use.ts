@@ -1,10 +1,10 @@
 // [S25] use (动词表 §4.9):
-// the closed set of 16 ops; no free-form intent. Prices / fees / periods are S5's.
+// the closed set of 17 ops; no free-form intent. Prices / fees / periods are S5's.
 
 import { itemPrice, tradePrice } from "../economy/prices.ts";
 import { ITEM_CATEGORY, type DeedKind } from "../facts/enums.ts";
 import { getRow, selectRows, type Patch } from "../facts/store.ts";
-import type { BondRow, Change, CharRow, ID, ItemInstanceRow, Proposal, SkillLearnedRow, UInt } from "../facts/types.ts";
+import type { BondRow, Change, CharRow, ID, ItemInstanceRow, OrgRow, Proposal, SkillLearnedRow, UInt } from "../facts/types.ts";
 import { capacity, definition, equipped, stats } from "../npc/facts.ts";
 import { changeOrg, emitBond, manageOrg, membership } from "../orgs/membership.ts";
 import { boolAt, ceilRatio, cellNumber, checkedUInt, floorRatio, numberAt, requireRevision } from "../orgs/numbers.ts";
@@ -12,7 +12,8 @@ import { NO_DETAILS, reject } from "../protocol/errors.ts";
 import { wakeSupply } from "../resources/clock.ts";
 import { requireRule } from "../rules/world_rules.ts";
 import { bondId, charId, deedId, direction, itemId, orgId } from "../protocol/shapes.ts";
-import { bool, oneOf, uint, union, type Out } from "../protocol/validate.ts";
+import { bad, bool, oneOf, str, uint, union, type Out } from "../protocol/validate.ts";
+import { sanitizeLabel } from "../speech/sanitize.ts";
 import { defineVerb, type VerbContext } from "./types.ts";
 
 const args = union("op", {
@@ -25,6 +26,7 @@ const args = union("op", {
   repair: { item: itemId, npc: charId },
   buy: { item: itemId, npc: charId },
   sell: { item: itemId, npc: charId },
+  org_create: { name: str({ min: 1, max: 1024 }) },
   org_join: { org: orgId },
   org_leave: {},
   org_manage: { action: oneOf(["promote", "expel"] as const, "org_manage action"), target: charId },
@@ -44,6 +46,9 @@ export interface UseResult {
   price?: UInt;
   /** relation_offer */
   offer?: ID;
+  /** org_create */
+  org?: ID;
+  fee?: UInt;
 }
 
 function actor(ctx: VerbContext): CharRow {
@@ -251,6 +256,88 @@ async function trade(ctx: VerbContext, a: Extract<UseArgs, { op: "buy" | "sell" 
   return a.op === "repair" ? result : { ...result, price: amount };
 }
 
+// Twice the tier's join fee makes founding a modest sink without a new balance key.
+const ORG_CREATE_FEE_MULTIPLIER = 2;
+// A short single-line name stays readable in lists and chronicles.
+const ORG_NAME_MAX_CHARS = 40;
+
+async function createOrg(ctx: VerbContext, rawName: string): Promise<UseResult> {
+  const me = actor(ctx);
+  const name = sanitizeLabel(rawName, ORG_NAME_MAX_CHARS);
+  if (name === null) return bad("args.name", "non-empty name after sanitizing");
+  const oldMember = await membership(ctx.q, me.id);
+  const oldOrg = await getRow(ctx.q, "org", oldMember.b);
+  if (oldOrg === null) return reject("NOT_FOUND", NO_DETAILS);
+  // Existing non-registry members must leave through the normal fee/rep path.
+  if (!oldOrg.registry) return reject("NOT_ALLOWED", { reason: "org" });
+  const place = await getRow(ctx.q, "place", me.loc);
+  if (place === null) return reject("NOT_FOUND", NO_DETAILS);
+  const fee = checkedUInt(BigInt(cellNumber(ctx.balance, "tier_prices", { tier: me.tier }, "org_join_fee")) * BigInt(ORG_CREATE_FEE_MULTIPLIER));
+  sufficient(me.coin, fee);
+  const id = await ctx.w.newId("org");
+  const local = id.split(":")[2]!;
+  const org: OrgRow = {
+    id, created_tick: ctx.tick, updated_tick: ctx.tick,
+    content_key: `content.${ctx.world.realm}.org.player_${local}`, player_name: name,
+    region: place.region, hall: place.id, registry: false,
+    ranks: [
+      { rank: 0, key: "org_rank.member", can_promote: false, can_expel: false },
+      { rank: 1, key: "org_rank.founder", can_promote: true, can_expel: true },
+    ],
+    skill_defs: [], treasury: 0,
+    goal: { week: ctx.world.week_index, kind: ctx.balance.org_goal.kind, target: ctx.balance.org_goal.target,
+      progress: 0, member_ids: [], reward_rep: ctx.balance.org_goal.reward_rep, settled: false },
+  };
+  const changes: Change[] = [];
+  const push = (change: Change | null): void => { if (change !== null) changes.push(change); };
+  // Keep the nullable extension outside the fixed legacy org insert field set.
+  const { player_name: _playerName, ...legacyOrg } = org;
+  push(await ctx.w.insert("org", legacyOrg));
+  await ctx.q.query("UPDATE orgs SET player_name = $2 WHERE id = $1", [id, name]);
+  const orgChange = changes.find((change) => change.table === "org" && change.id === id);
+  if (orgChange !== undefined) orgChange.after.player_name = name;
+  const endedChange = await ctx.w.update("bond", oldMember.id, { state: "ended", ended_tick: ctx.tick });
+  push(endedChange);
+  const left = await ctx.w.deed({
+    actor: me.id, verb: "use", kind: "org_leave", targets: [oldOrg.id, oldMember.id], place_id: place.id,
+    result: { outcome: "success", changes: endedChange === null ? [] : [endedChange], roll: null, proposal: null },
+    visibility: "self", participants: [me.id],
+  });
+  if (fee > 0) push(await ctx.w.update("char", me.id, { coin: me.coin - fee }));
+  const member: BondRow = {
+    id: await ctx.w.newId("bond"), created_tick: ctx.tick, updated_tick: ctx.tick,
+    kind: "member", a: me.id, b: id, state: "active", weight: numberAt(ctx.balance, "economy.bond_weight_initial"),
+    rank: 1, since_tick: ctx.tick, ended_tick: null,
+  };
+  const memberChange = await ctx.w.insert("bond", member);
+  push(memberChange);
+  const joined = await ctx.w.deed({
+    actor: me.id, verb: "use", kind: "org_join", targets: [id, member.id], place_id: place.id,
+    result: { outcome: "success", changes: memberChange === null ? [] : [memberChange], roll: null, proposal: null },
+    visibility: "self", participants: [me.id],
+  });
+  // The world deed contains no private coin or member deltas.
+  const deed = await ctx.w.deed({
+    actor: me.id, verb: "use", kind: "org_create", targets: [id], place_id: place.id,
+    result: { outcome: "success", changes: orgChange === undefined ? [] : [orgChange], roll: null, proposal: null },
+    visibility: "world", participants: [me.id],
+  });
+  await emitBond(ctx.w, { ...oldMember, state: "ended", ended_tick: ctx.tick, updated_tick: ctx.tick }, left.id);
+  await emitBond(ctx.w, member, joined.id);
+  await ctx.w.emit({ scope: "self", recipients: [me.id], type: "fact_changed", deed_id: deed.id, data: { changes } });
+  await ctx.w.emit({ scope: "world", type: "discovered", deed_id: deed.id, data: { char_id: me.id, target: id, first: false } });
+  if (me.kind !== "npc" && !(await ctx.w.firstTaken("first_org:realm"))) {
+    const first = await ctx.w.deed({
+      actor: me.id, verb: "use", kind: "first_org", targets: [id], place_id: place.id,
+      result: { outcome: "success", changes: [], roll: null, proposal: null },
+      visibility: "world", participants: [me.id], first_key: "first_org:realm",
+    });
+    await ctx.w.emit({ scope: "world", type: "discovered", deed_id: first.id, data: { char_id: me.id, target: id, first: true } });
+  }
+  ctx.actor = { ...me, coin: me.coin - fee };
+  return { op: "org_create", org: id, fee, changes, deed_id: deed.id, outcome: "success" };
+}
+
 async function activeBond(ctx: VerbContext, kind: BondRow["kind"], a: ID, b: ID): Promise<BondRow | null> {
   return (await selectRows(ctx.q, "bond", "kind = $1 AND a = $2 AND b = $3 AND state = 'active'", [kind, a, b]))[0] ?? null;
 }
@@ -336,7 +423,7 @@ export const def = defineVerb<UseArgs, UseResult>({
     consume: "消耗药品、卷轴或地图。", unlock: "用匹配钥匙打开当前地点指定方向的锁门。",
     equip: "装备背包里的物品。", unequip: "卸下已装备物品。", socket: "把核心镶入指定孔位。", unsocket: "付费取下指定孔位的核心。",
     repair: "向同地修理匠付费修复装备耐久。", buy: "按 GET /v1/shops/{npc} 的实例 item.id 向同地商人买入。", sell: "向同地商人出售自己的未装备物品。",
-    org_join: "加入指定组织。", org_leave: "离开当前组织。", org_manage: "按职级权限晋升或移除组织成员。",
+    org_create: "以当前位置为驻地创建组织。", org_join: "加入指定组织。", org_leave: "离开当前组织。", org_manage: "按职级权限晋升或移除组织成员。",
     relation_offer: "向同地人物发起师徒或盟友邀约。", relation_accept: "接受仍有效的关系邀约。", relation_end: "结束自己的师徒或盟友关系。", enmity: "建立或结束自己的敌对关系。",
   })[a.op],
   args,
@@ -350,6 +437,7 @@ export const def = defineVerb<UseArgs, UseResult>({
       case "consume": return consume(ctx, a.item);
       case "equip": case "unequip": case "socket": case "unsocket": return equipment(ctx, a);
       case "repair": case "buy": case "sell": return trade(ctx, a);
+      case "org_create": return createOrg(ctx, a.name);
       case "org_join": {
         const result = await changeOrg(ctx, a.org);
         return { op: a.op, ...result, outcome: "success" };

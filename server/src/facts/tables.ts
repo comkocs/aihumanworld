@@ -332,6 +332,8 @@ export function decodeRow<T extends FactTable>(table: T, row: Record<string, unk
   const fields = fieldsOf(desc, desc.discriminator === null ? null : row[desc.discriminator]);
   const out: Record<string, unknown> = {};
   for (const f of fields) out[f] = decodeValue(desc.cols[f] as ColKind, row[f]);
+  // Existing content and seed inserts omit this nullable, player-only column.
+  if (table === "org" && row.player_name != null) out.player_name = String(row.player_name);
   return out as unknown as RowMap[T];
 }
 

@@ -149,17 +149,30 @@ function taskLine(lex: Lexicon, t: TaskInstanceRow): string {
   ]);
 }
 
-function deedLine(lex: Lexicon, d: DeedRow): string {
-  const targets = d.targets.map((t) => `\`${t}\``).join(", ");
+function deedLine(lex: Lexicon, d: DeedRow, orgNames: ReadonlyMap<string, string> = new Map()): string {
+  const targets = d.targets.map((t) => `\`${t}\`${orgNames.has(t) ? ` (${orgNames.get(t)})` : ""}`).join(", ");
+  const kind = d.kind === "org_create" ? "开派 Organization founded `deed.org_create`"
+    : d.kind === "first_org" ? "首开组织 First organization `deed.first_org`" : facet(lex, `deed.${d.kind}`);
   return lineOf([
     `tick ${d.tick}`,
-    facet(lex, `deed.${d.kind}`),
+    kind,
     `verb ${d.verb}`,
     `outcome ${d.result.outcome}`,
     d.actor === null ? "actor system" : `actor \`${d.actor}\``,
     targets === "" ? "" : `targets ${targets}`,
     `\`${d.id}\``,
   ]);
+}
+
+async function playerOrgNames(q: Queryable, ids: string[]): Promise<Map<string, string>> {
+  const unique = [...new Set(ids.filter((id) => id.split(":")[1] === "org"))];
+  const names = new Map<string, string>();
+  if (unique.length === 0) return names;
+  const marks = unique.map((_, i) => `$${i + 1}`).join(", ");
+  for (const org of await selectRows(q, "org", `id IN (${marks})`, unique)) {
+    if (org.player_name !== undefined) names.set(org.id, org.player_name);
+  }
+  return names;
 }
 
 function header(title: string, lex: Lexicon, note: string): string[] {
@@ -180,7 +193,8 @@ async function chronicle(q: Queryable, lex: Lexicon): Promise<PageDoc> {
   );
   lines.push("## 近期事迹 Recent deeds", "");
   if (deeds.length === 0) lines.push("(none)", "");
-  for (const d of deeds) lines.push(`- ${deedLine(lex, d)}`);
+  const orgNames = await playerOrgNames(q, deeds.flatMap((d) => d.targets));
+  for (const d of deeds) lines.push(`- ${deedLine(lex, d, orgNames)}`);
   lines.push("");
   const stamp = `chronicle:${w?.tick ?? "0"}:${w?.deed_head ?? "0"}:${deeds.map((d) => d.seq).join(",")}`;
   return { kind: "chronicle", stamp, markdown: lines.join("\n") };
@@ -238,6 +252,7 @@ async function placePage(q: Queryable, lex: Lexicon, ref: string): Promise<PageD
       "ORDER BY seq DESC LIMIT $2",
     ),
   );
+  const orgNames = await playerOrgNames(q, deeds.flatMap((d) => d.targets));
   const lines = header(`地点 Place ${place.id}`, lex, "在场者 / 物 / 出口 / 可接任务 / 近期事迹。事实,不含身份码。");
   lines.push(placeLine(lex, place), "");
   lines.push("## 出口 Exits", "");
@@ -260,7 +275,7 @@ async function placePage(q: Queryable, lex: Lexicon, ref: string): Promise<PageD
   for (const t of tasks) lines.push(`- ${taskLine(lex, t)}`);
   lines.push("", "## 近期事迹 Recent deeds", "");
   if (deeds.length === 0) lines.push("(none)", "");
-  for (const d of deeds) lines.push(`- ${deedLine(lex, d)}`);
+  for (const d of deeds) lines.push(`- ${deedLine(lex, d, orgNames)}`);
   lines.push("");
   const stamp = [
     "place",
@@ -296,13 +311,14 @@ async function biography(q: Queryable, lex: Lexicon, ref: string, birthBook?: Sk
   const bonds = byCreation(
     await selectRows(q, "bond", "state = 'active' AND (a = $1 OR b = $1)", [who.id]),
   );
+  const orgNames = await playerOrgNames(q, [...bonds.filter((b) => b.kind === "member").map((b) => b.b), ...deeds.flatMap((d) => d.targets)]);
   const reps = byCreation(await selectRows(q, "reputation", "char_id = $1 AND scope = 'world'", [who.id]));
   const wanted = byCreation(await selectRows(q, "wanted", "char_id = $1 AND state = 'active'", [who.id]));
   const lines = header(`传记 Biography ${who.id}`, lex, "公开字段与公开事迹。余额、体力、身份凭据不在此页。");
   lines.push(`- ${charLine(lex, who)}`, "");
   lines.push("## 关系 Bonds", "");
   if (bonds.length === 0) lines.push("(none)", "");
-  for (const b of bonds) lines.push(`- ${bondLine(lex, b)}`);
+  for (const b of bonds) lines.push(`- ${bondLine(lex, b, orgNames)}`);
   lines.push("", "## 名声 Reputation", "");
   if (reps.length === 0) lines.push("(none)", "");
   for (const r of reps) lines.push(`- ${repLine(lex, r)}`);
@@ -311,7 +327,7 @@ async function biography(q: Queryable, lex: Lexicon, ref: string, birthBook?: Sk
   for (const w of wanted) lines.push(`- ${wantedLine(lex, w)}`);
   lines.push("", "## 事迹 Deeds", "");
   if (deeds.length === 0) lines.push("(none)", "");
-  for (const d of deeds) lines.push(`- ${deedLine(lex, d)}`);
+  for (const d of deeds) lines.push(`- ${deedLine(lex, d, orgNames)}`);
   lines.push("");
   const stamp = [
     "char",
@@ -325,8 +341,8 @@ async function biography(q: Queryable, lex: Lexicon, ref: string, birthBook?: Sk
   return { kind: "char", stamp, markdown: lines.join("\n") };
 }
 
-function bondLine(lex: Lexicon, b: BondRow): string {
-  return lineOf([`\`${b.id}\``, facet(lex, `bond.${b.kind}`), `\`${b.a}\` → \`${b.b}\``, `since ${b.since_tick}`]);
+function bondLine(lex: Lexicon, b: BondRow, orgNames: ReadonlyMap<string, string>): string {
+  return lineOf([`\`${b.id}\``, facet(lex, `bond.${b.kind}`), `\`${b.a}\` → \`${b.b}\``, orgNames.get(b.b) ?? "", `since ${b.since_tick}`]);
 }
 
 function repLine(lex: Lexicon, r: ReputationRow): string {

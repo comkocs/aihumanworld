@@ -345,6 +345,8 @@ export interface OrgGoal {
 }
 
 export interface OrgRow extends CommonFields {
+  /** Player-supplied name; absent for content organizations. */
+  player_name?: string;
   content_key: Key;
   region: Region;
   hall: ID;

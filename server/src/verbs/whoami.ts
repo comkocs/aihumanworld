@@ -3,7 +3,7 @@
 // the neutral balance (S10); missing numbers answer RULES_UNSET.
 
 import { pageRows, resolveLimit } from "../facts/paging.ts";
-import { countRows } from "../facts/store.ts";
+import { countRows, getRow } from "../facts/store.ts";
 import type { CharRow, FactTable, ID, Seq, Stats } from "../facts/types.ts";
 import { deriveStats } from "../growth/balance.ts";
 import { neutralFacts } from "../growth/facts.ts";
@@ -84,11 +84,16 @@ export const def = defineVerb<WhoamiArgs, WhoamiResult>({
     const q = QUERIES[a.section];
     const lim = resolveLimit(a.limit, ctx.rules);
     const p = await pageRows(ctx.q, q.table, q.where, [me.id], a.page, lim, ctx.world.deed_head);
+    const rows = a.section === "bonds" ? await Promise.all(p.rows.map(async (row) => {
+      if (!("kind" in row) || row.kind !== "member" || !("b" in row) || typeof row.b !== "string") return row;
+      const org = await getRow(ctx.q, "org", row.b);
+      return org?.player_name === undefined ? row : { ...row, org_name: org.player_name };
+    })) : p.rows;
     return {
       char: me,
       derived,
       section: a.section,
-      rows: p.rows,
+      rows,
       page: p.page,
       has_more: p.has_more,
       snapshot_changed: p.snapshot_changed,

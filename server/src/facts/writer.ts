@@ -99,7 +99,7 @@ export class Writer {
     this.requireLock("deed");
     const isFirst =
       d.kind === "first_found" || d.kind === "first_clear" || d.kind === "first_kill" ||
-      d.kind === "first_gate" || d.kind === "first_build" || d.kind === "first_crossing";
+      d.kind === "first_gate" || d.kind === "first_build" || d.kind === "first_crossing" || d.kind === "first_org";
     if (isFirst !== (d.first_key !== undefined)) throw new Error(`deed ${d.kind}: first_key mismatch`);
     const r = await this.q.query<{ deed_head: string }>(
       "UPDATE worlds SET deed_head = deed_head + 1 WHERE realm = $1 RETURNING deed_head",
