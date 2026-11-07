@@ -205,7 +205,11 @@ test("S12 chain: say delivers cleaned text only as other_speech; build checks an
     assert.equal(ok.body.result.table, "item");
     assert.equal(ok.body.result.record.by, A.id);
     assert.equal(ok.body.result.other_speech, null);
-    assert.equal(ok.body.deed_ids.length, 1);
+    // The realm's first player build also writes the world-visible first_build (S62); later builds stay at one deed.
+    assert.deepEqual(
+      (await q("SELECT kind FROM deeds WHERE id = ANY($1::text[]) ORDER BY seq", [ok.body.deed_ids])).rows.map((r: Json) => r.kind),
+      ["build", "first_build"],
+    );
     refused(await build(A, item()), 409, "DUPLICATE_KEY", { table: "item" });
     const stored = await q("SELECT id FROM items WHERE record = 'definition' AND content_key = 'content.r1.item.s12_blade'");
     assert.deepEqual(stored.rows.map((r: Json) => r.id), [ok.body.result.id]);

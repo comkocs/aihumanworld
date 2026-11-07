@@ -99,5 +99,6 @@ async function mint(w: Writer, def: ItemDefinitionRow, holder: { kind: "place" |
     equipped: false,
     dura: def.dura_max,
     sockets: Array.from({ length: def.slots }, () => null),
+    note: null,
   });
 }

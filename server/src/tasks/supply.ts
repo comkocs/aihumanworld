@@ -114,6 +114,7 @@ async function instantiate(ctx: SupplyCtx, n: TaskNumbers, char: CharRow, t: Tas
       equipped: false,
       dura: d.dura_max,
       sockets: Array.from({ length: d.slots }, () => null),
+      note: null,
     };
     itemRows.push(inst);
     items.push(inst.id);
@@ -148,6 +149,7 @@ async function instantiate(ctx: SupplyCtx, n: TaskNumbers, char: CharRow, t: Tas
     accepted_seq: null,
     progress: { count: 0, evidence: [] },
     expires_tick: (BigInt(tick) + BigInt(duration)).toString(),
+    note: null,
   };
   changes.push(must(await w.insert("task", row)));
   for (const inst of itemRows) changes.push(must(await w.insert("item", inst)));

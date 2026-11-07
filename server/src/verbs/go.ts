@@ -6,6 +6,7 @@
 // Guard rule (S5 has no number for it): a guard NPC alive and present at the
 // place stops a char with an active wanted record in that place's region.
 
+import { noteFirstCrossing } from "../facts/firsts.ts";
 import { countRows, getRow, mustGetRow } from "../facts/store.ts";
 import type { Change, CharRow, ID, PlaceRow, ReputationRow, Reward } from "../facts/types.ts";
 import { NO_DETAILS, reject } from "../protocol/errors.ts";
@@ -123,6 +124,8 @@ export const def = defineVerb<GoArgs, GoResult>({
     }
 
     ctx.actor = cur;
+    // S62: first of this origin region to step into another origin region's start place.
+    await noteFirstCrossing(w, cur, dest);
     changes.push(...(await recordPresenceEvidence(ctx, cur, dest, "go")));
     return { from: here.id, to: dest.id, changes };
   },

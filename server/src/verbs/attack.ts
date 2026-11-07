@@ -1,5 +1,6 @@
 // One neutral, reproducible S5 combat settlement. Request data never supplies rolls.
 
+import { noteFirstGate } from "../facts/firsts.ts";
 import { getRow } from "../facts/store.ts";
 import type { Change, CharRow, ID, Roll } from "../facts/types.ts";
 import { deriveStats, gridNumbers, mulDiv, type NeutralFacts } from "../growth/balance.ts";
@@ -157,6 +158,9 @@ export const def = defineVerb<AttackArgs, AttackResult>({
         const input = char.id === me.id ? actorInput : targetInput;
         // slay task progress is the task stream's: submit verifies combat deeds itself.
         if (char.kind === "npc") changes.push(...await firstKill(ctx, resolved.winner, input));
+        // S62: the first of this origin region to beat the opponent at its tutorial place.
+        const killer = await getRow(ctx.q, "char", resolved.winner);
+        if (killer !== null) await noteFirstGate(ctx.w, killer, char, place);
       }
     }
     if (target.kind === "npc" && target.archetype === "guard") changes.push(...await markWanted(ctx, me, place, "attack_guard"));

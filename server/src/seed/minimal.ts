@@ -47,6 +47,7 @@ export async function seedWorld(
       exits: SKINS.map((s) => ({ dir: LINKS[s].out, to: start(s), locked: false, key_def: null, guard: null })),
       owner_org: null,
       by: null,
+      note: null,
     },
     ...SKINS.map(
       (s): PlaceRow => ({
@@ -62,6 +63,7 @@ export async function seedWorld(
         exits: [{ dir: LINKS[s].back, to: market, locked: false, key_def: null, guard: null }],
         owner_org: null,
         by: null,
+        note: null,
       }),
     ),
   ];

@@ -44,7 +44,7 @@ test("S25 use, organization and NPC acceptance chains", async (t) => {
     const def = (local: string, patch: Partial<ItemDefinitionRow>): ItemDefinitionRow => ({
       id: `r1:item:s25_def_${local}`, ...stamp, record: "definition", content_key: `content.r1.item.s25_${local}`,
       kind: "blade", tier: 1, grade: 1, element: "none", slots: 1, cap: 33, dura_max: 100,
-      modifiers: { vigor: 0, power: 40, guard: 0, speed: 0 }, effect: { kind: "none" }, by: null, ...patch,
+      modifiers: { vigor: 0, power: 40, guard: 0, speed: 0 }, effect: { kind: "none" }, by: null, note: null, ...patch,
     });
     const potion = def("potion", { kind: "potion", slots: 0, cap: 0, dura_max: 0, modifiers: { vigor: 0, power: 0, guard: 0, speed: 0 }, effect: { kind: "restore", vigor: 1200 } });
     const large = def("large", { tier: 9, cap: 825, dura_max: 340 });
@@ -61,6 +61,7 @@ test("S25 use, organization and NPC acceptance chains", async (t) => {
     const instance = (local: string, d: ItemDefinitionRow, owner: string, dura = d.dura_max): ItemInstanceRow => ({
       id: `r1:item:s25_${local}`, ...stamp, record: "instance", def_id: d.id,
       holder: { kind: "char", id: owner }, state: "available", equipped: false, dura, sockets: Array.from({ length: d.slots }, () => null),
+      note: null,
     });
     const medicine = instance("potion", potion, A.id);
     const tooLarge = instance("large", large, A.id);
@@ -165,7 +166,7 @@ test("S25 use, organization and NPC acceptance chains", async (t) => {
       assert.deepEqual(initial.member_ids, [A.id]);
       const template: TaskTemplateRow = {
         id: "r1:task:s25_template", ...stamp, record: "template", content_key: "content.r1.task.s25_goal", tpl: "reach", tier: 1, stage: 1,
-        condition: { tpl: "reach", mode: "place", place: me.loc }, reward_spec: { coin: 0, xp: 0, potential: 0, rep: 0, item_defs: [] }, duration_ticks: 1440, by: null,
+        condition: { tpl: "reach", mode: "place", place: me.loc }, reward_spec: { coin: 0, xp: 0, potential: 0, rep: 0, item_defs: [] }, duration_ticks: 1440, by: null, note: null,
       };
       await app.db.tx(async (q) => {
         await mustGetRow(q, "world", world.id, { lock: true });
@@ -176,7 +177,7 @@ test("S25 use, organization and NPC acceptance chains", async (t) => {
             id: `r1:task:s25_done_${i}`, ...stamp, record: "instance", template_id: template.id, kind: "system", tpl: "reach",
             issuer: { kind: "system", id: world.id }, offer_place: me.loc, eligible_char: B.id, issuer_tier: null, taker: B.id,
             condition: template.condition, reward: { coin: 0, xp: 0, potential: 0, rep: 0, items: [] }, escrow: { coin: 0, items: [] },
-            state: "completed", accepted_seq: "0", progress: { count: 1, evidence: [] }, expires_tick: "1440",
+            state: "completed", accepted_seq: "0", progress: { count: 1, evidence: [] }, expires_tick: "1440", note: null,
           };
           await insertRow(q, "task", task);
           await w.deed({ actor: B.id, verb: "task", kind: "task_done", targets: [task.id, template.id], place_id: me.loc,

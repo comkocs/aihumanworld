@@ -4,8 +4,9 @@
 // economy.bounty_min_coin coin or one item), under bounty_open_max open
 // bounties. Coin leaves the issuer and items move to the task in the same
 // transaction; reputation for the taker is rep_bounty of the issuer's tier at
-// posting (xp / potential 0). The note is sanitised and delivered in memory
-// only (speech event + speech store), never stored with the task.
+// posting (xp / potential 0). The note is sanitised and stored on the task
+// (S62, so look / task list keep showing it) and also delivered in memory
+// (speech event + speech store) for the place that hears it posted.
 // cancel: issuer only, open only; escrow back in full.
 
 import { countRows, getRow, mustGetRow } from "../facts/store.ts";
@@ -157,6 +158,7 @@ async function post(ctx: VerbContext, me: CharRow, a: Extract<BountyArgs, { op: 
     accepted_seq: null,
     progress: { count: 0, evidence: [] },
     expires_tick: a.expires_tick,
+    note: note === null ? null : note.text,
   };
   const changes: Change[] = [must(await w.insert("task", row))];
   let cur = me;

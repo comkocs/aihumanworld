@@ -204,7 +204,7 @@ export async function markRedName(ctx: VerbContext, killer: CharRow, place: Plac
     issuer: { kind: "system", id: ctx.world.id }, offer_place: place.id, eligible_char: null, issuer_tier: null, taker: null,
     condition: { tpl: "slay", target: killer.id, archetype: null, tier: killer.tier, count: 1 },
     reward: { ...hunt, coin }, escrow: { coin, items: [] }, state: "open", accepted_seq: null,
-    progress: { count: 0, evidence: [] }, expires_tick: up.wanted.until_tick,
+    progress: { count: 0, evidence: [] }, expires_tick: up.wanted.until_tick, note: null,
   };
   const posted: Change[] = [must(await ctx.w.insert("task", row)), must(await ctx.w.update("wanted", up.wanted.id, { bounty_task: id }))];
   const deed = await ctx.w.deed({

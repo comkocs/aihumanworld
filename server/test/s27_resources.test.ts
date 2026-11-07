@@ -110,6 +110,7 @@ test("S27 chain: first-tick fill → take → 120-tick restock to cap → delive
       accepted_seq: null,
       progress: { count: 0, evidence: [] },
       expires_tick: String(now + 1440n),
+      note: null,
     } satisfies TaskInstanceRow);
     await nextTick();
     const accepted = await ok("task", { op: "accept", id: FIXTURE }, code);

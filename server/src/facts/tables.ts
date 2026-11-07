@@ -72,6 +72,7 @@ export const TABLES: Readonly<Record<FactTable, TableDesc>> = {
     exits: "json",
     owner_org: "text",
     by: "text",
+    note: "text",
   }),
   item: split(
     "items",
@@ -90,6 +91,7 @@ export const TABLES: Readonly<Record<FactTable, TableDesc>> = {
       modifiers: "json",
       effect: "json",
       by: "text",
+      note: "text",
       def_id: "text",
       holder: "json",
       state: "text",
@@ -110,8 +112,9 @@ export const TABLES: Readonly<Record<FactTable, TableDesc>> = {
         "modifiers",
         "effect",
         "by",
+        "note",
       ],
-      instance: ["def_id", "holder", "state", "equipped", "dura", "sockets"],
+      instance: ["def_id", "holder", "state", "equipped", "dura", "sockets", "note"],
     },
   ),
   char: plain("chars", {
@@ -234,9 +237,10 @@ export const TABLES: Readonly<Record<FactTable, TableDesc>> = {
       accepted_seq: "seq",
       progress: "json",
       expires_tick: "seq",
+      note: "text",
     },
     {
-      template: ["content_key", "tpl", "tier", "stage", "condition", "reward_spec", "duration_ticks", "by"],
+      template: ["content_key", "tpl", "tier", "stage", "condition", "reward_spec", "duration_ticks", "by", "note"],
       instance: [
         "template_id",
         "kind",
@@ -253,6 +257,7 @@ export const TABLES: Readonly<Record<FactTable, TableDesc>> = {
         "accepted_seq",
         "progress",
         "expires_tick",
+        "note",
       ],
     },
   ),

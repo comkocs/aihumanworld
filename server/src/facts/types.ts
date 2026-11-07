@@ -186,6 +186,8 @@ export interface PlaceRow extends CommonFields {
   exits: Exit[];
   owner_org: ID | null;
   by: ID | null;
+  /** S62: the builder's one line, sanitised; null for imported / seed places. */
+  note: string | null;
 }
 
 // ---------- item (§5) ----------
@@ -212,6 +214,8 @@ export interface ItemDefinitionRow extends CommonFields {
   modifiers: Modifiers;
   effect: ItemEffect;
   by: ID | null;
+  /** S62: the builder's one line, sanitised; null for imported definitions and every instance. */
+  note: string | null;
 }
 
 export interface ItemInstanceRow extends CommonFields {
@@ -222,6 +226,8 @@ export interface ItemInstanceRow extends CommonFields {
   equipped: boolean;
   dura: UInt;
   sockets: (ID | null)[];
+  /** S62: always null — a built item's line lives on its definition. */
+  note: string | null;
 }
 
 export type ItemRow = ItemDefinitionRow | ItemInstanceRow;
@@ -377,6 +383,8 @@ export interface TaskTemplateRow extends CommonFields {
   reward_spec: RewardSpec;
   duration_ticks: UInt;
   by: ID | null;
+  /** S62: the builder's one line, sanitised; null for imported templates. */
+  note: string | null;
 }
 
 export interface TaskInstanceRow extends CommonFields {
@@ -396,6 +404,8 @@ export interface TaskInstanceRow extends CommonFields {
   accepted_seq: Seq | null;
   progress: { count: UInt; evidence: ID[] };
   expires_tick: Tick;
+  /** S62: the issuer's one line on a player bounty, sanitised; null otherwise. */
+  note: string | null;
 }
 
 export type TaskRow = TaskTemplateRow | TaskInstanceRow;

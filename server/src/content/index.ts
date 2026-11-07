@@ -291,6 +291,7 @@ async function importPlaces(ctx: FileCtx, file: string, entries: Out<typeof plac
         exits: e.exits,
         owner_org: owner,
         by: null,
+        note: null,
       };
       await ctx.w.insert("place", row);
       fresh.push(row);
@@ -349,6 +350,7 @@ async function importItems(ctx: FileCtx, file: string, entries: ItemEntry[], res
         updated_tick: ctx.tick,
         record: "definition",
         by: null,
+        note: null,
         ...data,
       };
       await ctx.w.insert("item", row);
@@ -476,6 +478,7 @@ async function importTasks(ctx: FileCtx, file: string, entries: TaskEntry[], res
         updated_tick: ctx.tick,
         record: "template",
         by: null,
+        note: null,
         ...data,
       };
       await ctx.w.insert("task", row);

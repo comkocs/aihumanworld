@@ -32,6 +32,7 @@ const reachMarket: TaskTemplateRow = {
   reward_spec: { coin: 0, xp: 0, potential: 0, rep: 0, item_defs: [] },
   duration_ticks: 1440,
   by: null,
+  note: null,
 };
 
 test("S45: submit names the turn-in place; whoami next_breakthrough then stage", async () => {

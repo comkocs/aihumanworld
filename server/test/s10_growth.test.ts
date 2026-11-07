@@ -236,10 +236,10 @@ test("S10: neutral combat → training → teaching → breakthrough paths → d
     assert.equal(tierSuccess.result.stage, 1);
     let potion = "";
     await fixture(async (_q, w, row) => {
-      const def: ItemDefinitionRow = { id: await w.newId("item"), created_tick: row.tick, updated_tick: row.tick, record: "definition", content_key: "content.r1.item.s10_potion", kind: "potion", tier: 1, grade: 1, element: "none", slots: 0, cap: 0, dura_max: 0, modifiers: { vigor: 0, power: 0, guard: 0, speed: 0 }, effect: { kind: "breakthrough", bonus: 500 }, by: null };
+      const def: ItemDefinitionRow = { id: await w.newId("item"), created_tick: row.tick, updated_tick: row.tick, record: "definition", content_key: "content.r1.item.s10_potion", kind: "potion", tier: 1, grade: 1, element: "none", slots: 0, cap: 0, dura_max: 0, modifiers: { vigor: 0, power: 0, guard: 0, speed: 0 }, effect: { kind: "breakthrough", bonus: 500 }, by: null, note: null };
       await w.insert("item", def);
       potion = await w.newId("item");
-      await w.insert("item", { id: potion, created_tick: row.tick, updated_tick: row.tick, record: "instance", def_id: def.id, holder: { kind: "char", id: actor }, state: "available", equipped: false, dura: 0, sockets: [] });
+      await w.insert("item", { id: potion, created_tick: row.tick, updated_tick: row.tick, record: "instance", def_id: def.id, holder: { kind: "char", id: actor }, state: "available", equipped: false, dura: 0, sockets: [], note: null });
     });
     await bt("tier", false, potion);
     assert.equal((await char(actor)).xp, 880);
@@ -251,10 +251,10 @@ test("S10: neutral combat → training → teaching → breakthrough paths → d
     const gearIds: string[] = [];
     await fixture(async (_q, w, row) => {
       for (let i = 0; i < 4; i += 1) {
-        const def: ItemDefinitionRow = { id: await w.newId("item"), created_tick: row.tick, updated_tick: row.tick, record: "definition", content_key: `content.r1.item.s10_gear${i}`, kind: i === 0 ? "blade" : i === 1 ? "robe" : "ring", tier: 2, grade: 3, element: "none", slots: 3, cap: 66, dura_max: 150, modifiers: { vigor: 0, power: i === 0 ? 108 : 0, guard: i === 1 ? 108 : 0, speed: i >= 2 ? 108 : 0 }, effect: { kind: "none" }, by: null };
+        const def: ItemDefinitionRow = { id: await w.newId("item"), created_tick: row.tick, updated_tick: row.tick, record: "definition", content_key: `content.r1.item.s10_gear${i}`, kind: i === 0 ? "blade" : i === 1 ? "robe" : "ring", tier: 2, grade: 3, element: "none", slots: 3, cap: 66, dura_max: 150, modifiers: { vigor: 0, power: i === 0 ? 108 : 0, guard: i === 1 ? 108 : 0, speed: i >= 2 ? 108 : 0 }, effect: { kind: "none" }, by: null, note: null };
         await w.insert("item", def);
         const id = await w.newId("item"); gearIds.push(id);
-        await w.insert("item", { id, created_tick: row.tick, updated_tick: row.tick, record: "instance", def_id: def.id, holder: { kind: "char", id: actor }, state: "available", equipped: true, dura: 150, sockets: [null, null, null] });
+        await w.insert("item", { id, created_tick: row.tick, updated_tick: row.tick, record: "instance", def_id: def.id, holder: { kind: "char", id: actor }, state: "available", equipped: true, dura: 150, sockets: [null, null, null], note: null });
       }
     });
     await bt("cycle", true);
@@ -278,9 +278,9 @@ test("S10: neutral combat → training → teaching → breakthrough paths → d
       await w.update("char", actor, { tier: 9, stage: 4, vigor: 253000, ap_spent: 0, ap_tick: tick.toString(), last_seen_tick: tick.toString() });
       await w.update("char", target, { vigor: 1, xp: 710, ap_tick: tick.toString(), state: "active" });
       for (let i = 0; i < 2; i += 1) {
-        const def: ItemDefinitionRow = { id: await w.newId("item"), created_tick: row.tick, updated_tick: row.tick, record: "definition", content_key: `content.r1.item.s10_ore${i}`, kind: "ore", tier: 1, grade: 1, element: "none", slots: 0, cap: 0, dura_max: 0, modifiers: { vigor: 0, power: 0, guard: 0, speed: 0 }, effect: { kind: "none" }, by: null };
+        const def: ItemDefinitionRow = { id: await w.newId("item"), created_tick: row.tick, updated_tick: row.tick, record: "definition", content_key: `content.r1.item.s10_ore${i}`, kind: "ore", tier: 1, grade: 1, element: "none", slots: 0, cap: 0, dura_max: 0, modifiers: { vigor: 0, power: 0, guard: 0, speed: 0 }, effect: { kind: "none" }, by: null, note: null };
         await w.insert("item", def);
-        await w.insert("item", { id: await w.newId("item"), created_tick: row.tick, updated_tick: row.tick, record: "instance", def_id: def.id, holder: { kind: "char", id: target }, state: "available", equipped: false, dura: 0, sockets: [] });
+        await w.insert("item", { id: await w.newId("item"), created_tick: row.tick, updated_tick: row.tick, record: "instance", def_id: def.id, holder: { kind: "char", id: target }, state: "available", equipped: false, dura: 0, sockets: [], note: null });
       }
     });
     const pk = await call("attack", { target }, code);

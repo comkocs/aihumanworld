@@ -40,6 +40,7 @@ const parcelDef: ItemDefinitionRow = {
   modifiers: { vigor: 0, power: 0, guard: 0, speed: 0 },
   effect: { kind: "none" },
   by: null,
+  note: null,
 };
 
 const parcel = (local: string, holder: Holder): ItemInstanceRow => ({
@@ -53,6 +54,7 @@ const parcel = (local: string, holder: Holder): ItemInstanceRow => ({
   equipped: false,
   dura: 0,
   sockets: [],
+  note: null,
 });
 
 // Tier-1 deliver template; reward_spec equals the S5 tier-1 deliver row (100 / 300 / 30).
@@ -69,6 +71,7 @@ const deliverTo = (id: string, toPlace: string): TaskTemplateRow => ({
   reward_spec: { coin: 100, xp: 300, potential: 30, rep: 0, item_defs: [] },
   duration_ticks: 1440,
   by: null,
+  note: null,
 });
 
 test("S24 chain: deliver task → daily decay → bounty escrow / payout / refund → refusals", async () => {

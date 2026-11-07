@@ -202,6 +202,11 @@ export const DEED_KINDS = [
   "learn",
   "identity",
   "discourse",
+  // S62: region firsts (first of an origin region to clear its tutorial gate, to
+  // build anything, to step into another origin region).
+  "first_gate",
+  "first_build",
+  "first_crossing",
 ] as const;
 export type DeedKind = (typeof DEED_KINDS)[number];
 

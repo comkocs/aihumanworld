@@ -31,7 +31,11 @@ export interface DeedInput {
   visibility: Visibility;
   /** self-visible audience; the actor is added automatically. */
   participants: ID[];
-  /** Required for first_found / first_clear / first_kill: `(kind,target)` uniqueness key. */
+  /**
+   * Required for the world-first kinds (first_found / first_clear / first_kill and
+   * the S62 region firsts first_gate / first_build / first_crossing). Uniqueness is
+   * the first_key column, so the key itself states the scope.
+   */
   first_key?: string;
 }
 
@@ -93,7 +97,9 @@ export class Writer {
 
   async deed(d: DeedInput): Promise<DeedRow> {
     this.requireLock("deed");
-    const isFirst = d.kind === "first_found" || d.kind === "first_clear" || d.kind === "first_kill";
+    const isFirst =
+      d.kind === "first_found" || d.kind === "first_clear" || d.kind === "first_kill" ||
+      d.kind === "first_gate" || d.kind === "first_build" || d.kind === "first_crossing";
     if (isFirst !== (d.first_key !== undefined)) throw new Error(`deed ${d.kind}: first_key mismatch`);
     const r = await this.q.query<{ deed_head: string }>(
       "UPDATE worlds SET deed_head = deed_head + 1 WHERE realm = $1 RETURNING deed_head",

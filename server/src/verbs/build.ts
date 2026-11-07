@@ -5,6 +5,7 @@
 // definition, and records the deed and the `built` events.
 
 import { TASK_TPLS } from "../facts/enums.ts";
+import { noteFirstBuild } from "../facts/firsts.ts";
 import type { Change, ID, PlaceRow, ItemDefinitionRow, TaskTemplateRow } from "../facts/types.ts";
 import { checkContentKey, checkItem, checkPlace, checkTask, CONTENT_KEY_RE, type CheckEnv } from "../build/check.ts";
 import { buildLimits } from "../build/limits.ts";
@@ -119,6 +120,8 @@ export const def = defineVerb<BuildArgs, BuildResult>({
       if (c !== null) changes.push(c);
     };
     const stamp = { created_tick: tick, updated_tick: tick };
+    // S62: the line stays on the built record (sanitised), so a later look reads it.
+    const note = a.note === null ? null : sanitizeText(a.note);
     let id: ID;
     let record: BuildResult["record"];
     const targets: ID[] = [];
@@ -134,6 +137,7 @@ export const def = defineVerb<BuildArgs, BuildResult>({
         ...a.data,
         exits: [{ dir: a.attach.back, to: from.id, locked: false, key_def: null, guard: null }],
         by: me.id,
+        note,
       };
       push(await w.insert("place", row));
       // The new exit is appended to the anchor in the same transaction; existing exits are untouched.
@@ -145,7 +149,7 @@ export const def = defineVerb<BuildArgs, BuildResult>({
       await ensureKeyFree(q, "item", a.data.content_key);
       await checkItemRefs(q, a.data);
       id = await w.newId("item");
-      const row: ItemDefinitionRow = { id, ...stamp, record: "definition", ...a.data, by: me.id };
+      const row: ItemDefinitionRow = { id, ...stamp, record: "definition", ...a.data, by: me.id, note };
       push(await w.insert("item", row));
       record = row;
       targets.push(id);
@@ -154,7 +158,7 @@ export const def = defineVerb<BuildArgs, BuildResult>({
       await ensureKeyFree(q, "task", a.data.content_key);
       await checkTaskRefs(q, a.data, limits);
       id = await w.newId("task");
-      const row: TaskTemplateRow = { id, ...stamp, record: "template", ...a.data, by: me.id };
+      const row: TaskTemplateRow = { id, ...stamp, record: "template", ...a.data, by: me.id, note };
       push(await w.insert("task", row));
       record = row;
       targets.push(id);
@@ -173,8 +177,10 @@ export const def = defineVerb<BuildArgs, BuildResult>({
     const data = { builder: me.id, table: a.kind, id, content_key: a.data.content_key };
     await w.emit({ scope: "self", recipients: [me.id], type: "built", deed_id: deed.id, data });
     if (a.kind === "place") await w.emit({ scope: "place", place_id: me.loc, type: "built", deed_id: deed.id, data });
+    // S62: no verb founds an org, so the realm's first player-built record is the chronicle entry.
+    await noteFirstBuild(w, me, id, me.loc);
 
-    // The note is only echoed to the builder: 事实格式 §13 fixes other_speech to null for non-speech events.
-    return { table: a.kind, id, record, changes, other_speech: a.note === null ? null : sanitizeText(a.note) };
+    // Also echoed to the builder this once; the stored copy is what others read later.
+    return { table: a.kind, id, record, changes, other_speech: note };
   },
 });

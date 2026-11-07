@@ -94,6 +94,7 @@ function placeLine(lex: Lexicon, p: PlaceRow): string {
     facet(lex, `danger.${p.danger}`),
     facet(lex, `combat.${p.combat}`),
     features.length > 0 ? features.join(", ") : "",
+    p.note === null || p.note === "" ? "" : `note ${p.note}`,
   ]);
 }
 
@@ -131,6 +132,7 @@ function itemLine(lex: Lexicon, inst: ItemInstanceRow, def: ItemDefinitionRow | 
     facet(lex, `category.${ITEM_CATEGORY[def.kind as ItemKind]}`),
     inst.equipped ? "equipped" : "on ground",
     `dura ${inst.dura}`,
+    def?.note ? `note ${def.note}` : "",
   ]);
 }
 
@@ -143,6 +145,7 @@ function taskLine(lex: Lexicon, t: TaskInstanceRow): string {
     `state ${t.state}`,
     `reward coin ${t.reward.coin}`,
     cond,
+    t.note === null || t.note === "" ? "" : `note ${t.note}`,
   ]);
 }
 
