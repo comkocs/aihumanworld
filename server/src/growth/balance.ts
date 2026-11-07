@@ -52,14 +52,17 @@ export interface Numbers {
     deed_bonus: {
       first_kill: { xp_bp: number; potential_bp: number; rep_mult: number };
       /**
-       * S46 / S51 论道: talking pays by time, no count limit. Per discourse each of the two gets their tier's
+       * S46 / S51 / S54 论道: talking pays by time, no count limit. Per discourse each of the two gets their tier's
        * full-attendance day x talk_rate_bp / day_ticks per tick since their own previous discourse reward (at most
-       * talk_accrue_max_ticks); the pair's first ever (初识) adds first_* of the tier's full task value.
+       * talk_accrue_max_ticks, a few ticks, so chatting often earns more); the pair's first ever (初识) adds
+       * first_* of the tier's full task value. A direct talk with an NPC pays only the speaker, at npc_rate_bp.
        * Absent = no discourse reward.
        */
       discourse?: {
         rep_mult: number; window_ticks: number; first_xp_bp: number; first_potential_bp: number;
         talk_rate_bp: number; talk_accrue_max_ticks: number;
+        /** S54: a direct talk with an NPC pays this fraction of the player rate (the NPC itself is never paid). */
+        npc_rate_bp: number;
       };
       /**
        * S46 切磋 / PK. Absent = no such reward. *_bp apply to xp and potential alike, of the full task value of the
@@ -151,9 +154,9 @@ export function parseBalance(input: unknown): Balance {
   numbersAt(root, "tasks.deed_bonus.first_kill", "xp_bp potential_bp rep_mult");
   const deedBonus = record(record(root.tasks, "tasks").deed_bonus, "tasks.deed_bonus");
   if (deedBonus.discourse !== undefined) {
-    numbersAt(root, "tasks.deed_bonus.discourse", "rep_mult window_ticks first_xp_bp first_potential_bp talk_rate_bp talk_accrue_max_ticks");
+    numbersAt(root, "tasks.deed_bonus.discourse", "rep_mult window_ticks first_xp_bp first_potential_bp talk_rate_bp talk_accrue_max_ticks npc_rate_bp");
     const d = record(deedBonus.discourse, "tasks.deed_bonus.discourse");
-    for (const key of ["first_xp_bp", "first_potential_bp", "talk_rate_bp"]) {
+    for (const key of ["first_xp_bp", "first_potential_bp", "talk_rate_bp", "npc_rate_bp"]) {
       if ((d[key] as number) > 100000) throw new Error(`tasks.deed_bonus.discourse.${key} exceeds ten tasks / ten times training`);
     }
     if (d.window_ticks === 0 || d.talk_accrue_max_ticks === 0) throw new Error("tasks.deed_bonus.discourse ticks must be positive");

@@ -87,18 +87,18 @@ test("S46 ①: talking pays by time (1.1 x training), no count limit, 初识 onc
   const numbers = JSON.parse(await readFile(NUMBERS, "utf8")) as Json;
   const rule = numbers.tasks.deed_bonus.discourse;
   const t1 = numbers.tiers.find((r: Json) => r.tier === 1);
-  assert.equal(numbers.meta.revision_key, "balance.v1.2");
-  assert.equal(numbers.world_rules.balance_key, "balance.v1.2");
-  assert.deepEqual(rule, { rep_mult: 0, window_ticks: 60, first_xp_bp: 5000, first_potential_bp: 5000, talk_rate_bp: 11000, talk_accrue_max_ticks: 60 });
+  assert.equal(numbers.meta.revision_key, "balance.v1.3");
+  assert.equal(numbers.world_rules.balance_key, "balance.v1.3");
+  assert.deepEqual(rule, { rep_mult: 0, window_ticks: 60, first_xp_bp: 100, first_potential_bp: 100, talk_rate_bp: 11000, talk_accrue_max_ticks: 3, npc_rate_bp: 7000 });
   // Tier 1: the full-attendance day is 1188 xp / 234 potential; talking earns 1.1 x of it per tick since one's own last talk reward.
   const dayTicks: number = numbers.clock.day_ticks;
   const unit = 10000 * dayTicks;
   const xpPerTick = t1.daily_xp_full * rule.talk_rate_bp; // in 1/unit points
   const potPerTick = (3 * t1.task_potential + (dayTicks / numbers.clock.train_period_ticks) * t1.train_potential) * rule.talk_rate_bp;
-  assert.deepEqual([t1.daily_xp_full, xpPerTick * 60 / unit], [1188, 54.45]);
-  const firstXp = Math.floor((t1.task_xp * rule.first_xp_bp) / 10000); // half a task: 150
-  const firstPot = Math.floor((t1.task_potential * rule.first_potential_bp) / 10000); // 15
-  assert.deepEqual([firstXp, firstPot], [150, 15]);
+  assert.deepEqual([t1.daily_xp_full, xpPerTick * rule.talk_accrue_max_ticks / unit], [1188, 2.7225]);
+  const firstXp = Math.floor((t1.task_xp * rule.first_xp_bp) / 10000); // a hundredth of a task: 3
+  const firstPot = Math.floor((t1.task_potential * rule.first_potential_bp) / 10000); // 0
+  assert.deepEqual([firstXp, firstPot], [3, 0]);
   // The model of one char's talk income: whole points paid, the fraction carried to the next reward (dropped after a long silence).
   const model = () => ({ xp: 0, pot: 0 });
   const earn = (m: { xp: number; pot: number }, ticks: number, carry: boolean): { xp: number; pot: number } => {
@@ -125,7 +125,7 @@ test("S46 ①: talking pays by time (1.1 x training), no count limit, 初识 onc
       const advance = async (ticks: number): Promise<void> => {
         await d.q(`UPDATE worlds SET tick_started_at = tick_started_at - interval '${60 * ticks} seconds'`);
       };
-      await bump(100); // everybody is far past the first hour of their life: a first talk is paid the full hour
+      await bump(100); // everybody is far past the cap: a first talk is paid the full `talk_accrue_max_ticks`
       const mA = model();
       const mB = model();
       const mC = model();
@@ -133,7 +133,7 @@ test("S46 ①: talking pays by time (1.1 x training), no count limit, 初识 onc
       const xB0 = await d.xp(B);
       const pB0 = await d.potential(B);
 
-      // A speaks to the room; B answers: the first talk of the pair (初识) = one hour of talk + half a task, and a world deed.
+      // A speaks to the room; B answers: the first talk of the pair (初识) = the capped talk time + a sliver of a task, and a world deed.
       await d.nextTick();
       const opening = await d.say(A, "有人想论道吗?");
       assert.equal(opening.ok, true);
@@ -143,13 +143,14 @@ test("S46 ①: talking pays by time (1.1 x training), no count limit, 初识 onc
       const second = await d.say(B, "我来,谈谈心得", A);
       assert.equal(second.ok, true, JSON.stringify(second));
       assert.equal(second.deed_ids.length, 1);
-      const eA = earn(mA, 60, false);
-      const eB = earn(mB, 60, false);
-      assert.deepEqual([eA.xp, eA.pot], [54, 10]);
+      const capTicks: number = rule.talk_accrue_max_ticks;
+      const eA = earn(mA, capTicks, false);
+      const eB = earn(mB, capTicks, false);
+      assert.deepEqual([eA.xp, eA.pot], [2, 0]);
       assert.equal((await d.xp(A)) - xA0, eA.xp + firstXp);
       assert.equal((await d.xp(B)) - xB0, eB.xp + firstXp);
       assert.equal((await d.potential(B)) - pB0, eB.pot + firstPot);
-      assert.deepEqual(second.result.changes[0], { table: "char", id: B.id, after: { xp: xB0 + eB.xp + firstXp, potential: pB0 + eB.pot + firstPot } });
+      assert.deepEqual(second.result.changes[0], { table: "char", id: B.id, after: { xp: xB0 + eB.xp + firstXp, ...(eB.pot + firstPot > 0 ? { potential: pB0 + eB.pot + firstPot } : {}) } });
       const deeds = await d.discourses();
       assert.equal(deeds.length, 1);
       const deed = deeds[0] as Json;
@@ -168,9 +169,9 @@ test("S46 ①: talking pays by time (1.1 x training), no count limit, 初识 onc
       assert.equal(gotA[0].reward.xp, eA.xp + firstXp);
       assert.deepEqual(gotA[0].social, { kind: "discourse", with: B.id, carry: { xp: mA.xp, potential: mA.pot } });
 
-      // No limit: eight more lines, five ticks apart, every one pays both sides five ticks of talk (no new deed, no 初识).
+      // No limit: eight more lines, two ticks apart, every one pays both sides two ticks of talk (no new deed, no 初识).
       for (let i = 0; i < 8; i += 1) {
-        await advance(5);
+        await advance(2);
         const speaker = i % 2 === 0 ? A : B;
         const listener = i % 2 === 0 ? B : A;
         const [sm, lm] = i % 2 === 0 ? [mA, mB] : [mB, mA];
@@ -179,15 +180,15 @@ test("S46 ①: talking pays by time (1.1 x training), no count limit, 初识 onc
         const r = await d.say(speaker, `第${i}句`, listener);
         assert.equal(r.ok, true, JSON.stringify(r));
         assert.equal(r.deed_ids.length, 0, "ordinary talk writes no deed");
-        const es = earn(sm, 5, true);
-        const el = earn(lm, 5, true);
+        const es = earn(sm, 2, true);
+        const el = earn(lm, 2, true);
         assert.equal((await d.xp(speaker)) - xs0, es.xp, `line ${i}: speaker`);
         assert.equal((await d.xp(listener)) - xl0, el.xp, `line ${i}: listener`);
         assert.equal(r.result.changes[0].after.xp, xs0 + es.xp);
       }
       assert.equal((await d.discourses()).length, 1);
       // The carried fraction is exact: the sum paid is floor(all the time at the rate) + the one 初识.
-      assert.equal((await d.xp(A)) - xA0, Math.floor((xpPerTick * (60 + 5 * 8)) / unit) + firstXp);
+      assert.equal((await d.xp(A)) - xA0, Math.floor((xpPerTick * (capTicks + 2 * 8)) / unit) + firstXp);
       assert.equal((await rewardOf(A)).length, 1 + 8);
 
       // Answering twice in the same tick pays nothing the second time: the clock is the limit.
@@ -199,7 +200,7 @@ test("S46 ①: talking pays by time (1.1 x training), no count limit, 初识 onc
       assert.equal(Object.hasOwn(again.result, "changes"), false);
       assert.equal((await d.xp(B)) - xB1, 0);
 
-      // A long silence is paid for an hour only (the carried fraction is dropped with it).
+      // A long silence is paid for the cap only (the carried fraction is dropped with it).
       await bump(200);
       const xA2 = await d.xp(A);
       const xB2 = await d.xp(B);
@@ -210,8 +211,8 @@ test("S46 ①: talking pays by time (1.1 x training), no count limit, 初识 onc
       const back = await d.say(B, "是啊", A);
       assert.equal(back.ok, true);
       assert.equal(back.deed_ids.length, 0);
-      assert.equal((await d.xp(A)) - xA2, earn(mA, 60, false).xp);
-      assert.equal((await d.xp(B)) - xB2, earn(mB, 60, false).xp);
+      assert.equal((await d.xp(A)) - xA2, earn(mA, capTicks, false).xp);
+      assert.equal((await d.xp(B)) - xB2, earn(mB, capTicks, false).xp);
 
       // 初识 is once per pair, ever: A meets C (an extra half task each), meets C again (none).
       await bump(100); // (A's earlier room line is older than the reply window, so C's answer below is not to it)
@@ -223,32 +224,28 @@ test("S46 ①: talking pays by time (1.1 x training), no count limit, 初识 onc
       await d.nextTick();
       const meet = await d.say(A, "幸会", C);
       assert.equal(meet.deed_ids.length, 1);
-      const eC = earn(mC, 60, false);
+      const eC = earn(mC, capTicks, false);
       assert.equal((await d.xp(C)) - xC0, eC.xp + firstXp);
-      assert.equal((await d.xp(A)) - xA3, earn(mA, 60, false).xp + firstXp);
+      assert.equal((await d.xp(A)) - xA3, earn(mA, capTicks, false).xp + firstXp);
       assert.equal((await d.discourses()).length, 2);
       const xC1 = await d.xp(C);
-      await advance(7);
+      await advance(7); // longer than the cap, so it pays the cap only and drops the fraction carried before it
       const meetAgain = await d.say(C, "又见面了", A);
       assert.equal(meetAgain.deed_ids.length, 0);
-      assert.equal((await d.xp(C)) - xC1, earn(mC, 7, true).xp);
+      mC.xp = mC.pot = 0;
+      assert.equal((await d.xp(C)) - xC1, earn(mC, capTicks, false).xp);
       assert.equal((await d.discourses()).length, 2);
 
-      // NPCs never count: an NPC at the same place "spoke" (inserted), Z answers on the place channel.
+      // A place-channel line never draws an NPC in: Z speaks to the room with an NPC standing there and is not paid.
       await bump(100); // (the human lines above are older than the reply window by now)
       const npc: string = (await d.q("SELECT id FROM chars WHERE kind = 'npc' LIMIT 1"))[0]?.id;
       assert.ok(npc);
       await d.q("UPDATE chars SET loc = $2 WHERE id = $1", [npc, here]);
-      const head = Number((await d.q("UPDATE worlds SET event_head = event_head + 1 RETURNING event_head, tick"))[0]?.event_head);
-      const tick = (await d.q("SELECT tick FROM worlds"))[0]?.tick;
-      await d.q(
-        "INSERT INTO events (id, cursor, tick, scope, recipients, place_id, type, deed_id, data) VALUES ($1, $2, $3, 'place', '[]'::jsonb, $4, 'speech', NULL, $5::jsonb)",
-        [`${REALM}:event:e${head}`, head, tick, here, JSON.stringify({ speaker: npc, channel: "place", target: null })],
-      );
       const xZ0 = await d.xp(Z);
       await d.nextTick();
-      assert.equal((await d.say(Z, "老人家说得好", npc)).ok, true);
-      assert.equal((await d.say(Z, "老人家说得好")).ok, true);
+      const aloud = await d.say(Z, "大家好");
+      assert.equal(aloud.ok, true);
+      assert.equal(Object.hasOwn(aloud.result, "npc_reply"), false, "the place channel draws no NPC reply");
       assert.equal(await d.xp(Z), xZ0);
       assert.equal((await d.discourses()).length, 2);
 
@@ -264,8 +261,158 @@ test("S46 ①: talking pays by time (1.1 x training), no count limit, 初识 onc
       await d.nextTick();
       const day2 = await d.say(B, "新的一天", A);
       assert.equal(day2.deed_ids.length, 0);
-      assert.equal((await d.xp(A)) - xA4, earn(mA, 60, false).xp);
-      assert.equal((await d.xp(B)) - xB4, earn(mB, 60, false).xp);
+      assert.equal((await d.xp(A)) - xA4, earn(mA, capTicks, false).xp);
+      assert.equal((await d.xp(B)) - xB4, earn(mB, capTicks, false).xp);
+    } finally {
+      await app.close();
+    }
+  });
+});
+
+test("S54: chatting often pays more, an NPC replies for less, a direct talk counts across places, a URL is stripped", async () => {
+  setQuiet(true);
+  const numbers = JSON.parse(await readFile(NUMBERS, "utf8")) as Json;
+  const rule = numbers.tasks.deed_bonus.discourse;
+  const t1 = numbers.tiers.find((r: Json) => r.tier === 1);
+  const dayTicks: number = numbers.clock.day_ticks;
+  const unit = 10000 * dayTicks;
+  const paid = (ticks: number, rate: number): number => Math.floor((t1.daily_xp_full * rate * ticks) / unit);
+  const capTicks: number = rule.talk_accrue_max_ticks;
+
+  await withNoticeFile(join(SCRATCH, "no_such_notice.json"), async () => {
+    const app = await openMemory();
+    try {
+      const d = driver(app);
+      const [A, B] = [await d.join(), await d.join()] as [Player, Player];
+      const here: string = (await d.q("SELECT loc FROM chars WHERE id = $1", [A.id]))[0]?.loc;
+      const bump = async (ticks: number): Promise<void> => {
+        await d.q("UPDATE worlds SET tick = tick + $1", [ticks]);
+        await d.nextTick();
+        assert.equal((await d.call("look", {}, A.code)).ok, true);
+      };
+      const step = async (ticks: number): Promise<void> => {
+        await d.q(`UPDATE worlds SET tick_started_at = tick_started_at - interval '${60 * ticks} seconds'`);
+      };
+
+      // ① A two-way exchange on every tick against one answer in the whole stretch. A reply pays the gap since that
+      // char's own previous reward, so both sides of a steady exchange earn every round, and a single answer earns once.
+      await bump(100);
+      const xA0 = await d.xp(A);
+      const xB0 = await d.xp(B);
+      // One tick is under a whole point, so the leftover is carried and paid a tick or two later.
+      const accrued = (parts: number[]): number => {
+        let whole = 0;
+        let rest = 0;
+        for (const ticks of parts) {
+          const units = t1.daily_xp_full * rule.talk_rate_bp * ticks + rest;
+          whole += Math.floor(units / unit);
+          rest = units % unit;
+        }
+        return whole;
+      };
+      const firstXp = Math.floor((t1.task_xp * rule.first_xp_bp) / 10000);
+      const rounds = 6;
+      for (let i = 0; i < rounds; i += 1) {
+        await step(1);
+        await d.nextTick();
+        assert.equal((await d.say(B, `乙${i}`, A)).ok, true);
+        assert.equal((await d.say(A, `甲${i}`, B)).ok, true);
+      }
+      const steadyA = (await d.xp(A)) - xA0;
+      const steadyB = (await d.xp(B)) - xB0;
+      // Each `step(1)` lets two ticks become due (the request before it spent one): the opener is paid from the
+      // second round on, the answerer from the first.
+      assert.equal(steadyB, accrued([capTicks, ...Array(rounds - 1).fill(2)]) + firstXp, "opens every round");
+      assert.equal(steadyA, accrued([capTicks, ...Array(rounds - 1).fill(2)]) + firstXp, "answers every round");
+
+      const C = await d.join();
+      await bump(100);
+      const xC0 = await d.xp(C);
+      await step(1);
+      await d.nextTick();
+      assert.equal((await d.say(A, "只说这一次", C)).ok, true);
+      for (let i = 0; i < rounds - 1; i += 1) {
+        await step(1);
+        await d.nextTick();
+      }
+      await d.nextTick();
+      assert.equal((await d.say(C, "隔了好一会儿才回", A)).ok, true);
+      const once = (await d.xp(C)) - xC0;
+      assert.equal(once, accrued([capTicks]) + firstXp, "one answer pays the capped gap and no more");
+      assert.ok(steadyA > once * 2, `a steady exchange (${steadyA}) earns clearly more than one answer (${once})`);
+
+      // ② Speaking directly to an NPC at the same place: the NPC answers, and the pay is below a player discourse.
+      const npc: string = (await d.q("SELECT id FROM chars WHERE kind = 'npc' AND loc = $1 LIMIT 1", [here]))[0]?.id;
+      assert.ok(npc, "the start place has an NPC");
+      await bump(100);
+      const xA1 = await d.xp(A);
+      await d.nextTick();
+      const toNpc = await d.say(A, "老人家,近来可好?", npc);
+      assert.equal(toNpc.ok, true, JSON.stringify(toNpc));
+      assert.equal(typeof toNpc.result.npc_reply?.text, "string");
+      assert.ok(toNpc.result.npc_reply.text.length > 0, "the NPC answers with a line");
+      assert.equal(toNpc.result.npc_reply.from, npc);
+      assert.ok(toNpc.result.delivered_event_ids.includes(toNpc.result.npc_reply.event_id));
+      const npcXp = (await d.xp(A)) - xA1;
+      assert.equal(npcXp, paid(capTicks, rule.npc_rate_bp));
+      assert.ok(npcXp < paid(capTicks, rule.talk_rate_bp), "an NPC pays less than a player");
+      assert.equal(toNpc.deed_ids.length, 0, "talking to an NPC writes no deed");
+
+      // Alternating player and NPC talk shares one clock and carry; compare with player talk at every tick interval.
+      const D = await d.join();
+      const E = await d.join();
+      await bump(100);
+      assert.equal((await d.say(A, "再来论道", B)).ok, true);
+      assert.equal((await d.say(B, "请讲", A)).ok, true);
+      assert.equal((await d.say(D, "请论道", E)).ok, true);
+      assert.equal((await d.say(E, "请讲", D)).ok, true);
+      const mixedXp0 = await d.xp(A);
+      const mixedPot0 = await d.potential(A);
+      const playerXp0 = await d.xp(D);
+      const playerPot0 = await d.potential(D);
+      for (let i = 0; i < 8; i += 1) {
+        await step(1);
+        await d.nextTick();
+        assert.equal((await (i % 2 === 0 ? d.say(A, `问候${i}`, npc) : d.say(B, `论道${i}`, A))).ok, true);
+        assert.equal((await d.say(D, `论道${i}`, E)).ok, true);
+      }
+      const mixedXp = (await d.xp(A)) - mixedXp0;
+      const playerXp = (await d.xp(D)) - playerXp0;
+      assert.ok(mixedXp <= playerXp, `alternating talk (${mixedXp}) must not exceed player talk (${playerXp})`);
+      assert.ok((await d.potential(A)) - mixedPot0 <= (await d.potential(D)) - playerPot0, "alternating potential must not exceed player talk");
+
+      // A place-channel line draws no NPC reply.
+      await d.nextTick();
+      const aloud = await d.say(A, "大家好");
+      assert.equal(aloud.ok, true);
+      assert.equal(Object.hasOwn(aloud.result, "npc_reply"), false);
+
+      // ③ A direct exchange between two places pays both sides.
+      const elsewhere: string = (await d.q("SELECT id FROM places WHERE id <> $1 LIMIT 1", [here]))[0]?.id;
+      assert.ok(elsewhere);
+      await d.q("UPDATE chars SET loc = $2 WHERE id = $1", [B.id, elsewhere]);
+      await bump(100);
+      const xA2 = await d.xp(A);
+      const xB2 = await d.xp(B);
+      await d.nextTick();
+      assert.equal((await d.say(A, "隔着地方也能说话吗", B)).ok, true);
+      await d.nextTick();
+      const across = await d.say(B, "能,我在别处", A);
+      assert.equal(across.ok, true, JSON.stringify(across));
+      assert.ok((await d.xp(A)) - xA2 > 0, "the far speaker is paid");
+      assert.ok((await d.xp(B)) - xB2 > 0, "the answerer is paid");
+
+      // ④ A line carrying a URL still makes a discourse, and the URL is gone from the text.
+      await bump(100);
+      await d.nextTick();
+      const dirty = await d.say(A, "看看这个 http://evil.example/x 再说", B);
+      assert.equal(dirty.ok, true, JSON.stringify(dirty));
+      assert.equal(dirty.result.other_speech.includes("http"), false);
+      assert.ok(dirty.result.other_speech.includes("看看这个"));
+      await d.nextTick();
+      const answer = await d.say(B, "看见了", A);
+      assert.equal(answer.ok, true);
+      assert.ok((await d.xp(B)) > xB2, "the stripped line still completed a discourse");
     } finally {
       await app.close();
     }

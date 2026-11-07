@@ -24,12 +24,17 @@ export interface SayResult {
   delivered_event_ids: ID[];
   /** S46: only when this sentence completed a discourse: the speaker's own xp / potential changes. */
   changes?: Change[];
+  /**
+   * S54: only when this sentence was said directly to an NPC at the same place. The NPC answers with one
+   * fixed line (no LLM); `text` is that line and `event_id` is its speech event.
+   */
+  npc_reply?: { from: ID; text: string; event_id: ID };
 }
 
 export const def = defineVerb<SayArgs, SayResult>({
   verb: "say",
   summary:
-    "向当前地点说话，或向同地人物发送私话。与同地另一位玩家一来一回说上话即成论道，双方得修为，不限次数：一直聊天约为练级的 1.1 倍（隔很久聊一次最多补一小时的量）；两人初识另得半件任务。",
+    "向当前地点说话，或向任意地点的人物发送私话。聊什么都算论道，不限次数，聊得越勤得越多：与玩家一来一回，一直聊约为练级的 1.1 倍，每小时只说一句只得一小部分；私话隔地也算。对同地 NPC 发私话（target 填该 NPC），对方按规则回一句，你也得修为，但比与玩家论道少。",
   errors: ["NOT_FOUND", "NOT_HERE"],
   args,
   lock: "world",
@@ -71,19 +76,22 @@ export const def = defineVerb<SayArgs, SayResult>({
       });
     }
 
-    // S46 论道: this sentence may be the answer that completes one (reward + deed, same transaction).
-    const changes = await settleDiscourse(ctx, event);
+    // S46 / S54 论道: this sentence may complete one (reward + deed, same transaction), or be said to an NPC.
+    const settled = await settleDiscourse(ctx, event);
 
     // Last step of the handler: the in-memory text must not outlive a rollback.
     const clean = sanitizeText(a.text);
-    ctx.services.speech.put(event.id, clean, String(BigInt(ctx.tick) + BigInt(ttl)), ctx.tick);
+    const expires = String(BigInt(ctx.tick) + BigInt(ttl));
+    ctx.services.speech.put(event.id, clean, expires, ctx.tick);
+    if (settled.npcReply !== null) ctx.services.speech.put(settled.npcReply.event_id, settled.npcReply.text, expires, ctx.tick);
     return {
       channel: a.target === null ? "place" : "direct",
       target: a.target,
       other_speech: clean,
       speech_status: "available",
-      delivered_event_ids: [event.id],
-      ...(changes.length > 0 ? { changes } : {}),
+      delivered_event_ids: settled.npcReply === null ? [event.id] : [event.id, settled.npcReply.event_id],
+      ...(settled.changes.length > 0 ? { changes: settled.changes } : {}),
+      ...(settled.npcReply === null ? {} : { npc_reply: { from: settled.npcReply.from, text: settled.npcReply.text, event_id: settled.npcReply.event_id } }),
     };
   },
 });

@@ -67,7 +67,7 @@ test("S41 ①: world-first bonuses are capped (budget from numbers + content, th
   const taskXp1 = tier1.task_xp as number;
 
   // Revision: bumped, and the two copies of the key agree (loadRulesBundle refuses a mismatch).
-  assert.equal(numbers.meta.revision_key, "balance.v1.2");
+  assert.equal(numbers.meta.revision_key, "balance.v1.3");
   assert.equal(numbers.world_rules.balance_key, numbers.meta.revision_key);
 
   const rule = numbers.tasks.deed_bonus;
@@ -86,7 +86,7 @@ test("S41 ①: world-first bonuses are capped (budget from numbers + content, th
   config.clock.enabled = false;
   const app = await startApp(config);
   try {
-    assert.equal((await mustGetRow(app.db, "world", worldId(REALM))).rules_revision, "balance.v1.2");
+    assert.equal((await mustGetRow(app.db, "world", worldId(REALM))).rules_revision, "balance.v1.3");
     // The engine's own reward function agrees with the budget arithmetic above.
     const n = taskNumbers(app.services.balance());
     assert.equal(bonusReward(n.bonus.first_found, tierNumbers(n, 9)).xp, bp(tier9.task_xp, rule.first_found.xp_bp));
