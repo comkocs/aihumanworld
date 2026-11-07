@@ -21,8 +21,7 @@ type Json = any;
 
 test("S72: beast tide and secret realm open, pay, and close on the shared clock", async () => {
   setQuiet(true);
-  // S68 is mid-edit on content/world, so this test imports the committed copy.
-  const contentDir = resolve(dirname(fileURLToPath(import.meta.url)), "../../_work/builder/s72_content/content/world");
+  const contentDir = resolve(dirname(fileURLToPath(import.meta.url)), "../../content/world");
   const config = await loadConfig({ ...process.env, AIHW_DB_DRIVER: "pglite", AIHW_PGLITE_DIR: "memory", AIHW_PORT: "0", AIHW_CONTENT_DIR: contentDir });
   config.clock.enabled = false;
   const app = await startApp(config);
