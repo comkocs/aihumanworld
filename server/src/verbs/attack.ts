@@ -134,10 +134,9 @@ export const def = defineVerb<AttackArgs, AttackResult>({
             dropped.push({ id: item.id, def_id: item.def_id });
           }
         }
-        // S69: a monster killed where monsters are fought (pve) drops one equipment definition of its own tier
-        // onto the place (who takes it, keeps it). A duel is non-lethal and a pk place is for participants,
-        // so a monster dragged into either drops nothing. No equipment of its tier in the library drops nothing either.
-        if (mode === "pve" && char.kind === "npc" && char.archetype === "monster") {
+        // A participant killing a monster outside a duel may drop equipment of the monster's own tier.
+        // No equipment of its tier in the library drops nothing either.
+        if (place.combat !== "duel" && me.kind !== "npc" && char.id === target.id && resolved.winner === me.id && char.kind === "npc" && char.archetype === "monster") {
           const def = await monsterDropDef(ctx, seed, char.tier);
           if (def !== null) {
             const id = await ctx.w.newId("item");

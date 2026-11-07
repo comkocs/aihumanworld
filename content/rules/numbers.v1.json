@@ -1,7 +1,7 @@
 {
  "meta": {
   "schema": "aihw.numbers.v1",
-  "revision_key": "balance.v1.9",
+  "revision_key": "balance.v1.10",
   "integer_only": true
  },
  "world_rules": {
@@ -44,7 +44,7 @@
    "build": 1,
    "breakthrough": 2
   },
-  "balance_key": "balance.v1.9"
+  "balance_key": "balance.v1.10"
  },
  "clock": {
   "day_ticks": 1440,
@@ -747,7 +747,7 @@
    "guard": 10000,
    "quest_giver": 10000,
    "patroller": 10000,
-   "monster": 10000,
+   "monster": 9000,
    "tutorial_opponent": 3000
   },
   "body_rating_bp": {
@@ -842,7 +842,7 @@
     "cap": 33,
     "dura_max": 100,
     "slots": 1,
-    "price": 600
+    "price": 190
    },
    {
     "tier": 1,
@@ -1727,8 +1727,8 @@
     "rep_mult": 2
    },
    "first_clear": {
-    "xp_bp": 1500,
-    "potential_bp": 1500,
+    "xp_bp": 500,
+    "potential_bp": 500,
     "rep_mult": 3
    },
    "discourse": {

@@ -31,12 +31,12 @@ test("S69: a killed monster drops its own tier's equipment; killing a player doe
     const victim = await enter();
     const world = await mustGetRow(app.db, "world", "r1:world:main");
     const combat = app.services.balance().numbers.combat;
-    assert.equal(world.rules_revision, "balance.v1.9");
+    assert.equal(world.rules_revision, "balance.v1.10");
     assert.equal(combat.monster_drop_chance_bp, 2000);
     assert.deepEqual(combat.monster_drop_grade_weight, [7000, 2500, 500]);
 
     const mobs = await app.db.query<{ id: string; tier: number; loc: string }>(
-      "SELECT id, tier, loc FROM chars WHERE kind = 'npc' AND archetype = 'monster' AND life = 'alive' ORDER BY tier, id",
+      "SELECT c.id, c.tier, c.loc FROM chars c JOIN places p ON p.id = c.loc WHERE c.kind = 'npc' AND c.archetype = 'monster' AND c.life = 'alive' AND p.combat = 'pve' ORDER BY c.tier, c.id",
     );
     const mob = mobs.rows[0];
     assert.ok(mob, "the imported world has a living monster");
@@ -98,6 +98,23 @@ test("S69: a killed monster drops its own tier's equipment; killing a player doe
       [world.tick, item.id],
     );
     assert.equal(minted.rows[0]?.n, "0", "killing a player minted no item");
+
+    // A participant can also obtain a monster drop at a pk place.
+    const pkDropped: { item_id: string; def_id: string }[] = [];
+    for (let i = 0; i < 60 && pkDropped.length === 0; i += 1) {
+      await updateRow(app.db, "char", mob.id, { vigor: 1, life: "alive", revive_tick: null, loc: pkPlace, state: "active" }, world.tick);
+      await updateRow(app.db, "char", hunter.id, { loc: pkPlace, vigor: 1000000, ap_spent: 0 }, world.tick);
+      const res = await invoke("attack", { target: mob.id }, hunter.code);
+      assert.equal(res.ok, true, JSON.stringify(res.error));
+      if (res.result.dropped !== undefined) pkDropped.push(...res.result.dropped);
+    }
+    assert.ok(pkDropped.length > 0, "sixty monster kills at a pk place produced no drop");
+    const pkItem = await mustGetRow(app.db, "item", pkDropped[0]!.item_id);
+    assert.equal(pkItem.record, "instance");
+    if (pkItem.record === "instance") {
+      assert.equal(pkItem.def_id, pkDropped[0]!.def_id);
+      assert.deepEqual(pkItem.holder, { kind: "place", id: pkPlace });
+    }
   } finally {
     await app.close();
   }
