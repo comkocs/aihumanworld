@@ -25,7 +25,7 @@ export interface AttackResult {
 export const def = defineVerb<AttackArgs, AttackResult>({
   verb: "attack",
   summary:
-    "依当前地点战斗规则攻击同地目标。与另一位玩家在切磋场较量（每对每天首次：胜得 1.5 件任务修为、负 0.75 件、平 1 件），或在生死斗场击败对方（2 件），都得修为；按双方较低阶的满额任务算，每天至多 5 次。在生死斗场由你发起并击杀玩家会被通缉（红名）并挂系统悬赏：高杀低两天且无奖，同阶四小时、低杀高两小时；击杀红名者不受罚，得红名者阶 6 件任务修为与悬赏币。新角色建角后 5 刻内不能被其他玩家攻击。",
+    "依当前地点战斗规则攻击同地目标。与另一位玩家在切磋场较量,每对每天首次胜得 0.84 件任务修为、负得 0.42 件、平局各得 0.56 件;在其他任何地点击杀对方得 0.79 件。按双方较低阶的满额任务算,切磋与 PK 奖励每天共至多 5 次。单玩时持续玩家聊天最快,探索次之,五场切磋胜再次,五次 PK 击杀约等于练级。除切磋场外由你发起并击杀玩家会被通缉(红名)并挂系统悬赏:高杀低两天且无奖,同阶四小时、低杀高两小时;击杀红名者不受罚,得红名者阶 2.37 件任务修为与悬赏币。新角色建角后 5 刻内不能被其他玩家攻击,之后处处可 PK。",
   errors: ["NOT_FOUND", "NOT_HERE", "NOT_ALLOWED", "INSUFFICIENT_RESOURCE"],
   args,
   lock: "world",
@@ -39,12 +39,16 @@ export const def = defineVerb<AttackArgs, AttackResult>({
     if (target === null) return reject("NOT_FOUND", NO_DETAILS);
     if (target.loc !== me.loc) return reject("NOT_HERE", NO_DETAILS);
     if (target.life !== "alive") return reject("LIFE_BLOCKED", { revive_tick: target.revive_tick ?? "0" });
-    // draft and active are equal targets (动词表 §4.10: 不额外禁攻击草码); newcomers are
-    // protected by safe start places. Dormant / buried chars are not actionable.
+    // draft and active are equal targets (动词表 §4.10: 不额外禁攻击草码). Dormant / buried chars are not actionable.
     if (target.state !== "active" && target.state !== "draft") return reject("NOT_ALLOWED", { reason: "combat" });
     const place = await getRow(ctx.q, "place", me.loc);
     if (place === null) throw new Error("combat place missing");
-    if (place.combat === "safe" || (place.combat === "pve" && target.kind !== "npc")) return reject("NOT_ALLOWED", { reason: "combat" });
+    // S67 (设计者 15:2x, 弱规则): no safe zone. Past the newbie window a participant may be attacked anywhere;
+    // duel stays a non-lethal spar, and every other place settles as pk (red name, bounty, death loss).
+    // Attacking an NPC in a safe place stays forbidden, as before.
+    const lethal = place.combat !== "duel" && me.kind !== "npc" && target.kind !== "npc";
+    if (!lethal && (place.combat === "safe" || (place.combat === "pve" && target.kind !== "npc"))) return reject("NOT_ALLOWED", { reason: "combat" });
+    const mode = lethal || place.combat === "safe" ? "pk" : place.combat;
     // S48 newbie protection: a new participant cannot be attacked by other participants for a few ticks (NPCs go on as usual).
     // S53: protection also ends the tick the newcomer itself first attacks another participant (player / official);
     // attacking an NPC does not count. No new table — the earliest such combat_resolved is the fact.
@@ -74,7 +78,7 @@ export const def = defineVerb<AttackArgs, AttackResult>({
     const actorInput = combatant(ctx.balance, me, actorFacts);
     const targetInput = combatant(ctx.balance, target, targetFacts);
     const seed = await resolutionSeed(ctx.q, ctx.world.rules_revision, ctx.world.realm, ctx.tick, me.id, target.id);
-    const resolved = resolveCombat(ctx.balance, seed, actorInput, targetInput, place.combat);
+    const resolved = resolveCombat(ctx.balance, seed, actorInput, targetInput, mode);
     const changes: Change[] = [];
     const push = (c: Change | null): void => { if (c !== null) changes.push(c); };
     const dead: CharRow[] = [];
@@ -82,7 +86,7 @@ export const def = defineVerb<AttackArgs, AttackResult>({
     const dropped: { id: ID; def_id: ID }[] = [];
     const settle = async (char: CharRow, vigor: number, facts: NeutralFacts, wear: number): Promise<void> => {
       const before = changes.length;
-      const dies = place.combat !== "duel" && vigor === 0;
+      const dies = mode !== "duel" && vigor === 0;
       let next = { ...char, vigor };
       if (dies) {
         const n = ctx.balance.numbers;
@@ -91,7 +95,7 @@ export const def = defineVerb<AttackArgs, AttackResult>({
         next = { ...next, life: "dead", revive_tick: (BigInt(ctx.tick) + BigInt(wait)).toString(), xp: char.xp - xpLoss, last_yield_tick: ctx.tick };
         push(await ctx.w.update("char", char.id, { vigor, life: next.life, revive_tick: next.revive_tick, xp: next.xp, last_yield_tick: ctx.tick }));
         dead.push(next);
-        if (place.combat === "pk" && char.kind !== "npc" && u32(seed, "dropchance") % 10000 < n.death.pk_drop_chance_bp) {
+        if (mode === "pk" && char.kind !== "npc" && u32(seed, "dropchance") % 10000 < n.death.pk_drop_chance_bp) {
           const bag = await backpack(ctx.q, char.id);
           const item = bag.length === 0 ? undefined : bag[u32(seed, "drop") % bag.length];
           if (item !== undefined) {
@@ -117,12 +121,12 @@ export const def = defineVerb<AttackArgs, AttackResult>({
     await settle(me, resolved.actor_vigor, actorFacts, resolved.actor_wear_bp);
     await settle(target, resolved.target_vigor, targetFacts, resolved.target_wear_bp);
     const deed = await ctx.w.deed({
-      actor: me.id, verb: "attack", kind: resolved.outcome === "draw" ? "combat_draw" : resolved.outcome === "lose" ? "combat_loss" : place.combat === "duel" ? "duel_win" : "combat_win",
+      actor: me.id, verb: "attack", kind: resolved.outcome === "draw" ? "combat_draw" : resolved.outcome === "lose" ? "combat_loss" : mode === "duel" ? "duel_win" : "combat_win",
       targets: [target.id], place_id: place.id,
       result: { outcome: resolved.outcome === "lose" ? "failure" : "success", changes: [...changes], roll: resolved.roll, proposal: null },
       visibility: "self", participants: [me.id, target.id],
     });
-    const data = { attacker: me.id, target: target.id, winner: resolved.winner, mode: place.combat, outcome: resolved.outcome, dead: dead.map((c) => c.id), deed_id: deed.id };
+    const data = { attacker: me.id, target: target.id, winner: resolved.winner, mode, outcome: resolved.outcome, dead: dead.map((c) => c.id), deed_id: deed.id };
     await ctx.w.emit({ scope: "self", recipients: [me.id, target.id], type: "combat_resolved", deed_id: deed.id, data });
     await ctx.w.emit({ scope: "place", place_id: place.id, type: "combat_resolved", deed_id: deed.id, data });
     // Each owner gets only their balances/equipped changes; the place gets no
@@ -140,7 +144,7 @@ export const def = defineVerb<AttackArgs, AttackResult>({
     // S46 切磋 / PK reward and S48 red name / bounty for fighting another participant (also in this result's changes).
     const fight = { me: ctx.actor ?? me, target, place, outcome: resolved.outcome, winner: resolved.winner, dead: dead.map((c) => c.id), deed };
     const loser = resolved.winner === null ? null : resolved.winner === me.id ? target : me;
-    if (place.combat === "pk" && loser !== null && fight.dead.includes(loser.id) && me.kind !== "npc" && target.kind !== "npc") {
+    if (mode === "pk" && loser !== null && fight.dead.includes(loser.id)) {
       const winner = resolved.winner === me.id ? (ctx.actor ?? me) : target;
       changes.push(...await settlePkKill(ctx, { initiator: me.id, winner, loser, place, fight }));
     } else {

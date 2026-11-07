@@ -8,9 +8,8 @@ import { countRows, mustGetRow } from "../facts/store.ts";
 import type { Change, CharRow, FactTable, ID, PlaceRow, PublicChar, Seq } from "../facts/types.ts";
 import { PAGE_DEFAULT, limit, page } from "../protocol/shapes.ts";
 import { obj, oneOf, opt, type Out } from "../protocol/validate.ts";
-import { bonusReward, creditGrowth, merged } from "../tasks/common.ts";
+import { merged } from "../tasks/common.ts";
 import { recordPresenceEvidence } from "../tasks/hooks.ts";
-import { taskNumbers, tierNumbers } from "../tasks/numbers.ts";
 import { defineVerb, type VerbContext } from "./types.ts";
 
 const SECTIONS = ["place", "people", "items", "tasks", "deeds"] as const;
@@ -68,23 +67,14 @@ function sectionQuery(s: Exclude<Section, "place">, placeId: ID, me: ID): Sectio
   }
 }
 
-/** First sight of a place: known_places, personal discover, maybe world first_found. */
+/** First sight updates known_places; arrival alone awards first discovery. */
 async function discover(ctx: VerbContext, place: PlaceRow): Promise<void> {
   const me = ctx.actor;
   if (me === null || me.known_places.includes(place.id)) return;
   const known = [...me.known_places, place.id];
   const change = (await ctx.w.update("char", me.id, { known_places: known })) as Change;
-  const firstKey = `first_found:${place.id}`;
-  const first = me.kind !== "npc" && !(await ctx.w.firstTaken(firstKey));
-  let cur = merged(me, { known_places: known }, ctx.tick);
+  const cur = merged(me, { known_places: known }, ctx.tick);
   const changes = [change];
-  const numbers = first ? taskNumbers(ctx.balance) : null;
-  const reward = numbers === null ? null : bonusReward(numbers.bonus.first_found, tierNumbers(numbers, place.tier));
-  const bonus = reward === null ? null : await creditGrowth(ctx.q, ctx.w, cur, reward);
-  if (bonus !== null) {
-    cur = bonus.row;
-    changes.push(...bonus.changes);
-  }
   const d = await ctx.w.deed({
     actor: me.id,
     verb: "look",
@@ -100,30 +90,8 @@ async function discover(ctx: VerbContext, place: PlaceRow): Promise<void> {
     recipients: [me.id],
     type: "discovered",
     deed_id: d.id,
-    data: { char_id: me.id, target: place.id, first },
+    data: { char_id: me.id, target: place.id, first: false },
   });
-  if (first && reward !== null && bonus !== null) {
-    const fd = await ctx.w.deed({
-      actor: me.id,
-      verb: "look",
-      kind: "first_found",
-      targets: [place.id],
-      place_id: place.id,
-      result: { outcome: "success", changes: [], roll: null, proposal: null },
-      visibility: "world",
-      participants: [me.id],
-      first_key: firstKey,
-    });
-    await ctx.w.emit({
-      scope: "world",
-      type: "discovered",
-      deed_id: fd.id,
-      data: { char_id: me.id, target: place.id, first: true },
-    });
-    await ctx.w.emit({ scope: "self", recipients: [me.id], type: "reward_granted", deed_id: fd.id, data: { char_id: me.id, source: fd.id, reward } });
-    await ctx.w.emit({ scope: "self", recipients: [me.id], type: "fact_changed", deed_id: fd.id, data: { changes: bonus.changes } });
-    if (bonus.rep !== null) await ctx.w.emit({ scope: "self", recipients: [me.id], type: "reputation_changed", deed_id: fd.id, data: { reputation: bonus.rep } });
-  }
   ctx.actor = cur;
 }
 

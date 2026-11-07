@@ -1,7 +1,7 @@
 {
  "meta": {
   "schema": "aihw.numbers.v1",
-  "revision_key": "balance.v1.6",
+  "revision_key": "balance.v1.7",
   "integer_only": true
  },
  "world_rules": {
@@ -44,7 +44,7 @@
    "build": 1,
    "breakthrough": 2
   },
-  "balance_key": "balance.v1.6"
+  "balance_key": "balance.v1.7"
  },
  "clock": {
   "day_ticks": 1440,
@@ -1711,8 +1711,8 @@
   },
   "deed_bonus": {
    "first_found": {
-    "xp_bp": 100,
-    "potential_bp": 100,
+    "xp_bp": 5400,
+    "potential_bp": 5400,
     "rep_mult": 1
    },
    "first_kill": {

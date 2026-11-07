@@ -110,8 +110,8 @@ export async function socialCombatReward(ctx: VerbContext, f: SocialFight): Prom
   const { me, target, place } = f;
   const own: Change[] = [];
   if (rule === undefined || rule.daily_max === 0 || me.kind === "npc" || target.kind === "npc") return own;
-  if (place.combat !== "duel" && place.combat !== "pk") return own;
-  const kind = place.combat;
+  // S67: a participant-vs-participant fight outside a duel place pays as pk even where the place says safe or pve.
+  const kind = place.combat === "duel" ? "duel" : "pk";
 
   const shares: { id: ID; other: ID; bp: number }[] = [];
   if (kind === "duel") {

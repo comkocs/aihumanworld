@@ -80,7 +80,7 @@ test("S12 chain: say delivers cleaned text only as other_speech; build checks an
     const js = (v: unknown): Json => (typeof v === "string" ? JSON.parse(v) : v);
 
     // The numbers this test relies on, set on the world row so the test does not depend on
-    // how the default rules file is wired (S10): S5's values, revision balance.v1.6, roomy AP.
+    // how the default rules file is wired (S10): S5's values, revision balance.v1.7, roomy AP.
     const cur = js((await q("SELECT rules FROM worlds")).rows[0].rules);
     const rules = {
       ...cur,
@@ -92,7 +92,7 @@ test("S12 chain: say delivers cleaned text only as other_speech; build checks an
       socket_max: 3,
       ap_costs: { ...cur.ap_costs, say: 1, build: 1 },
     };
-    await q("UPDATE worlds SET rules = $1::jsonb, rules_revision = 'balance.v1.6'", [JSON.stringify(rules)]);
+    await q("UPDATE worlds SET rules = $1::jsonb, rules_revision = 'balance.v1.7'", [JSON.stringify(rules)]);
 
     const join = async (skin: string) => {
       const r = await call("enter", { mode: "create", skin, door: "api" });

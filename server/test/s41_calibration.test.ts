@@ -1,9 +1,8 @@
 // S41 numbers calibration (设计者 11-07 00:1x「现在做校准」), two short chains:
 //
-// ① 世界首例奖励设限:the first-found / first-clear / first-kill bonuses are a surprise,
-//   not a way to skip tiers. Budgets are computed from the real numbers file and the
-//   real content/world (+ the five seeded places); then one live walk: a tier-1 char
-//   first-finds a tier-1 place and a tier-9 place and gets only the capped amounts.
+// ① 个人首达与世界首例: budgets are computed from the real numbers file and
+//   content/world (+ the five seeded places); live walks check personal arrival rewards,
+//   world-first uniqueness, and the lower of character and destination tiers.
 // ② 换规则演练:a persistent world booted on the old numbers (balance.v1, bonuses ×1/×2/×3)
 //   is restarted on the current numbers; world.rules_revision follows, nothing errors,
 //   the old char / deeds stay as they were and the next first-find pays the new rate.
@@ -17,6 +16,8 @@ import { startApp } from "../src/app.ts";
 import { loadConfig } from "../src/config.ts";
 import { worldId } from "../src/facts/ids.ts";
 import { mustGetRow } from "../src/facts/store.ts";
+import { Writer } from "../src/facts/writer.ts";
+import { yieldPhase } from "../src/growth/clock.ts";
 import { setQuiet } from "../src/log.ts";
 import { bonusReward } from "../src/tasks/common.ts";
 import { taskNumbers, tierNumbers } from "../src/tasks/numbers.ts";
@@ -57,7 +58,7 @@ async function budgets(numbers: Json): Promise<Budget> {
   return { foundAll, clearTier1, killTier1: killKeys.size * bp(xpOf(1), rule.first_kill.xp_bp) };
 }
 
-test("S41 ①: world-first bonuses are capped (budget from numbers + content, then a live tier-1 walk)", async () => {
+test("S41 ①: personal first arrivals use the lower character or destination tier", async () => {
   setQuiet(true);
   const numbers = JSON.parse(await readFile(NUMBERS, "utf8")) as Json;
   const tier1 = (numbers.tiers as Json[]).find((r) => r.tier === 1);
@@ -67,26 +68,20 @@ test("S41 ①: world-first bonuses are capped (budget from numbers + content, th
   const taskXp1 = tier1.task_xp as number;
 
   // Revision: bumped, and the two copies of the key agree (loadRulesBundle refuses a mismatch).
-  assert.equal(numbers.meta.revision_key, "balance.v1.6");
+  assert.equal(numbers.meta.revision_key, "balance.v1.7");
   assert.equal(numbers.world_rules.balance_key, numbers.meta.revision_key);
 
   const rule = numbers.tasks.deed_bonus;
-  // A tier-9 place is worth less than one tier-1 task: a tier-1 char gets no tier-9 xp from it.
-  assert.ok(bp(tier9.task_xp, rule.first_found.xp_bp) < taskXp1, "tier-9 first_found stays under one tier-1 task");
   const b = await budgets(numbers);
-  // Walking the whole world once (all 90 places) is worth at most one full-attendance day of tier 1.
-  assert.ok(b.foundAll <= day, `first_found over every place ${b.foundAll} ≤ one tier-1 day ${day}`);
+  assert.ok(b.foundAll > day, "personal arrival rewards are no longer bounded by the old world-first budget");
   assert.ok(b.clearTier1 <= day, `first_clear over tier-1 templates ${b.clearTier1} ≤ ${day}`);
   assert.ok(b.killTier1 <= day, `first_kill over tier-1 kill keys ${b.killTier1} ≤ ${day}`);
-  assert.ok(b.foundAll + b.clearTier1 + b.killTier1 <= 2 * day, "all three together stay within two tier-1 days");
-  // Far from the old way of reaching tier 3 (tiers 1+2 need 3640 + 10800 xp).
-  assert.ok(b.foundAll + b.clearTier1 + b.killTier1 < 14440, "world-firsts alone can never lift a char to tier 3");
 
   const config = await loadConfig({ ...process.env, AIHW_DB_DRIVER: "pglite", AIHW_PGLITE_DIR: "memory", AIHW_PORT: "0" });
   config.clock.enabled = false;
   const app = await startApp(config);
   try {
-    assert.equal((await mustGetRow(app.db, "world", worldId(REALM))).rules_revision, "balance.v1.6");
+    assert.equal((await mustGetRow(app.db, "world", worldId(REALM))).rules_revision, "balance.v1.7");
     // The engine's own reward function agrees with the budget arithmetic above.
     const n = taskNumbers(app.services.balance());
     assert.equal(bonusReward(n.bonus.first_found, tierNumbers(n, 9)).xp, bp(tier9.task_xp, rule.first_found.xp_bp));
@@ -119,7 +114,28 @@ test("S41 ①: world-first bonuses are capped (budget from numbers + content, th
     assert.equal(toMarket.result.to, "r1:place:market_neutral");
     assert.equal((await xpOf(me)) - x0, bp(taskXp1, rule.first_found.xp_bp));
 
-    // Tier-9 place, first to arrive (the neutral ladder has no gate between tiers): still a pittance.
+    // A second character earns the same personal arrival reward at the same place.
+    await nextTick();
+    const entered2 = await call("enter", { mode: "create", skin: "xiuxian", door: "api" });
+    assert.equal(entered2.ok, true);
+    const me2: string = entered2.result.char.id;
+    const code2: string = entered2.result.identity_code;
+    const before2 = await xpOf(me2);
+    // A map may reveal a place before any visit; knowing it must not consume the arrival reward.
+    await app.db.query("UPDATE chars SET known_places = known_places || $2::jsonb WHERE id = $1", [me2, JSON.stringify(["r1:place:market_neutral"])]);
+    await nextTick();
+    assert.equal((await call("go", { dir: "south" }, code2)).ok, true);
+    assert.equal((await xpOf(me2)) - before2, bp(taskXp1, rule.first_found.xp_bp));
+    const worldFirsts = await app.db.query("SELECT id FROM deeds WHERE first_key = $1", ["first_found:r1:place:market_neutral"]);
+    assert.equal(worldFirsts.rows.length, 1);
+    await nextTick();
+    assert.equal((await call("go", { dir: "north" }, code2)).ok, true);
+    assert.equal((await xpOf(me2)) - before2, bp(taskXp1, rule.first_found.xp_bp), "birthplace is already visited");
+    await nextTick();
+    assert.equal((await call("go", { dir: "south" }, code2)).ok, true);
+    assert.equal((await xpOf(me2)) - before2, bp(taskXp1, rule.first_found.xp_bp), "returning pays nothing");
+
+    // Tier-1 character arriving at a tier-9 place is capped at tier 1.
     await app.db.query("UPDATE chars SET loc = 'r1:place:wild_t8' WHERE id = $1", [me]);
     const x1 = await xpOf(me);
     await nextTick();
@@ -127,8 +143,7 @@ test("S41 ①: world-first bonuses are capped (budget from numbers + content, th
     assert.equal(toNine.ok, true);
     assert.equal(toNine.result.to, "r1:place:wild_t9");
     const gained = (await xpOf(me)) - x1;
-    assert.equal(gained, bp(tier9.task_xp, rule.first_found.xp_bp));
-    assert.ok(gained < taskXp1, `tier-9 first_found ${gained} < one tier-1 task ${taskXp1}`);
+    assert.equal(gained, bp(taskXp1, rule.first_found.xp_bp));
 
     // Taken once: leaving and coming back pays nothing.
     await nextTick();
@@ -137,6 +152,42 @@ test("S41 ①: world-first bonuses are capped (budget from numbers + content, th
     await nextTick();
     assert.equal((await call("go", { dir: "north" }, code)).ok, true);
     assert.equal(await xpOf(me), x2);
+
+    // Looking at an unvisited location does not turn sight into an arrival.
+    await app.db.query("UPDATE chars SET loc = 'r1:place:wild_t7' WHERE id = $1", [me2]);
+    const beforeLook = await xpOf(me2);
+    await nextTick();
+    assert.equal((await call("look", {}, code2)).ok, true);
+    assert.equal(await xpOf(me2), beforeLook);
+    assert.equal((await app.db.query("SELECT id FROM deeds WHERE first_key = $1", ["first_found:r1:place:wild_t7"])).rows.length, 0);
+
+    const reviveAtSeven = async (): Promise<void> => {
+      await app.db.query("UPDATE chars SET loc = 'r1:place:market_neutral', respawn_place = 'r1:place:wild_t7', life = 'dead', revive_tick = 0, growth_due_tick = 0 WHERE id = $1", [me2]);
+      await app.db.tx(async (q) => {
+        const world = await mustGetRow(q, "world", worldId(REALM), { lock: true });
+        const w = new Writer(q, REALM, world.tick, world.rules_revision, true);
+        await yieldPhase.run({ q, w, world, rules: world.rules, balance: app.services.balance(), from_tick: world.tick, to_tick: world.tick, now: new Date() });
+      });
+    };
+    await reviveAtSeven();
+    assert.equal((await xpOf(me2)) - beforeLook, bp(taskXp1, rule.first_found.xp_bp), "revival pays at the lower tier");
+    assert.equal((await app.db.query("SELECT id FROM deeds WHERE first_key = $1", ["first_found:r1:place:wild_t7"])).rows.length, 1);
+    const afterRevive = await xpOf(me2);
+    await reviveAtSeven();
+    assert.equal(await xpOf(me2), afterRevive, "repeated revival pays nothing");
+    await nextTick();
+    assert.equal((await call("go", { dir: "north" }, code2)).ok, true);
+    const afterNine = await xpOf(me2);
+    await nextTick();
+    assert.equal((await call("go", { dir: "south" }, code2)).ok, true);
+    assert.equal(await xpOf(me2), afterNine, "walking back after revival pays nothing");
+
+    // A higher-tier character at a tier-1 destination is capped by the destination.
+    await app.db.query("UPDATE chars SET tier = 9, loc = 'r1:place:market_neutral' WHERE id = $1", [me]);
+    const beforeLow = await xpOf(me);
+    await nextTick();
+    assert.equal((await call("go", { dir: "south" }, code)).ok, true);
+    assert.equal((await xpOf(me)) - beforeLow, bp(taskXp1, rule.first_found.xp_bp));
   } finally {
     await app.close();
   }

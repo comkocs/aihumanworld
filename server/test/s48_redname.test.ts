@@ -29,7 +29,7 @@ test("S48: newbie window, red name by tier relation, hunting a red name", async 
   const tierRow = (t: number): Json => numbers.tiers.find((r: Json) => r.tier === t);
   const rule = numbers.tasks.deed_bonus.combat_social;
   const wantedRule = numbers.wanted;
-  assert.equal(numbers.meta.revision_key, "balance.v1.6");
+  assert.equal(numbers.meta.revision_key, "balance.v1.7");
   assert.equal(numbers.combat.newbie_protect_ticks, 5);
   assert.deepEqual([wantedRule.kill_lower_ticks, wantedRule.kill_peer_ticks, wantedRule.kill_higher_ticks], [2880, 240, 120]);
   assert.deepEqual([rule.hunt_mult, rule.hunt_daily_max], [3, 5]);
@@ -291,6 +291,57 @@ test("S48: newbie window, red name by tier relation, hunting a red name", async 
     assert.deepEqual(await socialKinds(lo3), ["hunt"]);
   } finally {
     delete process.env.AIHW_NOTICE_FILE;
+    await app.close();
+  }
+});
+
+// S67 (设计者 15:2x): no safe zone, only the newbie window. Runs on the seed world alone — the content files are mid-edit
+// by another ticket, and the seed's start places are combat = safe.
+test("S67: past the window a safe place settles as pk; inside it the newcomer is refused", async () => {
+  setQuiet(true);
+  const config = await loadConfig({ ...process.env, AIHW_DB_DRIVER: "pglite", AIHW_PGLITE_DIR: "memory", AIHW_PORT: "0", AIHW_CONTENT_DIR: "null" });
+  config.clock.enabled = false;
+  const app = await startApp(config);
+  try {
+    const call = async (verb: string, args: object, code: string): Promise<Json> => {
+      const res = await fetch(`${app.url}/v1/actions/${verb}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json; charset=utf-8", Authorization: `Bearer ${code}` },
+        body: JSON.stringify({ args }),
+      });
+      return (await res.json()) as Json;
+    };
+    const q = async (sql: string, params: unknown[] = []): Promise<Json[]> => (await app.db.query<Json>(sql, params)).rows;
+    const join = async (): Promise<Player> => {
+      const r = await call("enter", { mode: "create", skin: "xiuxian", door: "api" }, "");
+      return { id: "", code: "" , ...(r.ok ? { id: r.result.char.id as string, code: r.result.identity_code as string } : {}) };
+    };
+    const a = await join();
+    const b = await join();
+    assert.ok(a.id !== "" && b.id !== "", "enter failed");
+    const start: string = (await q("SELECT loc FROM chars WHERE id = $1", [a.id]))[0]?.loc;
+    assert.equal((await q("SELECT combat FROM places WHERE id = $1", [start]))[0]?.combat, "safe");
+    // created_tick is non-negative, so the window passes by moving the world clock, not the char.
+    // The clock is rewound before the newcomer is created, so the attack on it does not spend the day's AP first.
+    await app.db.query(`UPDATE worlds SET tick_started_at = tick_started_at - interval '360 seconds'`);
+    await q("UPDATE chars SET vigor = 1000000 WHERE id = $1", [a.id]);
+    await q("UPDATE chars SET vigor = 1 WHERE id = $1", [b.id]);
+    const kill = await call("attack", { target: b.id }, a.code);
+    assert.equal(kill.ok, true, JSON.stringify(kill));
+    assert.equal(kill.result.outcome, "win");
+    assert.equal((await q("SELECT life FROM chars WHERE id = $1", [b.id]))[0]?.life, "dead");
+    const wanted = (await q("SELECT reason, until_tick FROM wanted WHERE char_id = $1", [a.id]))[0];
+    assert.equal(wanted.reason, "kill_player");
+    assert.equal(wanted.until_tick, String(Number(kill.tick) + 240));
+    await app.db.query(`UPDATE worlds SET tick_started_at = now()`);
+    await q("UPDATE chars SET ap_spent = 0, ap_tick = '0' WHERE id = $1", [a.id]);
+    const fresh = await join();
+    assert.ok(fresh.id !== "");
+    const blocked = await call("attack", { target: fresh.id }, a.code);
+    assert.equal(blocked.ok, false, JSON.stringify(blocked));
+    assert.equal(blocked.error.code, "NOT_ALLOWED");
+    assert.equal(blocked.error.details.reason, "newbie");
+  } finally {
     await app.close();
   }
 });

@@ -49,7 +49,7 @@ test("S10: neutral combat → training → teaching → breakthrough paths → d
   };
   const assertError = (body: Json, code: string): void => { assert.equal(body.ok, false); assert.equal(body.error.code, code); };
   try {
-    assert.equal((await world()).rules_revision, "balance.v1.6");
+    assert.equal((await world()).rules_revision, "balance.v1.7");
     assert.deepEqual([(await world()).rules.active_task_max, (await world()).rules.bounty_open_max, (await world()).rules.socket_max], [3, 3, 3]);
     assert.equal((await world()).rules.ap_costs["task.accept"], 1);
     const a = await call("enter", { mode: "create", skin: "xiuxian", door: "api" });
@@ -317,11 +317,9 @@ test("S10: neutral combat → training → teaching → breakthrough paths → d
     const beforeLook = await char(actor);
     assert.equal((await call("look", {}, code)).ok, true);
     const afterLook = await char(actor);
-    assert.ok(afterLook.xp > beforeLook.xp);
+    assert.equal(afterLook.xp, beforeLook.xp, "look does not award arrival growth");
     assert.equal((await call("look", {}, code)).ok, true);
     assert.equal((await char(actor)).xp, afterLook.xp);
-    const rewards = await selectRows(app.db, "event", "type = 'reward_granted' AND recipients @> $1::jsonb", [JSON.stringify([actor])]);
-    assert.equal(rewards.filter((e) => e.type === "reward_granted" && e.data.reward.coin === 0 && e.data.reward.xp === afterLook.xp - beforeLook.xp).length, 1);
   } finally {
     await app.close();
   }

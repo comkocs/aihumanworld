@@ -1,11 +1,12 @@
 // [S24] go (动词表 §4.5): walk one exit of the current place.
 // Effect: char.loc → exit target, known_places, deed travel (place-visible,
-// public fields only), discover / first_found on first arrival (S5 first_found
-// bonus to the world's first finder), find / reach evidence via tasks/hooks.ts,
+// public fields only), discover / first_found on first arrival (personal arrival
+// bonus, plus a world-first deed), find / reach evidence via tasks/hooks.ts,
 // moved to self + source and target place. No task completes by itself.
 // Guard rule (S5 has no number for it): a guard NPC alive and present at the
 // place stops a char with an active wanted record in that place's region.
 
+import type { ClockCtx } from "../clock/phases.ts";
 import { noteFirstCrossing } from "../facts/firsts.ts";
 import { countRows, getRow, mustGetRow } from "../facts/store.ts";
 import type { Change, CharRow, ID, PlaceRow, ReputationRow, Reward } from "../facts/types.ts";
@@ -37,6 +38,51 @@ async function guardStops(ctx: VerbContext, guardId: ID, here: PlaceRow, me: Cha
   return wanted > 0;
 }
 
+export async function arrivalReward(ctx: Pick<ClockCtx, "q" | "w" | "balance">, me: CharRow, dest: PlaceRow, verb: "go" | "clock", knownChange: Change | null): Promise<{ row: CharRow; changes: Change[] }> {
+  const { w } = ctx;
+  if (me.kind === "npc") return { row: me, changes: [] };
+  const firstKey = `first_found:${dest.id}`;
+  const first = !(await w.firstTaken(firstKey));
+  // Maps and look can reveal places without a visit. Revivals use a null actor.
+  const arrived = await countRows(
+    ctx.q, "deed",
+    "place_id = $2 AND ((actor = $1 AND ((verb = 'go' AND kind = 'travel') OR (verb = 'enter' AND kind = 'identity'))) OR (verb = 'clock' AND kind = 'revive' AND targets @> $3::jsonb))",
+    [me.id, dest.id, JSON.stringify([me.id])],
+  );
+  let cur = me;
+  let bonus: { changes: Change[]; reward: Reward; rep: ReputationRow | null } | null = null;
+  if (arrived === 0) {
+    const n = taskNumbers(ctx.balance);
+    const reward = bonusReward(n.bonus.first_found, tierNumbers(n, Math.min(me.tier, dest.tier)));
+    const g = await creditGrowth(ctx.q, w, cur, reward);
+    cur = g.row;
+    bonus = { changes: g.changes, reward, rep: g.rep };
+  }
+  if (knownChange !== null || first || bonus !== null) {
+    const own = [...(knownChange === null ? [] : [knownChange]), ...(bonus?.changes ?? [])];
+    const d = await w.deed({
+      actor: me.id, verb, kind: "discover", targets: [dest.id], place_id: dest.id,
+      result: { outcome: "success", changes: own, roll: null, proposal: null },
+      visibility: "self", participants: [me.id],
+    });
+    await w.emit({ scope: "self", recipients: [me.id], type: "discovered", deed_id: d.id, data: { char_id: me.id, target: dest.id, first } });
+    if (bonus !== null) {
+      await w.emit({ scope: "self", recipients: [me.id], type: "reward_granted", deed_id: d.id, data: { char_id: me.id, source: d.id, reward: bonus.reward } });
+      await w.emit({ scope: "self", recipients: [me.id], type: "fact_changed", deed_id: d.id, data: { changes: bonus.changes } });
+      if (bonus.rep !== null) await w.emit({ scope: "self", recipients: [me.id], type: "reputation_changed", deed_id: d.id, data: { reputation: bonus.rep } });
+    }
+  }
+  if (first) {
+    const fd = await w.deed({
+      actor: me.id, verb, kind: "first_found", targets: [dest.id], place_id: dest.id,
+      result: { outcome: "success", changes: [], roll: null, proposal: null },
+      visibility: "world", participants: [me.id], first_key: firstKey,
+    });
+    await w.emit({ scope: "world", type: "discovered", deed_id: fd.id, data: { char_id: me.id, target: dest.id, first: true } });
+  }
+  return { row: cur, changes: bonus?.changes ?? [] };
+}
+
 export const def = defineVerb<GoArgs, GoResult>({
   verb: "go",
   summary: "沿当前地点的指定方向出口移动；锁门须先 use unlock。",
@@ -63,17 +109,9 @@ export const def = defineVerb<GoArgs, GoResult>({
     let cur = merged(me, patch, ctx.tick);
     const changes: Change[] = [moveChange];
 
-    const firstKey = `first_found:${dest.id}`;
-    const first = me.kind !== "npc" && !(await w.firstTaken(firstKey));
-    let bonus: { changes: Change[]; reward: Reward; rep: ReputationRow | null } | null = null;
-    if (first) {
-      const n = taskNumbers(ctx.balance);
-      const reward = bonusReward(n.bonus.first_found, tierNumbers(n, dest.tier));
-      const g = await creditGrowth(ctx.q, w, cur, reward);
-      cur = g.row;
-      bonus = { changes: g.changes, reward, rep: g.rep };
-      changes.push(...g.changes);
-    }
+    const arrival = await arrivalReward(ctx, cur, dest, "go", fresh ? moveChange : null);
+    cur = arrival.row;
+    changes.push(...arrival.changes);
 
     const travel = await w.deed({
       actor: me.id,
@@ -89,39 +127,6 @@ export const def = defineVerb<GoArgs, GoResult>({
     await w.emit({ scope: "self", recipients: [me.id], type: "moved", deed_id: travel.id, data: moved });
     await w.emit({ scope: "place", place_id: here.id, type: "moved", deed_id: travel.id, data: moved });
     await w.emit({ scope: "place", place_id: dest.id, type: "moved", deed_id: travel.id, data: moved });
-
-    if (fresh || first) {
-      const own = fresh ? [moveChange, ...(bonus?.changes ?? [])] : [...(bonus?.changes ?? [])];
-      const d = await w.deed({
-        actor: me.id,
-        verb: "go",
-        kind: "discover",
-        targets: [dest.id],
-        place_id: dest.id,
-        result: { outcome: "success", changes: own, roll: null, proposal: null },
-        visibility: "self",
-        participants: [me.id],
-      });
-      await w.emit({ scope: "self", recipients: [me.id], type: "discovered", deed_id: d.id, data: { char_id: me.id, target: dest.id, first } });
-    }
-    if (first && bonus !== null) {
-      const fd = await w.deed({
-        actor: me.id,
-        verb: "go",
-        kind: "first_found",
-        targets: [dest.id],
-        place_id: dest.id,
-        result: { outcome: "success", changes: [], roll: null, proposal: null },
-        visibility: "world",
-        participants: [me.id],
-        first_key: firstKey,
-      });
-      await w.emit({ scope: "world", type: "discovered", deed_id: fd.id, data: { char_id: me.id, target: dest.id, first: true } });
-      await w.emit({ scope: "self", recipients: [me.id], type: "reward_granted", deed_id: fd.id, data: { char_id: me.id, source: fd.id, reward: bonus.reward } });
-      if (bonus.rep !== null) {
-        await w.emit({ scope: "self", recipients: [me.id], type: "reputation_changed", deed_id: fd.id, data: { reputation: bonus.rep } });
-      }
-    }
 
     ctx.actor = cur;
     // S62: first of this origin region to step into another origin region's start place.

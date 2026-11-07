@@ -6,6 +6,7 @@ import { mustGetRow, selectRows } from "../facts/store.ts";
 import type { Change, CharRow } from "../facts/types.ts";
 import { addUInt, deriveStats, mulDiv, safeUInt, tierNumbers } from "./balance.ts";
 import { learnedSkill, neutralFacts, skillDefinition } from "./facts.ts";
+import { arrivalReward } from "../verbs/go.ts";
 
 export const wantedPhase: ClockPhase = {
   name: "wanted_expiry",
@@ -36,6 +37,8 @@ async function revive(ctx: ClockCtx, char: CharRow): Promise<void> {
   };
   const change = await ctx.w.update("char", char.id, patch);
   const changes = change === null ? [] : [change];
+  const dest = await mustGetRow(ctx.q, "place", char.respawn_place);
+  await arrivalReward(ctx, { ...char, ...patch, updated_tick: ctx.to_tick }, dest, "clock", null);
   const deed = await ctx.w.deed({
     actor: null, verb: "clock", kind: "revive", targets: [char.id], place_id: char.respawn_place,
     result: { outcome: "success", changes, roll: null, proposal: null }, visibility: "self", participants: [char.id],
