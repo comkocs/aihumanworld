@@ -409,6 +409,21 @@
    "flavor": "总得有人第一个。"
   },
   {
+   "key": "deed.first_gate",
+   "name": "首过模拟舱",
+   "flavor": null
+  },
+  {
+   "key": "deed.first_build",
+   "name": "首建",
+   "flavor": null
+  },
+  {
+   "key": "deed.first_crossing",
+   "name": "首次跨区",
+   "flavor": null
+  },
+  {
    "key": "deed.first_kill",
    "name": "首杀",
    "flavor": null

@@ -409,6 +409,21 @@
       "flavor": null
     },
     {
+      "key": "deed.first_gate",
+      "name": "首闯木人巷",
+      "flavor": null
+    },
+    {
+      "key": "deed.first_build",
+      "name": "首建",
+      "flavor": null
+    },
+    {
+      "key": "deed.first_crossing",
+      "name": "首度出关",
+      "flavor": null
+    },
+    {
       "key": "deed.first_kill",
       "name": "首度击败",
       "flavor": null

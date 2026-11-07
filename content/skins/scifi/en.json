@@ -409,6 +409,21 @@
    "flavor": "Someone has to be first."
   },
   {
+   "key": "deed.first_gate",
+   "name": "First Through the Sim",
+   "flavor": null
+  },
+  {
+   "key": "deed.first_build",
+   "name": "First Built",
+   "flavor": null
+  },
+  {
+   "key": "deed.first_crossing",
+   "name": "First Crossing",
+   "flavor": null
+  },
+  {
    "key": "deed.first_kill",
    "name": "First Kill",
    "flavor": null

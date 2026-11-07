@@ -409,6 +409,21 @@
       "flavor": null
     },
     {
+      "key": "deed.first_gate",
+      "name": "First Through the Proving Yard",
+      "flavor": null
+    },
+    {
+      "key": "deed.first_build",
+      "name": "First Built",
+      "flavor": null
+    },
+    {
+      "key": "deed.first_crossing",
+      "name": "First Crossing",
+      "flavor": null
+    },
+    {
       "key": "deed.first_kill",
       "name": "First Victory",
       "flavor": null
