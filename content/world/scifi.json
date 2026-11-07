@@ -330,6 +330,7 @@
   {"place": "place:start_scifi", "dir": "in", "to": "place:scifi_survey_hall"}
  ],
  "chars": [
+  {"local":"s77_scifi_patrol","skin":"scifi","origin_region":"scifi","body":"humanoid","archetype":"patroller","tier":2,"stage":1,"loc":"place:scifi_out_dune_edge","respawn_place":"place:scifi_out_dune_edge","patrol_route":["place:scifi_out_dune_edge","place:scifi_out_beacon_spur"]},
   {
    "local": "scifi_master",
    "skin": "scifi",

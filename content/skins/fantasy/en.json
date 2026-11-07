@@ -3,6 +3,11 @@
   "skin": "fantasy",
   "locale": "en",
   "entries": [
+  {"key":"content.r1.char.s77_xiuxian_patrol","name":"Mist Slope Patrol","flavor":"A traveler keeping watch along the road."},
+  {"key":"content.r1.char.s77_wuxia_patrol","name":"Bamboo Edge Patrol","flavor":"A traveler keeping watch along the road."},
+  {"key":"content.r1.char.s77_fantasy_patrol","name":"Mire Edge Patrol","flavor":"A traveler keeping watch along the road."},
+  {"key":"content.r1.char.s77_scifi_patrol","name":"Dune Edge Patrol","flavor":"A traveler keeping watch along the road."},
+  {"key":"content.r1.char.s77_neutral_patrol","name":"Confluence Waykeeper","flavor":"A traveler keeping watch along the road."},
     {
       "key": "place.settlement",
       "name": "Settlement",

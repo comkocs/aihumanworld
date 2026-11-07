@@ -6,6 +6,7 @@ import { getRow, mustGetRow, selectRows, type Patch } from "../facts/store.ts";
 import type { Change, CharRow, SkillLearnedRow } from "../facts/types.ts";
 import { cellNumber, checkedUInt, numberAt, periodAt, requireRevision, valueAt } from "../orgs/numbers.ts";
 import { publicChanges } from "../tasks/common.ts";
+import { ambush, npcLifeNumber } from "./ambush.ts";
 import { stats } from "./facts.ts";
 
 async function revive(ctx: ClockCtx, npc: CharRow): Promise<CharRow> {
@@ -96,6 +97,14 @@ async function scheduleNpc(ctx: ClockCtx, npc: CharRow): Promise<void> {
         const next = patrolDue > tick ? patrolDue : tick + 1n;
         if (next < due) due = next;
       }
+      if (npc.archetype === "monster") {
+        const place = await getRow(ctx.q, "place", npc.loc);
+        if (place?.danger === "high" && place.tier === npc.tier && place.combat !== "safe" && place.combat !== "duel") {
+          const interval = BigInt(npcLifeNumber(ctx, "ambush_interval_ticks", 5, 1, 1000000));
+          const next = (tick / interval + 1n) * interval;
+          if (next < due) due = next;
+        }
+      }
     }
   }
   await ctx.q.query("UPDATE chars SET npc_due_tick = $2 WHERE id = $1", [npc.id, due?.toString() ?? null]);
@@ -129,6 +138,7 @@ export const npcPhase: ClockPhase = {
           if (vigor !== npc.vigor) await ctx.w.update("char", npc.id, { vigor, ap_tick: ctx.to_tick, ap_spent: 0 });
         }
         await patrol(ctx, npc, row.patrol_tick);
+        await ambush(ctx, await mustGetRow(ctx.q, "char", npc.id));
       }
       await teach(ctx, npc);
       if (BigInt(ctx.to_tick) / period > BigInt(row.coin_tick) / period) {

@@ -1502,6 +1502,7 @@
       }
   ],
   "chars": [
+    {"local":"s77_wuxia_patrol","skin":"wuxia","origin_region":"wuxia","body":"humanoid","archetype":"patroller","tier":2,"stage":1,"loc":"place:wuxia_out_bamboo_edge","respawn_place":"place:wuxia_out_bamboo_edge","patrol_route":["place:wuxia_out_bamboo_edge","place:wuxia_out_flag_path"]},
     {
       "local": "wuxia_master_t1",
       "skin": "wuxia",

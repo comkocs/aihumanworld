@@ -345,6 +345,7 @@
     { "place": "place:start_fantasy", "dir": "down", "to": "place:fantasy_pier" }
   ],
   "chars": [
+    {"local":"s77_fantasy_patrol","skin":"fantasy","origin_region":"fantasy","body":"humanoid","archetype":"patroller","tier":2,"stage":1,"loc":"place:fantasy_out_mire_edge","respawn_place":"place:fantasy_out_mire_edge","patrol_route":["place:fantasy_out_mire_edge","place:fantasy_out_willow_track"]},
     {
       "local": "fantasy_master",
       "skin": "fantasy",

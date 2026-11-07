@@ -3,6 +3,11 @@
   "skin": "fantasy",
   "locale": "zh-CN",
   "entries": [
+  {"key":"content.r1.char.s77_xiuxian_patrol","name":"雾岭巡行者","flavor":"沿途巡行，留意往来行人。"},
+  {"key":"content.r1.char.s77_wuxia_patrol","name":"竹缘巡行者","flavor":"沿途巡行，留意往来行人。"},
+  {"key":"content.r1.char.s77_fantasy_patrol","name":"泽边巡行者","flavor":"沿途巡行，留意往来行人。"},
+  {"key":"content.r1.char.s77_scifi_patrol","name":"沙缘巡行者","flavor":"沿途巡行，留意往来行人。"},
+  {"key":"content.r1.char.s77_neutral_patrol","name":"归途巡行者","flavor":"沿途巡行，留意往来行人。"},
     {
       "key": "place.settlement",
       "name": "聚落",

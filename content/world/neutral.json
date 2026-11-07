@@ -10619,6 +10619,7 @@
 
   ],
   "chars": [
+    {"local":"s77_neutral_patrol","skin":"xiuxian","origin_region":"xiuxian","body":"humanoid","archetype":"patroller","tier":1,"stage":1,"loc":"place:wild_t1","respawn_place":"place:wild_t1","patrol_route":["place:wild_t1","place:wild2_t1"]},
     {
       "local": "master_t2",
       "skin": "xiuxian",

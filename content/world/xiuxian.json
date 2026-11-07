@@ -344,6 +344,7 @@
     { "place": "place:start_xiuxian", "dir": "north", "to": "place:xiuxian_enroll_hall" }
   ],
   "chars": [
+    {"local":"s77_xiuxian_patrol","skin":"xiuxian","origin_region":"xiuxian","body":"humanoid","archetype":"patroller","tier":2,"stage":1,"loc":"place:xiuxian_out_mist_slope","respawn_place":"place:xiuxian_out_mist_slope","patrol_route":["place:xiuxian_out_mist_slope","place:xiuxian_out_reed_path"]},
     {
       "local": "xiuxian_master",
       "skin": "xiuxian",
