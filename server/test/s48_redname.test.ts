@@ -115,6 +115,8 @@ test("S48: newbie window, red name by tier relation, hunting a red name", async 
     await q("UPDATE chars SET loc = $2 WHERE id = $1", [mob, arena]);
     const n3 = await join();
     await advance(1); // n3 still has ticks of protection left; n1's window is already over
+    // S82: a fight with a monster now settles in one attack, so n3 must not die here (protection is checked, not who wins).
+    await vigorOf(n3, 1000000);
     const vsNpc2 = await call("attack", { target: mob }, n3.code);
     assert.equal(vsNpc2.ok, true, JSON.stringify(vsNpc2));
     const kept = await call("attack", { target: n3.id }, n1.code); // hitting an NPC does not drop the protection
