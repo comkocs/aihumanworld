@@ -6,6 +6,7 @@ import { getRow, selectRows } from "../facts/store.ts";
 import type { Change, CharRow, ID, ItemDefinitionRow, Roll } from "../facts/types.ts";
 import { deriveStats, gridNumbers, mulDiv, type NeutralFacts } from "../growth/balance.ts";
 import { firstKill, markWanted, settlePkKill, socialCombatReward } from "../growth/combat_effects.ts";
+import { monsterKillReward } from "../growth/monster_reward.ts";
 import { backpack, combatant, neutralFacts } from "../growth/facts.ts";
 import { resolutionSeed, resolveCombat, u32 } from "../growth/settlement.ts";
 import { NO_DETAILS, reject } from "../protocol/errors.ts";
@@ -23,6 +24,8 @@ export interface AttackResult {
   roll: Roll;
   /** S69: equipment a killed monster dropped on the place; absent when nothing dropped. */
   dropped?: { item_id: ID; def_id: ID }[];
+  /** S80: cultivation this kill paid; absent when the kill pays none (a lower-tier monster, or not a monster). */
+  reward?: { xp: number; potential: number };
 }
 
 const EQUIPMENT_CATEGORIES = new Set(["weapon", "armor", "accessory"]);
@@ -172,9 +175,14 @@ export const def = defineVerb<AttackArgs, AttackResult>({
       result: { outcome: resolved.outcome === "lose" ? "failure" : "success", changes: [...changes], roll: resolved.roll, proposal: null },
       visibility: "self", participants: [me.id, target.id],
     });
+    // S80: paid on the kill itself, before the deed's changes are re-read, and never counted with the duel / pk five.
+    const killedMonster = place.combat !== "duel" && me.kind !== "npc" && resolved.winner === me.id && dead.some((c) => c.id === target.id) && target.kind === "npc" && target.archetype === "monster";
+    const monsterPay = killedMonster ? await monsterKillReward(ctx, ctx.actor ?? me, target, deed.id) : { changes: [] as Change[] };
+    changes.push(...monsterPay.changes);
     const data = {
       attacker: me.id, target: target.id, winner: resolved.winner, mode, outcome: resolved.outcome, dead: dead.map((c) => c.id), deed_id: deed.id,
       ...(monsterDrops.length > 0 ? { dropped: monsterDrops.map((d) => ({ item_id: d.id, def_id: d.def_id })) } : {}),
+      ...(monsterPay.reward !== undefined ? { reward: { xp: monsterPay.reward.xp, potential: monsterPay.reward.potential } } : {}),
     };
     await ctx.w.emit({ scope: "self", recipients: [me.id, target.id], type: "combat_resolved", deed_id: deed.id, data });
     await ctx.w.emit({ scope: "place", place_id: place.id, type: "combat_resolved", deed_id: deed.id, data });
@@ -220,6 +228,7 @@ export const def = defineVerb<AttackArgs, AttackResult>({
     return {
       outcome: resolved.outcome, winner: resolved.winner, changes, deed_id: deed.id, roll: resolved.roll,
       ...(monsterDrops.length > 0 ? { dropped: monsterDrops.map((d) => ({ item_id: d.id, def_id: d.def_id })) } : {}),
+      ...(monsterPay.reward !== undefined ? { reward: { xp: monsterPay.reward.xp, potential: monsterPay.reward.potential } } : {}),
     };
   },
 });

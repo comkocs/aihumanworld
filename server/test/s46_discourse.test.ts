@@ -87,8 +87,8 @@ test("S46 ①: talking pays by time (1.1 x training), no count limit, 初识 onc
   const numbers = JSON.parse(await readFile(NUMBERS, "utf8")) as Json;
   const rule = numbers.tasks.deed_bonus.discourse;
   const t1 = numbers.tiers.find((r: Json) => r.tier === 1);
-  assert.equal(numbers.meta.revision_key, "balance.v1.11");
-  assert.equal(numbers.world_rules.balance_key, "balance.v1.11");
+  assert.equal(numbers.meta.revision_key, "balance.v1.12");
+  assert.equal(numbers.world_rules.balance_key, "balance.v1.12");
   assert.deepEqual(rule, { rep_mult: 0, window_ticks: 60, first_xp_bp: 100, first_potential_bp: 100, talk_rate_bp: 11000, talk_accrue_max_ticks: 3, npc_rate_bp: 7000 });
   // Tier 1: the full-attendance day is 1188 xp / 234 potential; talking earns 1.1 x of it per tick since one's own last talk reward.
   const dayTicks: number = numbers.clock.day_ticks;
@@ -497,10 +497,11 @@ test("S46 ⑤: 切磋 / PK pay by the lower tier, once per pair per day, five a 
       assert.equal(((again.res.result.changes as Json[]).filter((c) => c.table === "char" && c.after.xp !== undefined)).length, 0);
       assert.equal((await socialEvents(w.a)).length, 1);
 
-      // An NPC at the arena pays nothing.
+      // An NPC at the arena pays nothing on the duel / pk path. S80 pays a monster kill of the killer's own
+      // tier or higher, so this monster is set below the hunter's tier and the assertion stays about the duel path.
       const npc: string = (await d.q("SELECT id FROM chars WHERE kind = 'npc' AND archetype = 'monster' AND life = 'alive' AND state = 'active' LIMIT 1"))[0]?.id;
       assert.ok(npc);
-      await d.q("UPDATE chars SET loc = $2 WHERE id = $1", [npc, arena]);
+      await d.q("UPDATE chars SET loc = $2, tier = 1 WHERE id = $1", [npc, arena]);
       const H = await d.join();
       const L = await d.join();
       await d.q("UPDATE chars SET tier = 5, stage = 1, vigor = 1000000 WHERE id = $1", [H.id]);

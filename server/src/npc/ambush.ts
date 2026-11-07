@@ -6,6 +6,7 @@ import { getRow, selectRows } from "../facts/store.ts";
 import type { Change, CharRow, ItemDefinitionRow } from "../facts/types.ts";
 import { deriveStats, gridNumbers, mulDiv, type NeutralFacts } from "../growth/balance.ts";
 import { firstKill } from "../growth/combat_effects.ts";
+import { monsterKillReward } from "../growth/monster_reward.ts";
 import { SpeechStore } from "../speech/store.ts";
 import { combatant, neutralFacts } from "../growth/facts.ts";
 import { resolutionSeed, resolveCombat, u32 } from "../growth/settlement.ts";
@@ -113,8 +114,15 @@ export async function ambush(ctx: ClockCtx, monster: CharRow): Promise<void> {
     result: { outcome: result.outcome === "lose" ? "failure" : "success", changes, roll: result.roll, proposal: null },
     visibility: "self", participants: [target.id],
   });
+  // S80: counter-killing the ambusher pays the same as a kill the victim started, and the event below
+  // carries it. The clock started this fight, so no action points were spent; it is not counted with the duel / pk five.
+  const countered = dead.some((c) => c.id === monster.id) && result.winner === target.id;
+  const verbCtx = { q: ctx.q, w: ctx.w, world: ctx.world, rules: ctx.rules, balance: ctx.balance, tick: ctx.to_tick,
+    now: ctx.now, door: "api" as const, actor: null, services: { speech: new SpeechStore(), balance: () => ctx.balance } };
+  const counterPay = countered ? await monsterKillReward(verbCtx, target, monster, deed.id) : { changes: [] };
   const data = { attacker: monster.id, target: target.id, winner: result.winner, mode: "pve" as const, outcome: result.outcome, dead: dead.map((c) => c.id), deed_id: deed.id, ambush: true,
-    ...(dropped.length > 0 ? { dropped } : {}) };
+    ...(dropped.length > 0 ? { dropped } : {}),
+    ...(counterPay.reward !== undefined ? { reward: { xp: counterPay.reward.xp, potential: counterPay.reward.potential } } : {}) };
   await ctx.w.emit({ scope: "self", recipients: [monster.id, target.id], type: "combat_resolved", deed_id: deed.id, data });
   await ctx.w.emit({ scope: "place", place_id: place.id, type: "combat_resolved", deed_id: deed.id, data });
   for (const who of [monster.id, target.id]) {
@@ -132,9 +140,6 @@ export async function ambush(ctx: ClockCtx, monster: CharRow): Promise<void> {
     const life = { char_id: char.id, from: "alive" as const, to: "dead" as const, place_id: place.id, revive_tick: char.revive_tick };
     await ctx.w.emit({ scope: "self", recipients: [char.id], type: "life_changed", deed_id: death.id, data: life });
     await ctx.w.emit({ scope: "place", place_id: place.id, type: "life_changed", deed_id: death.id, data: life });
-    if (char.id === monster.id && result.winner === target.id) {
-      await firstKill({ q: ctx.q, w: ctx.w, world: ctx.world, rules: ctx.rules, balance: ctx.balance, tick: ctx.to_tick,
-        now: ctx.now, door: "api", actor: null, services: { speech: new SpeechStore(), balance: () => ctx.balance } }, target.id, actorInput);
-    }
+    if (char.id === monster.id && result.winner === target.id) await firstKill(verbCtx, target.id, actorInput);
   }
 }

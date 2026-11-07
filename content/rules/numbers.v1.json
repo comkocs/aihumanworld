@@ -1,7 +1,7 @@
 {
  "meta": {
   "schema": "aihw.numbers.v1",
-  "revision_key": "balance.v1.11",
+  "revision_key": "balance.v1.12",
   "integer_only": true
  },
  "world_rules": {
@@ -44,7 +44,7 @@
    "build": 1,
    "breakthrough": 2
   },
-  "balance_key": "balance.v1.11"
+  "balance_key": "balance.v1.12"
  },
  "clock": {
   "day_ticks": 1440,
@@ -768,7 +768,8 @@
    7000,
    2500,
    500
-  ]
+  ],
+  "monster_kill_xp_bp": 234
  },
  "death": {
   "xp_loss_bp": 1000,

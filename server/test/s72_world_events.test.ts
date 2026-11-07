@@ -31,7 +31,7 @@ test("S72: beast tide and secret realm open, pay, and close on the shared clock"
   if (rule === undefined) return;
   try {
     const world = await mustGetRow(app.db, "world", worldId(config.realm));
-    assert.equal(world.rules_revision, "balance.v1.11");
+    assert.equal(world.rules_revision, "balance.v1.12");
     assert.equal(rule.period_ticks, 720);
     assert.equal(rule.duration_ticks, 30);
     assert.deepEqual(rule.kinds, ["beast_tide", "secret_realm"]);

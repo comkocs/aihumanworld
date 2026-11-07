@@ -43,6 +43,12 @@ export interface Numbers {
      */
     monster_drop_chance_bp?: number;
     monster_drop_grade_weight?: number[];
+    /**
+     * S80: a participant killing an NPC of archetype monster at or above the killer's own tier is paid
+     * this fraction of that tier's full task value, in xp and potential alike, on every kill (no daily
+     * count). A lower-tier monster pays nothing. Absent = no such reward.
+     */
+    monster_kill_xp_bp?: number;
   };
   death: { xp_loss_bp: number; revive_wait_ticks: number; revive_vigor_bp: number; pk_drop_chance_bp: number; pk_drop_count: number; pk_drop_equipped: boolean };
   wanted: {
@@ -165,6 +171,10 @@ export function parseBalance(input: unknown): Balance {
   numbersAt(root, "combat.npc_rating_bp", "master merchant repairer guard quest_giver patroller monster tutorial_opponent");
   const combat = record(root.combat, "combat");
   if (combat.monster_drop_chance_bp !== undefined) uint(combat.monster_drop_chance_bp, "combat.monster_drop_chance_bp");
+  if (combat.monster_kill_xp_bp !== undefined) {
+    uint(combat.monster_kill_xp_bp, "combat.monster_kill_xp_bp");
+    if ((combat.monster_kill_xp_bp as number) > 10000) throw new Error("combat.monster_kill_xp_bp exceeds basis-point range");
+  }
   if (combat.monster_drop_grade_weight !== undefined) {
     const w = combat.monster_drop_grade_weight;
     if (!Array.isArray(w) || w.length !== 3 || w.some((x) => typeof x !== "number" || !Number.isSafeInteger(x) || x < 0)) {
