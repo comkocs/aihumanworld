@@ -1,6 +1,8 @@
 {
   "schema": "aihw.content.v1",
   "places": [
+    {"local": "neutral_landmark_stone_ring", "region": "neutral", "kind": "ruin", "features": [], "tier": 3, "danger": "medium", "combat": "pve", "owner_org": null, "exits": [{"dir": "south", "to": "place:wild2_t3"}]},
+    {"local": "neutral_landmark_silent_vault", "region": "neutral", "kind": "dungeon", "features": [], "tier": 6, "danger": "high", "combat": "pve", "owner_org": null, "exits": [{"dir": "south", "to": "place:wild2_t6"}]},
     {
       "local": "gate_confluence",
       "region": "neutral",
@@ -881,6 +883,8 @@
     }
   ],
   "place_links": [
+    {"place": "place:wild2_t3", "dir": "north", "to": "place:neutral_landmark_stone_ring"},
+    {"place": "place:wild2_t6", "dir": "north", "to": "place:neutral_landmark_silent_vault"},
     {
       "place": "place:market_neutral",
       "dir": "in",

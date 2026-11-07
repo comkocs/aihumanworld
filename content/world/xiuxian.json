@@ -1,6 +1,8 @@
 {
   "schema": "aihw.content.v1",
   "places": [
+    {"local": "xiuxian_landmark_ash_altar", "region": "xiuxian", "kind": "shrine", "features": [], "tier": 5, "danger": "medium", "combat": "pve", "owner_org": null, "exits": [{"dir": "west", "to": "place:xiuxian_out_ash_ridge"}]},
+    {"local": "xiuxian_landmark_bone_vault", "region": "xiuxian", "kind": "dungeon", "features": [], "tier": 7, "danger": "high", "combat": "pve", "owner_org": null, "exits": [{"dir": "west", "to": "place:xiuxian_out_bone_cave"}]},
     {
       "local": "xiuxian_enroll_hall",
       "region": "xiuxian",
@@ -178,7 +180,7 @@
         "resource"
       ],
       "tier": 2,
-      "danger": "low",
+      "danger": "medium",
       "combat": "pve",
       "owner_org": null,
       "exits": [
@@ -198,7 +200,7 @@
       "kind": "road",
       "features": [],
       "tier": 3,
-      "danger": "low",
+      "danger": "medium",
       "combat": "pve",
       "owner_org": null,
       "exits": [
@@ -336,6 +338,8 @@
     }
   ],
   "place_links": [
+    {"place": "place:xiuxian_out_ash_ridge", "dir": "east", "to": "place:xiuxian_landmark_ash_altar"},
+    {"place": "place:xiuxian_out_bone_cave", "dir": "east", "to": "place:xiuxian_landmark_bone_vault"},
     { "place": "place:xiuxian_broken_cliff", "dir": "north", "to": "place:xiuxian_out_mist_slope" },
     { "place": "place:start_xiuxian", "dir": "north", "to": "place:xiuxian_enroll_hall" }
   ],

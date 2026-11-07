@@ -2147,5 +2147,16 @@
     {"key": "content.r1.char.merchant_t6", "name": "六阶行商", "flavor": "一个六阶的行商,在幽冥林摆摊。"},
     {"key": "content.r1.char.merchant_t7", "name": "七阶行商", "flavor": "一个七阶的行商,在星陨荒摆摊。"},
     {"key": "content.r1.char.merchant_t9", "name": "九阶行商", "flavor": "一个九阶的行商,在归墟尽头摆摊。"}
+,
+    {"key": "content.r1.place.xiuxian_landmark_ash_altar", "name": "灰脊观测台", "flavor": "残坛立在灰烬岭旁。"},
+    {"key": "content.r1.place.xiuxian_landmark_bone_vault", "name": "骨穴封存室", "flavor": "白骨洞旁有一座石窟。"},
+    {"key": "content.r1.place.wuxia_landmark_broken_court", "name": "断垣设施", "flavor": "断墙围着一片旧院。"},
+    {"key": "content.r1.place.wuxia_landmark_stone_vault", "name": "石门封存室", "flavor": "洞旁石关后有一间石室。"},
+    {"key": "content.r1.place.fantasy_landmark_ash_court", "name": "灰墙设施", "flavor": "灰色残墙围着一处庭院。"},
+    {"key": "content.r1.place.fantasy_landmark_hollow_vault", "name": "空穴封存室", "flavor": "洞侧有一间封闭的石室。"},
+    {"key": "content.r1.place.scifi_landmark_relay_shrine", "name": "中继纪念台", "flavor": "断裂的信标围着一座石台。"},
+    {"key": "content.r1.place.scifi_landmark_sealed_bay", "name": "封闭舱段", "flavor": "巢穴旁有一座封闭的舱室。"},
+    {"key": "content.r1.place.neutral_landmark_stone_ring", "name": "环碑遗址", "flavor": "数块石碑围成一圈。"},
+    {"key": "content.r1.place.neutral_landmark_silent_vault", "name": "静默封存室", "flavor": "遗迹旁有一间寂静石室。"}
 ]
 }

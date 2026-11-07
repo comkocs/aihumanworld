@@ -36,7 +36,7 @@ test("S71: exits show destination tier and danger in look and public place", asy
       const exit = place.exits.find((e: Json) => e.to === OUTER);
       assert.ok(exit);
       assert.equal(place.tier, 3);
-      assert.equal(place.danger, "low");
+      assert.equal(place.danger, "medium");
       assert.equal(exit.tier, 4);
       assert.equal(exit.danger, "medium");
       assert.equal(exit.region, "xiuxian");

@@ -1,6 +1,8 @@
 {
   "schema": "aihw.content.v1",
   "places": [
+    {"local": "fantasy_landmark_ash_court", "region": "fantasy", "kind": "ruin", "features": [], "tier": 5, "danger": "medium", "combat": "pve", "owner_org": null, "exits": [{"dir": "south", "to": "place:fantasy_out_broken_keep"}]},
+    {"local": "fantasy_landmark_hollow_vault", "region": "fantasy", "kind": "dungeon", "features": [], "tier": 7, "danger": "high", "combat": "pve", "owner_org": null, "exits": [{"dir": "south", "to": "place:fantasy_out_howl_den"}]},
     {
       "local": "fantasy_watch_hall",
       "region": "fantasy",
@@ -334,6 +336,8 @@
     }
   ],
   "place_links": [
+    {"place": "place:fantasy_out_broken_keep", "dir": "north", "to": "place:fantasy_landmark_ash_court"},
+    {"place": "place:fantasy_out_howl_den", "dir": "north", "to": "place:fantasy_landmark_hollow_vault"},
     { "place": "place:fantasy_fen", "dir": "east", "to": "place:fantasy_out_mire_edge" },
     { "place": "place:start_fantasy", "dir": "west", "to": "place:fantasy_watch_hall" },
     { "place": "place:start_fantasy", "dir": "south", "to": "place:fantasy_wayfarer_hall" },

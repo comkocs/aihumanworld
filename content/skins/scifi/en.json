@@ -2147,5 +2147,16 @@
     {"key": "content.r1.char.merchant_t6", "name": "Tier-Six Trader", "flavor": "A tier-six trader with a stall in the nether wood."},
     {"key": "content.r1.char.merchant_t7", "name": "Tier-Seven Trader", "flavor": "A tier-seven trader with a stall on the starfall waste."},
     {"key": "content.r1.char.merchant_t9", "name": "Tier-Nine Trader", "flavor": "A tier-nine trader with a stall at the end of the confluence."}
+,
+    {"key": "content.r1.place.xiuxian_landmark_ash_altar", "name": "Ash Ridge Altar", "flavor": "A ruined altar stands beside the ash ridge."},
+    {"key": "content.r1.place.xiuxian_landmark_bone_vault", "name": "Bone Cave Vault", "flavor": "A stone vault lies beside the bone cave."},
+    {"key": "content.r1.place.wuxia_landmark_broken_court", "name": "Broken Court", "flavor": "Broken walls surround an old court."},
+    {"key": "content.r1.place.wuxia_landmark_stone_vault", "name": "Stone Gate Vault", "flavor": "A stone chamber lies beyond a gate beside the cave."},
+    {"key": "content.r1.place.fantasy_landmark_ash_court", "name": "Ash Wall Court", "flavor": "Grey broken walls surround a court."},
+    {"key": "content.r1.place.fantasy_landmark_hollow_vault", "name": "Hollow Vault", "flavor": "A sealed stone chamber lies beside the hollow."},
+    {"key": "content.r1.place.scifi_landmark_relay_shrine", "name": "Broken Relay Shrine", "flavor": "Broken beacons surround a stone platform."},
+    {"key": "content.r1.place.scifi_landmark_sealed_bay", "name": "Sealed Bay", "flavor": "A sealed bay lies beside the nest."},
+    {"key": "content.r1.place.neutral_landmark_stone_ring", "name": "Stone Ring Ruin", "flavor": "Several stone slabs form a ring."},
+    {"key": "content.r1.place.neutral_landmark_silent_vault", "name": "Silent Vault", "flavor": "A quiet stone vault lies beside the ruins."}
 ]
 }

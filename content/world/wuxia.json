@@ -1,6 +1,8 @@
 {
   "schema": "aihw.content.v1",
   "places": [
+    {"local": "wuxia_landmark_broken_court", "region": "wuxia", "kind": "ruin", "features": [], "tier": 5, "danger": "medium", "combat": "pve", "owner_org": null, "exits": [{"dir": "south", "to": "place:wuxia_out_bandit_fort"}]},
+    {"local": "wuxia_landmark_stone_vault", "region": "wuxia", "kind": "dungeon", "features": [], "tier": 7, "danger": "high", "combat": "pve", "owner_org": null, "exits": [{"dir": "south", "to": "place:wuxia_out_night_cave"}]},
     {
       "local": "wuxia_hall_escort",
       "region": "wuxia",
@@ -379,6 +381,8 @@
     }
   ],
   "place_links": [
+    {"place": "place:wuxia_out_bandit_fort", "dir": "north", "to": "place:wuxia_landmark_broken_court"},
+    {"place": "place:wuxia_out_night_cave", "dir": "north", "to": "place:wuxia_landmark_stone_vault"},
     { "place": "place:wuxia_wild_ridge", "dir": "east", "to": "place:wuxia_out_bamboo_edge" },
     {
       "place": "place:start_wuxia",
