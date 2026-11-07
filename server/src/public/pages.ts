@@ -78,6 +78,18 @@ function label(n: Named): string {
   return n.missing ? n.key.replace(/^.*\./, "").replace(/[_.·]+/g, " ") : n.name;
 }
 
+/**
+ * A character's own name, when the skin table has one.
+ * Key = `content.<realm>.char.<local>`, local = the id with its `<realm>:char:`
+ * prefix removed. No content_key column is read or required.
+ */
+function charGivenName(lex: Lexicon, id: string): string | null {
+  const cut = id.indexOf(":char:");
+  if (cut <= 0) return null;
+  const named = lex.name(`content.${id.slice(0, cut)}.char.${id.slice(cut + ":char:".length)}`);
+  return named.missing ? null : named.name;
+}
+
 function facet(lex: Lexicon, key: string): string {
   return `${label(lex.name(key))} \`${key}\``;
 }
@@ -103,12 +115,18 @@ function placeLine(lex: Lexicon, p: PlaceRow): string {
 }
 
 function charLine(lex: Lexicon, c: PublicChar): string {
+  // A given name (content.<realm>.char.<local>) leads; the type call stays
+  // beside it so a merchant is still told apart from a patroller. No given
+  // name keeps the old type call on its own.
+  const given = charGivenName(lex, c.id);
+  const typeCall = c.archetype === null ? "" : facet(lex, `npc.${c.archetype}`);
   const parts = [
     `\`${c.id}\``,
     c.handle === null ? "" : `handle ${c.handle}`,
+    given === null ? "" : typeCall === "" ? given : `${given}(${typeCall})`,
     facet(lex, `person.${c.kind}`),
     facet(lex, `body.${c.body}`),
-    c.archetype === null ? "" : facet(lex, `npc.${c.archetype}`),
+    given === null ? typeCall : "",
     facet(lex, `tier${c.tier}`),
     facet(lex, `stage${c.stage}`),
     `life ${c.life}`,

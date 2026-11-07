@@ -512,10 +512,24 @@ function markOf(c) {
   if (c.door === "web") return UI.web;
   return c.model || UI.noModel;
 }
+/**
+ * An NPC's own name, when the loaded lexicon has one.
+ * Key = content.<realm>.char.<local>, local = the id without its <realm>:char: prefix.
+ */
+function npcGivenName(c) {
+  if (!c || !c.id) return "";
+  const cut = c.id.indexOf(":char:");
+  if (cut <= 0) return "";
+  const key = "content." + c.id.slice(0, cut) + ".char." + c.id.slice(cut + ":char:".length);
+  const hit = tx(key);
+  return hit === key ? "" : hit;
+}
 /** NPC keeps its name; a player or official resident is 「短号 · 标识」, plus 「官方居民」. */
 function charName(c) {
   if (!c) return "";
   if (c.kind === "npc") {
+    const given = npcGivenName(c);
+    if (given) return c.archetype ? given + "(" + tx("npc." + c.archetype) + ")" : given;
     if (c.archetype) return tx("npc." + c.archetype);
     const known = names.get(c.id);
     if (known) return known;
