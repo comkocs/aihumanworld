@@ -77,7 +77,7 @@ export const def = defineVerb<SayArgs, SayResult>({
     }
 
     // S46 / S54 论道: this sentence may complete one (reward + deed, same transaction), or be said to an NPC.
-    const settled = await settleDiscourse(ctx, event);
+    const settled = await settleDiscourse(ctx, event, a.text);
 
     // Last step of the handler: the in-memory text must not outlive a rollback.
     const clean = sanitizeText(a.text);

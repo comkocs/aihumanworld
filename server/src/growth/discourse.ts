@@ -11,7 +11,7 @@
 //   - player / official with player / official: a direct exchange counts even when the two are in different places;
 //     a place-channel exchange still requires both to be at the same place.
 //   - a participating char (player / official) speaking DIRECTLY to an NPC at the same place: the NPC answers at
-//     once by a fixed line (no LLM, see npc_lines.ts) and that one sentence is a discourse. Only the speaker is
+//     once by a selected line (no LLM, see npc_lines.ts) and that one sentence is a discourse. Only the speaker is
 //     paid, at `npc_rate_bp` of the full-attendance training rate (in place of `talk_rate_bp`), and no 初识 deed is written. A place-channel line never makes an
 //     NPC answer, so one sentence cannot pull a reply out of everyone standing there.
 //
@@ -152,16 +152,23 @@ export interface NpcReply {
 }
 
 /**
- * A participating char spoke DIRECTLY to an NPC standing in the same place: the NPC answers with one fixed
+ * A participating char spoke DIRECTLY to an NPC standing in the same place: the NPC answers with one
  * line and the speaker is paid at the NPC rate. Nothing is paid when the NPC is elsewhere, and a place-channel
  * sentence never reaches here.
  */
-async function settleNpc(ctx: VerbContext, me: CharRow, npc: CharRow, speech: EventRow, rule: DiscourseRule): Promise<{ changes: Change[]; reply: NpcReply | null }> {
+async function settleNpc(ctx: VerbContext, me: CharRow, npc: CharRow, speech: EventRow, rule: DiscourseRule, spokenText: string): Promise<{ changes: Change[]; reply: NpcReply | null }> {
   const none = { changes: [] as Change[], reply: null };
   if (npc.loc !== me.loc || (npc.state !== "draft" && npc.state !== "active") || npc.life !== "alive") return none;
-  const place = await getRow(ctx.q, "place", me.loc);
-  const lang: "zh" | "en" = place !== null && (place.region === "fantasy" || place.region === "scifi") ? "en" : "zh";
-  const text = npcLine(npc.archetype, lang);
+  let lang: "zh" | "en";
+  if (/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}\p{Script=Bopomofo}]/u.test(spokenText)) {
+    lang = "zh";
+  } else if (/[\p{L}\p{N}]/u.test(spokenText)) {
+    lang = "en";
+  } else {
+    const place = await getRow(ctx.q, "place", me.loc);
+    lang = place !== null && (place.region === "fantasy" || place.region === "scifi") ? "en" : "zh";
+  }
+  const text = npcLine(npc.archetype, lang, me.id, npc.id, ctx.tick);
 
   const got = await accrue(ctx, me, rule, rule.npc_rate_bp, false);
   const pays = got.reward.xp > 0 || got.reward.potential > 0 || got.reward.rep > 0;
@@ -190,7 +197,7 @@ async function settleNpc(ctx: VerbContext, me: CharRow, npc: CharRow, speech: Ev
  * (xp / potential) for the `say` result, plus the NPC's reply when this sentence was said directly
  * to an NPC. No-op for an NPC speaker and for numbers without `tasks.deed_bonus.discourse`.
  */
-export async function settleDiscourse(ctx: VerbContext, speech: EventRow): Promise<{ changes: Change[]; npcReply: NpcReply | null }> {
+export async function settleDiscourse(ctx: VerbContext, speech: EventRow, spokenText: string): Promise<{ changes: Change[]; npcReply: NpcReply | null }> {
   const rule = ctx.balance.numbers.tasks.deed_bonus.discourse;
   const first = ctx.actor;
   const none = { changes: [] as Change[], npcReply: null };
@@ -202,7 +209,7 @@ export async function settleDiscourse(ctx: VerbContext, speech: EventRow): Promi
   if (replyTo !== null) {
     const target = await getRow(ctx.q, "char", replyTo, { lock: true });
     if (target !== null && target.kind === "npc") {
-    const r = await settleNpc(ctx, me, target, speech, rule);
+    const r = await settleNpc(ctx, me, target, speech, rule, spokenText);
     return { changes: r.changes, npcReply: r.reply };
   }
   }
