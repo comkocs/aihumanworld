@@ -51,10 +51,20 @@ export async function ambush(ctx: ClockCtx, monster: CharRow): Promise<void> {
   if (target === undefined) return;
   const actorFacts = await neutralFacts(ctx.q, monster);
   const targetFacts = await neutralFacts(ctx.q, target);
-  const actorInput = combatant(ctx.balance, monster, actorFacts);
-  const targetInput = combatant(ctx.balance, target, targetFacts);
+  // S82: the ambush is the monster's bout, so the monster leads and the participant is the target. resolveCombat
+  // only plays a whole bout when the *target* is the monster, so the two inputs are swapped for the resolution
+  // and mapped back: a monster win here is the participant losing the bout.
+  const actorInput = combatant(ctx.balance, target, targetFacts);
+  const targetInput = combatant(ctx.balance, monster, actorFacts);
   const seed = await resolutionSeed(ctx.q, ctx.world.rules_revision, ctx.world.realm, ctx.to_tick, monster.id, target.id);
-  const result = resolveCombat(ctx.balance, seed, actorInput, targetInput, "pve");
+  const bout = resolveCombat(ctx.balance, seed, actorInput, targetInput, "pve");
+  const result = {
+    outcome: (bout.outcome === "win" ? "lose" : bout.outcome === "lose" ? "win" : "draw") as "win" | "lose" | "draw",
+    winner: bout.winner,
+    actor_vigor: bout.target_vigor, target_vigor: bout.actor_vigor,
+    actor_wear_bp: bout.target_wear_bp, target_wear_bp: bout.actor_wear_bp,
+    roll: bout.roll, rounds: bout.rounds,
+  };
   const changes: Change[] = [];
   const own = new Map<string, Change[]>();
   const dead: CharRow[] = [];

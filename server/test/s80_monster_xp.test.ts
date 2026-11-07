@@ -28,13 +28,13 @@ test("S80: a same-tier monster kill pays cultivation the result can show; a lowe
     const sparring = await enter();
     const world = await mustGetRow(app.db, "world", "r1:world:main");
     const numbers = app.services.balance().numbers;
-    assert.equal(world.rules_revision, "balance.v1.12");
-    assert.equal(numbers.combat.monster_kill_xp_bp, 234);
+    assert.equal(world.rules_revision, "balance.v1.13");
+    assert.equal(numbers.combat.monster_kill_xp_bp, 825);
     const task = numbers.tiers.find((r) => r.tier === 1);
     assert.ok(task, `tier 1 row missing; tiers seen: ${numbers.tiers.map((r) => r.tier).join(",")}`);
     const perKill = Math.floor((task.task_xp * numbers.combat.monster_kill_xp_bp) / 10000);
     const perKillPot = Math.floor((task.task_potential * numbers.combat.monster_kill_xp_bp) / 10000);
-    assert.equal(perKill, 7, `tier 1 task_xp ${task.task_xp} x ${numbers.combat.monster_kill_xp_bp}bp`);
+    assert.equal(perKill, 24, `tier 1 task_xp ${task.task_xp} x ${numbers.combat.monster_kill_xp_bp}bp`);
 
     const base = await mustGetRow(app.db, "char", hunter.id);
     // The birth place is safe and refuses an attack on an NPC, so the fight happens at a pve place.

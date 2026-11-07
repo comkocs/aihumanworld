@@ -25,8 +25,21 @@ export interface CombatResolution {
   actor_wear_bp: number;
   target_wear_bp: number;
   roll: Roll;
+  /**
+   * S82: how many rounds this one resolution played. A participant-versus-monster fight plays the
+   * whole bout (see `resolveMonsterBout`); everything else is still one round, so this is 1.
+   */
+  rounds: number;
 }
-export function resolveCombat(balance: Balance, seed: string, actor: Combatant, target: Combatant, mode: "pve" | "duel" | "pk"): CombatResolution {
+
+/** S82: a participant hunting a monster settles the whole bout in one resolution, at most this many rounds. */
+export const MONSTER_BOUT_ROUND_CAP = 8;
+
+/**
+ * One labelled round of the neutral combat rule. `seed` already names the round, so a bout of several
+ * rounds draws a fresh jitter each round and stays replayable from the one deed seed.
+ */
+function resolveRound(balance: Balance, seed: string, actor: Combatant, target: Combatant, mode: "pve" | "duel" | "pk"): CombatResolution {
   const n = balance.numbers.combat;
   const score = (c: Combatant, label: string): bigint => {
     const max = BigInt(c.stats.vigor_max);
@@ -57,7 +70,51 @@ export function resolveCombat(balance: Balance, seed: string, actor: Combatant, 
     actor_wear_bp: outcome === "draw" ? n.wear_draw_bp : outcome === "win" ? n.wear_winner_bp : n.wear_loser_bp,
     target_wear_bp: outcome === "draw" ? n.wear_draw_bp : outcome === "lose" ? n.wear_winner_bp : n.wear_loser_bp,
     roll: { seed, rule: n.rule_key, inputs: { actor, target, mode, assist_item: null }, value: safeUInt(a * 10000n / d) },
+    rounds: 1,
   };
+}
+
+/**
+ * S82 (设计者 11-08 01:08: 等级差不多就一次结算, 打不打由 AI 自己看怪的阶段判断, 不加准入门槛).
+ * A participant fighting an `archetype: monster` NPC — the attack verb and a monster's ambush alike —
+ * plays the whole bout inside the one resolution: the same per-round rule, round after round, each
+ * round a fresh labelled draw off the one deed seed, carrying the vigor each round leaves behind,
+ * until one side's vigor is 0 or `MONSTER_BOUT_ROUND_CAP` rounds have passed.
+ * Win = the monster's vigor hit 0 (it dies; drop, first kill and reward stay on this one result).
+ * Lose = the participant's vigor hit 0 (the existing vigor / death rules apply unchanged).
+ * Draw = neither side reached 0 within the cap: both keep the vigor the last round left them, so both
+ * are hurt and the monster lives. Reaching 0 on the same round counts as the participant's win.
+ * Wear is taken from the round that ended the bout, not summed, so one bout wears gear once.
+ * A duel, a pk, and any fight that is not a participant against a monster stays exactly one round.
+ */
+export function resolveMonsterBout(balance: Balance, seed: string, actor: Combatant, target: Combatant, mode: "pve" | "pk"): CombatResolution {
+  let a: Combatant = actor;
+  let d: Combatant = target;
+  let last: CombatResolution | undefined;
+  for (let round = 0; round < MONSTER_BOUT_ROUND_CAP; round += 1) {
+    last = resolveRound(balance, `${seed}#r${round}`, a, d, mode);
+    if (last.actor_vigor === 0 || last.target_vigor === 0) {
+      const monsterDies = last.target_vigor === 0;
+      const participantDies = last.actor_vigor === 0;
+      const outcome = monsterDies ? "win" : participantDies ? "lose" : last.outcome;
+      return {
+        ...last,
+        outcome,
+        winner: outcome === "draw" ? null : outcome === "win" ? actor.char_id : target.char_id,
+        rounds: round + 1,
+      };
+    }
+    a = { ...a, vigor: last.actor_vigor };
+    d = { ...d, vigor: last.target_vigor };
+  }
+  if (last === undefined) throw new Error("monster bout played no round");
+  return { ...last, outcome: "draw", winner: null, rounds: MONSTER_BOUT_ROUND_CAP };
+}
+
+export function resolveCombat(balance: Balance, seed: string, actor: Combatant, target: Combatant, mode: "pve" | "duel" | "pk"): CombatResolution {
+  const monsterBout = target.archetype === "monster" && actor.archetype !== "monster" && mode !== "duel";
+  if (monsterBout) return resolveMonsterBout(balance, seed, actor, target, mode === "pk" ? "pk" : "pve");
+  return resolveRound(balance, seed, actor, target, mode);
 }
 
 export function resolveBreakthrough(balance: Balance, mode: "stage" | "tier" | "cycle", tier: number, bonus: number, seed: string): { success: boolean; value: number | null; probability: number } {

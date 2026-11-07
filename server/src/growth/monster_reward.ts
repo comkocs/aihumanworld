@@ -17,6 +17,9 @@ export interface MonsterKillReward {
 /**
  * A participant (never an NPC) who kills a monster of its own tier or higher is paid
  * `monster_kill_xp_bp` of that monster's tier's full task value, in xp and in potential.
+ * S82: one attack now settles the whole bout, so a kill costs one attack instead of about four;
+ * the basis points were recomputed for that (234 → 825) so a day of same-tier kills still
+ * comes out near a full day of training.
  * A monster below the killer's tier pays nothing, so farming weaker ones is not worth it.
  * Every kill pays; nothing here is counted against the daily duel / pk five.
  */

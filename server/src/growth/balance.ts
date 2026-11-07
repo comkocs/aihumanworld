@@ -44,9 +44,10 @@ export interface Numbers {
     monster_drop_chance_bp?: number;
     monster_drop_grade_weight?: number[];
     /**
-     * S80: a participant killing an NPC of archetype monster at or above the killer's own tier is paid
+     * S80 / S82: a participant killing an NPC of archetype monster at or above the killer's own tier is paid
      * this fraction of that tier's full task value, in xp and potential alike, on every kill (no daily
-     * count). A lower-tier monster pays nothing. Absent = no such reward.
+     * count). A lower-tier monster pays nothing. S82 recomputed it for a one-attack bout (234 → 825):
+     * a day is about 48 same-tier kills, which lands near a full day of training. Absent = no such reward.
      */
     monster_kill_xp_bp?: number;
   };
