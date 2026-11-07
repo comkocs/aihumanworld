@@ -743,6 +743,37 @@ async function verifyOrgSkills(ctx: FileCtx, file: string): Promise<void> {
   }
 }
 
+/** Backfill each hall's NPC masters after all org skill definitions have been imported. */
+async function backfillOrgMasterSkills(db: Db, realm: string, bundle: RulesBundle, result: ContentImportResult): Promise<void> {
+  await db.tx(async (q) => {
+    await q.query("SELECT pg_advisory_xact_lock(7234003)");
+    const world = await getRow(q, "world", worldId(realm));
+    if (world === null) throw new Error("content: world not booted for org master skills");
+    if (valueAt(bundle.balance, "npc.master_skill_level_rule") !== "skill_cap_hard") {
+      throw new Error("unsupported npc.master_skill_level_rule");
+    }
+    const w = new Writer(q, realm, world.tick, world.rules_revision, false);
+    const orgs = await selectRows(q, "org", "split_part(id, ':', 1) = $1", [realm], 'ORDER BY id COLLATE "C"');
+    for (const org of orgs) {
+      if (org.skill_defs.length === 0) continue;
+      const masters = await selectRows(q, "char", "kind = 'npc' AND archetype = 'master' AND loc = $1 AND split_part(id, ':', 1) = $2", [org.hall, realm], 'ORDER BY id COLLATE "C"');
+      const defs = await selectRows(q, "skill", "record = 'definition' AND org_id = $1", [org.id], 'ORDER BY id COLLATE "C"');
+      for (const master of masters) {
+        const level = cellNumber(bundle.balance, "tiers", { tier: master.tier }, "skill_cap_hard");
+        for (const def of defs) {
+          if (!org.skill_defs.includes(def.id) || await learnedSkill(q, master.id, def.id) !== null) continue;
+          const row: SkillLearnedRow = {
+            id: await w.newId("skill"), created_tick: world.tick, updated_tick: world.tick,
+            record: "learned", char_id: master.id, def_id: def.id, level, cap: level,
+          };
+          await w.insert("skill", row);
+          result.inserted.skill += 1;
+        }
+      }
+    }
+  });
+}
+
 /** Whole-graph reference check for the freshly imported places (exits may point at places imported later in the same file). */
 async function verifyPlaces(ctx: FileCtx, file: string, fresh: PlaceRow[]): Promise<void> {
   for (const p of fresh) {
@@ -838,6 +869,7 @@ export async function importWorldContent(
   }
   await verifyTaskSources(db);
   await verifyKeySources(db, realm);
+  await backfillOrgMasterSkills(db, realm, bundle, result);
   const { inserted, skipped } = result;
   log.info("content imported", {
     files: result.files.length,

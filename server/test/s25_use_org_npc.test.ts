@@ -5,9 +5,11 @@ import { test } from "node:test";
 import { startApp } from "../src/app.ts";
 import type { ClockPhase } from "../src/clock/phases.ts";
 import { loadConfig } from "../src/config.ts";
+import { importWorldContent } from "../src/content/index.ts";
 import { getRow, insertRow, mustGetRow, selectRows, updateRow } from "../src/facts/store.ts";
 import type { CharRow, ItemDefinitionRow, ItemInstanceRow, OrgRow, TaskInstanceRow, TaskTemplateRow } from "../src/facts/types.ts";
 import { Writer } from "../src/facts/writer.ts";
+import { loadRulesBundle } from "../src/growth/rules_source.ts";
 import { setQuiet } from "../src/log.ts";
 import { npcPhase } from "../src/npc/clock.ts";
 import { orgGoalPhase } from "../src/orgs/clock.ts";
@@ -199,6 +201,56 @@ test("S25 use, organization and NPC acceptance chains", async (t) => {
       assert.deepEqual(next.member_ids, [B.id]);
       assert.equal(next.target, 5);
       assert.equal(next.progress, 0);
+    });
+
+    await t.test("org masters teach members after idempotent backfill", async () => {
+      const sect = await mustGetRow(app.db, "org", "r1:org:xiuxian_taihua");
+      const master = await mustGetRow(app.db, "char", "r1:char:xiuxian_master_t2");
+      assert.equal(master.loc, sect.hall);
+      assert.equal(master.archetype, "master");
+      const definitions = await Promise.all(sect.skill_defs.map((id) => mustGetRow(app.db, "skill", id)));
+      assert.ok(definitions.length > 1);
+      const first = definitions[0]!;
+      const second = definitions[1]!;
+      assert.equal(first.record, "definition");
+      assert.equal(second.record, "definition");
+      if (first.record !== "definition" || second.record !== "definition") throw new Error("org skill definition missing");
+      const masterSkills = async () => selectRows(app.db, "skill", "record = 'learned' AND char_id = $1 AND def_id = $2", [master.id, first.id]);
+      const original = (await masterSkills())[0];
+      assert.ok(original?.record === "learned");
+      const hard = app.services.balance().numbers.tiers.find((row) => row.tier === master.tier)?.skill_cap_hard;
+      assert.equal(original.level, hard);
+      assert.equal(original.cap, hard);
+      const unchanged = (await selectRows(app.db, "skill", "record = 'learned' AND char_id = $1 AND def_id = $2", [master.id, second.id]))[0];
+      assert.ok(unchanged?.record === "learned");
+      await app.db.query("DELETE FROM skills WHERE id = $1", [original.id]);
+      const bundle = await loadRulesBundle(config.config_dir, config.rules_file);
+      assert.notEqual(config.content_dir, null);
+      const recovered = await importWorldContent(app.db, config.realm, bundle, config.content_dir!);
+      assert.equal(recovered.inserted.skill, 1);
+      const restored = (await masterSkills())[0];
+      assert.ok(restored?.record === "learned");
+      assert.equal(restored.level, hard);
+      assert.equal(restored.cap, hard);
+      assert.deepEqual((await selectRows(app.db, "skill", "record = 'learned' AND char_id = $1 AND def_id = $2", [master.id, second.id]))[0], unchanged);
+      const again = await importWorldContent(app.db, config.realm, bundle, config.content_dir!);
+      assert.equal(again.inserted.skill, 0);
+      assert.deepEqual(await masterSkills(), [restored]);
+
+      await updateRow(app.db, "char", A.id, { loc: sect.hall, coin: 10000 }, "0");
+      await updateRow(app.db, "char", B.id, { loc: sect.hall, coin: 10000 }, "0");
+      const learn = async (bearer: string): Promise<Json> => (await app.dispatch({
+        verb: "learn", body: { args: { master: master.id, skill: first.key, payment: "coin" } }, bearer, door: "api",
+      })).body;
+      const refused = await learn(B.code);
+      assert.equal(refused.error.code, "NOT_ALLOWED");
+      assert.equal(refused.error.details.reason, "rank");
+      assert.equal((await selectRows(app.db, "skill", "record = 'learned' AND char_id = $1 AND def_id = $2", [B.id, first.id])).length, 0);
+      assert.equal((await call({ op: "org_join", org: sect.id }, A.code)).ok, true);
+      const learned = await learn(A.code);
+      assert.equal(learned.ok, true);
+      assert.equal(learned.result.skill.def_id, first.id);
+      assert.equal((await selectRows(app.db, "skill", "record = 'learned' AND char_id = $1 AND def_id = $2", [A.id, first.id])).length, 1);
     });
 
     await t.test("NPC heartbeat moves patrol and revives monster only when due", async () => {
