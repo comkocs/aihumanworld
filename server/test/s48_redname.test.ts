@@ -110,13 +110,13 @@ test("S48: newbie window, red name by tier relation, hunting a red name", async 
     const vsNpc = await call("attack", { target: npc }, n1.code); // NPCs are not protected, and may be fought meanwhile
     assert.equal(vsNpc.ok, true, JSON.stringify(vsNpc));
     // S53: a newcomer attacking an NPC keeps its own protection; attacking another participant ends it that same tick.
-    const mob: string = (await q("SELECT id FROM chars WHERE kind = 'npc' AND archetype = 'monster' AND life = 'alive' AND state = 'active' LIMIT 1"))[0]?.id;
+    const mob: string = (await q("SELECT id FROM chars WHERE kind = 'npc' AND archetype = 'monster' AND tier = 1 AND life = 'alive' AND state = 'active' ORDER BY id LIMIT 1"))[0]?.id;
     assert.ok(mob);
     await q("UPDATE chars SET loc = $2 WHERE id = $1", [mob, arena]);
     const n3 = await join();
     await advance(1); // n3 still has ticks of protection left; n1's window is already over
     // S82: a fight with a monster now settles in one attack, so n3 must not die here (protection is checked, not who wins):
-    // the picked monster may be of any tier, so it is left with 1 vigor.
+    // a tier-1 monster left with 1 vigor.
     await vigorOf(n3, 1000000);
     await q("UPDATE chars SET vigor = 1 WHERE id = $1", [mob]);
     const vsNpc2 = await call("attack", { target: mob }, n3.code);
