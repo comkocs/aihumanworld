@@ -4,8 +4,8 @@
 //      since their own last talk reward, at most an hour; the leftover fraction is carried), with no count limit and
 //      no "once a day"; the pair's first ever (初识) adds half a task and one world deed; the answerer's say result
 //      shows its own xp change; answering twice in one tick pays nothing; NPCs never count.
-//   ⑤ 切磋 / PK: attack between two participants at a duel / pk place pays by the LOWER tier (win 1.5,
-//      lose 0.75, draw 1 task; a PK kill 2 tasks), once per pair per day, five a day, counted apart from talking.
+//   ⑤ 切磋 / PK: attack between two participants at a duel / pk place pays by the LOWER tier (win 0.84,
+//      lose 0.42, draw 0.56 task; a PK kill 0.79 task), once per pair per day, five a day, counted apart from talking.
 //      (①b: a place-channel opening only counts for chars who were already there when it was said.)
 //
 // Needs migrations/1101_s46_discourse_kind.sql (deeds.kind CHECK knows `discourse`); without it the first
@@ -87,8 +87,8 @@ test("S46 ①: talking pays by time (1.1 x training), no count limit, 初识 onc
   const numbers = JSON.parse(await readFile(NUMBERS, "utf8")) as Json;
   const rule = numbers.tasks.deed_bonus.discourse;
   const t1 = numbers.tiers.find((r: Json) => r.tier === 1);
-  assert.equal(numbers.meta.revision_key, "balance.v1.5");
-  assert.equal(numbers.world_rules.balance_key, "balance.v1.5");
+  assert.equal(numbers.meta.revision_key, "balance.v1.6");
+  assert.equal(numbers.world_rules.balance_key, "balance.v1.6");
   assert.deepEqual(rule, { rep_mult: 0, window_ticks: 60, first_xp_bp: 100, first_potential_bp: 100, talk_rate_bp: 11000, talk_accrue_max_ticks: 3, npc_rate_bp: 7000 });
   // Tier 1: the full-attendance day is 1188 xp / 234 potential; talking earns 1.1 x of it per tick since one's own last talk reward.
   const dayTicks: number = numbers.clock.day_ticks;
@@ -423,16 +423,16 @@ test("S46 ⑤: 切磋 / PK pay by the lower tier, once per pair per day, five a 
   setQuiet(true);
   const numbers = JSON.parse(await readFile(NUMBERS, "utf8")) as Json;
   const rule = numbers.tasks.deed_bonus.combat_social;
-  assert.deepEqual(rule, { duel_win_bp: 15000, duel_lose_bp: 7500, duel_draw_bp: 10000, pk_win_bp: 20000, daily_max: 5, hunt_mult: 3, hunt_daily_max: 5 });
+  assert.deepEqual(rule, { duel_win_bp: 8400, duel_lose_bp: 4200, duel_draw_bp: 5600, pk_win_bp: 7900, daily_max: 5, hunt_mult: 3, hunt_daily_max: 5 });
   const t1 = numbers.tiers.find((r: Json) => r.tier === 1);
   const t5 = numbers.tiers.find((r: Json) => r.tier === 5);
   const of = (bp: number): { xp: number; pot: number } => ({ xp: Math.floor((t1.task_xp * bp) / 10000), pot: Math.floor((t1.task_potential * bp) / 10000) });
-  const win = of(rule.duel_win_bp); // 450 / 45
-  const lose = of(rule.duel_lose_bp); // 225 / 22
-  const draw = of(rule.duel_draw_bp); // 300 / 30
+  const win = of(rule.duel_win_bp); // 252 / 25
+  const lose = of(rule.duel_lose_bp); // 126 / 12
+  const draw = of(rule.duel_draw_bp); // 168 / 16
   // PK kills below are between peers of tier 5 (a higher tier killing a lower one pays no PK reward, S48 test).
-  const kill = { xp: Math.floor((t5.task_xp * rule.pk_win_bp) / 10000), pot: Math.floor((t5.task_potential * rule.pk_win_bp) / 10000) }; // 3000 / 300
-  assert.deepEqual([win.xp, lose.xp, draw.xp, kill.xp], [450, 225, 300, 3000]);
+  const kill = { xp: Math.floor((t5.task_xp * rule.pk_win_bp) / 10000), pot: Math.floor((t5.task_potential * rule.pk_win_bp) / 10000) }; // 1185 / 118
+  assert.deepEqual([win.xp, lose.xp, draw.xp, kill.xp], [252, 126, 168, 1185]);
 
   await withNoticeFile(join(SCRATCH, "no_such_notice.json"), async () => {
     const app = await openMemory();
@@ -473,9 +473,9 @@ test("S46 ⑤: 切磋 / PK pay by the lower tier, once per pair per day, five a 
       const w = seen.get("win") as NonNullable<ReturnType<typeof seen.get>>;
       const l = seen.get("lose") as NonNullable<ReturnType<typeof seen.get>>;
       const dr = seen.get("draw") as NonNullable<ReturnType<typeof seen.get>>;
-      assert.deepEqual([w.dxp, w.dpot], [[win.xp, lose.xp], [win.pot, lose.pot]], "attacker won: winner 1.5 tasks, loser 0.75");
+      assert.deepEqual([w.dxp, w.dpot], [[win.xp, lose.xp], [win.pot, lose.pot]], "attacker won: winner 0.84 task, loser 0.42");
       assert.deepEqual([l.dxp, l.dpot], [[lose.xp, win.xp], [lose.pot, win.pot]], "attacker lost");
-      assert.deepEqual([dr.dxp, dr.dpot], [[draw.xp, draw.xp], [draw.pot, draw.pot]], "draw: one task each");
+      assert.deepEqual([dr.dxp, dr.dpot], [[draw.xp, draw.xp], [draw.pot, draw.pot]], "draw: 0.56 task each");
       // The attack result shows the attacker's own gain; the deed kinds are the existing combat ones.
       for (const [name, s, kindOf] of [["win", w, "duel_win"], ["lose", l, "combat_loss"], ["draw", dr, "combat_draw"]] as [string, typeof w, string][]) {
         const own = (s.res.result.changes as Json[]).filter((c) => c.table === "char" && c.id === s.a.id && c.after.xp !== undefined && c.after.potential !== undefined);
@@ -509,15 +509,15 @@ test("S46 ⑤: 切磋 / PK pay by the lower tier, once per pair per day, five a 
       assert.deepEqual(vsNpc.dxp, [0]);
       assert.equal((await socialEvents(H)).length, 0);
 
-      // Lower-tier base: a tier-5 char against a tier-1 char is paid on tier 1 (450 / 225, not 2250 / 1125).
-      assert.ok(t5.task_xp * 15000 / 10000 > win.xp);
+      // Lower-tier base: a tier-5 char against a tier-1 char is paid on tier 1 (252 / 126, not 1260 / 630).
+      assert.ok(t5.task_xp * rule.duel_win_bp / 10000 > win.xp);
       await d.q("UPDATE chars SET vigor = 1000000 WHERE id = $1", [H.id]);
       const spar = await gains([H, L], () => attack(H, L));
       assert.equal(spar.res.result.outcome, "win");
       assert.deepEqual(spar.dxp, [win.xp, lose.xp]);
       assert.equal((await d.q("SELECT tier FROM chars WHERE id = $1", [H.id]))[0]?.tier, 5);
 
-      // PK between peers (tier 5): only a kill pays, 2 tasks of the lower tier to the winner; the victim gets nothing extra.
+      // PK between peers (tier 5): only a kill pays, 0.79 task of the lower tier to the winner; the victim gets nothing extra.
       await d.q("UPDATE places SET combat = 'pk' WHERE id = $1", [arena]);
       const victims: Player[] = [];
       for (let i = 0; i < 5; i += 1) {

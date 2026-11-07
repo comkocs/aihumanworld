@@ -29,7 +29,7 @@ test("S48: newbie window, red name by tier relation, hunting a red name", async 
   const tierRow = (t: number): Json => numbers.tiers.find((r: Json) => r.tier === t);
   const rule = numbers.tasks.deed_bonus.combat_social;
   const wantedRule = numbers.wanted;
-  assert.equal(numbers.meta.revision_key, "balance.v1.5");
+  assert.equal(numbers.meta.revision_key, "balance.v1.6");
   assert.equal(numbers.combat.newbie_protect_ticks, 5);
   assert.deepEqual([wantedRule.kill_lower_ticks, wantedRule.kill_peer_ticks, wantedRule.kill_higher_ticks], [2880, 240, 120]);
   assert.deepEqual([rule.hunt_mult, rule.hunt_daily_max], [3, 5]);
@@ -37,7 +37,7 @@ test("S48: newbie window, red name by tier relation, hunting a red name", async 
   const hunt = (tier: number): number => Math.floor((tierRow(tier).task_xp * rule.pk_win_bp * rule.hunt_mult) / 10000); // N x at the red name's tier
   const huntPot = (tier: number): number => Math.floor((tierRow(tier).task_potential * rule.pk_win_bp * rule.hunt_mult) / 10000);
   const bounty = (tier: number): number => Math.floor((tierRow(tier).task_coin * wantedRule.bounty_coin_pct_of_task_coin) / 100);
-  assert.deepEqual([pk(5), hunt(5), bounty(5)], [3000, 9000, 1000]);
+  assert.deepEqual([pk(5), hunt(5), bounty(5)], [1185, 3555, 1000]);
 
   const config = await loadConfig({ ...process.env, AIHW_DB_DRIVER: "pglite", AIHW_PGLITE_DIR: "memory", AIHW_PORT: "0" });
   config.clock.enabled = false;
@@ -221,7 +221,7 @@ test("S48: newbie window, red name by tier relation, hunting a red name", async 
     assert.deepEqual(await socialKinds(hi2), ["pk"]);
 
     // ---------- ③ hunting ----------
-    // (a) a peer of the red name (tier 5 H) kills it: no red name for the hunter, 6 tasks of tier 5 + the bounty coin
+    // (a) a peer of the red name (tier 5 H) kills it: no red name for the hunter, 2.37 tasks of tier 5 + the bounty coin
     await vigorOf(H, 1);
     await vigorOf(U5, 1000000);
     const [xU0, cU0, pU0] = [await xp(U5), await coin(U5), await num("SELECT potential AS v FROM chars WHERE id = $1", U5.id)];

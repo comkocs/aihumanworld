@@ -1,7 +1,7 @@
 {
  "meta": {
   "schema": "aihw.numbers.v1",
-  "revision_key": "balance.v1.5",
+  "revision_key": "balance.v1.6",
   "integer_only": true
  },
  "world_rules": {
@@ -44,7 +44,7 @@
    "build": 1,
    "breakthrough": 2
   },
-  "balance_key": "balance.v1.5"
+  "balance_key": "balance.v1.6"
  },
  "clock": {
   "day_ticks": 1440,
@@ -1735,10 +1735,10 @@
     "npc_rate_bp": 7000
    },
    "combat_social": {
-    "duel_win_bp": 15000,
-    "duel_lose_bp": 7500,
-    "duel_draw_bp": 10000,
-    "pk_win_bp": 20000,
+    "duel_win_bp": 8400,
+    "duel_lose_bp": 4200,
+    "duel_draw_bp": 5600,
+    "pk_win_bp": 7900,
     "daily_max": 5,
     "hunt_mult": 3,
     "hunt_daily_max": 5
