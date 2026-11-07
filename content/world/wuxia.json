@@ -379,6 +379,7 @@
     }
   ],
   "place_links": [
+    { "place": "place:wuxia_wild_ridge", "dir": "east", "to": "place:wuxia_out_bamboo_edge" },
     {
       "place": "place:start_wuxia",
       "dir": "east",

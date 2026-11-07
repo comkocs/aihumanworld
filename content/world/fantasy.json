@@ -334,6 +334,7 @@
     }
   ],
   "place_links": [
+    { "place": "place:fantasy_fen", "dir": "east", "to": "place:fantasy_out_mire_edge" },
     { "place": "place:start_fantasy", "dir": "west", "to": "place:fantasy_watch_hall" },
     { "place": "place:start_fantasy", "dir": "south", "to": "place:fantasy_wayfarer_hall" },
     { "place": "place:start_fantasy", "dir": "east", "to": "place:fantasy_yard" },

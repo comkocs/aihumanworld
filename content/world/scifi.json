@@ -322,6 +322,7 @@
    }
  ],
  "place_links": [
+  { "place": "place:scifi_dust_plain", "dir": "east", "to": "place:scifi_out_dune_edge" },
   {"place": "place:start_scifi", "dir": "in", "to": "place:scifi_survey_hall"}
  ],
  "chars": [

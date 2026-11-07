@@ -336,6 +336,7 @@
     }
   ],
   "place_links": [
+    { "place": "place:xiuxian_broken_cliff", "dir": "north", "to": "place:xiuxian_out_mist_slope" },
     { "place": "place:start_xiuxian", "dir": "north", "to": "place:xiuxian_enroll_hall" }
   ],
   "chars": [
