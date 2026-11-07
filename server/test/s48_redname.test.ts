@@ -29,7 +29,7 @@ test("S48: newbie window, red name by tier relation, hunting a red name", async 
   const tierRow = (t: number): Json => numbers.tiers.find((r: Json) => r.tier === t);
   const rule = numbers.tasks.deed_bonus.combat_social;
   const wantedRule = numbers.wanted;
-  assert.equal(numbers.meta.revision_key, "balance.v1.7");
+  assert.equal(numbers.meta.revision_key, "balance.v1.8");
   assert.equal(numbers.combat.newbie_protect_ticks, 5);
   assert.deepEqual([wantedRule.kill_lower_ticks, wantedRule.kill_peer_ticks, wantedRule.kill_higher_ticks], [2880, 240, 120]);
   assert.deepEqual([rule.hunt_mult, rule.hunt_daily_max], [3, 5]);
@@ -121,6 +121,10 @@ test("S48: newbie window, red name by tier relation, hunting a red name", async 
     assert.equal(kept.ok, false);
     assert.equal(kept.error?.details?.reason, "newbie", JSON.stringify(kept));
     await advance(1);
+    // S69 bumped the rules revision, which changes the combat seed. This segment checks newbie protection, not
+    // who wins, so neither side may die here (a pk loss at low vigor would block the counter-attack below).
+    await vigorOf(n1, 1000000);
+    await vigorOf(n3, 1000000);
     const struck = await call("attack", { target: n1.id }, n3.code); // n3 strikes a participant first: its protection ends now
     assert.equal(struck.ok, true, JSON.stringify(struck));
     const back = await call("attack", { target: n3.id }, n1.code); // n1 may answer inside what used to be n3's window

@@ -1,8 +1,9 @@
 // One neutral, reproducible S5 combat settlement. Request data never supplies rolls.
 
 import { noteFirstGate } from "../facts/firsts.ts";
-import { getRow } from "../facts/store.ts";
-import type { Change, CharRow, ID, Roll } from "../facts/types.ts";
+import { ITEM_CATEGORY } from "../facts/enums.ts";
+import { getRow, selectRows } from "../facts/store.ts";
+import type { Change, CharRow, ID, ItemDefinitionRow, Roll } from "../facts/types.ts";
 import { deriveStats, gridNumbers, mulDiv, type NeutralFacts } from "../growth/balance.ts";
 import { firstKill, markWanted, settlePkKill, socialCombatReward } from "../growth/combat_effects.ts";
 import { backpack, combatant, neutralFacts } from "../growth/facts.ts";
@@ -10,7 +11,7 @@ import { resolutionSeed, resolveCombat, u32 } from "../growth/settlement.ts";
 import { NO_DETAILS, reject } from "../protocol/errors.ts";
 import { charId } from "../protocol/shapes.ts";
 import { obj, type Out } from "../protocol/validate.ts";
-import { defineVerb } from "./types.ts";
+import { defineVerb, type VerbContext } from "./types.ts";
 
 const args = obj({ target: charId });
 export type AttackArgs = Out<typeof args>;
@@ -20,6 +21,34 @@ export interface AttackResult {
   changes: Change[];
   deed_id: ID;
   roll: Roll;
+  /** S69: equipment a killed monster dropped on the place; absent when nothing dropped. */
+  dropped?: { item_id: ID; def_id: ID }[];
+}
+
+const EQUIPMENT_CATEGORIES = new Set(["weapon", "armor", "accessory"]);
+
+/**
+ * S69: one equipment definition of the monster's own tier, drawn from the library (never a hard-coded
+ * local list). Grade follows monster_drop_grade_weight; the kind is uniform over the kinds the library
+ * actually stocks at that tier and grade. Same seed, same library → same drop.
+ */
+async function monsterDropDef(ctx: VerbContext, seed: string, tier: number): Promise<ItemDefinitionRow | null> {
+  const c = ctx.balance.numbers.combat;
+  const weights = c.monster_drop_grade_weight;
+  if (c.monster_drop_chance_bp === undefined || weights === undefined) return null;
+  if (u32(seed, "mondrop") % 10000 >= c.monster_drop_chance_bp) return null;
+  const draw = u32(seed, "mongrade") % 10000;
+  let grade = 1;
+  for (let acc = 0; grade <= weights.length; grade += 1) {
+    acc += weights[grade - 1] ?? 0;
+    if (draw < acc) break;
+  }
+  const defs = (await selectRows(ctx.q, "item", "record = 'definition' AND tier = $1 AND grade = $2", [tier, grade]))
+    .filter((d): d is ItemDefinitionRow => d.record === "definition" && EQUIPMENT_CATEGORIES.has(ITEM_CATEGORY[d.kind]));
+  const kinds = [...new Set(defs.map((d) => d.kind))].sort();
+  const ofKind = defs.filter((d) => d.kind === kinds[u32(seed, "monkind") % kinds.length]).sort((a, b) => (a.id < b.id ? -1 : 1));
+  const picked = ofKind[u32(seed, "mondef") % ofKind.length];
+  return picked ?? null;
 }
 
 export const def = defineVerb<AttackArgs, AttackResult>({
@@ -84,6 +113,8 @@ export const def = defineVerb<AttackArgs, AttackResult>({
     const dead: CharRow[] = [];
     const deathChanges = new Map<ID, Change[]>();
     const dropped: { id: ID; def_id: ID }[] = [];
+    // S69 only: what the killed monster itself dropped. A player's PK loot stays out of the combat report.
+    const monsterDrops: { id: ID; def_id: ID }[] = [];
     const settle = async (char: CharRow, vigor: number, facts: NeutralFacts, wear: number): Promise<void> => {
       const before = changes.length;
       const dies = mode !== "duel" && vigor === 0;
@@ -101,6 +132,22 @@ export const def = defineVerb<AttackArgs, AttackResult>({
           if (item !== undefined) {
             push(await ctx.w.update("item", item.id, { holder: { kind: "place", id: place.id } }));
             dropped.push({ id: item.id, def_id: item.def_id });
+          }
+        }
+        // S69: a monster killed where monsters are fought (pve) drops one equipment definition of its own tier
+        // onto the place (who takes it, keeps it). A duel is non-lethal and a pk place is for participants,
+        // so a monster dragged into either drops nothing. No equipment of its tier in the library drops nothing either.
+        if (mode === "pve" && char.kind === "npc" && char.archetype === "monster") {
+          const def = await monsterDropDef(ctx, seed, char.tier);
+          if (def !== null) {
+            const id = await ctx.w.newId("item");
+            push(await ctx.w.insert("item", {
+              id, created_tick: ctx.tick, updated_tick: ctx.tick, record: "instance", def_id: def.id,
+              holder: { kind: "place", id: place.id }, state: "available", equipped: false,
+              dura: def.dura_max, sockets: Array.from({ length: def.slots }, () => null), note: null,
+            }));
+            dropped.push({ id, def_id: def.id });
+            monsterDrops.push({ id, def_id: def.id });
           }
         }
       } else push(await ctx.w.update("char", char.id, { vigor }));
@@ -126,7 +173,10 @@ export const def = defineVerb<AttackArgs, AttackResult>({
       result: { outcome: resolved.outcome === "lose" ? "failure" : "success", changes: [...changes], roll: resolved.roll, proposal: null },
       visibility: "self", participants: [me.id, target.id],
     });
-    const data = { attacker: me.id, target: target.id, winner: resolved.winner, mode, outcome: resolved.outcome, dead: dead.map((c) => c.id), deed_id: deed.id };
+    const data = {
+      attacker: me.id, target: target.id, winner: resolved.winner, mode, outcome: resolved.outcome, dead: dead.map((c) => c.id), deed_id: deed.id,
+      ...(monsterDrops.length > 0 ? { dropped: monsterDrops.map((d) => ({ item_id: d.id, def_id: d.def_id })) } : {}),
+    };
     await ctx.w.emit({ scope: "self", recipients: [me.id, target.id], type: "combat_resolved", deed_id: deed.id, data });
     await ctx.w.emit({ scope: "place", place_id: place.id, type: "combat_resolved", deed_id: deed.id, data });
     // Each owner gets only their balances/equipped changes; the place gets no
@@ -168,6 +218,9 @@ export const def = defineVerb<AttackArgs, AttackResult>({
       }
     }
     if (target.kind === "npc" && target.archetype === "guard") changes.push(...await markWanted(ctx, me, place, "attack_guard"));
-    return { outcome: resolved.outcome, winner: resolved.winner, changes, deed_id: deed.id, roll: resolved.roll };
+    return {
+      outcome: resolved.outcome, winner: resolved.winner, changes, deed_id: deed.id, roll: resolved.roll,
+      ...(monsterDrops.length > 0 ? { dropped: monsterDrops.map((d) => ({ item_id: d.id, def_id: d.def_id })) } : {}),
+    };
   },
 });

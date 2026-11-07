@@ -1,7 +1,7 @@
 {
  "meta": {
   "schema": "aihw.numbers.v1",
-  "revision_key": "balance.v1.7",
+  "revision_key": "balance.v1.8",
   "integer_only": true
  },
  "world_rules": {
@@ -44,7 +44,7 @@
    "build": 1,
    "breakthrough": 2
   },
-  "balance_key": "balance.v1.7"
+  "balance_key": "balance.v1.8"
  },
  "clock": {
   "day_ticks": 1440,
@@ -762,7 +762,13 @@
   "rule_key": "combat.v1",
   "rule_key_tier": "breakthrough.tier.v1",
   "rule_key_cycle": "breakthrough.cycle.v1",
-  "newbie_protect_ticks": 5
+  "newbie_protect_ticks": 5,
+  "monster_drop_chance_bp": 2000,
+  "monster_drop_grade_weight": [
+   7000,
+   2500,
+   500
+  ]
  },
  "death": {
   "xp_loss_bp": 1000,

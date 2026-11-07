@@ -535,6 +535,8 @@ export interface EventDataMap {
     outcome: "win" | "lose" | "draw";
     dead: ID[];
     deed_id: ID;
+    /** S69: equipment an NPC monster dropped on the place when it died; absent when nothing dropped. */
+    dropped?: { item_id: ID; def_id: ID }[];
   };
   life_changed: { char_id: ID; from: Life; to: Life; place_id: ID; revive_tick: Tick | null };
   progressed: {

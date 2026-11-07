@@ -36,6 +36,13 @@ export interface Numbers {
     npc_rating_bp: Record<NpcArchetype, number>; rule_key: string; rule_key_tier: string; rule_key_cycle: string;
     /** S48: a new char cannot be attacked by other participants for this many ticks after creation (absent = 0). */
     newbie_protect_ticks?: number;
+    /**
+     * S69: killing an NPC of archetype monster in a pve place drops one equipment definition of its own tier
+     * on the place with this chance (absent = 0, no drop; duel / pk places never drop). monster_drop_grade_weight is one weight per grade 1..3
+     * (absent = no drop); the three must sum to 10000.
+     */
+    monster_drop_chance_bp?: number;
+    monster_drop_grade_weight?: number[];
   };
   death: { xp_loss_bp: number; revive_wait_ticks: number; revive_vigor_bp: number; pk_drop_chance_bp: number; pk_drop_count: number; pk_drop_equipped: boolean };
   wanted: {
@@ -146,6 +153,15 @@ export function parseBalance(input: unknown): Balance {
   numbersAt(root, "cycle", "legacy_gain legacy_cap legacy_bp_per_point skill_keep_bp potential_keep_bp xp_after");
   numbersAt(root, "combat", "roll_spread_bp draw_margin_bp loss_base_bp loss_gap_pct loss_cap_bp winner_recoil_bp draw_loss_bp vigor_factor_floor_bp duel_vigor_floor tutorial_rating_bp wear_loser_bp wear_winner_bp wear_draw_bp");
   numbersAt(root, "combat.npc_rating_bp", "master merchant repairer guard quest_giver patroller monster tutorial_opponent");
+  const combat = record(root.combat, "combat");
+  if (combat.monster_drop_chance_bp !== undefined) uint(combat.monster_drop_chance_bp, "combat.monster_drop_chance_bp");
+  if (combat.monster_drop_grade_weight !== undefined) {
+    const w = combat.monster_drop_grade_weight;
+    if (!Array.isArray(w) || w.length !== 3 || w.some((x) => typeof x !== "number" || !Number.isSafeInteger(x) || x < 0)) {
+      throw new Error("combat.monster_drop_grade_weight must be three non-negative integers");
+    }
+    if ((w as number[]).reduce((a, b) => a + b, 0) !== 10000) throw new Error("combat.monster_drop_grade_weight must sum to 10000");
+  }
   numbersAt(root, "death", "xp_loss_bp revive_wait_ticks revive_vigor_bp pk_drop_chance_bp pk_drop_count");
   numbersAt(root, "wanted", "attack_guard_ticks kill_player_ticks");
   numbersAt(root, "npc", "monster_respawn_ticks npc_respawn_ticks tutorial_respawn_ticks");
