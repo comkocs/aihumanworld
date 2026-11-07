@@ -23,7 +23,7 @@ import type {
   WorldRow,
 } from "../facts/types.ts";
 import type { Writer } from "../facts/writer.ts";
-import { must } from "./common.ts";
+import { must, releaseTask } from "./common.ts";
 import { rewardKey, taskNumbers, type TaskNumbers } from "./numbers.ts";
 
 export interface SupplyCtx {
@@ -62,6 +62,34 @@ async function usable(q: Queryable, char: CharRow, t: TaskTemplateRow, placeId: 
       if (c.mode === "place") return c.place !== placeId && (await placeOk(c.place));
       return before(char.tier, char.stage, c.tier, c.stage);
   }
+}
+
+// Place facts, rather than ID prefixes, also cover player-built places and moving targets.
+async function homeTarget(q: Queryable, char: CharRow, t: TaskTemplateRow | TaskInstanceRow): Promise<{ allowed: boolean; tutorial: boolean }> {
+  const c = t.condition;
+  const places: ID[] = [];
+  const targets: ID[] = [];
+  if (c.tpl === "deliver" || c.tpl === "gather") places.push(c.to_place);
+  if (c.tpl === "deliver" && c.to_char !== null) targets.push(c.to_char);
+  if (c.tpl === "reach" && c.mode === "place") places.push(c.place);
+  if (c.tpl === "find") targets.push(c.target);
+  if (c.tpl === "slay" && c.target !== null) targets.push(c.target);
+  for (const id of targets) {
+    const target = await getRow(q, "char", id);
+    if (target === null) return { allowed: false, tutorial: false };
+    places.push(target.loc);
+  }
+  let tutorial = false;
+  for (const id of places) {
+    const place = await getRow(q, "place", id);
+    if (place === null || (place.region !== char.origin_region && place.region !== "neutral")) {
+      return { allowed: false, tutorial: false };
+    }
+    if (c.tpl === "reach" && c.mode === "place" && id === c.place && place.region === char.origin_region && place.features.includes("tutorial")) {
+      tutorial = true;
+    }
+  }
+  return { allowed: true, tutorial };
 }
 
 async function instantiate(ctx: SupplyCtx, n: TaskNumbers, char: CharRow, t: TaskTemplateRow, placeId: ID): Promise<Change[]> {
@@ -147,8 +175,15 @@ export async function supplyFor(ctx: SupplyCtx, char: CharRow, placeId: ID): Pro
   const n = taskNumbers(ctx.balance);
   const { q, w } = ctx;
   const changes: Change[] = [];
-  const mine = await openOffers(q, char.id, ctx.tick);
-  for (const t of mine) {
+  const here = char.tier === 1 ? await getRow(q, "place", placeId) : null;
+  const restrict = here !== null && here.region === char.origin_region;
+  const mine: TaskInstanceRow[] = [];
+  for (const t of await openOffers(q, char.id, ctx.tick)) {
+    if (restrict && !(await homeTarget(q, char, t)).allowed) {
+      changes.push(...(await releaseTask(q, w, t, "cancelled")).changes);
+      continue;
+    }
+    mine.push(t);
     if (t.offer_place !== placeId) changes.push(must(await w.update("task", t.id, { offer_place: placeId })));
   }
   let need = n.supply_per_char - mine.length;
@@ -161,12 +196,20 @@ export async function supplyFor(ctx: SupplyCtx, char: CharRow, placeId: ID): Pro
     [char.id],
   );
   const busy = new Set(inUse.map((r) => (r.record === "instance" ? r.template_id : null)));
+  const completed = restrict
+    ? new Set((await selectRows(q, "task", "record = 'instance' AND kind = 'system' AND state = 'completed' AND taker = $1", [char.id]))
+      .map((r) => r.record === "instance" ? r.template_id : null))
+    : new Set<ID | null>();
   for (let tier = char.tier; tier >= 1 && need > 0; tier -= 1) {
     const tpls = (await selectRows(q, "task", "record = 'template' AND tier = $1", [tier])) as TaskTemplateRow[];
-    const ranked = tpls
-      .filter((t) => !busy.has(t.id))
-      .map((t) => ({ t, rank: Math.abs(t.stage - char.stage), h: hashOrder(char.id, t.id, ctx.world.day_index) }))
-      .sort((a, b) => a.rank - b.rank || (a.h < b.h ? -1 : a.h > b.h ? 1 : 0));
+    const ranked: { t: TaskTemplateRow; priority: number; rank: number; h: string }[] = [];
+    for (const t of tpls) {
+      if (busy.has(t.id)) continue;
+      const target = restrict ? await homeTarget(q, char, t) : { allowed: true, tutorial: false };
+      if (!target.allowed) continue;
+      ranked.push({ t, priority: target.tutorial && !completed.has(t.id) ? 0 : 1, rank: Math.abs(t.stage - char.stage), h: hashOrder(char.id, t.id, ctx.world.day_index) });
+    }
+    ranked.sort((a, b) => a.priority - b.priority || a.rank - b.rank || (a.h < b.h ? -1 : a.h > b.h ? 1 : 0));
     for (const { t } of ranked) {
       if (need <= 0) break;
       if (!(await usable(q, char, t, placeId))) continue;
