@@ -129,7 +129,7 @@ function headerLine(req: IncomingMessage, name: string): string | undefined {
 /** Browser view of a public page. Region pages use that region's skin; the rest default by language. */
 function browserSkin(book: SkinBook, kind: PageKind | "index", ref: string | null, search: URLSearchParams, lang: ShellLang): ResolvedSkin {
   const asked = resolveSkin(book, search);
-  if (asked.query !== "") return asked;
+  if (asked.query !== "" || search.has("skin")) return asked;
   const locale = lang === "zh" ? "zh-CN" : "en";
   const skin: Skin = kind === "region" && ref !== null && (SKINS as readonly string[]).includes(ref) ? (ref as Skin) : lang === "zh" ? "xiuxian" : "fantasy";
   const lex = lexiconFor(book, skin, locale);
@@ -455,7 +455,7 @@ async function handleGet(deps: PublicDeps, req: IncomingMessage, res: ServerResp
       sendPage(req, res, indexDoc(book, chosen.query));
       return;
     }
-    const doc = await renderPage(deps.db, { kind: hit.kind, ref: hit.ref, lexicon: chosen.lexicon });
+    const doc = await renderPage(deps.db, { kind: hit.kind, ref: hit.ref, lexicon: chosen.lexicon, ...(!search.has("skin") ? { birthBook: book } : {}) });
     if (doc === null) return notFound(res);
     sendPage(req, res, doc);
     return;
@@ -465,9 +465,9 @@ async function handleGet(deps: PublicDeps, req: IncomingMessage, res: ServerResp
     sendHtml(res, 200, homeHtml(lang, book), true);
     return;
   }
-  const doc = await renderPage(deps.db, { kind: hit.kind, ref: hit.ref, lexicon: view.lexicon });
+  const doc = await renderPage(deps.db, { kind: hit.kind, ref: hit.ref, lexicon: view.lexicon, ...(!search.has("skin") ? { birthBook: book } : {}) });
   if (doc === null) return notFound(res);
-  sendHtml(res, 200, publicHtml(lang, doc.markdown, view.query), true);
+  sendHtml(res, 200, publicHtml(lang, doc.markdown, hit.kind === "char" && !search.has("skin") ? "" : view.query), true);
 }
 
 async function handlePost(deps: PublicDeps, req: IncomingMessage, res: ServerResponse, path: string, search: URLSearchParams): Promise<void> {

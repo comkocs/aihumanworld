@@ -43,6 +43,8 @@ export interface PageQuery {
   /** Region key, place id or char id, depending on kind. */
   ref: string | null;
   lexicon: Lexicon;
+  /** When no skin was requested, a biography uses the character's origin skin. */
+  birthBook?: SkinBook;
 }
 
 const REGION_KEYS = ["xiuxian", "wuxia", "fantasy", "scifi", "neutral"] as const;
@@ -71,7 +73,7 @@ function bySeq(rows: DeedRow[]): DeedRow[] {
 }
 
 function label(n: Named): string {
-  return n.missing ? `${n.name} (translation_missing)` : n.name;
+  return n.missing ? n.key.replace(/^.*\./, "").replace(/[_.·]+/g, " ") : n.name;
 }
 
 function facet(lex: Lexicon, key: string): string {
@@ -269,9 +271,15 @@ async function placePage(q: Queryable, lex: Lexicon, ref: string): Promise<PageD
   return { kind: "place", stamp, markdown: lines.join("\n") };
 }
 
-async function biography(q: Queryable, lex: Lexicon, ref: string): Promise<PageDoc | null> {
+async function biography(q: Queryable, lex: Lexicon, ref: string, birthBook?: SkinBook): Promise<PageDoc | null> {
   const row = (await selectRows(q, "char", "id = $1", [ref]))[0];
   if (row === undefined) return null;
+  if (birthBook !== undefined) {
+    const origin = row.origin_region;
+    lex = typeof origin === "string" && (SKINS as readonly string[]).includes(origin)
+      ? defaultSkin(birthBook, origin as Skin).lexicon
+      : neutralLexicon();
+  }
   const who = publicChar(row);
   const deeds = bySeq(
     await selectRows(
@@ -340,7 +348,7 @@ export async function renderPage(q: Queryable, query: PageQuery): Promise<PageDo
     case "place":
       return query.ref === null ? null : placePage(q, query.lexicon, query.ref);
     case "char":
-      return query.ref === null ? null : biography(q, query.lexicon, query.ref);
+      return query.ref === null ? null : biography(q, query.lexicon, query.ref, query.birthBook);
   }
 }
 
@@ -350,13 +358,27 @@ export interface ResolvedSkin {
   query: string;
 }
 
-/** `?skin=<皮>&locale=<语言>`; either missing, unknown or untranslated → neutral keys. */
+/** Chinese skins default to Chinese; fantasy and science fiction default to English. */
+function defaultLocale(skin: Skin): string {
+  return skin === "xiuxian" || skin === "wuxia" ? "zh-CN" : "en";
+}
+
+function defaultSkin(book: SkinBook, skin: Skin): ResolvedSkin {
+  const locale = defaultLocale(skin);
+  const lexicon = lexiconFor(book, skin, locale);
+  return lexicon.skin === null
+    ? { lexicon: neutralLexicon(), query: "" }
+    : { lexicon, query: `?skin=${encodeURIComponent(skin)}&locale=${encodeURIComponent(locale)}` };
+}
+
+/** `?skin=<皮>&locale=<语言>`; a missing locale uses the skin's default. */
 export function resolveSkin(book: SkinBook, search: URLSearchParams): ResolvedSkin {
   const skin = search.get("skin");
-  const locale = search.get("locale");
-  if (skin === null || locale === null || !(SKINS as readonly string[]).includes(skin)) {
+  if (skin === null || !(SKINS as readonly string[]).includes(skin)) {
     return { lexicon: neutralLexicon(), query: "" };
   }
+  const locale = search.get("locale");
+  if (locale === null) return defaultSkin(book, skin as Skin);
   const lex = lexiconFor(book, skin as Skin, locale);
   if (lex.skin === null) return { lexicon: neutralLexicon(), query: "" };
   return { lexicon: lex, query: `?skin=${encodeURIComponent(skin)}&locale=${encodeURIComponent(locale)}` };
