@@ -12,8 +12,8 @@
 // discourse answers RETRY_LATER with "violates check constraint deeds_kind_check" in the error log.
 //   ② new_speech: B's next successful action carries what A said to B directly (≤5, newest, own speech
 //      excluded), the one after carries nothing; a refused action consumes nothing.
-//   ③ notice: an old char sees a fresh rev once, a new rev shows once more, no / empty / broken file shows
-//      nothing, a created char does not see it, a restarted server does not show it twice.
+//   ③ notice: an old char sees a fresh rev in a short burst, a new rev starts another burst,
+//      no / empty / broken file shows nothing, a created char does not see it, and the tick fallback survives restart.
 
 import assert from "node:assert/strict";
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
@@ -693,7 +693,7 @@ test("S46 ②: new_speech carries what others said directly since the previous s
   });
 });
 
-test("S46 ③: notice shows once per char per rev, survives a restart, ignores missing / empty / broken files", async () => {
+test("S46 ③: notice shows in bursts per char per rev, survives a restart, ignores missing / empty / broken files", async () => {
   setQuiet(true);
   const scratch = join(SCRATCH, `notice_${process.pid}`);
   await rm(scratch, { recursive: true, force: true });
@@ -728,12 +728,12 @@ test("S46 ③: notice shows once per char per rev, survives a restart, ignores m
       await d.nextTick();
       assert.equal(Object.hasOwn(await d.call("look", {}, old.code), "notice"), false);
 
-      // A fresh rev: the old char sees it on its first action after publication, not on the second.
+      // A fresh rev: the old char sees five notices, then no more.
       await writeFile(noticeFile, notice("r-one"));
       await d.nextTick();
       const n1 = await d.call("look", {}, old.code);
       assert.deepEqual(n1.notice, { rev: "r-one", url: "https://example.test/start.md", text: { en: "Guide r-one updated.", "zh-CN": "入口 r-one 已更新。" } });
-      assert.equal(Object.hasOwn(await d.call("look", {}, old.code), "notice"), false);
+      for (let i = 0; i < 4; i += 1) assert.equal((await d.call("look", {}, old.code)).notice.rev, "r-one");
       assert.equal(Object.hasOwn(await d.call("whoami", {}, old.code), "notice"), false);
 
       // A char created after publication does not see it (create envelope, nor the actions after).
@@ -756,12 +756,14 @@ test("S46 ③: notice shows once per char per rev, survives a restart, ignores m
       await d.nextTick();
       assert.equal(Object.hasOwn(await d.call("look", {}, old.code), "notice"), false);
 
-      // A new rev: everybody sees it once more, the char created in between too.
+      // A new rev starts another burst for both chars, including the one created in between.
       await writeFile(noticeFile, notice("r-two"));
       await d.nextTick();
-      assert.equal((await d.call("look", {}, old.code)).notice.rev, "r-two");
+      for (let i = 0; i < 5; i += 1) {
+        assert.equal((await d.call("look", {}, old.code)).notice.rev, "r-two");
+        assert.equal((await d.call("look", {}, fresh.code)).notice.rev, "r-two");
+      }
       assert.equal(Object.hasOwn(await d.call("look", {}, old.code), "notice"), false);
-      assert.equal((await d.call("look", {}, fresh.code)).notice.rev, "r-two");
       assert.equal(Object.hasOwn(await d.call("look", {}, fresh.code), "notice"), false);
       assert.equal((await d.q("SELECT count(*) AS n FROM notice_revs"))[0]?.n, "2");
 

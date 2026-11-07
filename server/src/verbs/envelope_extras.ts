@@ -1,12 +1,11 @@
 // [S46] Optional fields of a success envelope that belong to no single verb's result:
 //   new_speech  direct sentences others said to this char since its previous successful action
-//   notice      "the entry guide changed" (content/notice.json), once per char per rev
-// Nothing is kept per char in the database: both are bounded by the char's previous successful action
-// tick (`last_seen_tick` before this request stamped it). A small per-process memo (what this process
-// already showed) only sharpens that boundary inside one tick, where ticks alone cannot tell "before
-// my previous action" from "after it"; a restart loses it and falls back to the tick boundary, which
-// can repeat a line within one tick but never drops one. Computed by the runner inside the request
-// transaction (a rollback takes the fields away); the memo is written only after the commit.
+//   notice      "the entry guide changed" (content/notice.json), several times per char per rev
+//   guide_rev   the current valid entry guide revision
+// Nothing is kept per char in the database: a per-process memo tracks what was shown, with the previous
+// successful action tick (`last_seen_tick` before this request stamped it) as the restart fallback.
+// Computed by the runner inside the request transaction (a rollback takes the fields away); the memo
+// is written only after the commit.
 
 import { readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
@@ -21,6 +20,8 @@ import type { SpeechProjection, SpeechStore } from "../speech/store.ts";
 
 /** At most this many sentences ride in one envelope (the newest ones, oldest first). */
 export const NEW_SPEECH_MAX = 5;
+/** A short burst covers chained requests without sending the full text indefinitely. */
+export const NOTICE_MAX = 5;
 /** The memo is dropped (back to the tick boundary) past this many chars; it only ever sharpens. */
 const MEMO_MAX = 50_000;
 
@@ -42,8 +43,8 @@ export interface Notice {
 interface Memo {
   /** event_head of the char's last successful action: later direct sentences are the new ones. */
   heard: Map<ID, bigint>;
-  /** Last notice rev shown to the char. */
-  noticed: Map<ID, string>;
+  /** Last notice rev shown to the char and how many committed envelopes carried it. */
+  noticed: Map<ID, { rev: string; count: number }>;
 }
 const memos = new WeakMap<object, Memo>();
 
@@ -139,16 +140,12 @@ export async function readNotice(file?: string): Promise<Notice | null> {
 }
 
 /**
- * The notice this char should see now, or null. A rev is published at the world tick of the first
- * request that sees it (row in notice_revs, so a restart forgets nothing); a char sees it when its
- * previous successful action is not later than that tick (so a char active in the publishing tick is
- * not missed) and this process has not shown it that rev yet. Its own request stamps last_seen_tick
- * past the publication on the next tick, so the same rev does not show twice; a new rev shows once
- * more to everyone.
+ * A rev is published at the tick of the first authenticated request that sees it. An eligible char
+ * gets a burst of NOTICE_MAX committed notices, even across ticks. After a restart or memo eviction,
+ * the previous action tick is the fallback: a completed burst may repeat in the publication tick,
+ * while an unfinished burst may stop once the char has acted on a later tick.
  */
-async function noticeFor(q: Queryable, memo: Memo, realm: string, me: ID, tick: Tick, oldSeen: Tick, file?: string): Promise<Notice | null> {
-  const notice = await readNotice(file);
-  if (notice === null) return null;
+async function noticeFor(q: Queryable, memo: Memo, realm: string, me: ID, tick: Tick, oldSeen: Tick, notice: Notice): Promise<Notice | null> {
   const lookup = async (): Promise<string | undefined> =>
     (await q.query<{ published_tick: string }>("SELECT published_tick FROM notice_revs WHERE realm = $1 AND rev = $2", [realm, notice.rev])).rows[0]?.published_tick;
   let published = await lookup();
@@ -161,13 +158,16 @@ async function noticeFor(q: Queryable, memo: Memo, realm: string, me: ID, tick: 
     ).rows[0]?.published_tick;
     published ??= await lookup();
   }
-  if (published === undefined || BigInt(oldSeen) > BigInt(published)) return null;
-  return memo.noticed.get(me) === notice.rev ? null : notice;
+  if (published === undefined) return null;
+  const shown = memo.noticed.get(me);
+  if (shown?.rev === notice.rev) return shown.count < NOTICE_MAX ? notice : null;
+  return BigInt(oldSeen) <= BigInt(published) ? notice : null;
 }
 
 export interface Extras {
   new_speech?: NewSpeech[];
   notice?: Notice;
+  guide_rev?: string;
   /** Run once the transaction has committed: remembers what was shown. */
   commit(): void;
 }
@@ -188,12 +188,19 @@ export async function envelopeExtras(
   const extras: Extras = {
     commit() {
       memo.heard.set(me, BigInt(head));
-      if (extras.notice !== undefined) memo.noticed.set(me, extras.notice.rev);
+      if (extras.notice !== undefined) {
+        const shown = memo.noticed.get(me);
+        memo.noticed.set(me, { rev: extras.notice.rev, count: shown?.rev === extras.notice.rev ? shown.count + 1 : 1 });
+      }
     },
   };
   const heard = await newSpeechFor(q, speech, rules, memo, me, oldSeen, tick, head);
   if (heard.length > 0) extras.new_speech = heard;
-  const notice = await noticeFor(q, memo, realm, me, tick, oldSeen);
-  if (notice !== null) extras.notice = notice;
+  const current = await readNotice();
+  if (current !== null) {
+    extras.guide_rev = current.rev;
+    const notice = await noticeFor(q, memo, realm, me, tick, oldSeen, current);
+    if (notice !== null) extras.notice = notice;
+  }
   return extras;
 }

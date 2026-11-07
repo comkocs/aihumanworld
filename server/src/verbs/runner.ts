@@ -35,8 +35,10 @@ export interface OkEnvelope {
   event_head: Seq;
   /** S46: direct sentences others said to this char since its previous successful action (≤5, absent when none). */
   new_speech?: NewSpeech[];
-  /** S46: "entry guide updated", once per char per content/notice.json rev (absent otherwise). */
+  /** S46/S81: "entry guide updated", a short burst per char per content/notice.json rev. */
   notice?: Notice;
+  /** S81: current entry guide revision, when the notice file is valid. */
+  guide_rev?: string;
 }
 
 export interface ErrEnvelope {
@@ -185,6 +187,7 @@ async function runInTx(deps: RunnerDeps, def: AnyVerbDef, args: unknown, input: 
       const extras = await envelopeExtras(q, deps.services, deps.services.speech, deps.realm, rules, after.id, previousSeen, world.tick, body.event_head);
       if (extras.new_speech !== undefined) body.new_speech = extras.new_speech;
       if (extras.notice !== undefined) body.notice = extras.notice;
+      if (extras.guide_rev !== undefined) body.guide_rev = extras.guide_rev;
       trace.afterCommit?.push(extras.commit);
     }
     // Serialise before COMMIT (see DispatchOutput.json).
