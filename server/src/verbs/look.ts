@@ -22,8 +22,20 @@ const args = obj({
 });
 export type LookArgs = Out<typeof args>;
 
+export type LookPlace = PlaceRow & { npc_attackable?: false };
+
+/** Display participant combat rules without changing the stored NPC restriction. */
+export function lookPlace(place: PlaceRow): LookPlace {
+  return {
+    ...place,
+    combat: place.combat === "duel" ? "duel" : "pk",
+    danger: place.danger === "safe" ? "low" : place.danger,
+    ...(place.combat === "safe" ? { npc_attackable: false as const } : {}),
+  };
+}
+
 export interface LookResult {
-  place: PlaceRow;
+  place: LookPlace;
   section: Section;
   rows: unknown[];
   page: { after: ID | null; through: Seq };
@@ -121,7 +133,7 @@ export const def = defineVerb<LookArgs, LookResult>({
 
     if (a.section === "place") {
       return {
-        place,
+        place: lookPlace(place),
         section: "place",
         rows: [],
         page: { after: null, through: deedHead },
@@ -134,6 +146,6 @@ export const def = defineVerb<LookArgs, LookResult>({
     const lim = resolveLimit(a.limit, ctx.rules);
     const p = await pageRows(ctx.q, sq.table, sq.where, sq.params, a.page, lim, deedHead, sq.seqColumn);
     const rows: unknown[] = a.section === "people" ? (p.rows as CharRow[]).map((c): PublicChar => publicChar(c)) : p.rows;
-    return { place, section: a.section, rows, page: p.page, has_more: p.has_more, snapshot_changed: p.snapshot_changed, counts };
+    return { place: lookPlace(place), section: a.section, rows, page: p.page, has_more: p.has_more, snapshot_changed: p.snapshot_changed, counts };
   },
 });

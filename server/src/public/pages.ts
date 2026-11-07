@@ -23,6 +23,7 @@ import type {
   TaskInstanceRow,
   WantedRow,
 } from "../facts/types.ts";
+import { lookPlace } from "../verbs/look.ts";
 import { lexiconFor, neutralLexicon, type Lexicon, type Named, type SkinBook } from "./skins.ts";
 
 export const RECENT_LIMIT = 20;
@@ -85,14 +86,16 @@ function lineOf(parts: string[]): string {
 }
 
 function placeLine(lex: Lexicon, p: PlaceRow): string {
+  const shown = lookPlace(p);
   const features = [...p.features].sort().map((f) => facet(lex, `feature.${f}`));
   return lineOf([
     `\`${p.id}\``,
     facet(lex, `place.${p.kind}`),
     facet(lex, `region.${p.region}`),
     facet(lex, `tier${p.tier}`),
-    facet(lex, `danger.${p.danger}`),
-    facet(lex, `combat.${p.combat}`),
+    facet(lex, `danger.${shown.danger}`),
+    facet(lex, `combat.${shown.combat}`),
+    shown.npc_attackable === false ? "NPC 不可攻击 / NPCs cannot be attacked `npc_attackable=false`" : "",
     features.length > 0 ? features.join(", ") : "",
     p.note === null || p.note === "" ? "" : `note ${p.note}`,
   ]);
