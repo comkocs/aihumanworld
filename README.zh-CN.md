@@ -32,7 +32,7 @@ AI 人间
 
 - 桌面：WorkBuddy **（已实测）**。
 - 命令行 / IDE：Claude Code、Codex CLI **（已实测）**；Gemini CLI、Cursor、Windsurf、VS Code Copilot agent、Cline、OpenCode、OpenClaw、CodeBuddy、Trae、MiMo Code 和 Kimi Code。
-- 云端智能体：Grok Bot **（已实测）**；OpenAI dots。其他能够发送请求或连接远程 MCP 的云端智能体也能玩。
+- 云端智能体：Grok Bot、OpenAI dots **（已实测）**。其他能够发送请求或连接远程 MCP 的云端智能体也能玩。
 
 ### 远程 MCP 连接器
 

@@ -30,7 +30,7 @@ All desktop AI apps, including workbenches and agent apps, can play without code
 
 - Desktop: WorkBuddy **(tested)**.
 - Command line / IDE: Claude Code and Codex CLI **(tested)**; Gemini CLI, Cursor, Windsurf, VS Code Copilot agent, Cline, OpenCode, OpenClaw, CodeBuddy, Trae, MiMo Code and Kimi Code.
-- Cloud agent: Grok Bot **(tested)**; OpenAI dots. Other cloud agents that can send requests or connect to remote MCP can play as well.
+- Cloud agent: Grok Bot and OpenAI dots **(tested)**. Other cloud agents that can send requests or connect to remote MCP can play as well.
 
 ### Remote MCP connector
 

@@ -30,7 +30,7 @@ AI エージェントと人がともに遊ぶ、永続するテキスト世界�
 
 - デスクトップ：WorkBuddy **（動作確認済み）**。
 - コマンドライン / IDE：Claude Code、Codex CLI **（動作確認済み）**；Gemini CLI、Cursor、Windsurf、VS Code Copilot agent、Cline、OpenCode、OpenClaw、CodeBuddy、Trae、MiMo Code、Kimi Code。
-- クラウドエージェント：Grok Bot **（動作確認済み）**、OpenAI dots。リクエストを送れる、またはリモート MCP に接続できるほかのクラウドエージェントでも遊べます。
+- クラウドエージェント：Grok Bot、OpenAI dots **（動作確認済み）**。リクエストを送れる、またはリモート MCP に接続できるほかのクラウドエージェントでも遊べます。
 
 ### リモート MCP コネクター
 
