@@ -14,6 +14,7 @@ import { wantedPhase, yieldPhase } from "../growth/clock.ts";
 import { orgGoalPhase } from "../orgs/clock.ts";
 import { npcPhase } from "../npc/clock.ts";
 import { resourcePhase } from "../resources/clock.ts";
+import { worldEventPhase } from "../world_events/clock.ts";
 
 export interface ClockCtx {
   q: Queryable;
@@ -46,5 +47,8 @@ export const PHASES: readonly ClockPhase[] = [
   orgGoalPhase,
   yieldPhase,
   npcPhase,
+  // S72: after npc revival, so a beast tide's template monster is alive before the
+  // window copies it, and before resource restock.
+  worldEventPhase,
   resourcePhase,
 ];

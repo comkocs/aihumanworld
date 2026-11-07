@@ -552,6 +552,19 @@ export interface EventDataMap {
   discovered: { char_id: ID; target: ID; first: boolean };
   tick_yield: { char_id: ID; xp: UInt; potential: UInt; skill: SkillKey | null; level: UInt | null };
   fact_changed: { changes: Change[] };
+  /**
+   * S72: a scheduled world event. `phase` open announces the window, close ends it;
+   * `until_tick` is the first tick the window no longer holds. The same shape goes
+   * out on the world layer and into the chronicle deed.
+   */
+  world_event: {
+    kind: "beast_tide" | "secret_realm";
+    phase: "open" | "close";
+    place_id: ID;
+    tier: Tier;
+    open_tick: Tick;
+    until_tick: Tick;
+  };
 }
 
 export type EventType = keyof EventDataMap;

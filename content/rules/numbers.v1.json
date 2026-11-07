@@ -1,7 +1,7 @@
 {
  "meta": {
   "schema": "aihw.numbers.v1",
-  "revision_key": "balance.v1.8",
+  "revision_key": "balance.v1.9",
   "integer_only": true
  },
  "world_rules": {
@@ -44,7 +44,7 @@
    "build": 1,
    "breakthrough": 2
   },
-  "balance_key": "balance.v1.8"
+  "balance_key": "balance.v1.9"
  },
  "clock": {
   "day_ticks": 1440,
@@ -2078,5 +2078,15 @@
   "goal_per_head_deliver_items": 8,
   "goal_min_target": 3,
   "goal_reward_rep": 5
+ },
+ "world_events": {
+  "period_ticks": 720,
+  "duration_ticks": 30,
+  "kinds": [
+   "beast_tide",
+   "secret_realm"
+  ],
+  "beast_tide_extra": 2,
+  "secret_realm_reward_bp": 1000
  }
 }

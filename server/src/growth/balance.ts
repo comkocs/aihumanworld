@@ -54,6 +54,16 @@ export interface Numbers {
   consumables: { table: { tier: number; grade: number; bt_bonus_bp: number }[] };
   economy: { start_coin: number; start_potential: number };
   orgs: { goal_min_target: number; goal_reward_rep: number };
+  /**
+   * S72 定时世界事件。period_ticks 一场（从刻 0 起算），持续 duration_ticks；kinds 在周期序号上轮换。
+   * beast_tide_extra 是兽潮在该地点额外刷出的本阶怪数；secret_realm_reward_bp 是秘境开启期间、
+   * 首次走进其内间时，在普通首达奖之外另加的比例（按该地点阶的满额任务修为，只给一次）。
+   * 缺省整段 = 不开世界事件。
+   */
+  world_events?: {
+    period_ticks: number; duration_ticks: number; kinds: string[];
+    beast_tide_extra: number; secret_realm_reward_bp: number;
+  };
   tasks: {
     supply_per_char?: number;
     deed_bonus: {
@@ -176,6 +186,17 @@ export function parseBalance(input: unknown): Balance {
       if ((d[key] as number) > 100000) throw new Error(`tasks.deed_bonus.discourse.${key} exceeds ten tasks / ten times training`);
     }
     if (d.window_ticks === 0 || d.talk_accrue_max_ticks === 0) throw new Error("tasks.deed_bonus.discourse ticks must be positive");
+  }
+  if (root.world_events !== undefined) {
+    numbersAt(root, "world_events", "period_ticks duration_ticks beast_tide_extra secret_realm_reward_bp");
+    const we = record(root.world_events, "world_events");
+    if (we.period_ticks === 0 || we.duration_ticks === 0) throw new Error("world_events ticks must be positive");
+    if ((we.duration_ticks as number) >= (we.period_ticks as number)) throw new Error("world_events.duration_ticks must be shorter than period_ticks");
+    if ((we.secret_realm_reward_bp as number) > 10000) throw new Error("world_events.secret_realm_reward_bp exceeds basis-point range");
+    const kinds = we.kinds;
+    if (!Array.isArray(kinds) || kinds.length === 0 || kinds.some((k) => k !== "beast_tide" && k !== "secret_realm")) {
+      throw new Error("world_events.kinds must list beast_tide / secret_realm");
+    }
   }
   if (deedBonus.combat_social !== undefined) {
     numbersAt(root, "tasks.deed_bonus.combat_social", "duel_win_bp duel_lose_bp duel_draw_bp pk_win_bp daily_max hunt_mult hunt_daily_max");

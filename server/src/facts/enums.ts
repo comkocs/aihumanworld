@@ -209,6 +209,8 @@ export const DEED_KINDS = [
   "first_crossing",
   "org_create",
   "first_org",
+  // S72: a scheduled world event opened or closed (world-visible, verb clock).
+  "world_event",
 ] as const;
 export type DeedKind = (typeof DEED_KINDS)[number];
 
@@ -262,6 +264,8 @@ export const EVENT_TYPES = [
   "discovered",
   "tick_yield",
   "fact_changed",
+  // S72: a scheduled world event opened or closed, visible to the whole realm.
+  "world_event",
 ] as const;
 
 /** Tables allowed in Change records (事实格式 §10). */

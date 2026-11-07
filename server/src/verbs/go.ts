@@ -8,6 +8,7 @@
 
 import type { ClockCtx } from "../clock/phases.ts";
 import { noteFirstCrossing } from "../facts/firsts.ts";
+import { openWorldEvent, secretRealmBonus } from "../world_events/clock.ts";
 import { countRows, getRow, mustGetRow } from "../facts/store.ts";
 import type { Change, CharRow, ID, PlaceRow, ReputationRow, Reward } from "../facts/types.ts";
 import { NO_DETAILS, reject } from "../protocol/errors.ts";
@@ -24,6 +25,15 @@ export interface GoResult {
   from: ID;
   to: ID;
   changes: Change[];
+}
+
+/** S72: true when an open secret realm has waived the key on this exact door. */
+async function realmDoorWaived(q: VerbContext["q"], placeId: ID, dir: string): Promise<boolean> {
+  const row = await openWorldEvent(q);
+  if (row === null || row.kind !== "secret_realm") return false;
+  const spawned = Array.isArray(row.spawned) ? row.spawned : [];
+  return spawned.some((e) => typeof e === "object" && e !== null &&
+    (e as { place_id?: unknown }).place_id === placeId && (e as { dir?: unknown }).dir === dir);
 }
 
 async function guardStops(ctx: VerbContext, guardId: ID, here: PlaceRow, me: CharRow): Promise<boolean> {
@@ -98,7 +108,10 @@ export const def = defineVerb<GoArgs, GoResult>({
     const here = await mustGetRow(ctx.q, "place", me.loc);
     const exit = here.exits.find((e) => e.dir === a.dir);
     if (exit === undefined) return reject("NOT_FOUND", NO_DETAILS, "args.dir");
-    if (exit.locked) return reject("EXIT_BLOCKED", { reason: "locked" });
+    // S72: while a secret realm is open, the one door it unbarred needs no key. The
+    // clock puts the lock back at the close, so this only widens the window.
+    const waived = exit.locked && (await realmDoorWaived(ctx.q, here.id, exit.dir));
+    if (exit.locked && !waived) return reject("EXIT_BLOCKED", { reason: "locked" });
     if (exit.guard !== null && (await guardStops(ctx, exit.guard, here, me))) return reject("EXIT_BLOCKED", { reason: "guard" });
     const dest = await getRow(ctx.q, "place", exit.to);
     if (dest === null) return reject("NOT_FOUND", NO_DETAILS, "args.dir");
@@ -112,6 +125,19 @@ export const def = defineVerb<GoArgs, GoResult>({
     const arrival = await arrivalReward(ctx, cur, dest, "go", fresh ? moveChange : null);
     cur = arrival.row;
     changes.push(...arrival.changes);
+
+    // S72: the first non-NPC through a secret realm's door takes a small once-only bonus.
+    const realm = await secretRealmBonus(ctx, cur, dest);
+    if (realm !== null) {
+      cur = realm.row;
+      changes.push(...realm.changes);
+      const d = await w.deed({
+        actor: me.id, verb: "go", kind: "world_event", targets: [dest.id], place_id: dest.id,
+        result: { outcome: "success", changes: realm.changes, roll: null, proposal: null },
+        visibility: "world", participants: [me.id],
+      });
+      await w.emit({ scope: "self", recipients: [me.id], type: "reward_granted", deed_id: d.id, data: { char_id: me.id, source: d.id, reward: { ...realm.reward, items: [] } } });
+    }
 
     const travel = await w.deed({
       actor: me.id,
