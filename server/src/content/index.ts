@@ -772,8 +772,11 @@ async function importOrgRelations(
       const key = `${a}|${b}`;
       if (seen.has(key)) throw new Error(`duplicate pair ${a} ${b} in this file`);
       seen.add(key);
-      if ((await getRow(ctx.w.q, "org", a)) === null) throw new Error(`org ${a} not in library`);
-      if ((await getRow(ctx.w.q, "org", b)) === null) throw new Error(`org ${b} not in library`);
+      // Cross-region pairs take effect only when both ends exist; the five files import by filename, with pairs in the later file.
+      if ((await getRow(ctx.w.q, "org", a)) === null || (await getRow(ctx.w.q, "org", b)) === null) {
+        result.skipped.org_relation += 1;
+        continue;
+      }
       const taken = await ctx.w.q.query("SELECT stance FROM s78_org_relations WHERE a = $1 AND b = $2", [a, b]);
       if (taken.rows.length > 0) {
         result.skipped.org_relation += 1;
