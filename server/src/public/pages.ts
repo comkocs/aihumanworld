@@ -23,6 +23,7 @@ import type {
   TaskInstanceRow,
   WantedRow,
 } from "../facts/types.ts";
+import { orgStances } from "../orgs/relations.ts";
 import { lookExits, lookPlace } from "../verbs/look.ts";
 import { lexiconFor, neutralLexicon, type Lexicon, type Named, type SkinBook } from "./skins.ts";
 
@@ -30,7 +31,7 @@ export const RECENT_LIMIT = 20;
 
 const ID_RE = /^[a-z][a-z0-9_]*:(place|char|item|task|org|bond|reputation|wanted):[a-z][a-z0-9_]*$/;
 
-export type PageKind = "chronicle" | "region" | "place" | "char";
+export type PageKind = "chronicle" | "region" | "place" | "char" | "org";
 
 export interface PageDoc {
   kind: PageKind;
@@ -350,6 +351,32 @@ async function biography(q: Queryable, lex: Lexicon, ref: string, birthBook?: Sk
   return { kind: "char", stamp, markdown: lines.join("\n") };
 }
 
+/** S78: one organization's public page — its facts plus the orgs it is allied or at odds with. */
+async function orgPage(q: Queryable, lex: Lexicon, ref: string): Promise<PageDoc | null> {
+  const org = (await selectRows(q, "org", "id = $1", [ref]))[0];
+  if (org === undefined) return null;
+  const stance = await orgStances(q, org.id);
+  const named = await playerOrgNames(q, [org.id, ...stance.allies, ...stance.enemies]);
+  const lines = header(`组织 Organization ${org.id}`, lex, "组织事实与它同其他组织的盟 / 敌。未列出的都是中立。不含成员名单。");
+  lines.push(lineOf([
+    `\`${org.id}\``,
+    named.get(org.id) ?? "",
+    facet(lex, `region.${org.region}`),
+    org.registry ? facet(lex, "org.registry") : facet(lex, "org.group"),
+    `hall \`${org.hall}\``,
+  ]), "");
+  const side = (title: string, ids: string[], key: string): void => {
+    lines.push(`## ${title}`, "");
+    if (ids.length === 0) lines.push("(none)", "");
+    for (const id of ids) lines.push(`- ${lineOf([`\`${id}\``, named.get(id) ?? "", facet(lex, key)])}`);
+    lines.push("");
+  };
+  side("盟友 Allies", stance.allies, "org_stance.ally");
+  side("敌对 Enemies", stance.enemies, "org_stance.enemy");
+  const stamp = `org:${org.id}:${org.updated_tick}:${stance.allies.join(",")}:${stance.enemies.join(",")}`;
+  return { kind: "org", stamp, markdown: lines.join("\n") };
+}
+
 function bondLine(lex: Lexicon, b: BondRow, orgNames: ReadonlyMap<string, string>): string {
   return lineOf([`\`${b.id}\``, facet(lex, `bond.${b.kind}`), `\`${b.a}\` → \`${b.b}\``, orgNames.get(b.b) ?? "", `since ${b.since_tick}`]);
 }
@@ -377,6 +404,8 @@ export async function renderPage(q: Queryable, query: PageQuery): Promise<PageDo
       return query.ref === null ? null : placePage(q, query.lexicon, query.ref);
     case "char":
       return query.ref === null ? null : biography(q, query.lexicon, query.ref, query.birthBook);
+    case "org":
+      return query.ref === null ? null : orgPage(q, query.lexicon, query.ref);
   }
 }
 

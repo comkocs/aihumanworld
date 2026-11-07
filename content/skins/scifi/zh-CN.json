@@ -393,6 +393,16 @@
    "name": "成员身份",
    "flavor": null
   },
+   {
+     "key": "org_stance.ally",
+     "name": "协约",
+     "flavor": null
+   },
+   {
+     "key": "org_stance.enemy",
+     "name": "对立",
+     "flavor": null
+   },
   {
    "key": "deed.travel",
    "name": "移动",

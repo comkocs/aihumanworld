@@ -393,6 +393,16 @@
       "name": "Membership",
       "flavor": null
     },
+      {
+        "key": "org_stance.ally",
+        "name": "Allied School",
+        "flavor": null
+      },
+      {
+        "key": "org_stance.enemy",
+        "name": "Rival School",
+        "flavor": null
+      },
     {
       "key": "deed.travel",
       "name": "Travel",

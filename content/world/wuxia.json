@@ -2060,5 +2060,12 @@
             "cap": 1
           }      ]
     }
+  ],
+  "org_relations": [
+    { "a": "org:wuxia_escort", "b": "org:wuxia_herb", "stance": "ally" },
+    { "a": "org:wuxia_herb", "b": "org:wuxia_martial", "stance": "enemy" }
+  ],
+  "org_members": [
+    { "char": "char:wuxia_merchant", "org": "org:wuxia_escort" }
   ]
 }

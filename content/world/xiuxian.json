@@ -1975,5 +1975,14 @@
             "cap": 1
           }      ]
     }
+  ],
+  "org_relations": [
+    { "a": "org:xiuxian_taihua", "b": "org:xiuxian_yunzhuan", "stance": "ally" },
+    { "a": "org:xiuxian_jiuhuan", "b": "org:xiuxian_taihua", "stance": "enemy" },
+    { "a": "org:xiuxian_jiuhuan", "b": "org:wuxia_herb", "stance": "ally" },
+    { "a": "org:xiuxian_taihua", "b": "org:wuxia_martial", "stance": "enemy" }
+  ],
+  "org_members": [
+    { "char": "char:xiuxian_merchant", "org": "org:xiuxian_jiuhuan" }
   ]
 }

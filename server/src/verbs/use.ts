@@ -1,7 +1,7 @@
 // [S25] use (动词表 §4.9):
 // the closed set of 17 ops; no free-form intent. Prices / fees / periods are S5's.
 
-import { itemPrice, tradePrice } from "../economy/prices.ts";
+import { itemPrice, stancePrice, tradePrice } from "../economy/prices.ts";
 import { ITEM_CATEGORY, type DeedKind } from "../facts/enums.ts";
 import { getRow, selectRows, type Patch } from "../facts/store.ts";
 import type { BondRow, Change, CharRow, ID, ItemInstanceRow, OrgRow, Proposal, SkillLearnedRow, UInt } from "../facts/types.ts";
@@ -242,7 +242,7 @@ async function trade(ctx: VerbContext, a: Extract<UseArgs, { op: "buy" | "sell" 
     await operation.update("char", npc.id, { coin: checkedUInt(BigInt(npc.coin) + BigInt(amount)) });
     await operation.update("item", row.id, { dura: def.dura_max });
   } else {
-    amount = tradePrice(ctx.balance, basePrice, a.op);
+    amount = await stancePrice(ctx.q, ctx.balance, tradePrice(ctx.balance, basePrice, a.op), a.op, npc.id, me.id);
     const buyer = a.op === "buy" ? me : npc;
     const seller = a.op === "buy" ? npc : me;
     sufficient(buyer.coin, amount);

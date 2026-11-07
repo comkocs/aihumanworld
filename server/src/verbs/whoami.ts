@@ -5,6 +5,7 @@
 import { pageRows, resolveLimit } from "../facts/paging.ts";
 import { countRows, getRow } from "../facts/store.ts";
 import type { CharRow, FactTable, ID, Seq, Stats } from "../facts/types.ts";
+import { memberOrg, orgStances, type OrgStanceList } from "../orgs/relations.ts";
 import { deriveStats } from "../growth/balance.ts";
 import { neutralFacts } from "../growth/facts.ts";
 import { PAGE_DEFAULT, limit, page } from "../protocol/shapes.ts";
@@ -34,6 +35,10 @@ export interface WhoamiResult {
   has_more: boolean;
   snapshot_changed: boolean;
   counts: Record<ListSection, number>;
+  /** S78: present on section=bonds. The caller's org, and the orgs it is allied or at odds with. */
+  org_id?: ID | null;
+  allies?: ID[];
+  enemies?: ID[];
 }
 
 const QUERIES: Readonly<Record<ListSection, { table: FactTable; where: string }>> = {
@@ -89,6 +94,8 @@ export const def = defineVerb<WhoamiArgs, WhoamiResult>({
       const org = await getRow(ctx.q, "org", row.b);
       return org?.player_name === undefined ? row : { ...row, org_name: org.player_name };
     })) : p.rows;
+    const orgId = a.section === "bonds" ? await memberOrg(ctx.q, me.id) : undefined;
+    const stance: OrgStanceList | null = orgId === undefined ? null : orgId === null ? { allies: [], enemies: [] } : await orgStances(ctx.q, orgId);
     return {
       char: me,
       derived,
@@ -98,6 +105,7 @@ export const def = defineVerb<WhoamiArgs, WhoamiResult>({
       has_more: p.has_more,
       snapshot_changed: p.snapshot_changed,
       counts,
+      ...(stance === null ? {} : { org_id: orgId, allies: stance.allies, enemies: stance.enemies }),
     };
   },
 });

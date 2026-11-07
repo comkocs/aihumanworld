@@ -5,6 +5,7 @@
 import type { Queryable } from "../db/db.ts";
 import { pageRows, resolveLimit } from "../facts/paging.ts";
 import { publicChar } from "../facts/project.ts";
+import { memberOrg, orgStance, type OrgStance } from "../orgs/relations.ts";
 import { countRows, mustGetRow, selectRows } from "../facts/store.ts";
 import type { Change, CharRow, FactTable, ID, PlaceRow, PublicChar, Seq } from "../facts/types.ts";
 import { PAGE_DEFAULT, limit, page } from "../protocol/shapes.ts";
@@ -25,6 +26,24 @@ export type LookArgs = Out<typeof args>;
 
 export type LookExit = PlaceRow["exits"][number] & Partial<Pick<PlaceRow, "tier" | "danger" | "region">>;
 export type LookPlace = Omit<PlaceRow, "exits"> & { exits: LookExit[]; npc_attackable?: false };
+
+/**
+ * S78: an NPC that belongs to an org carries the stance between that org and the
+ * caller's org. Other people, and a caller with no org, stay unmarked.
+ */
+async function peopleRows(q: Queryable, actor: ID | null, rows: CharRow[]): Promise<unknown[]> {
+  const mine = actor === null ? null : await memberOrg(q, actor);
+  const out: unknown[] = [];
+  for (const c of rows) {
+    const shown: PublicChar = publicChar(c);
+    if (mine !== null && c.kind === "npc") {
+      const theirs = await memberOrg(q, c.id);
+      const stance: OrgStance = theirs === null ? "neutral" : await orgStance(q, mine, theirs);
+      out.push(theirs === null ? shown : { ...shown, org_id: theirs, org_stance: stance });
+    } else out.push(shown);
+  }
+  return out;
+}
 
 /** Display participant combat rules without changing the stored NPC restriction. */
 export function lookPlace(place: PlaceRow): LookPlace {
@@ -161,7 +180,7 @@ export const def = defineVerb<LookArgs, LookResult>({
     const sq = sectionQuery(a.section, place.id, me.id);
     const lim = resolveLimit(a.limit, ctx.rules);
     const p = await pageRows(ctx.q, sq.table, sq.where, sq.params, a.page, lim, deedHead, sq.seqColumn);
-    const rows: unknown[] = a.section === "people" ? (p.rows as CharRow[]).map((c): PublicChar => publicChar(c)) : p.rows;
+    const rows: unknown[] = a.section === "people" ? await peopleRows(ctx.q, ctx.actor?.id ?? null, p.rows as CharRow[]) : p.rows;
     return { place: shownPlace, section: a.section, rows, page: p.page, has_more: p.has_more, snapshot_changed: p.snapshot_changed, counts };
   },
 });

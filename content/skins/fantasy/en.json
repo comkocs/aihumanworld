@@ -393,6 +393,16 @@
       "name": "Membership",
       "flavor": null
     },
+      {
+        "key": "org_stance.ally",
+        "name": "Pact",
+        "flavor": null
+      },
+      {
+        "key": "org_stance.enemy",
+        "name": "Feud",
+        "flavor": null
+      },
     {
       "key": "deed.travel",
       "name": "Travel",

@@ -11597,5 +11597,9 @@
       ]
     }
 
+  ],
+  "org_relations": [
+    { "a": "org:registry_fantasy", "b": "org:registry_scifi", "stance": "ally" },
+    { "a": "org:registry_wuxia", "b": "org:registry_xiuxian", "stance": "enemy" }
   ]
 }

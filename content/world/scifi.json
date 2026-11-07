@@ -1852,5 +1852,14 @@
             "cap": 1
           }      ]
     }
+  ],
+  "org_relations": [
+    { "a": "org:scifi_survey", "b": "org:scifi_trade", "stance": "ally" },
+    { "a": "org:scifi_salvage", "b": "org:scifi_trade", "stance": "enemy" },
+    { "a": "org:fantasy_watch", "b": "org:scifi_survey", "stance": "ally" },
+    { "a": "org:fantasy_conclave", "b": "org:scifi_salvage", "stance": "enemy" }
+  ],
+  "org_members": [
+    { "char": "char:scifi_merchant", "org": "org:scifi_trade" }
   ]
 }

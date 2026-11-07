@@ -25,6 +25,7 @@ import { BODIES, SKILL_BASES, TASK_TPLS } from "../facts/enums.ts";
 import { seedId, worldId } from "../facts/ids.ts";
 import { getRow, selectRows } from "../facts/store.ts";
 import type {
+  BondRow,
   CharRow,
   Exit,
   ID,
@@ -44,6 +45,7 @@ import type { RulesBundle } from "../growth/rules_source.ts";
 import { errText, log } from "../log.ts";
 import { stats } from "../npc/facts.ts";
 import { cellNumber, valueAt } from "../orgs/numbers.ts";
+import { pairOrder, type OrgStance } from "../orgs/relations.ts";
 import { ActionError } from "../protocol/errors.ts";
 import {
   archetype as archetypeV,
@@ -78,9 +80,11 @@ export interface ContentImportResult {
 }
 
 /** `skill` counts skill rows of both records (master learned rows, org skill definitions). */
-export type ContentCounter = "place" | "item" | "task" | "char" | "skill" | "exit" | "org" | "supply";
+export type ContentCounter = "place" | "item" | "task" | "char" | "skill" | "exit" | "org" | "supply" | "org_relation" | "org_member";
 
-const zeroCounts = (): Record<ContentCounter, number> => ({ place: 0, item: 0, task: 0, char: 0, skill: 0, exit: 0, org: 0, supply: 0 });
+const zeroCounts = (): Record<ContentCounter, number> => ({
+  place: 0, item: 0, task: 0, char: 0, skill: 0, exit: 0, org: 0, supply: 0, org_relation: 0, org_member: 0,
+});
 
 /** Org skills per org (产品文档 §17 F: 每组织专属 2~3 门). */
 export const ORG_SKILLS_MIN = 2;
@@ -198,6 +202,15 @@ const supplyItemEntry = obj({
 const spotEntry = obj({ place: placeId, items: arr(supplyItemEntry, { min: 1 }) });
 const shopEntry = obj({ char: charId, items: arr(supplyItemEntry, { min: 1 }) });
 
+// [S78] Stance between two content orgs, and which content org a content NPC belongs to.
+// Both are additive and idempotent: a pair or a char already recorded is skipped.
+const orgRelationEntry = obj({
+  a: orgId,
+  b: orgId,
+  stance: oneOf(["ally", "enemy"] as const, "org stance"),
+});
+const orgMemberEntry = obj({ char: charId, org: orgId });
+
 const contentFile = obj({
   schema: lit("aihw.content.v1"),
   places: opt(arr(placeEntry), []),
@@ -209,6 +222,8 @@ const contentFile = obj({
   org_skills: opt(arr(orgSkillEntry), []),
   resource_spots: opt(arr(spotEntry), []),
   shop_lists: opt(arr(shopEntry), []),
+  org_relations: opt(arr(orgRelationEntry), []),
+  org_members: opt(arr(orgMemberEntry), []),
 });
 
 type ItemEntry = Out<typeof itemEntry>;
@@ -736,6 +751,91 @@ async function importOrgSkills(ctx: FileCtx, file: string, entries: OrgSkillEntr
 }
 
 /** Every org this file created or gave skills ends with 2~3 org skill definitions. */
+/**
+ * [S78] Org-to-org stance, idempotent per unordered pair: a pair already recorded
+ * is skipped, never overwritten. Both ends must already be in the library, so a
+ * cross-file pair belongs in the file imported later.
+ */
+async function importOrgRelations(
+  ctx: FileCtx,
+  file: string,
+  entries: Out<typeof orgRelationEntry>[],
+  result: ContentImportResult,
+): Promise<void> {
+  const seen = new Set<string>();
+  for (let i = 0; i < entries.length; i += 1) {
+    const e = entries[i]!;
+    const name = `${e.a} ${e.stance} ${e.b}`;
+    try {
+      if (e.a === e.b) throw new Error("an org has no stance with itself");
+      const [a, b] = pairOrder(e.a, e.b);
+      const key = `${a}|${b}`;
+      if (seen.has(key)) throw new Error(`duplicate pair ${a} ${b} in this file`);
+      seen.add(key);
+      if ((await getRow(ctx.w.q, "org", a)) === null) throw new Error(`org ${a} not in library`);
+      if ((await getRow(ctx.w.q, "org", b)) === null) throw new Error(`org ${b} not in library`);
+      const taken = await ctx.w.q.query("SELECT stance FROM s78_org_relations WHERE a = $1 AND b = $2", [a, b]);
+      if (taken.rows.length > 0) {
+        result.skipped.org_relation += 1;
+        continue;
+      }
+      await ctx.w.q.query("INSERT INTO s78_org_relations (a, b, stance) VALUES ($1, $2, $3)", [a, b, e.stance satisfies OrgStance]);
+      result.inserted.org_relation += 1;
+    } catch (err) {
+      fail(file, "org_relations", i, name, err);
+    }
+  }
+}
+
+/**
+ * [S78] Content NPC membership, idempotent per char: a char that already has an
+ * active membership is skipped. New rows use the org's default rank.
+ */
+async function importOrgMembers(
+  ctx: FileCtx,
+  file: string,
+  entries: Out<typeof orgMemberEntry>[],
+  result: ContentImportResult,
+): Promise<void> {
+  const seen = new Set<string>();
+  for (let i = 0; i < entries.length; i += 1) {
+    const e = entries[i]!;
+    try {
+      if (seen.has(e.char)) throw new Error(`duplicate char ${e.char} in this file`);
+      seen.add(e.char);
+      const npc = await getRow(ctx.w.q, "char", e.char);
+      if (npc === null) throw new Error(`char ${e.char} not in library`);
+      if (npc.kind !== "npc") throw new Error(`char ${e.char} is not an NPC`);
+      const org = await getRow(ctx.w.q, "org", e.org);
+      if (org === null) throw new Error(`org ${e.org} not in library`);
+      const existing = await selectRows(ctx.w.q, "bond", "kind = 'member' AND state = 'active' AND a = $1", [npc.id]);
+      if (existing.length > 0) {
+        result.skipped.org_member += 1;
+        continue;
+      }
+      const rank = org.ranks.find((r) => r.key === "org_rank.member")?.rank;
+      if (rank === undefined) throw new Error(`org ${org.id} has no default rank`);
+      const row: BondRow = {
+        id: seedId(ctx.realm, "bond", `member_${npc.id.split(":")[2]}`),
+        created_tick: ctx.tick,
+        updated_tick: ctx.tick,
+        kind: "member",
+        a: npc.id,
+        b: org.id,
+        state: "active",
+        weight: 0,
+        rank,
+        since_tick: ctx.tick,
+        ended_tick: null,
+      };
+      await ctx.w.insert("bond", row);
+      result.inserted.org_member += 1;
+    } catch (err) {
+      fail(file, "org_members", i, e.char, err);
+    }
+  }
+}
+
 async function verifyOrgSkills(ctx: FileCtx, file: string): Promise<void> {
   for (const id of ctx.touchedOrgs) {
     const org = await getRow(ctx.w.q, "org", id);
@@ -837,8 +937,10 @@ async function importFile(
     await importLinks(ctx, file, parsed.place_links, result);
     await importOrgs(ctx, file, parsed.orgs, result);
     await importOrgSkills(ctx, file, parsed.org_skills, result);
+    await importOrgRelations(ctx, file, parsed.org_relations, result);
     await importItems(ctx, file, parsed.items, result);
     await importChars(ctx, file, parsed.chars, result);
+    await importOrgMembers(ctx, file, parsed.org_members, result);
     await importTasks(ctx, file, parsed.tasks, result);
     await verifyPlaces(ctx, file, fresh);
     await verifyOrgSkills(ctx, file);

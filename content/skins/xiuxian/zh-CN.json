@@ -1,4 +1,6 @@
 {"schema":"aihw.translation.v1","skin":"xiuxian","locale":"zh-CN","entries":[
+  {"key":"org_stance.ally","name":"同道","flavor":"Allied order"},
+  {"key":"org_stance.enemy","name":"对宗","flavor":"Opposed order"},
   {"key":"content.r1.char.s77_xiuxian_patrol","name":"雾岭巡行者","flavor":"沿途巡行，留意往来行人。"},
   {"key":"content.r1.char.s77_wuxia_patrol","name":"竹缘巡行者","flavor":"沿途巡行，留意往来行人。"},
   {"key":"content.r1.char.s77_fantasy_patrol","name":"泽边巡行者","flavor":"沿途巡行，留意往来行人。"},

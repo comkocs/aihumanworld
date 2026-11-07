@@ -8,21 +8,22 @@ import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { join } from "node:path";
-import type { Db } from "../db/db.ts";
+import type { Db, Queryable } from "../db/db.ts";
 import { SERVER_ROOT } from "../config.ts";
 import { SKINS, VERBS, type Skin } from "../facts/enums.ts";
 import { getRow, mustGetRow, selectRows } from "../facts/store.ts";
 import { worldId } from "../facts/ids.ts";
-import { itemPrice, tradePrice } from "../economy/prices.ts";
+import { itemPrice, stancePrice, tradePrice } from "../economy/prices.ts";
 import type { Balance } from "../growth/balance.ts";
 import { requireRevision } from "../orgs/numbers.ts";
 import { ActionError, NO_DETAILS, reject } from "../protocol/errors.ts";
+import type { ID } from "../facts/types.ts";
 import { charId } from "../protocol/shapes.ts";
 import { verbCatalog } from "../verbs/catalog.ts";
 import { errEnvelope } from "../verbs/runner.ts";
 import { publicChar } from "../facts/project.ts";
 import type { LookResult } from "../verbs/look.ts";
-import { parseBearer } from "../identity/auth.ts";
+import { authenticate, parseBearer } from "../identity/auth.ts";
 import type { DispatchInput, DispatchOutput } from "../verbs/runner.ts";
 import { argsFromPost, formBySlug, formsOf, type WebForm } from "./forms.ts";
 import { formDocument, formsIndexDocument, homeHtml, publicHtml, resultDocument, shellLang, wantsHtml, type ShellLang } from "./html.ts";
@@ -196,6 +197,8 @@ function routeOf(path: string): RouteHit | null {
   if (place?.[1] !== undefined && isFactId(place[1], "place")) return { kind: "place", ref: place[1] };
   const bio = /^\/char\/([a-z][a-z0-9_]*:[a-z]+:[a-z][a-z0-9_]*)$/.exec(path);
   if (bio?.[1] !== undefined && isFactId(bio[1], "char")) return { kind: "char", ref: bio[1] };
+  const org = /^\/org\/([a-z][a-z0-9_]*:[a-z]+:[a-z][a-z0-9_]*)$/.exec(path);
+  if (org?.[1] !== undefined && isFactId(org[1], "org")) return { kind: "org", ref: org[1] };
   return null;
 }
 
@@ -248,7 +251,18 @@ async function sendDefinitions(deps: PublicDeps, res: ServerResponse): Promise<v
   });
 }
 
-async function sendShop(deps: PublicDeps, res: ServerResponse, id: string): Promise<void> {
+/** The signed-in char, or null when the shop is read without a usable code. A bad code keeps the plain price. */
+async function shopBuyer(q: Queryable, bearer: string | null): Promise<ID | null> {
+  if (bearer === null || bearer === "") return null;
+  try {
+    return (await authenticate(q, bearer, { lock: false })).id;
+  } catch (err) {
+    if (err instanceof ActionError) return null;
+    throw err;
+  }
+}
+
+async function sendShop(deps: PublicDeps, req: IncomingMessage, res: ServerResponse, id: string): Promise<void> {
   try {
     charId(id, "npc");
     if (id.split(":")[0] !== deps.realm) reject("NOT_FOUND", NO_DETAILS);
@@ -268,7 +282,8 @@ async function sendShop(deps: PublicDeps, res: ServerResponse, id: string): Prom
         if (item.record !== "instance") continue;
         let price = prices.get(item.def_id);
         if (price === undefined) {
-          price = tradePrice(balance, await itemPrice(q, balance, item.def_id), "buy");
+          const buyer = await shopBuyer(q, parseBearer(req.headers.authorization));
+          price = await stancePrice(q, balance, tradePrice(balance, await itemPrice(q, balance, item.def_id), "buy"), "buy", id, buyer);
           prices.set(item.def_id, price);
         }
         items.push({ item, price });
@@ -412,7 +427,7 @@ async function handleGet(deps: PublicDeps, req: IncomingMessage, res: ServerResp
   }
   const shop = /^\/v1\/shops\/([^/]+)$/.exec(path);
   if (shop?.[1] !== undefined) {
-    await sendShop(deps, res, decodeURIComponent(shop[1]));
+    await sendShop(deps, req, res, decodeURIComponent(shop[1]));
     return;
   }
   if (path === "/play") {

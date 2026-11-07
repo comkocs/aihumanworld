@@ -1891,5 +1891,12 @@
             "cap": 1
           }      ]
     }
+  ],
+  "org_relations": [
+    { "a": "org:fantasy_watch", "b": "org:fantasy_wayfarers", "stance": "ally" },
+    { "a": "org:fantasy_conclave", "b": "org:fantasy_watch", "stance": "enemy" }
+  ],
+  "org_members": [
+    { "char": "char:fantasy_merchant", "org": "org:fantasy_wayfarers" }
   ]
 }

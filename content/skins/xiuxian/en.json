@@ -1,4 +1,6 @@
 {"schema":"aihw.translation.v1","skin":"xiuxian","locale":"en","entries":[
+  {"key":"org_stance.ally","name":"Allied Order","flavor":"Allied order"},
+  {"key":"org_stance.enemy","name":"Opposed Order","flavor":"Opposed order"},
   {"key":"content.r1.char.s77_xiuxian_patrol","name":"Mist Slope Patrol","flavor":"A traveler keeping watch along the road."},
   {"key":"content.r1.char.s77_wuxia_patrol","name":"Bamboo Edge Patrol","flavor":"A traveler keeping watch along the road."},
   {"key":"content.r1.char.s77_fantasy_patrol","name":"Mire Edge Patrol","flavor":"A traveler keeping watch along the road."},
