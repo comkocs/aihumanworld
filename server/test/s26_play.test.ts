@@ -75,7 +75,7 @@ test("S26: html door, play page, web enter, no translation_missing", async (t) =
     assert.equal(catalog.verbs.length, 16);
     assert.equal(new Set(catalog.verbs.map((entry) => entry.verb)).size, 16);
     const use = catalog.verbs.find((entry) => entry.verb === "use")!;
-    assert.equal(use.branches.length, 16);
+    assert.equal(use.branches.length, 17);
     const buy = use.branches.find((branch) => branch.selector.op === "buy")!;
     assert.deepEqual(buy.args.required, ["op", "item", "npc"]);
     assert.ok(buy.args.properties.item && buy.args.properties.npc);
