@@ -10267,7 +10267,352 @@
           "item_defs": []
         },
         "duration_ticks": 1440
-      }
+      },
+    {
+      "local": "slay_gear_t2",
+      "tpl": "slay",
+      "tier": 2,
+      "stage": 4,
+      "condition": {
+        "tpl": "slay",
+        "target": null,
+        "archetype": "monster",
+        "tier": 2,
+        "count": 1
+      },
+      "reward_spec": {
+        "coin": 210,
+        "xp": 630,
+        "potential": 63,
+        "rep": 0,
+        "item_defs": [
+          "item:weapon_t2_g1"
+        ]
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "find_gear_t2",
+      "tpl": "find",
+      "tier": 2,
+      "stage": 4,
+      "condition": {
+        "tpl": "find",
+        "target": "char:merchant_t3"
+      },
+      "reward_spec": {
+        "coin": 120,
+        "xp": 360,
+        "potential": 36,
+        "rep": 0,
+        "item_defs": [
+          "item:weapon_t2_g1"
+        ]
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "slay_gear_t3",
+      "tpl": "slay",
+      "tier": 3,
+      "stage": 4,
+      "condition": {
+        "tpl": "slay",
+        "target": null,
+        "archetype": "monster",
+        "tier": 3,
+        "count": 1
+      },
+      "reward_spec": {
+        "coin": 322,
+        "xp": 952,
+        "potential": 94,
+        "rep": 0,
+        "item_defs": [
+          "item:armor_t3_g1"
+        ]
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "find_gear_t3",
+      "tpl": "find",
+      "tier": 3,
+      "stage": 4,
+      "condition": {
+        "tpl": "find",
+        "target": "char:merchant_t3"
+      },
+      "reward_spec": {
+        "coin": 184,
+        "xp": 544,
+        "potential": 54,
+        "rep": 0,
+        "item_defs": [
+          "item:armor_t3_g1"
+        ]
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "slay_gear_t4",
+      "tpl": "slay",
+      "tier": 4,
+      "stage": 4,
+      "condition": {
+        "tpl": "slay",
+        "target": null,
+        "archetype": "monster",
+        "tier": 4,
+        "count": 1
+      },
+      "reward_spec": {
+        "coin": 462,
+        "xp": 1400,
+        "potential": 140,
+        "rep": 0,
+        "item_defs": [
+          "item:ring_t4_g1"
+        ]
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "find_gear_t4",
+      "tpl": "find",
+      "tier": 4,
+      "stage": 4,
+      "condition": {
+        "tpl": "find",
+        "target": "char:merchant_t4"
+      },
+      "reward_spec": {
+        "coin": 264,
+        "xp": 800,
+        "potential": 80,
+        "rep": 0,
+        "item_defs": [
+          "item:ring_t4_g1"
+        ]
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "slay_gear_t5",
+      "tpl": "slay",
+      "tier": 5,
+      "stage": 4,
+      "condition": {
+        "tpl": "slay",
+        "target": null,
+        "archetype": "monster",
+        "tier": 5,
+        "count": 1
+      },
+      "reward_spec": {
+        "coin": 700,
+        "xp": 2100,
+        "potential": 210,
+        "rep": 0,
+        "item_defs": [
+          "item:weapon_t5_g1"
+        ]
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "find_gear_t5",
+      "tpl": "find",
+      "tier": 5,
+      "stage": 4,
+      "condition": {
+        "tpl": "find",
+        "target": "char:merchant_t4"
+      },
+      "reward_spec": {
+        "coin": 400,
+        "xp": 1200,
+        "potential": 120,
+        "rep": 0,
+        "item_defs": [
+          "item:weapon_t5_g1"
+        ]
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "slay_gear_t6",
+      "tpl": "slay",
+      "tier": 6,
+      "stage": 4,
+      "condition": {
+        "tpl": "slay",
+        "target": null,
+        "archetype": "monster",
+        "tier": 6,
+        "count": 1
+      },
+      "reward_spec": {
+        "coin": 1078,
+        "xp": 3220,
+        "potential": 322,
+        "rep": 0,
+        "item_defs": [
+          "item:armor_t6_g1"
+        ]
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "find_gear_t6",
+      "tpl": "find",
+      "tier": 6,
+      "stage": 4,
+      "condition": {
+        "tpl": "find",
+        "target": "char:merchant_t6"
+      },
+      "reward_spec": {
+        "coin": 616,
+        "xp": 1840,
+        "potential": 184,
+        "rep": 0,
+        "item_defs": [
+          "item:armor_t6_g1"
+        ]
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "slay_gear_t7",
+      "tpl": "slay",
+      "tier": 7,
+      "stage": 4,
+      "condition": {
+        "tpl": "slay",
+        "target": null,
+        "archetype": "monster",
+        "tier": 7,
+        "count": 1
+      },
+      "reward_spec": {
+        "coin": 1540,
+        "xp": 4760,
+        "potential": 476,
+        "rep": 0,
+        "item_defs": [
+          "item:ring_t7_g1"
+        ]
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "find_gear_t7",
+      "tpl": "find",
+      "tier": 7,
+      "stage": 4,
+      "condition": {
+        "tpl": "find",
+        "target": "char:merchant_t7"
+      },
+      "reward_spec": {
+        "coin": 880,
+        "xp": 2720,
+        "potential": 272,
+        "rep": 0,
+        "item_defs": [
+          "item:ring_t7_g1"
+        ]
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "slay_gear_t8",
+      "tpl": "slay",
+      "tier": 8,
+      "stage": 4,
+      "condition": {
+        "tpl": "slay",
+        "target": null,
+        "archetype": "monster",
+        "tier": 8,
+        "count": 1
+      },
+      "reward_spec": {
+        "coin": 2380,
+        "xp": 7140,
+        "potential": 714,
+        "rep": 0,
+        "item_defs": [
+          "item:weapon_t8_g1"
+        ]
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "find_gear_t8",
+      "tpl": "find",
+      "tier": 8,
+      "stage": 4,
+      "condition": {
+        "tpl": "find",
+        "target": "char:merchant_t9"
+      },
+      "reward_spec": {
+        "coin": 1360,
+        "xp": 4080,
+        "potential": 408,
+        "rep": 0,
+        "item_defs": [
+          "item:weapon_t8_g1"
+        ]
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "slay_gear_t9",
+      "tpl": "slay",
+      "tier": 9,
+      "stage": 4,
+      "condition": {
+        "tpl": "slay",
+        "target": null,
+        "archetype": "monster",
+        "tier": 9,
+        "count": 1
+      },
+      "reward_spec": {
+        "coin": 3640,
+        "xp": 10780,
+        "potential": 1078,
+        "rep": 0,
+        "item_defs": [
+          "item:armor_t9_g1"
+        ]
+      },
+      "duration_ticks": 1440
+    },
+    {
+      "local": "find_gear_t9",
+      "tpl": "find",
+      "tier": 9,
+      "stage": 4,
+      "condition": {
+        "tpl": "find",
+        "target": "char:merchant_t9"
+      },
+      "reward_spec": {
+        "coin": 2080,
+        "xp": 6160,
+        "potential": 616,
+        "rep": 0,
+        "item_defs": [
+          "item:armor_t9_g1"
+        ]
+      },
+      "duration_ticks": 1440
+    }
+
   ],
   "chars": [
     {
@@ -10628,7 +10973,52 @@
       "stage": 1,
       "loc": "place:wild2_t9",
       "respawn_place": "place:wild2_t9"
+    },
+    {
+      "local": "merchant_t4",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "humanoid",
+      "archetype": "merchant",
+      "tier": 4,
+      "stage": 1,
+      "loc": "place:wild_t4",
+      "respawn_place": "place:wild_t4"
+    },
+    {
+      "local": "merchant_t6",
+      "skin": "fantasy",
+      "origin_region": "fantasy",
+      "body": "humanoid",
+      "archetype": "merchant",
+      "tier": 6,
+      "stage": 1,
+      "loc": "place:wild_t6",
+      "respawn_place": "place:wild_t6"
+    },
+    {
+      "local": "merchant_t7",
+      "skin": "wuxia",
+      "origin_region": "wuxia",
+      "body": "humanoid",
+      "archetype": "merchant",
+      "tier": 7,
+      "stage": 1,
+      "loc": "place:wild_t7",
+      "respawn_place": "place:wild_t7"
+    },
+    {
+      "local": "merchant_t9",
+      "skin": "scifi",
+      "origin_region": "scifi",
+      "body": "humanoid",
+      "archetype": "merchant",
+      "tier": 9,
+      "stage": 1,
+      "loc": "place:wild_t9",
+      "respawn_place": "place:wild_t9"
     }
+
   ],
   "resource_spots": [
     {
@@ -11059,7 +11449,148 @@
           "def": "item:ore_t3",
           "cap": 4
         }
+,
+          {
+            "def": "item:weapon_t1_g1",
+            "cap": 2
+          },
+          {
+            "def": "item:armor_t1_g1",
+            "cap": 2
+          },
+          {
+            "def": "item:ring_t1_g1",
+            "cap": 2
+          },
+          {
+            "def": "item:weapon_t2_g1",
+            "cap": 2
+          },
+          {
+            "def": "item:armor_t2_g1",
+            "cap": 2
+          },
+          {
+            "def": "item:ring_t2_g1",
+            "cap": 2
+          },
+          {
+            "def": "item:weapon_t3_g1",
+            "cap": 2
+          },
+          {
+            "def": "item:armor_t3_g1",
+            "cap": 2
+          },
+          {
+            "def": "item:ring_t3_g1",
+            "cap": 2
+          },
+          {
+            "def": "item:weapon_t1_g2",
+            "cap": 1
+          },
+          {
+            "def": "item:armor_t2_g2",
+            "cap": 1
+          }      ]
+    },
+    {
+      "char": "char:merchant_t4",
+      "items": [
+        {
+          "def": "item:weapon_t4_g1",
+          "cap": 1
+        },
+        {
+          "def": "item:armor_t4_g1",
+          "cap": 1
+        },
+        {
+          "def": "item:ring_t4_g1",
+          "cap": 1
+        },
+        {
+          "def": "item:weapon_t5_g1",
+          "cap": 1
+        },
+        {
+          "def": "item:armor_t5_g1",
+          "cap": 1
+        },
+        {
+          "def": "item:ring_t5_g1",
+          "cap": 1
+        },
+        {
+          "def": "item:ring_t4_g2",
+          "cap": 1
+        }
+      ]
+    },
+    {
+      "char": "char:merchant_t6",
+      "items": [
+        {
+          "def": "item:weapon_t6_g1",
+          "cap": 1
+        },
+        {
+          "def": "item:armor_t6_g1",
+          "cap": 1
+        },
+        {
+          "def": "item:ring_t6_g1",
+          "cap": 1
+        }
+      ]
+    },
+    {
+      "char": "char:merchant_t7",
+      "items": [
+        {
+          "def": "item:weapon_t7_g1",
+          "cap": 1
+        },
+        {
+          "def": "item:armor_t7_g1",
+          "cap": 1
+        },
+        {
+          "def": "item:ring_t7_g1",
+          "cap": 1
+        }
+      ]
+    },
+    {
+      "char": "char:merchant_t9",
+      "items": [
+        {
+          "def": "item:weapon_t8_g1",
+          "cap": 1
+        },
+        {
+          "def": "item:armor_t8_g1",
+          "cap": 1
+        },
+        {
+          "def": "item:ring_t8_g1",
+          "cap": 1
+        },
+        {
+          "def": "item:weapon_t9_g1",
+          "cap": 1
+        },
+        {
+          "def": "item:armor_t9_g1",
+          "cap": 1
+        },
+        {
+          "def": "item:ring_t9_g1",
+          "cap": 1
+        }
       ]
     }
+
   ]
 }

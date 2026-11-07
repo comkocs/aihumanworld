@@ -1829,7 +1829,23 @@
           "def": "item:ore_t1",
           "cap": 4
         }
-      ]
+,
+          {
+            "def": "item:weapon_t1_g1",
+            "cap": 2
+          },
+          {
+            "def": "item:armor_t1_g1",
+            "cap": 2
+          },
+          {
+            "def": "item:ring_t1_g1",
+            "cap": 2
+          },
+          {
+            "def": "item:weapon_t1_g2",
+            "cap": 1
+          }      ]
     }
   ]
 }

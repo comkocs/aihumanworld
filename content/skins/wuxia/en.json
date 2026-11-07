@@ -3344,6 +3344,26 @@
     {"key": "content.r1.task.wuxia_slay_t9_s2", "name": "Slay, tier nine stage two, the outer beast", "flavor": "Clear the monster at the outer beast."},
     {"key": "content.r1.task.wuxia_slay_t9_s3", "name": "Slay, tier nine stage three, tier-9 monsters", "flavor": "Clear the monster at tier-9 monsters."},
     {"key": "content.r1.char.wuxia_escort_master", "name": "Escort Master", "flavor": "Master of the Qingxi escort agency."},
-    {"key": "content.r1.char.wuxia_herb_master", "name": "Herb Master", "flavor": "Master of the Listening Rain herb society."}
-  ]
+    {"key": "content.r1.char.wuxia_herb_master", "name": "Herb Master", "flavor": "Master of the Listening Rain herb society."},
+    {"key": "content.r1.task.slay_gear_t2", "name": "Slay, tier 2, a common piece", "flavor": "Clear a monster of this tier for a common piece of this tier."},
+    {"key": "content.r1.task.find_gear_t2", "name": "Find, tier 2, a common piece", "flavor": "Find the trader for a common piece of this tier."},
+    {"key": "content.r1.task.slay_gear_t3", "name": "Slay, tier 3, a common piece", "flavor": "Clear a monster of this tier for a common piece of this tier."},
+    {"key": "content.r1.task.find_gear_t3", "name": "Find, tier 3, a common piece", "flavor": "Find the trader for a common piece of this tier."},
+    {"key": "content.r1.task.slay_gear_t4", "name": "Slay, tier 4, a common piece", "flavor": "Clear a monster of this tier for a common piece of this tier."},
+    {"key": "content.r1.task.find_gear_t4", "name": "Find, tier 4, a common piece", "flavor": "Find the trader for a common piece of this tier."},
+    {"key": "content.r1.task.slay_gear_t5", "name": "Slay, tier 5, a common piece", "flavor": "Clear a monster of this tier for a common piece of this tier."},
+    {"key": "content.r1.task.find_gear_t5", "name": "Find, tier 5, a common piece", "flavor": "Find the trader for a common piece of this tier."},
+    {"key": "content.r1.task.slay_gear_t6", "name": "Slay, tier 6, a common piece", "flavor": "Clear a monster of this tier for a common piece of this tier."},
+    {"key": "content.r1.task.find_gear_t6", "name": "Find, tier 6, a common piece", "flavor": "Find the trader for a common piece of this tier."},
+    {"key": "content.r1.task.slay_gear_t7", "name": "Slay, tier 7, a common piece", "flavor": "Clear a monster of this tier for a common piece of this tier."},
+    {"key": "content.r1.task.find_gear_t7", "name": "Find, tier 7, a common piece", "flavor": "Find the trader for a common piece of this tier."},
+    {"key": "content.r1.task.slay_gear_t8", "name": "Slay, tier 8, a common piece", "flavor": "Clear a monster of this tier for a common piece of this tier."},
+    {"key": "content.r1.task.find_gear_t8", "name": "Find, tier 8, a common piece", "flavor": "Find the trader for a common piece of this tier."},
+    {"key": "content.r1.task.slay_gear_t9", "name": "Slay, tier 9, a common piece", "flavor": "Clear a monster of this tier for a common piece of this tier."},
+    {"key": "content.r1.task.find_gear_t9", "name": "Find, tier 9, a common piece", "flavor": "Find the trader for a common piece of this tier."},
+    {"key": "content.r1.char.merchant_t4", "name": "Tier-Four Trader", "flavor": "A tier-four trader with a stall on the dark-ice plain."},
+    {"key": "content.r1.char.merchant_t6", "name": "Tier-Six Trader", "flavor": "A tier-six trader with a stall in the nether wood."},
+    {"key": "content.r1.char.merchant_t7", "name": "Tier-Seven Trader", "flavor": "A tier-seven trader with a stall on the starfall waste."},
+    {"key": "content.r1.char.merchant_t9", "name": "Tier-Nine Trader", "flavor": "A tier-nine trader with a stall at the end of the confluence."}
+]
 }

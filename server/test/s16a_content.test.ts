@@ -51,16 +51,19 @@ test("S16a content: neutral import, connectivity, idempotence", async () => {
     // Task templates. S68 added stage 2 and 3 beside each stage-1 row (5 × 9 × 3),
     // plus deliver / gather aimed at the four origin rings, which live in this file
     // because only neutral.json defines the items (4 skins × 9 tiers × 2 stages).
+    // S75 added one slay and one find per tier 2..9 that pay a common piece of gear
+    // (8 × 2). The four origin regions sell gear from their merchants instead: their
+    // files import before this one, so a reward item defined here would not resolve.
     // masters t2..t9 keep skills at the hard cap.
     const tpls = await app.db.query<{ tpl: string; n: string }>(
       "SELECT tpl, count(*)::text AS n FROM tasks WHERE record = 'template' GROUP BY tpl ORDER BY tpl",
     );
     assert.deepEqual(tpls.rows, [
       { tpl: "deliver", n: "99" },
-      { tpl: "find", n: "27" },
+      { tpl: "find", n: "35" },
       { tpl: "gather", n: "99" },
       { tpl: "reach", n: "27" },
-      { tpl: "slay", n: "27" },
+      { tpl: "slay", n: "35" },
     ]);
     const masters = await app.db.query<{ tier: number }>("SELECT tier FROM chars WHERE archetype = 'master' ORDER BY tier");
     assert.deepEqual(masters.rows.map((r) => r.tier), [2, 3, 4, 5, 6, 7, 8, 9]);

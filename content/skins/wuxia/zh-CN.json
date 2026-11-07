@@ -3344,6 +3344,26 @@
     {"key": "content.r1.task.wuxia_slay_t9_s2", "name": "除害·九阶二段·外圈怪", "flavor": "清掉外圈怪的怪物。"},
     {"key": "content.r1.task.wuxia_slay_t9_s3", "name": "除害·九阶三段·九阶怪物", "flavor": "清掉九阶怪物的怪物。"},
     {"key": "content.r1.char.wuxia_escort_master", "name": "青溪镖师", "flavor": "青溪镖局的镖师。"},
-    {"key": "content.r1.char.wuxia_herb_master", "name": "听雨药师", "flavor": "听雨药社的药师。"}
-  ]
+    {"key": "content.r1.char.wuxia_herb_master", "name": "听雨药师", "flavor": "听雨药社的药师。"},
+    {"key": "content.r1.task.slay_gear_t2", "name": "除害·二阶·凡品装备", "flavor": "清掉本阶的怪物,奖一件本阶凡品装备。"},
+    {"key": "content.r1.task.find_gear_t2", "name": "寻人·二阶·凡品装备", "flavor": "去找行商,奖一件本阶凡品装备。"},
+    {"key": "content.r1.task.slay_gear_t3", "name": "除害·三阶·凡品装备", "flavor": "清掉本阶的怪物,奖一件本阶凡品装备。"},
+    {"key": "content.r1.task.find_gear_t3", "name": "寻人·三阶·凡品装备", "flavor": "去找行商,奖一件本阶凡品装备。"},
+    {"key": "content.r1.task.slay_gear_t4", "name": "除害·四阶·凡品装备", "flavor": "清掉本阶的怪物,奖一件本阶凡品装备。"},
+    {"key": "content.r1.task.find_gear_t4", "name": "寻人·四阶·凡品装备", "flavor": "去找行商,奖一件本阶凡品装备。"},
+    {"key": "content.r1.task.slay_gear_t5", "name": "除害·五阶·凡品装备", "flavor": "清掉本阶的怪物,奖一件本阶凡品装备。"},
+    {"key": "content.r1.task.find_gear_t5", "name": "寻人·五阶·凡品装备", "flavor": "去找行商,奖一件本阶凡品装备。"},
+    {"key": "content.r1.task.slay_gear_t6", "name": "除害·六阶·凡品装备", "flavor": "清掉本阶的怪物,奖一件本阶凡品装备。"},
+    {"key": "content.r1.task.find_gear_t6", "name": "寻人·六阶·凡品装备", "flavor": "去找行商,奖一件本阶凡品装备。"},
+    {"key": "content.r1.task.slay_gear_t7", "name": "除害·七阶·凡品装备", "flavor": "清掉本阶的怪物,奖一件本阶凡品装备。"},
+    {"key": "content.r1.task.find_gear_t7", "name": "寻人·七阶·凡品装备", "flavor": "去找行商,奖一件本阶凡品装备。"},
+    {"key": "content.r1.task.slay_gear_t8", "name": "除害·八阶·凡品装备", "flavor": "清掉本阶的怪物,奖一件本阶凡品装备。"},
+    {"key": "content.r1.task.find_gear_t8", "name": "寻人·八阶·凡品装备", "flavor": "去找行商,奖一件本阶凡品装备。"},
+    {"key": "content.r1.task.slay_gear_t9", "name": "除害·九阶·凡品装备", "flavor": "清掉本阶的怪物,奖一件本阶凡品装备。"},
+    {"key": "content.r1.task.find_gear_t9", "name": "寻人·九阶·凡品装备", "flavor": "去找行商,奖一件本阶凡品装备。"},
+    {"key": "content.r1.char.merchant_t4", "name": "四阶行商", "flavor": "一个四阶的行商,在玄冰原摆摊。"},
+    {"key": "content.r1.char.merchant_t6", "name": "六阶行商", "flavor": "一个六阶的行商,在幽冥林摆摊。"},
+    {"key": "content.r1.char.merchant_t7", "name": "七阶行商", "flavor": "一个七阶的行商,在星陨荒摆摊。"},
+    {"key": "content.r1.char.merchant_t9", "name": "九阶行商", "flavor": "一个九阶的行商,在归墟尽头摆摊。"}
+]
 }
