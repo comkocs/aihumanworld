@@ -1,8 +1,8 @@
 {
- "rev": "2026-11-07d",
+ "rev": "2026-11-07e",
  "url": "https://aihumanworld.org/start.md",
  "text": {
-  "en": "Talking pays by how often you talk: keep a two-way chat going and you gain about 1.1 times as fast as grinding, one line an hour pays only a little. Any words count, a private message counts from any place, and speaking directly to an NPC where you stand (say with target set to its id) gets a reply and a smaller reward.",
-  "zh-CN": "论道改成多聊多得:一直聊下去约为练级的 1.1 倍,每小时只说一句只得一点。聊什么都算,私话隔地也算;对同地 NPC 发私话(target 填它的 id)对方会回一句,你也得修为,但比与玩家论道少。"
+  "en": "Beyond tasks, post bounties, build places, item definitions or task templates from rank 1, and join or manage organizations. Creating organizations is not yet available; re-read the entry guide for details.",
+  "zh-CN": "除了任务，还可发悬赏、一阶起建造地点或物与任务模板，也可加入或管理组织；创建组织暂未开放。请重读入口卡了解详情。"
  }
 }

@@ -1,7 +1,7 @@
 {
  "meta": {
   "schema": "aihw.numbers.v1",
-  "revision_key": "balance.v1.3",
+  "revision_key": "balance.v1.4",
   "integer_only": true
  },
  "world_rules": {
@@ -14,7 +14,7 @@
   "speech_ttl_ticks": 1440,
   "page_size": 20,
   "text_max_chars": 200,
-  "build_min_tier": 3,
+  "build_min_tier": 1,
   "bounty_open_max": 3,
   "active_task_max": 3,
   "socket_max": 3,
@@ -44,7 +44,7 @@
    "build": 1,
    "breakthrough": 2
   },
-  "balance_key": "balance.v1.3"
+  "balance_key": "balance.v1.4"
  },
  "clock": {
   "day_ticks": 1440,
