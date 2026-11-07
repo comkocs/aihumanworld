@@ -26,7 +26,7 @@ test("S10: neutral combat → training → teaching → breakthrough paths → d
   config.clock.enabled = false;
   const app = await startApp(config);
   const balance = app.services.balance();
-  balance.numbers.combat.newbie_protect_ticks = 0; // S48: this chain spars at tick 0
+  assert.equal(balance.numbers.combat.newbie_protect_ticks, 5);
   const world = () => mustGetRow(app.db, "world", worldId(config.realm));
   const char = (id: string) => mustGetRow(app.db, "char", id);
   const call = async (verb: string, args: object, code: string | null = null): Promise<Json> => {
@@ -74,12 +74,33 @@ test("S10: neutral combat → training → teaching → breakthrough paths → d
       await w.update("char", teacher, { state: "active", loc });
     });
     const headBefore = (await world()).deed_head;
-    assertError(await call("attack", { target }, code), "NOT_ALLOWED"); // safe
-    await fixture(async (_q, w) => { await w.update("place", loc, { combat: "pve" }); });
-    assertError(await call("attack", { target }, code), "NOT_ALLOWED"); // player vs player outside duel/pk
+    const until = (BigInt((await char(target)).created_tick) + 5n).toString();
+    for (const combat of ["safe", "pve"] as const) {
+      await fixture(async (_q, w) => { await w.update("place", loc, { combat }); });
+      const blocked = await call("attack", { target }, code);
+      assertError(blocked, "NOT_ALLOWED");
+      assert.deepEqual(blocked.error.details, { reason: "newbie", until_tick: until });
+    }
     assert.equal((await char(actor)).ap_spent, 0);
     assert.equal((await world()).deed_head, headBefore);
-    await fixture(async (_q, w) => { await w.update("place", loc, { combat: "duel" }); });
+    await fixture(async (_q, w, row) => { await w.update("world", row.id, { tick: until }); });
+    for (const combat of ["safe", "pve"] as const) {
+      await fixture(async (_q, w, row) => {
+        await w.update("place", loc, { combat });
+        await w.update("char", actor, { vigor: 2000, ap_spent: 0, ap_tick: row.tick });
+        await w.update("char", target, { vigor: 2000 });
+      });
+      const pk = await call("attack", { target }, code);
+      assert.equal(pk.ok, true);
+      assert.equal(pk.result.roll.inputs.mode, "pk");
+      assert.equal((await char(actor)).life, "alive");
+      assert.equal((await char(target)).life, "alive");
+    }
+    await fixture(async (_q, w, row) => {
+      await w.update("place", loc, { combat: "duel" });
+      await w.update("char", actor, { vigor: 2000, ap_spent: 0, ap_tick: row.tick });
+      await w.update("char", target, { vigor: 2000 });
+    });
     const me = await char(actor);
     const other = await char(target);
     assert.notEqual(me.skin, other.skin);
@@ -104,30 +125,32 @@ test("S10: neutral combat → training → teaching → breakthrough paths → d
       await w.update("char", actor, { ap_spent: 0, ap_tick: row.tick, potential: 0, xp: 0 });
       await w.update("skill", inner.id, { level: 0, cap: 1 });
     });
+    const trainStart = BigInt((await world()).tick);
+    const trainTick = (offset: bigint): string => (trainStart + offset).toString();
     assert.equal((await call("train", { mode: "start", skill: "inner" }, code)).ok, true);
     assert.equal((await char(actor)).potential, 0); // start requires no prepaid potential
     assert.equal((await char(actor)).xp, 0);
     await fixture(async (_q, w) => { await w.update("char", actor, { potential: 29 }); });
-    await phase("9");
+    await phase(trainTick(9n));
     assert.equal((await char(actor)).xp, 0);
-    await phase("10");
+    await phase(trainTick(10n));
     assert.equal((await char(actor)).xp, 2);
     assert.equal((await char(actor)).potential, 0); // 29 + 1 yield - 30 level cost
     assert.equal((await learnedSkill(app.db, actor, innerDef.id))?.level, 1);
-    await phase("10");
+    await phase(trainTick(10n));
     assert.equal((await char(actor)).xp, 2); // cannot collect twice
     await fixture(async (_q, w) => { await w.update("char", target, { vigor: 2000 }); });
     const idle = await char(target);
-    await phase("11");
+    await phase(trainTick(11n));
     assert.deepEqual(await char(target), idle);
-    assert.ok(!(await selectRows(app.db, "char", "split_part(id, ':', 1) = $1 AND growth_due_tick IS NOT NULL AND growth_due_tick <= $2::bigint", [config.realm, "12"])).some((c) => c.id === target));
-    await phase("20");
+    assert.ok(!(await selectRows(app.db, "char", "split_part(id, ':', 1) = $1 AND growth_due_tick IS NOT NULL AND growth_due_tick <= $2::bigint", [config.realm, trainTick(12n)])).some((c) => c.id === target));
+    await phase(trainTick(20n));
     assert.equal((await learnedSkill(app.db, actor, innerDef.id))?.level, 1);
     assert.equal((await char(actor)).potential, 1); // cap never spends again
     assertError(await call("train", { mode: "start", skill: "inner" }, code), "SKILL_CAP");
-    await phase("2020"); // synthetic long gap: cap at 144 periods
+    await phase(trainTick(2020n)); // synthetic long gap: cap at 144 periods
     assert.equal((await char(actor)).xp, 292);
-    assert.equal((await char(actor)).last_yield_tick, "2020");
+    assert.equal((await char(actor)).last_yield_tick, trainTick(2020n));
     assert.equal((await call("train", { mode: "stop" }, code)).ok, true);
     assertError(await call("train", { mode: "stop" }, code), "CONDITION_UNMET");
     const beforeCatchup = await char(actor);
