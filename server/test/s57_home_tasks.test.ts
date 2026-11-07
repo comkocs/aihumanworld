@@ -80,6 +80,7 @@ test("S57: first-tier home offers stay local and prioritize the tutorial", async
 
     await app.db.query("UPDATE tasks SET state = 'cancelled' WHERE record = 'instance' AND state = 'open' AND eligible_char = $1", [first.char]);
     await app.db.query("UPDATE chars SET loc = $1, tier = 2 WHERE id = $2", ["r1:place:start_xiuxian", first.char]);
+    await app.db.query("UPDATE tasks SET tier = 9 WHERE record = 'template' AND tier = 2 AND id <> $1", [foreignTemplate]);
     await app.db.query("UPDATE tasks SET tier = 2 WHERE record = 'template' AND id = $1", [foreignTemplate]);
     const advanced = await ok("task", { op: "list" }, first.code);
     assert.ok(advanced.result.rows.some((t: Json) => t.template_id === foreignTemplate), "second tier at home is unrestricted");
