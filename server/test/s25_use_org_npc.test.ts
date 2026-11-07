@@ -128,14 +128,14 @@ test("S25 use, organization and NPC acceptance chains", async (t) => {
     await t.test("org join/leave charge S5 fee, treasury and departure cost", async () => {
       const before = (await mustGetRow(app.db, "char", A.id)).coin;
       assert.equal((await call({ op: "org_join", org: org.id }, A.code)).ok, true);
-      assert.equal((await mustGetRow(app.db, "char", A.id)).coin, before - 200);
-      assert.equal((await mustGetRow(app.db, "org", org.id)).treasury, 200);
+      assert.equal((await mustGetRow(app.db, "char", A.id)).coin, before - 30);
+      assert.equal((await mustGetRow(app.db, "org", org.id)).treasury, 30);
       const members = await selectRows(app.db, "bond", "kind = 'member' AND a = $1 AND state = 'active'", [A.id]);
       assert.deepEqual(members.map((b) => b.b), [org.id]);
       await phase(orgGoalPhase, "1");
       assert.deepEqual((await mustGetRow(app.db, "org", org.id)).goal.member_ids, [A.id]);
       assert.equal((await call({ op: "org_leave" }, A.code)).ok, true);
-      assert.equal((await mustGetRow(app.db, "char", A.id)).coin, before - 700);
+      assert.equal((await mustGetRow(app.db, "char", A.id)).coin, before - 530);
       assert.deepEqual((await selectRows(app.db, "bond", "kind = 'member' AND a = $1 AND state = 'active'", [A.id])).map((b) => b.b), [world.registry_orgs.xiuxian]);
       assert.equal((await selectRows(app.db, "reputation", "char_id = $1 AND org_id = $2", [A.id, org.id]))[0]?.value, -10);
     });

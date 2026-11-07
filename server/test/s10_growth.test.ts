@@ -49,7 +49,7 @@ test("S10: neutral combat → training → teaching → breakthrough paths → d
   };
   const assertError = (body: Json, code: string): void => { assert.equal(body.ok, false); assert.equal(body.error.code, code); };
   try {
-    assert.equal((await world()).rules_revision, "balance.v1.4");
+    assert.equal((await world()).rules_revision, "balance.v1.5");
     assert.deepEqual([(await world()).rules.active_task_max, (await world()).rules.bounty_open_max, (await world()).rules.socket_max], [3, 3, 3]);
     assert.equal((await world()).rules.ap_costs["task.accept"], 1);
     const a = await call("enter", { mode: "create", skin: "xiuxian", door: "api" });
@@ -161,14 +161,14 @@ test("S10: neutral combat → training → teaching → breakthrough paths → d
     assertError(await call("learn", { master: teacher, skill: "inner", payment: "coin" }, code), "TEACHER_REQUIRED");
     await fixture(async (_q, w) => {
       await w.update("char", teacher, { kind: "npc", door: null, archetype: "master", tier: 2, coin: 0 });
-      await w.update("char", actor, { coin: 600 });
+      await w.update("char", actor, { coin: 80 });
       await w.update("skill", teacherInner.id, { level: 12, cap: 16 });
     });
     const learned = await call("learn", { master: teacher, skill: "inner", payment: "coin" }, code);
     assert.equal(learned.ok, true);
-    assert.deepEqual([learned.result.skill.level, learned.result.skill.cap, learned.result.paid.coin], [3, 6, 600]);
+    assert.deepEqual([learned.result.skill.level, learned.result.skill.cap, learned.result.paid.coin], [3, 6, 80]);
     assert.equal((await char(actor)).coin, 0);
-    assert.equal((await char(teacher)).coin, 600);
+    assert.equal((await char(teacher)).coin, 80);
     assert.ok(learned.result.changes.every((c: Change) => c.table !== "char" || c.id === actor));
     const sharedLearn = (await selectRows(app.db, "deed", "verb = 'learn' AND actor = $1", [actor]))[0]!;
     assert.ok(sharedLearn.result.changes.every((c) => c.table !== "char" || !Object.hasOwn(c.after, "coin")));

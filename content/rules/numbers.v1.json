@@ -1,7 +1,7 @@
 {
  "meta": {
   "schema": "aihw.numbers.v1",
-  "revision_key": "balance.v1.4",
+  "revision_key": "balance.v1.5",
   "integer_only": true
  },
  "world_rules": {
@@ -44,7 +44,7 @@
    "build": 1,
    "breakthrough": 2
   },
-  "balance_key": "balance.v1.4"
+  "balance_key": "balance.v1.5"
  },
  "clock": {
   "day_ticks": 1440,
@@ -199,8 +199,8 @@
  "tier_prices": [
   {
    "tier": 1,
-   "learn_coin": 600,
-   "org_join_fee": 200,
+   "learn_coin": 80,
+   "org_join_fee": 30,
    "org_leave_coin": 500,
    "wanted_bounty_coin": 200,
    "npc_coin_float": 3000
