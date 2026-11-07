@@ -2,9 +2,10 @@
 // Sections other than "place" are ID-ordered pages; deeds only those the caller
 // may see (place / world, or self where the caller participated).
 
+import type { Queryable } from "../db/db.ts";
 import { pageRows, resolveLimit } from "../facts/paging.ts";
 import { publicChar } from "../facts/project.ts";
-import { countRows, mustGetRow } from "../facts/store.ts";
+import { countRows, mustGetRow, selectRows } from "../facts/store.ts";
 import type { Change, CharRow, FactTable, ID, PlaceRow, PublicChar, Seq } from "../facts/types.ts";
 import { PAGE_DEFAULT, limit, page } from "../protocol/shapes.ts";
 import { obj, oneOf, opt, type Out } from "../protocol/validate.ts";
@@ -22,7 +23,8 @@ const args = obj({
 });
 export type LookArgs = Out<typeof args>;
 
-export type LookPlace = PlaceRow & { npc_attackable?: false };
+export type LookExit = PlaceRow["exits"][number] & Partial<Pick<PlaceRow, "tier" | "danger" | "region">>;
+export type LookPlace = Omit<PlaceRow, "exits"> & { exits: LookExit[]; npc_attackable?: false };
 
 /** Display participant combat rules without changing the stored NPC restriction. */
 export function lookPlace(place: PlaceRow): LookPlace {
@@ -32,6 +34,19 @@ export function lookPlace(place: PlaceRow): LookPlace {
     danger: place.danger === "safe" ? "low" : place.danger,
     ...(place.combat === "safe" ? { npc_attackable: false as const } : {}),
   };
+}
+
+export async function lookExits(q: Queryable, place: PlaceRow): Promise<LookExit[]> {
+  const ids = [...new Set(place.exits.map((exit) => exit.to))];
+  if (ids.length === 0) return [];
+  const marks = ids.map((_, i) => `$${i + 1}`).join(", ");
+  const destinations = new Map((await selectRows(q, "place", `id IN (${marks})`, ids)).map((p) => [p.id, p]));
+  return place.exits.map((exit) => {
+    const target = destinations.get(exit.to);
+    if (target === undefined) return { ...exit };
+    const shown = lookPlace(target);
+    return { ...exit, tier: shown.tier, danger: shown.danger, region: shown.region };
+  });
 }
 
 export interface LookResult {
@@ -120,6 +135,7 @@ export const def = defineVerb<LookArgs, LookResult>({
     const me = ctx.actor;
     if (me === null) throw new Error("look without actor");
     const place = await mustGetRow(ctx.q, "place", me.loc);
+    const shownPlace = { ...lookPlace(place), exits: await lookExits(ctx.q, place) };
     await discover(ctx, place);
     await recordPresenceEvidence(ctx, ctx.actor ?? me, place);
     // deed_head after any deed this look wrote.
@@ -133,7 +149,7 @@ export const def = defineVerb<LookArgs, LookResult>({
 
     if (a.section === "place") {
       return {
-        place: lookPlace(place),
+        place: shownPlace,
         section: "place",
         rows: [],
         page: { after: null, through: deedHead },
@@ -146,6 +162,6 @@ export const def = defineVerb<LookArgs, LookResult>({
     const lim = resolveLimit(a.limit, ctx.rules);
     const p = await pageRows(ctx.q, sq.table, sq.where, sq.params, a.page, lim, deedHead, sq.seqColumn);
     const rows: unknown[] = a.section === "people" ? (p.rows as CharRow[]).map((c): PublicChar => publicChar(c)) : p.rows;
-    return { place: lookPlace(place), section: a.section, rows, page: p.page, has_more: p.has_more, snapshot_changed: p.snapshot_changed, counts };
+    return { place: shownPlace, section: a.section, rows, page: p.page, has_more: p.has_more, snapshot_changed: p.snapshot_changed, counts };
   },
 });

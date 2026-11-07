@@ -23,7 +23,7 @@ import type {
   TaskInstanceRow,
   WantedRow,
 } from "../facts/types.ts";
-import { lookPlace } from "../verbs/look.ts";
+import { lookExits, lookPlace } from "../verbs/look.ts";
 import { lexiconFor, neutralLexicon, type Lexicon, type Named, type SkinBook } from "./skins.ts";
 
 export const RECENT_LIMIT = 20;
@@ -260,8 +260,13 @@ async function placePage(q: Queryable, lex: Lexicon, ref: string): Promise<PageD
   lines.push(placeLine(lex, place), "");
   lines.push("## 出口 Exits", "");
   if (place.exits.length === 0) lines.push("(none)", "");
-  for (const e of place.exits) {
-    lines.push(`- ${e.dir} → \`${e.to}\`${e.locked ? " (locked)" : ""}`);
+  const exits = await lookExits(q, place);
+  for (const e of exits) {
+    lines.push(lineOf([
+      `${e.dir} → \`${e.to}\`${e.locked ? " (locked)" : ""}`,
+      e.tier === undefined ? "" : facet(lex, `tier${e.tier}`),
+      e.danger === undefined ? "" : facet(lex, `danger.${e.danger}`),
+    ]).replace(/^/, "- "));
   }
   lines.push("", "## 在场 Present", "");
   if (people.length === 0) lines.push("(none)", "");
@@ -284,6 +289,7 @@ async function placePage(q: Queryable, lex: Lexicon, ref: string): Promise<PageD
     "place",
     place.id,
     place.updated_tick,
+    JSON.stringify(exits),
     people.map((c) => c.id).join(","),
     items.map((i) => `${i.id}@${i.updated_tick}`).join(","),
     tasks.map((t) => t.id).join(","),
