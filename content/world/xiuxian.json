@@ -556,7 +556,43 @@
       "loc": "place:xiuxian_out_heaven_vault",
       "respawn_place": "place:xiuxian_out_heaven_vault",
       "patrol_route": []
-    }
+    },
+      {
+        "local": "xiuxian_jiuhuan_master",
+        "skin": "xiuxian",
+        "origin_region": "xiuxian",
+        "body": "humanoid",
+        "archetype": "master",
+        "tier": 6,
+        "stage": 1,
+        "loc": "place:xiuxian_elixir_court",
+        "respawn_place": "place:xiuxian_elixir_court",
+        "patrol_route": []
+      },
+      {
+        "local": "xiuxian_yunzhuan_master",
+        "skin": "xiuxian",
+        "origin_region": "xiuxian",
+        "body": "humanoid",
+        "archetype": "master",
+        "tier": 6,
+        "stage": 1,
+        "loc": "place:xiuxian_sigil_tower",
+        "respawn_place": "place:xiuxian_sigil_tower",
+        "patrol_route": []
+      },
+      {
+        "local": "registry_xiuxian_master",
+        "skin": "xiuxian",
+        "origin_region": "xiuxian",
+        "body": "humanoid",
+        "archetype": "master",
+        "tier": 6,
+        "stage": 1,
+        "loc": "place:start_xiuxian",
+        "respawn_place": "place:start_xiuxian",
+        "patrol_route": []
+      }
   ],
   "orgs": [
     {
@@ -634,7 +670,1051 @@
       "condition": { "tpl": "deliver", "item_def": "item:herb_t1", "count": 2, "to_place": "place:xiuxian_elixir_court", "to_char": "char:xiuxian_quest_giver" },
       "reward_spec": { "coin": 100, "xp": 300, "potential": 30, "rep": 0, "item_defs": [] },
       "duration_ticks": 1440
-    }
+    },
+      {
+        "local": "xiuxian_reach_t1_s2",
+        "tpl": "reach",
+        "tier": 1,
+        "stage": 2,
+        "condition": {
+          "tpl": "reach",
+          "mode": "place",
+          "place": "place:xiuxian_peach_slope"
+        },
+        "reward_spec": {
+          "coin": 70,
+          "xp": 210,
+          "potential": 21,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_reach_t1_s3",
+        "tpl": "reach",
+        "tier": 1,
+        "stage": 3,
+        "condition": {
+          "tpl": "reach",
+          "mode": "place",
+          "place": "place:xiuxian_herb_ravine"
+        },
+        "reward_spec": {
+          "coin": 70,
+          "xp": 210,
+          "potential": 21,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_find_t1_s2",
+        "tpl": "find",
+        "tier": 1,
+        "stage": 2,
+        "condition": {
+          "tpl": "find",
+          "target": "char:xiuxian_quest_giver"
+        },
+        "reward_spec": {
+          "coin": 80,
+          "xp": 240,
+          "potential": 24,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_find_t1_s3",
+        "tpl": "find",
+        "tier": 1,
+        "stage": 3,
+        "condition": {
+          "tpl": "find",
+          "target": "char:xiuxian_monster"
+        },
+        "reward_spec": {
+          "coin": 80,
+          "xp": 240,
+          "potential": 24,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_slay_t1_s2",
+        "tpl": "slay",
+        "tier": 1,
+        "stage": 2,
+        "condition": {
+          "tpl": "slay",
+          "target": "char:xiuxian_monster",
+          "archetype": null,
+          "tier": 1,
+          "count": 1
+        },
+        "reward_spec": {
+          "coin": 140,
+          "xp": 420,
+          "potential": 42,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_slay_t1_s3",
+        "tpl": "slay",
+        "tier": 1,
+        "stage": 3,
+        "condition": {
+          "tpl": "slay",
+          "target": null,
+          "archetype": "monster",
+          "tier": 1,
+          "count": 2
+        },
+        "reward_spec": {
+          "coin": 140,
+          "xp": 420,
+          "potential": 42,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_reach_t2_s2",
+        "tpl": "reach",
+        "tier": 2,
+        "stage": 2,
+        "condition": {
+          "tpl": "reach",
+          "mode": "place",
+          "place": "place:xiuxian_out_mist_slope"
+        },
+        "reward_spec": {
+          "coin": 105,
+          "xp": 315,
+          "potential": 31,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_reach_t2_s3",
+        "tpl": "reach",
+        "tier": 2,
+        "stage": 3,
+        "condition": {
+          "tpl": "reach",
+          "mode": "place",
+          "place": "place:xiuxian_out_mist_slope"
+        },
+        "reward_spec": {
+          "coin": 105,
+          "xp": 315,
+          "potential": 31,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_find_t2_s2",
+        "tpl": "find",
+        "tier": 2,
+        "stage": 2,
+        "condition": {
+          "tpl": "find",
+          "target": "char:xiuxian_quest_giver"
+        },
+        "reward_spec": {
+          "coin": 120,
+          "xp": 360,
+          "potential": 36,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_find_t2_s3",
+        "tpl": "find",
+        "tier": 2,
+        "stage": 3,
+        "condition": {
+          "tpl": "find",
+          "target": "char:xiuxian_mon_t2"
+        },
+        "reward_spec": {
+          "coin": 120,
+          "xp": 360,
+          "potential": 36,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_slay_t2_s2",
+        "tpl": "slay",
+        "tier": 2,
+        "stage": 2,
+        "condition": {
+          "tpl": "slay",
+          "target": "char:xiuxian_mon_t2",
+          "archetype": null,
+          "tier": 2,
+          "count": 1
+        },
+        "reward_spec": {
+          "coin": 210,
+          "xp": 630,
+          "potential": 63,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_slay_t2_s3",
+        "tpl": "slay",
+        "tier": 2,
+        "stage": 3,
+        "condition": {
+          "tpl": "slay",
+          "target": null,
+          "archetype": "monster",
+          "tier": 2,
+          "count": 2
+        },
+        "reward_spec": {
+          "coin": 210,
+          "xp": 630,
+          "potential": 63,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_reach_t3_s2",
+        "tpl": "reach",
+        "tier": 3,
+        "stage": 2,
+        "condition": {
+          "tpl": "reach",
+          "mode": "place",
+          "place": "place:xiuxian_out_reed_path"
+        },
+        "reward_spec": {
+          "coin": 161,
+          "xp": 476,
+          "potential": 47,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_reach_t3_s3",
+        "tpl": "reach",
+        "tier": 3,
+        "stage": 3,
+        "condition": {
+          "tpl": "reach",
+          "mode": "place",
+          "place": "place:xiuxian_out_reed_path"
+        },
+        "reward_spec": {
+          "coin": 161,
+          "xp": 476,
+          "potential": 47,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_find_t3_s2",
+        "tpl": "find",
+        "tier": 3,
+        "stage": 2,
+        "condition": {
+          "tpl": "find",
+          "target": "char:xiuxian_quest_giver"
+        },
+        "reward_spec": {
+          "coin": 184,
+          "xp": 544,
+          "potential": 54,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_find_t3_s3",
+        "tpl": "find",
+        "tier": 3,
+        "stage": 3,
+        "condition": {
+          "tpl": "find",
+          "target": "char:xiuxian_mon_t3"
+        },
+        "reward_spec": {
+          "coin": 184,
+          "xp": 544,
+          "potential": 54,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_slay_t3_s2",
+        "tpl": "slay",
+        "tier": 3,
+        "stage": 2,
+        "condition": {
+          "tpl": "slay",
+          "target": "char:xiuxian_mon_t3",
+          "archetype": null,
+          "tier": 3,
+          "count": 1
+        },
+        "reward_spec": {
+          "coin": 322,
+          "xp": 952,
+          "potential": 95,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_slay_t3_s3",
+        "tpl": "slay",
+        "tier": 3,
+        "stage": 3,
+        "condition": {
+          "tpl": "slay",
+          "target": null,
+          "archetype": "monster",
+          "tier": 3,
+          "count": 2
+        },
+        "reward_spec": {
+          "coin": 322,
+          "xp": 952,
+          "potential": 95,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_reach_t4_s2",
+        "tpl": "reach",
+        "tier": 4,
+        "stage": 2,
+        "condition": {
+          "tpl": "reach",
+          "mode": "place",
+          "place": "place:xiuxian_out_pine_wild"
+        },
+        "reward_spec": {
+          "coin": 231,
+          "xp": 700,
+          "potential": 70,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_reach_t4_s3",
+        "tpl": "reach",
+        "tier": 4,
+        "stage": 3,
+        "condition": {
+          "tpl": "reach",
+          "mode": "place",
+          "place": "place:xiuxian_out_pine_wild"
+        },
+        "reward_spec": {
+          "coin": 231,
+          "xp": 700,
+          "potential": 70,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_find_t4_s2",
+        "tpl": "find",
+        "tier": 4,
+        "stage": 2,
+        "condition": {
+          "tpl": "find",
+          "target": "char:xiuxian_quest_giver"
+        },
+        "reward_spec": {
+          "coin": 264,
+          "xp": 800,
+          "potential": 80,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_find_t4_s3",
+        "tpl": "find",
+        "tier": 4,
+        "stage": 3,
+        "condition": {
+          "tpl": "find",
+          "target": "char:xiuxian_mon_t4"
+        },
+        "reward_spec": {
+          "coin": 264,
+          "xp": 800,
+          "potential": 80,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_slay_t4_s2",
+        "tpl": "slay",
+        "tier": 4,
+        "stage": 2,
+        "condition": {
+          "tpl": "slay",
+          "target": "char:xiuxian_mon_t4",
+          "archetype": null,
+          "tier": 4,
+          "count": 1
+        },
+        "reward_spec": {
+          "coin": 462,
+          "xp": 1400,
+          "potential": 140,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_slay_t4_s3",
+        "tpl": "slay",
+        "tier": 4,
+        "stage": 3,
+        "condition": {
+          "tpl": "slay",
+          "target": null,
+          "archetype": "monster",
+          "tier": 4,
+          "count": 2
+        },
+        "reward_spec": {
+          "coin": 462,
+          "xp": 1400,
+          "potential": 140,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_reach_t5_s2",
+        "tpl": "reach",
+        "tier": 5,
+        "stage": 2,
+        "condition": {
+          "tpl": "reach",
+          "mode": "place",
+          "place": "place:xiuxian_out_ash_ridge"
+        },
+        "reward_spec": {
+          "coin": 350,
+          "xp": 1050,
+          "potential": 105,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_reach_t5_s3",
+        "tpl": "reach",
+        "tier": 5,
+        "stage": 3,
+        "condition": {
+          "tpl": "reach",
+          "mode": "place",
+          "place": "place:xiuxian_out_ash_ridge"
+        },
+        "reward_spec": {
+          "coin": 350,
+          "xp": 1050,
+          "potential": 105,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_find_t5_s2",
+        "tpl": "find",
+        "tier": 5,
+        "stage": 2,
+        "condition": {
+          "tpl": "find",
+          "target": "char:xiuxian_quest_giver"
+        },
+        "reward_spec": {
+          "coin": 400,
+          "xp": 1200,
+          "potential": 120,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_find_t5_s3",
+        "tpl": "find",
+        "tier": 5,
+        "stage": 3,
+        "condition": {
+          "tpl": "find",
+          "target": "char:xiuxian_mon_t5"
+        },
+        "reward_spec": {
+          "coin": 400,
+          "xp": 1200,
+          "potential": 120,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_slay_t5_s2",
+        "tpl": "slay",
+        "tier": 5,
+        "stage": 2,
+        "condition": {
+          "tpl": "slay",
+          "target": "char:xiuxian_mon_t5",
+          "archetype": null,
+          "tier": 5,
+          "count": 1
+        },
+        "reward_spec": {
+          "coin": 700,
+          "xp": 2100,
+          "potential": 210,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_slay_t5_s3",
+        "tpl": "slay",
+        "tier": 5,
+        "stage": 3,
+        "condition": {
+          "tpl": "slay",
+          "target": null,
+          "archetype": "monster",
+          "tier": 5,
+          "count": 2
+        },
+        "reward_spec": {
+          "coin": 700,
+          "xp": 2100,
+          "potential": 210,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_reach_t6_s2",
+        "tpl": "reach",
+        "tier": 6,
+        "stage": 2,
+        "condition": {
+          "tpl": "reach",
+          "mode": "place",
+          "place": "place:xiuxian_out_gale_pass"
+        },
+        "reward_spec": {
+          "coin": 539,
+          "xp": 1610,
+          "potential": 161,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_reach_t6_s3",
+        "tpl": "reach",
+        "tier": 6,
+        "stage": 3,
+        "condition": {
+          "tpl": "reach",
+          "mode": "place",
+          "place": "place:xiuxian_out_gale_pass"
+        },
+        "reward_spec": {
+          "coin": 539,
+          "xp": 1610,
+          "potential": 161,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_find_t6_s2",
+        "tpl": "find",
+        "tier": 6,
+        "stage": 2,
+        "condition": {
+          "tpl": "find",
+          "target": "char:xiuxian_quest_giver"
+        },
+        "reward_spec": {
+          "coin": 616,
+          "xp": 1840,
+          "potential": 184,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_find_t6_s3",
+        "tpl": "find",
+        "tier": 6,
+        "stage": 3,
+        "condition": {
+          "tpl": "find",
+          "target": "char:xiuxian_mon_t6"
+        },
+        "reward_spec": {
+          "coin": 616,
+          "xp": 1840,
+          "potential": 184,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_slay_t6_s2",
+        "tpl": "slay",
+        "tier": 6,
+        "stage": 2,
+        "condition": {
+          "tpl": "slay",
+          "target": "char:xiuxian_mon_t6",
+          "archetype": null,
+          "tier": 6,
+          "count": 1
+        },
+        "reward_spec": {
+          "coin": 1078,
+          "xp": 3220,
+          "potential": 322,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_slay_t6_s3",
+        "tpl": "slay",
+        "tier": 6,
+        "stage": 3,
+        "condition": {
+          "tpl": "slay",
+          "target": null,
+          "archetype": "monster",
+          "tier": 6,
+          "count": 2
+        },
+        "reward_spec": {
+          "coin": 1078,
+          "xp": 3220,
+          "potential": 322,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_reach_t7_s2",
+        "tpl": "reach",
+        "tier": 7,
+        "stage": 2,
+        "condition": {
+          "tpl": "reach",
+          "mode": "place",
+          "place": "place:xiuxian_out_bone_cave"
+        },
+        "reward_spec": {
+          "coin": 770,
+          "xp": 2380,
+          "potential": 238,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_reach_t7_s3",
+        "tpl": "reach",
+        "tier": 7,
+        "stage": 3,
+        "condition": {
+          "tpl": "reach",
+          "mode": "place",
+          "place": "place:xiuxian_out_bone_cave"
+        },
+        "reward_spec": {
+          "coin": 770,
+          "xp": 2380,
+          "potential": 238,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_find_t7_s2",
+        "tpl": "find",
+        "tier": 7,
+        "stage": 2,
+        "condition": {
+          "tpl": "find",
+          "target": "char:xiuxian_quest_giver"
+        },
+        "reward_spec": {
+          "coin": 880,
+          "xp": 2720,
+          "potential": 272,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_find_t7_s3",
+        "tpl": "find",
+        "tier": 7,
+        "stage": 3,
+        "condition": {
+          "tpl": "find",
+          "target": "char:xiuxian_mon_t7"
+        },
+        "reward_spec": {
+          "coin": 880,
+          "xp": 2720,
+          "potential": 272,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_slay_t7_s2",
+        "tpl": "slay",
+        "tier": 7,
+        "stage": 2,
+        "condition": {
+          "tpl": "slay",
+          "target": "char:xiuxian_mon_t7",
+          "archetype": null,
+          "tier": 7,
+          "count": 1
+        },
+        "reward_spec": {
+          "coin": 1540,
+          "xp": 4760,
+          "potential": 476,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_slay_t7_s3",
+        "tpl": "slay",
+        "tier": 7,
+        "stage": 3,
+        "condition": {
+          "tpl": "slay",
+          "target": null,
+          "archetype": "monster",
+          "tier": 7,
+          "count": 2
+        },
+        "reward_spec": {
+          "coin": 1540,
+          "xp": 4760,
+          "potential": 476,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_reach_t8_s2",
+        "tpl": "reach",
+        "tier": 8,
+        "stage": 2,
+        "condition": {
+          "tpl": "reach",
+          "mode": "place",
+          "place": "place:xiuxian_out_star_abyss"
+        },
+        "reward_spec": {
+          "coin": 1190,
+          "xp": 3570,
+          "potential": 357,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_reach_t8_s3",
+        "tpl": "reach",
+        "tier": 8,
+        "stage": 3,
+        "condition": {
+          "tpl": "reach",
+          "mode": "place",
+          "place": "place:xiuxian_out_star_abyss"
+        },
+        "reward_spec": {
+          "coin": 1190,
+          "xp": 3570,
+          "potential": 357,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_find_t8_s2",
+        "tpl": "find",
+        "tier": 8,
+        "stage": 2,
+        "condition": {
+          "tpl": "find",
+          "target": "char:xiuxian_quest_giver"
+        },
+        "reward_spec": {
+          "coin": 1360,
+          "xp": 4080,
+          "potential": 408,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_find_t8_s3",
+        "tpl": "find",
+        "tier": 8,
+        "stage": 3,
+        "condition": {
+          "tpl": "find",
+          "target": "char:xiuxian_mon_t8"
+        },
+        "reward_spec": {
+          "coin": 1360,
+          "xp": 4080,
+          "potential": 408,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_slay_t8_s2",
+        "tpl": "slay",
+        "tier": 8,
+        "stage": 2,
+        "condition": {
+          "tpl": "slay",
+          "target": "char:xiuxian_mon_t8",
+          "archetype": null,
+          "tier": 8,
+          "count": 1
+        },
+        "reward_spec": {
+          "coin": 2380,
+          "xp": 7140,
+          "potential": 714,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_slay_t8_s3",
+        "tpl": "slay",
+        "tier": 8,
+        "stage": 3,
+        "condition": {
+          "tpl": "slay",
+          "target": null,
+          "archetype": "monster",
+          "tier": 8,
+          "count": 2
+        },
+        "reward_spec": {
+          "coin": 2380,
+          "xp": 7140,
+          "potential": 714,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_reach_t9_s2",
+        "tpl": "reach",
+        "tier": 9,
+        "stage": 2,
+        "condition": {
+          "tpl": "reach",
+          "mode": "place",
+          "place": "place:xiuxian_out_heaven_vault"
+        },
+        "reward_spec": {
+          "coin": 1820,
+          "xp": 5390,
+          "potential": 539,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_reach_t9_s3",
+        "tpl": "reach",
+        "tier": 9,
+        "stage": 3,
+        "condition": {
+          "tpl": "reach",
+          "mode": "place",
+          "place": "place:xiuxian_out_heaven_vault"
+        },
+        "reward_spec": {
+          "coin": 1820,
+          "xp": 5390,
+          "potential": 539,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_find_t9_s2",
+        "tpl": "find",
+        "tier": 9,
+        "stage": 2,
+        "condition": {
+          "tpl": "find",
+          "target": "char:xiuxian_quest_giver"
+        },
+        "reward_spec": {
+          "coin": 2080,
+          "xp": 6160,
+          "potential": 616,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_find_t9_s3",
+        "tpl": "find",
+        "tier": 9,
+        "stage": 3,
+        "condition": {
+          "tpl": "find",
+          "target": "char:xiuxian_mon_t9"
+        },
+        "reward_spec": {
+          "coin": 2080,
+          "xp": 6160,
+          "potential": 616,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_slay_t9_s2",
+        "tpl": "slay",
+        "tier": 9,
+        "stage": 2,
+        "condition": {
+          "tpl": "slay",
+          "target": "char:xiuxian_mon_t9",
+          "archetype": null,
+          "tier": 9,
+          "count": 1
+        },
+        "reward_spec": {
+          "coin": 3640,
+          "xp": 10780,
+          "potential": 1078,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      },
+      {
+        "local": "xiuxian_slay_t9_s3",
+        "tpl": "slay",
+        "tier": 9,
+        "stage": 3,
+        "condition": {
+          "tpl": "slay",
+          "target": null,
+          "archetype": "monster",
+          "tier": 9,
+          "count": 2
+        },
+        "reward_spec": {
+          "coin": 3640,
+          "xp": 10780,
+          "potential": 1078,
+          "rep": 0,
+          "item_defs": []
+        },
+        "duration_ticks": 1440
+      }
   ],
   "resource_spots": [
     {
@@ -706,7 +1786,111 @@
           "cap": 2
         }
       ]
-    }
+    },
+      {
+        "place": "place:xiuxian_out_mist_slope",
+        "items": [
+          {
+            "def": "item:herb_t2",
+            "cap": 4
+          },
+          {
+            "def": "item:ore_t2",
+            "cap": 4
+          }
+        ]
+      },
+      {
+        "place": "place:xiuxian_out_pine_wild",
+        "items": [
+          {
+            "def": "item:herb_t4",
+            "cap": 4
+          },
+          {
+            "def": "item:ore_t4",
+            "cap": 4
+          }
+        ]
+      },
+      {
+        "place": "place:xiuxian_out_gale_pass",
+        "items": [
+          {
+            "def": "item:herb_t6",
+            "cap": 4
+          },
+          {
+            "def": "item:ore_t6",
+            "cap": 4
+          }
+        ]
+      },
+      {
+        "place": "place:xiuxian_out_star_abyss",
+        "items": [
+          {
+            "def": "item:herb_t8",
+            "cap": 4
+          },
+          {
+            "def": "item:ore_t8",
+            "cap": 4
+          }
+        ]
+      },
+      {
+        "place": "place:xiuxian_out_pine_wild",
+        "items": [
+          {
+            "def": "item:herb_t3",
+            "cap": 3
+          },
+          {
+            "def": "item:ore_t3",
+            "cap": 3
+          }
+        ]
+      },
+      {
+        "place": "place:xiuxian_out_gale_pass",
+        "items": [
+          {
+            "def": "item:herb_t5",
+            "cap": 3
+          },
+          {
+            "def": "item:ore_t5",
+            "cap": 3
+          }
+        ]
+      },
+      {
+        "place": "place:xiuxian_out_star_abyss",
+        "items": [
+          {
+            "def": "item:herb_t7",
+            "cap": 3
+          },
+          {
+            "def": "item:ore_t7",
+            "cap": 3
+          }
+        ]
+      },
+      {
+        "place": "place:xiuxian_out_star_abyss",
+        "items": [
+          {
+            "def": "item:herb_t9",
+            "cap": 3
+          },
+          {
+            "def": "item:ore_t9",
+            "cap": 3
+          }
+        ]
+      }
   ],
   "shop_lists": [
     {

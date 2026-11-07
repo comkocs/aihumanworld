@@ -52,7 +52,8 @@ test("S16b xiuxian: origin region import, connectivity, translations", async () 
       const archetypes = [...new Set(chars.rows.map((r) => r.archetype))].sort();
       assert.deepEqual(archetypes, ["guard", "master", "merchant", "monster", "patroller", "quest_giver", "repairer", "tutorial_opponent"]);
       const masterTiers = chars.rows.filter((r) => r.archetype === "master").map((r) => r.tier).sort();
-      assert.deepEqual(masterTiers, [1, 2, 3]);
+      // S68 added a tier-6 master at the elixir court, the sigil tower and the registry hall.
+      assert.deepEqual(masterTiers, [1, 2, 3, 6, 6, 6]);
       assert.equal(chars.rows.find((r) => r.archetype === "tutorial_opponent")?.loc, `${REALM}:place:xiuxian_trial_lane`);
 
       // Three named orgs plus the seed registry, each with 2..3 org skills.

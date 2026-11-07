@@ -48,16 +48,19 @@ test("S16a content: neutral import, connectivity, idempotence", async () => {
     assert.deepEqual(monsterTiers, [1, 2, 3, 4, 5, 6, 7, 8, 9]);
     assert.ok(monsters.rows.length >= 9, `monsters ${monsters.rows.length}`);
 
-    // Task templates: 5 tpls × 9 tiers; masters t2..t9 with skills at the hard cap.
+    // Task templates. S68 added stage 2 and 3 beside each stage-1 row (5 × 9 × 3),
+    // plus deliver / gather aimed at the four origin rings, which live in this file
+    // because only neutral.json defines the items (4 skins × 9 tiers × 2 stages).
+    // masters t2..t9 keep skills at the hard cap.
     const tpls = await app.db.query<{ tpl: string; n: string }>(
       "SELECT tpl, count(*)::text AS n FROM tasks WHERE record = 'template' GROUP BY tpl ORDER BY tpl",
     );
     assert.deepEqual(tpls.rows, [
-      { tpl: "deliver", n: "9" },
-      { tpl: "find", n: "9" },
-      { tpl: "gather", n: "9" },
-      { tpl: "reach", n: "9" },
-      { tpl: "slay", n: "9" },
+      { tpl: "deliver", n: "99" },
+      { tpl: "find", n: "27" },
+      { tpl: "gather", n: "99" },
+      { tpl: "reach", n: "27" },
+      { tpl: "slay", n: "27" },
     ]);
     const masters = await app.db.query<{ tier: number }>("SELECT tier FROM chars WHERE archetype = 'master' ORDER BY tier");
     assert.deepEqual(masters.rows.map((r) => r.tier), [2, 3, 4, 5, 6, 7, 8, 9]);

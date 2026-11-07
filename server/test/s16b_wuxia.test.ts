@@ -52,7 +52,8 @@ test("S16b wuxia: origin content, connectivity, translations", async () => {
       const masters = await app.db.query<{ tier: number }>(
         "SELECT tier FROM chars WHERE archetype = 'master' AND origin_region = 'wuxia' AND loc <> 'r1:place:camp_neutral' ORDER BY tier",
       );
-      assert.deepEqual(masters.rows.map((r) => r.tier), [1, 2, 3]);
+      // S68 added a tier-6 master at the escort hall and the herb hall.
+      assert.deepEqual(masters.rows.map((r) => r.tier), [1, 2, 3, 6, 6]);
       const tutorial = await app.db.query<{ n: string }>(
         "SELECT count(*)::text AS n FROM chars WHERE archetype = 'tutorial_opponent' AND loc = 'r1:place:wuxia_tutorial_lane'",
       );
