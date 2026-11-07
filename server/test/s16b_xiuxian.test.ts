@@ -36,7 +36,8 @@ test("S16b xiuxian: origin region import, connectivity, translations", async () 
       assert.ok(ids.includes(`${REALM}:place:start_xiuxian`), "starter village missing");
       // 野外地点: everything outside the starter village, the org halls and the tutorial lane.
       const wild = places.rows.filter((r) => r.kind !== "hall" && r.id !== `${REALM}:place:start_xiuxian` && !r.features.includes("tutorial"));
-      assert.ok(wild.length >= 6 && wild.length <= 10, `field places ${wild.length}`);
+      // S59 added an 8-place outer ring (tiers 2..9) beyond the §17 E starter band.
+      assert.ok(wild.length >= 6 && wild.length <= 18, `field places ${wild.length}`);
       const tutorial = places.rows.filter((r) => r.features.includes("tutorial"));
       assert.equal(tutorial.length, 1);
       const halls = places.rows.filter((r) => r.owner_org !== null && r.kind === "hall");

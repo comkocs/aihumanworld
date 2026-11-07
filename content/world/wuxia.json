@@ -66,6 +66,7 @@
           "dir": "south",
           "to": "place:wuxia_water_creek"
         }
+      ,{"dir": "east", "to": "place:wuxia_out_bamboo_edge"}
       ],
       "owner_org": null
     },
@@ -210,6 +211,171 @@
         }
       ],
       "owner_org": null
+    }
+  ,
+    {
+      "local": "wuxia_out_bamboo_edge",
+      "region": "wuxia",
+      "kind": "wilderness",
+      "features": [
+        "resource"
+      ],
+      "tier": 2,
+      "danger": "low",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:wuxia_wild_ridge"
+        },
+        {
+          "dir": "east",
+          "to": "place:wuxia_out_flag_path"
+        }
+      ]
+    },
+    {
+      "local": "wuxia_out_flag_path",
+      "region": "wuxia",
+      "kind": "road",
+      "features": [],
+      "tier": 3,
+      "danger": "low",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:wuxia_out_bamboo_edge"
+        },
+        {
+          "dir": "east",
+          "to": "place:wuxia_out_wolf_hill"
+        }
+      ]
+    },
+    {
+      "local": "wuxia_out_wolf_hill",
+      "region": "wuxia",
+      "kind": "wilderness",
+      "features": [
+        "resource"
+      ],
+      "tier": 4,
+      "danger": "medium",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:wuxia_out_flag_path"
+        },
+        {
+          "dir": "east",
+          "to": "place:wuxia_out_bandit_fort"
+        }
+      ]
+    },
+    {
+      "local": "wuxia_out_bandit_fort",
+      "region": "wuxia",
+      "kind": "ruin",
+      "features": [],
+      "tier": 5,
+      "danger": "medium",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:wuxia_out_wolf_hill"
+        },
+        {
+          "dir": "east",
+          "to": "place:wuxia_out_blade_gorge"
+        }
+      ]
+    },
+    {
+      "local": "wuxia_out_blade_gorge",
+      "region": "wuxia",
+      "kind": "wilderness",
+      "features": [
+        "resource"
+      ],
+      "tier": 6,
+      "danger": "high",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:wuxia_out_bandit_fort"
+        },
+        {
+          "dir": "east",
+          "to": "place:wuxia_out_night_cave"
+        }
+      ]
+    },
+    {
+      "local": "wuxia_out_night_cave",
+      "region": "wuxia",
+      "kind": "dungeon",
+      "features": [],
+      "tier": 7,
+      "danger": "high",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:wuxia_out_blade_gorge"
+        },
+        {
+          "dir": "east",
+          "to": "place:wuxia_out_tomb_corridor"
+        }
+      ]
+    },
+    {
+      "local": "wuxia_out_tomb_corridor",
+      "region": "wuxia",
+      "kind": "dungeon",
+      "features": [
+        "resource"
+      ],
+      "tier": 8,
+      "danger": "high",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:wuxia_out_night_cave"
+        },
+        {
+          "dir": "east",
+          "to": "place:wuxia_out_sealed_tomb"
+        }
+      ]
+    },
+    {
+      "local": "wuxia_out_sealed_tomb",
+      "region": "wuxia",
+      "kind": "dungeon",
+      "features": [],
+      "tier": 9,
+      "danger": "high",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:wuxia_out_tomb_corridor"
+        }
+      ]
     }
   ],
   "place_links": [
@@ -402,6 +568,103 @@
       "stage": 1,
       "loc": "place:wuxia_tutorial_lane",
       "respawn_place": "place:wuxia_tutorial_lane"
+    }
+  ,
+    {
+      "local": "wuxia_mon_t2",
+      "skin": "wuxia",
+      "origin_region": "wuxia",
+      "body": "beast",
+      "archetype": "monster",
+      "tier": 2,
+      "stage": 1,
+      "loc": "place:wuxia_out_bamboo_edge",
+      "respawn_place": "place:wuxia_out_bamboo_edge",
+      "patrol_route": []
+    },
+    {
+      "local": "wuxia_mon_t3",
+      "skin": "wuxia",
+      "origin_region": "wuxia",
+      "body": "humanoid",
+      "archetype": "monster",
+      "tier": 3,
+      "stage": 1,
+      "loc": "place:wuxia_out_flag_path",
+      "respawn_place": "place:wuxia_out_flag_path",
+      "patrol_route": []
+    },
+    {
+      "local": "wuxia_mon_t4",
+      "skin": "wuxia",
+      "origin_region": "wuxia",
+      "body": "beast",
+      "archetype": "monster",
+      "tier": 4,
+      "stage": 1,
+      "loc": "place:wuxia_out_wolf_hill",
+      "respawn_place": "place:wuxia_out_wolf_hill",
+      "patrol_route": []
+    },
+    {
+      "local": "wuxia_mon_t5",
+      "skin": "wuxia",
+      "origin_region": "wuxia",
+      "body": "humanoid",
+      "archetype": "monster",
+      "tier": 5,
+      "stage": 1,
+      "loc": "place:wuxia_out_bandit_fort",
+      "respawn_place": "place:wuxia_out_bandit_fort",
+      "patrol_route": []
+    },
+    {
+      "local": "wuxia_mon_t6",
+      "skin": "wuxia",
+      "origin_region": "wuxia",
+      "body": "humanoid",
+      "archetype": "monster",
+      "tier": 6,
+      "stage": 1,
+      "loc": "place:wuxia_out_blade_gorge",
+      "respawn_place": "place:wuxia_out_blade_gorge",
+      "patrol_route": []
+    },
+    {
+      "local": "wuxia_mon_t7",
+      "skin": "wuxia",
+      "origin_region": "wuxia",
+      "body": "undead",
+      "archetype": "monster",
+      "tier": 7,
+      "stage": 1,
+      "loc": "place:wuxia_out_night_cave",
+      "respawn_place": "place:wuxia_out_night_cave",
+      "patrol_route": []
+    },
+    {
+      "local": "wuxia_mon_t8",
+      "skin": "wuxia",
+      "origin_region": "wuxia",
+      "body": "undead",
+      "archetype": "monster",
+      "tier": 8,
+      "stage": 1,
+      "loc": "place:wuxia_out_tomb_corridor",
+      "respawn_place": "place:wuxia_out_tomb_corridor",
+      "patrol_route": []
+    },
+    {
+      "local": "wuxia_mon_t9",
+      "skin": "wuxia",
+      "origin_region": "wuxia",
+      "body": "construct",
+      "archetype": "monster",
+      "tier": 9,
+      "stage": 1,
+      "loc": "place:wuxia_out_sealed_tomb",
+      "respawn_place": "place:wuxia_out_sealed_tomb",
+      "patrol_route": []
     }
   ],
   "orgs": [

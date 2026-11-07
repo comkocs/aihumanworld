@@ -1694,5 +1694,132 @@
   {"key": "org_rank.wuxia_escort_chief", "name": "护航局总领", "flavor": "青溪护航局的首领。"},
   {"key": "org_rank.wuxia_martial_instructor", "name": "格斗教官", "flavor": "松风格斗团的教官。"},
   {"key": "org_rank.wuxia_herb_keeper", "name": "样本社主管", "flavor": "听雨样本社的主管。"}
+ ,
+   {
+     "key": "content.r1.place.scifi_out_dune_edge",
+     "name": "尘丘缘",
+     "flavor": "尘原东缘的低丘。"
+   },
+   {
+     "key": "content.r1.place.scifi_out_beacon_spur",
+     "name": "信标支路",
+     "flavor": "脱离主路的信标支路。"
+   },
+   {
+     "key": "content.r1.place.scifi_out_scrap_field",
+     "name": "废件野",
+     "flavor": "撒满废件的野地。"
+   },
+   {
+     "key": "content.r1.place.scifi_out_relay_ruin",
+     "name": "中继废站",
+     "flavor": "停机的中继站残骸。"
+   },
+   {
+     "key": "content.r1.place.scifi_out_storm_gap",
+     "name": "风暴峡",
+     "flavor": "尘暴不停的峡口。"
+   },
+   {
+     "key": "content.r1.place.scifi_out_nest_bay",
+     "name": "巢舱",
+     "flavor": "被占作巢的货舱。"
+   },
+   {
+     "key": "content.r1.place.scifi_out_core_vault",
+     "name": "核心舱",
+     "flavor": "锁着的核心舱。"
+   },
+   {
+     "key": "content.r1.place.scifi_out_black_archive",
+     "name": "黑档库",
+     "flavor": "最深处的封存档库。"
+   },
+   {
+     "key": "content.r1.char.scifi_mon_t2",
+     "name": "尘丘啮兽",
+     "flavor": "尘丘上翻垃圾的小兽。"
+   },
+   {
+     "key": "content.r1.char.scifi_mon_t3",
+     "name": "支路巡逻机",
+     "flavor": "支路上还在巡逻的旧机。"
+   },
+   {
+     "key": "content.r1.char.scifi_mon_t4",
+     "name": "废件猎犬",
+     "flavor": "废件野里的机械猎犬。"
+   },
+   {
+     "key": "content.r1.char.scifi_mon_t5",
+     "name": "废站哨机",
+     "flavor": "废站门口的哨戒机。"
+   },
+   {
+     "key": "content.r1.char.scifi_mon_t6",
+     "name": "风暴甲",
+     "flavor": "风暴峡里的重甲机。"
+   },
+   {
+     "key": "content.r1.char.scifi_mon_t7",
+     "name": "巢舱寄生体",
+     "flavor": "巢舱里的寄生体。"
+   },
+   {
+     "key": "content.r1.char.scifi_mon_t8",
+     "name": "核心守卫",
+     "flavor": "核心舱的守卫机。"
+   },
+   {
+     "key": "content.r1.char.scifi_mon_t9",
+     "name": "档库监管机",
+     "flavor": "封存档库的监管机。"
+   }
+ ,
+   {
+     "key": "content.r1.char.monster_side_t1",
+     "name": "苔洞啮兽",
+     "flavor": "苔洞外的啮兽。"
+   },
+   {
+     "key": "content.r1.char.monster_side_t2",
+     "name": "冷泉蠕体",
+     "flavor": "冷泉边的蠕体。"
+   },
+   {
+     "key": "content.r1.char.monster_side_t3",
+     "name": "焦石蜥蜴",
+     "flavor": "焦石堆里的蜥蜴。"
+   },
+   {
+     "key": "content.r1.char.monster_side_t4",
+     "name": "铁牢残灵",
+     "flavor": "铁牢外的残灵。"
+   },
+   {
+     "key": "content.r1.char.monster_side_t5",
+     "name": "龙穴滑翔体",
+     "flavor": "龙穴外的滑翔体。"
+   },
+   {
+     "key": "content.r1.char.monster_side_t6",
+     "name": "幽冥巡尸",
+     "flavor": "幽冥道上的巡尸。"
+   },
+   {
+     "key": "content.r1.char.monster_side_t7",
+     "name": "坠星残机",
+     "flavor": "坠星坑外的残机。"
+   },
+   {
+     "key": "content.r1.char.monster_side_t8",
+     "name": "雷池电灵",
+     "flavor": "雷池边的电灵。"
+   },
+   {
+     "key": "content.r1.char.monster_side_t9",
+     "name": "太虚守兽",
+     "flavor": "太虚外圈的守兽。"
+   }
  ]
 }

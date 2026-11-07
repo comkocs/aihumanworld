@@ -2913,5 +2913,132 @@
       "name": "Salvage Chief",
       "flavor": "The head of the Salvage Crew."
     }
+  ,
+    {
+      "key": "content.r1.place.wuxia_out_bamboo_edge",
+      "name": "Bamboo Edge",
+      "flavor": "The east edge of the ridge's bamboo."
+    },
+    {
+      "key": "content.r1.place.wuxia_out_flag_path",
+      "name": "Flagstone Path",
+      "flavor": "A stone path toward an old flag post."
+    },
+    {
+      "key": "content.r1.place.wuxia_out_wolf_hill",
+      "name": "Wolf Hill",
+      "flavor": "A hill marked with wolf tracks."
+    },
+    {
+      "key": "content.r1.place.wuxia_out_bandit_fort",
+      "name": "Broken Fort",
+      "flavor": "The broken walls of an abandoned fort."
+    },
+    {
+      "key": "content.r1.place.wuxia_out_blade_gorge",
+      "name": "Blade Gorge",
+      "flavor": "A gorge whose walls close like a blade."
+    },
+    {
+      "key": "content.r1.place.wuxia_out_night_cave",
+      "name": "Night-Cry Cave",
+      "flavor": "A cave that cries at night."
+    },
+    {
+      "key": "content.r1.place.wuxia_out_tomb_corridor",
+      "name": "Tomb Corridor",
+      "flavor": "A long corridor behind a tomb door."
+    },
+    {
+      "key": "content.r1.place.wuxia_out_sealed_tomb",
+      "name": "Sealed Tomb",
+      "flavor": "A tomb chamber sealed at the corridor's end."
+    },
+    {
+      "key": "content.r1.char.wuxia_mon_t2",
+      "name": "Bamboo Hound",
+      "flavor": "A wild hound that runs out of the bamboo."
+    },
+    {
+      "key": "content.r1.char.wuxia_mon_t3",
+      "name": "Path Swordsman",
+      "flavor": "A swordsman who blocks the path."
+    },
+    {
+      "key": "content.r1.char.wuxia_mon_t4",
+      "name": "Hill Wolf",
+      "flavor": "The lead wolf of the hill."
+    },
+    {
+      "key": "content.r1.char.wuxia_mon_t5",
+      "name": "Fort Bandit",
+      "flavor": "A bandit holding the broken fort."
+    },
+    {
+      "key": "content.r1.char.wuxia_mon_t6",
+      "name": "Gorge Assassin",
+      "flavor": "An assassin waiting in the gorge."
+    },
+    {
+      "key": "content.r1.char.wuxia_mon_t7",
+      "name": "Night-Cry Corpse",
+      "flavor": "A corpse that crawls out of the cave."
+    },
+    {
+      "key": "content.r1.char.wuxia_mon_t8",
+      "name": "Corridor Warden",
+      "flavor": "A tomb warden who does not fall."
+    },
+    {
+      "key": "content.r1.char.wuxia_mon_t9",
+      "name": "Tomb Bronze",
+      "flavor": "A bronze figure set before the sealed tomb."
+    }
+  ,
+    {
+      "key": "content.r1.char.monster_side_t1",
+      "name": "Moss Hound",
+      "flavor": "A wild hound outside the moss cavern."
+    },
+    {
+      "key": "content.r1.char.monster_side_t2",
+      "name": "Spring Snake",
+      "flavor": "A snake by the cold spring."
+    },
+    {
+      "key": "content.r1.char.monster_side_t3",
+      "name": "Cinder Lizard",
+      "flavor": "A lizard in the cinder rock."
+    },
+    {
+      "key": "content.r1.char.monster_side_t4",
+      "name": "Gaol Wraith",
+      "flavor": "A wraith outside the iron gaol."
+    },
+    {
+      "key": "content.r1.char.monster_side_t5",
+      "name": "Den Glider",
+      "flavor": "A gliding beast outside the dragon den."
+    },
+    {
+      "key": "content.r1.char.monster_side_t6",
+      "name": "Nether Corpse",
+      "flavor": "A corpse on the nether road."
+    },
+    {
+      "key": "content.r1.char.monster_side_t7",
+      "name": "Fallen Iron",
+      "flavor": "An iron figure outside the fallen-star pit."
+    },
+    {
+      "key": "content.r1.char.monster_side_t8",
+      "name": "Thunder Soul",
+      "flavor": "A lightning soul by the thunder pool."
+    },
+    {
+      "key": "content.r1.char.monster_side_t9",
+      "name": "Void Beast",
+      "flavor": "A guardian beast on the outer ring of the void."
+    }
   ]
 }

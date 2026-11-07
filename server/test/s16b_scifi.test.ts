@@ -41,7 +41,8 @@ test("S16b scifi: origin import, connectivity, translations", async () => {
       const wilds = places.rows.filter((p) => p.id !== "r1:place:start_scifi" && p.kind !== "hall" && !p.features.includes("tutorial"));
       assert.equal(places.rows.filter((p) => p.id === "r1:place:start_scifi").length, 1);
       assert.equal(places.rows.filter((p) => p.kind === "hall").length, 1);
-      assert.ok(wilds.length >= 6 && wilds.length <= 10, `wilds ${wilds.length}`);
+      // S59 added an 8-place outer ring (tiers 2..9) beyond the §17 E starter band.
+      assert.ok(wilds.length >= 6 && wilds.length <= 18, `wilds ${wilds.length}`);
       assert.equal(places.rows.filter((p) => p.features.includes("tutorial")).length, 1);
       assert.ok(places.rows.filter((p) => p.combat === "pk").length >= 1);
 

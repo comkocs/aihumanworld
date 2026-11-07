@@ -2913,5 +2913,132 @@
       "name": "打捞头领",
       "flavor": "打捞队的首领。"
     }
+  ,
+    {
+      "key": "content.r1.place.wuxia_out_bamboo_edge",
+      "name": "竹林外",
+      "flavor": "岭东的竹林边缘。"
+    },
+    {
+      "key": "content.r1.place.wuxia_out_flag_path",
+      "name": "旗亭小径",
+      "flavor": "通向旧旗亭的石径。"
+    },
+    {
+      "key": "content.r1.place.wuxia_out_wolf_hill",
+      "name": "狼丘",
+      "flavor": "常有狼踪的土丘。"
+    },
+    {
+      "key": "content.r1.place.wuxia_out_bandit_fort",
+      "name": "残寨",
+      "flavor": "弃置的山寨残墙。"
+    },
+    {
+      "key": "content.r1.place.wuxia_out_blade_gorge",
+      "name": "刀峡",
+      "flavor": "峡壁窄如刀缝。"
+    },
+    {
+      "key": "content.r1.place.wuxia_out_night_cave",
+      "name": "夜啼洞",
+      "flavor": "夜里有哭声的山洞。"
+    },
+    {
+      "key": "content.r1.place.wuxia_out_tomb_corridor",
+      "name": "古墓甬道",
+      "flavor": "墓门后的长甬道。"
+    },
+    {
+      "key": "content.r1.place.wuxia_out_sealed_tomb",
+      "name": "封墓",
+      "flavor": "甬道尽头的封死墓室。"
+    },
+    {
+      "key": "content.r1.char.wuxia_mon_t2",
+      "name": "竹外野犬",
+      "flavor": "竹林外窜出来的野犬。"
+    },
+    {
+      "key": "content.r1.char.wuxia_mon_t3",
+      "name": "旗亭刀客",
+      "flavor": "小径上拦路的刀客。"
+    },
+    {
+      "key": "content.r1.char.wuxia_mon_t4",
+      "name": "狼丘头狼",
+      "flavor": "狼丘上的头狼。"
+    },
+    {
+      "key": "content.r1.char.wuxia_mon_t5",
+      "name": "残寨悍匪",
+      "flavor": "占着残寨的悍匪。"
+    },
+    {
+      "key": "content.r1.char.wuxia_mon_t6",
+      "name": "刀峡刺客",
+      "flavor": "刀峡里的刺客。"
+    },
+    {
+      "key": "content.r1.char.wuxia_mon_t7",
+      "name": "夜啼尸",
+      "flavor": "洞里爬出来的尸。"
+    },
+    {
+      "key": "content.r1.char.wuxia_mon_t8",
+      "name": "甬道守墓人",
+      "flavor": "甬道里不倒的守墓人。"
+    },
+    {
+      "key": "content.r1.char.wuxia_mon_t9",
+      "name": "封墓铜人",
+      "flavor": "封墓前的铜人。"
+    }
+  ,
+    {
+      "key": "content.r1.char.monster_side_t1",
+      "name": "苔洞野狗",
+      "flavor": "苔洞外的野狗。"
+    },
+    {
+      "key": "content.r1.char.monster_side_t2",
+      "name": "冷泉水蛇",
+      "flavor": "冷泉边的水蛇。"
+    },
+    {
+      "key": "content.r1.char.monster_side_t3",
+      "name": "焦石蜥蜴",
+      "flavor": "焦石堆里的蜥蜴。"
+    },
+    {
+      "key": "content.r1.char.monster_side_t4",
+      "name": "铁牢游魂",
+      "flavor": "铁牢外的游魂。"
+    },
+    {
+      "key": "content.r1.char.monster_side_t5",
+      "name": "龙穴飞鼠",
+      "flavor": "龙穴外的飞鼠。"
+    },
+    {
+      "key": "content.r1.char.monster_side_t6",
+      "name": "幽冥游尸",
+      "flavor": "幽冥道上的游尸。"
+    },
+    {
+      "key": "content.r1.char.monster_side_t7",
+      "name": "坠星铁偶",
+      "flavor": "坠星坑外的铁偶。"
+    },
+    {
+      "key": "content.r1.char.monster_side_t8",
+      "name": "雷池电魂",
+      "flavor": "雷池边的电魂。"
+    },
+    {
+      "key": "content.r1.char.monster_side_t9",
+      "name": "太虚守兽",
+      "flavor": "太虚外圈的守兽。"
+    }
   ]
 }

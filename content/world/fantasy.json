@@ -97,6 +97,7 @@
       "exits": [
         { "dir": "west", "to": "place:fantasy_shore" },
         { "dir": "north", "to": "place:fantasy_barrow" }
+      ,{"dir": "east", "to": "place:fantasy_out_mire_edge"}
       ]
     },
     {
@@ -164,6 +165,171 @@
       "owner_org": null,
       "exits": [
         { "dir": "east", "to": "place:fantasy_watch_hall" }
+      ]
+    }
+  ,
+    {
+      "local": "fantasy_out_mire_edge",
+      "region": "fantasy",
+      "kind": "wilderness",
+      "features": [
+        "resource"
+      ],
+      "tier": 2,
+      "danger": "low",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:fantasy_fen"
+        },
+        {
+          "dir": "east",
+          "to": "place:fantasy_out_willow_track"
+        }
+      ]
+    },
+    {
+      "local": "fantasy_out_willow_track",
+      "region": "fantasy",
+      "kind": "road",
+      "features": [],
+      "tier": 3,
+      "danger": "low",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:fantasy_out_mire_edge"
+        },
+        {
+          "dir": "east",
+          "to": "place:fantasy_out_barrow_field"
+        }
+      ]
+    },
+    {
+      "local": "fantasy_out_barrow_field",
+      "region": "fantasy",
+      "kind": "wilderness",
+      "features": [
+        "resource"
+      ],
+      "tier": 4,
+      "danger": "medium",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:fantasy_out_willow_track"
+        },
+        {
+          "dir": "east",
+          "to": "place:fantasy_out_broken_keep"
+        }
+      ]
+    },
+    {
+      "local": "fantasy_out_broken_keep",
+      "region": "fantasy",
+      "kind": "ruin",
+      "features": [],
+      "tier": 5,
+      "danger": "medium",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:fantasy_out_barrow_field"
+        },
+        {
+          "dir": "east",
+          "to": "place:fantasy_out_thorn_pass"
+        }
+      ]
+    },
+    {
+      "local": "fantasy_out_thorn_pass",
+      "region": "fantasy",
+      "kind": "wilderness",
+      "features": [
+        "resource"
+      ],
+      "tier": 6,
+      "danger": "high",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:fantasy_out_broken_keep"
+        },
+        {
+          "dir": "east",
+          "to": "place:fantasy_out_howl_den"
+        }
+      ]
+    },
+    {
+      "local": "fantasy_out_howl_den",
+      "region": "fantasy",
+      "kind": "dungeon",
+      "features": [],
+      "tier": 7,
+      "danger": "high",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:fantasy_out_thorn_pass"
+        },
+        {
+          "dir": "east",
+          "to": "place:fantasy_out_deep_crypt"
+        }
+      ]
+    },
+    {
+      "local": "fantasy_out_deep_crypt",
+      "region": "fantasy",
+      "kind": "dungeon",
+      "features": [
+        "resource"
+      ],
+      "tier": 8,
+      "danger": "high",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:fantasy_out_howl_den"
+        },
+        {
+          "dir": "east",
+          "to": "place:fantasy_out_king_barrow"
+        }
+      ]
+    },
+    {
+      "local": "fantasy_out_king_barrow",
+      "region": "fantasy",
+      "kind": "dungeon",
+      "features": [],
+      "tier": 9,
+      "danger": "high",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        {
+          "dir": "west",
+          "to": "place:fantasy_out_deep_crypt"
+        }
       ]
     }
   ],
@@ -262,6 +428,103 @@
       "stage": 1,
       "loc": "place:fantasy_yard",
       "respawn_place": "place:fantasy_yard"
+    }
+  ,
+    {
+      "local": "fantasy_mon_t2",
+      "skin": "fantasy",
+      "origin_region": "fantasy",
+      "body": "beast",
+      "archetype": "monster",
+      "tier": 2,
+      "stage": 1,
+      "loc": "place:fantasy_out_mire_edge",
+      "respawn_place": "place:fantasy_out_mire_edge",
+      "patrol_route": []
+    },
+    {
+      "local": "fantasy_mon_t3",
+      "skin": "fantasy",
+      "origin_region": "fantasy",
+      "body": "beast",
+      "archetype": "monster",
+      "tier": 3,
+      "stage": 1,
+      "loc": "place:fantasy_out_willow_track",
+      "respawn_place": "place:fantasy_out_willow_track",
+      "patrol_route": []
+    },
+    {
+      "local": "fantasy_mon_t4",
+      "skin": "fantasy",
+      "origin_region": "fantasy",
+      "body": "undead",
+      "archetype": "monster",
+      "tier": 4,
+      "stage": 1,
+      "loc": "place:fantasy_out_barrow_field",
+      "respawn_place": "place:fantasy_out_barrow_field",
+      "patrol_route": []
+    },
+    {
+      "local": "fantasy_mon_t5",
+      "skin": "fantasy",
+      "origin_region": "fantasy",
+      "body": "humanoid",
+      "archetype": "monster",
+      "tier": 5,
+      "stage": 1,
+      "loc": "place:fantasy_out_broken_keep",
+      "respawn_place": "place:fantasy_out_broken_keep",
+      "patrol_route": []
+    },
+    {
+      "local": "fantasy_mon_t6",
+      "skin": "fantasy",
+      "origin_region": "fantasy",
+      "body": "beast",
+      "archetype": "monster",
+      "tier": 6,
+      "stage": 1,
+      "loc": "place:fantasy_out_thorn_pass",
+      "respawn_place": "place:fantasy_out_thorn_pass",
+      "patrol_route": []
+    },
+    {
+      "local": "fantasy_mon_t7",
+      "skin": "fantasy",
+      "origin_region": "fantasy",
+      "body": "beast",
+      "archetype": "monster",
+      "tier": 7,
+      "stage": 1,
+      "loc": "place:fantasy_out_howl_den",
+      "respawn_place": "place:fantasy_out_howl_den",
+      "patrol_route": []
+    },
+    {
+      "local": "fantasy_mon_t8",
+      "skin": "fantasy",
+      "origin_region": "fantasy",
+      "body": "undead",
+      "archetype": "monster",
+      "tier": 8,
+      "stage": 1,
+      "loc": "place:fantasy_out_deep_crypt",
+      "respawn_place": "place:fantasy_out_deep_crypt",
+      "patrol_route": []
+    },
+    {
+      "local": "fantasy_mon_t9",
+      "skin": "fantasy",
+      "origin_region": "fantasy",
+      "body": "undead",
+      "archetype": "monster",
+      "tier": 9,
+      "stage": 1,
+      "loc": "place:fantasy_out_king_barrow",
+      "respawn_place": "place:fantasy_out_king_barrow",
+      "patrol_route": []
     }
   ],
   "orgs": [

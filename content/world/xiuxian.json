@@ -166,6 +166,172 @@
       "owner_org": null,
       "exits": [
         { "dir": "south", "to": "place:xiuxian_sword_gate" }
+      ,{"dir": "north", "to": "place:xiuxian_out_mist_slope"}
+      ]
+    }
+  ,
+    {
+      "local": "xiuxian_out_mist_slope",
+      "region": "xiuxian",
+      "kind": "wilderness",
+      "features": [
+        "resource"
+      ],
+      "tier": 2,
+      "danger": "low",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        {
+          "dir": "south",
+          "to": "place:xiuxian_broken_cliff"
+        },
+        {
+          "dir": "north",
+          "to": "place:xiuxian_out_reed_path"
+        }
+      ]
+    },
+    {
+      "local": "xiuxian_out_reed_path",
+      "region": "xiuxian",
+      "kind": "road",
+      "features": [],
+      "tier": 3,
+      "danger": "low",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        {
+          "dir": "south",
+          "to": "place:xiuxian_out_mist_slope"
+        },
+        {
+          "dir": "north",
+          "to": "place:xiuxian_out_pine_wild"
+        }
+      ]
+    },
+    {
+      "local": "xiuxian_out_pine_wild",
+      "region": "xiuxian",
+      "kind": "wilderness",
+      "features": [
+        "resource"
+      ],
+      "tier": 4,
+      "danger": "medium",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        {
+          "dir": "south",
+          "to": "place:xiuxian_out_reed_path"
+        },
+        {
+          "dir": "north",
+          "to": "place:xiuxian_out_ash_ridge"
+        }
+      ]
+    },
+    {
+      "local": "xiuxian_out_ash_ridge",
+      "region": "xiuxian",
+      "kind": "ruin",
+      "features": [],
+      "tier": 5,
+      "danger": "medium",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        {
+          "dir": "south",
+          "to": "place:xiuxian_out_pine_wild"
+        },
+        {
+          "dir": "north",
+          "to": "place:xiuxian_out_gale_pass"
+        }
+      ]
+    },
+    {
+      "local": "xiuxian_out_gale_pass",
+      "region": "xiuxian",
+      "kind": "wilderness",
+      "features": [
+        "resource"
+      ],
+      "tier": 6,
+      "danger": "high",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        {
+          "dir": "south",
+          "to": "place:xiuxian_out_ash_ridge"
+        },
+        {
+          "dir": "north",
+          "to": "place:xiuxian_out_bone_cave"
+        }
+      ]
+    },
+    {
+      "local": "xiuxian_out_bone_cave",
+      "region": "xiuxian",
+      "kind": "dungeon",
+      "features": [],
+      "tier": 7,
+      "danger": "high",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        {
+          "dir": "south",
+          "to": "place:xiuxian_out_gale_pass"
+        },
+        {
+          "dir": "north",
+          "to": "place:xiuxian_out_star_abyss"
+        }
+      ]
+    },
+    {
+      "local": "xiuxian_out_star_abyss",
+      "region": "xiuxian",
+      "kind": "dungeon",
+      "features": [
+        "resource"
+      ],
+      "tier": 8,
+      "danger": "high",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        {
+          "dir": "south",
+          "to": "place:xiuxian_out_bone_cave"
+        },
+        {
+          "dir": "north",
+          "to": "place:xiuxian_out_heaven_vault"
+        }
+      ]
+    },
+    {
+      "local": "xiuxian_out_heaven_vault",
+      "region": "xiuxian",
+      "kind": "dungeon",
+      "features": [],
+      "tier": 9,
+      "danger": "high",
+      "combat": "pve",
+      "owner_org": null,
+      "exits": [
+        {
+          "dir": "south",
+          "to": "place:xiuxian_out_star_abyss"
+        }
       ]
     }
   ],
@@ -291,6 +457,103 @@
       "stage": 1,
       "loc": "place:xiuxian_sword_gate",
       "respawn_place": "place:xiuxian_sword_gate",
+      "patrol_route": []
+    }
+  ,
+    {
+      "local": "xiuxian_mon_t2",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "beast",
+      "archetype": "monster",
+      "tier": 2,
+      "stage": 1,
+      "loc": "place:xiuxian_out_mist_slope",
+      "respawn_place": "place:xiuxian_out_mist_slope",
+      "patrol_route": []
+    },
+    {
+      "local": "xiuxian_mon_t3",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "beast",
+      "archetype": "monster",
+      "tier": 3,
+      "stage": 1,
+      "loc": "place:xiuxian_out_reed_path",
+      "respawn_place": "place:xiuxian_out_reed_path",
+      "patrol_route": []
+    },
+    {
+      "local": "xiuxian_mon_t4",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "beast",
+      "archetype": "monster",
+      "tier": 4,
+      "stage": 1,
+      "loc": "place:xiuxian_out_pine_wild",
+      "respawn_place": "place:xiuxian_out_pine_wild",
+      "patrol_route": []
+    },
+    {
+      "local": "xiuxian_mon_t5",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "spirit",
+      "archetype": "monster",
+      "tier": 5,
+      "stage": 1,
+      "loc": "place:xiuxian_out_ash_ridge",
+      "respawn_place": "place:xiuxian_out_ash_ridge",
+      "patrol_route": []
+    },
+    {
+      "local": "xiuxian_mon_t6",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "spirit",
+      "archetype": "monster",
+      "tier": 6,
+      "stage": 1,
+      "loc": "place:xiuxian_out_gale_pass",
+      "respawn_place": "place:xiuxian_out_gale_pass",
+      "patrol_route": []
+    },
+    {
+      "local": "xiuxian_mon_t7",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "undead",
+      "archetype": "monster",
+      "tier": 7,
+      "stage": 1,
+      "loc": "place:xiuxian_out_bone_cave",
+      "respawn_place": "place:xiuxian_out_bone_cave",
+      "patrol_route": []
+    },
+    {
+      "local": "xiuxian_mon_t8",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "construct",
+      "archetype": "monster",
+      "tier": 8,
+      "stage": 1,
+      "loc": "place:xiuxian_out_star_abyss",
+      "respawn_place": "place:xiuxian_out_star_abyss",
+      "patrol_route": []
+    },
+    {
+      "local": "xiuxian_mon_t9",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "spirit",
+      "archetype": "monster",
+      "tier": 9,
+      "stage": 1,
+      "loc": "place:xiuxian_out_heaven_vault",
+      "respawn_place": "place:xiuxian_out_heaven_vault",
       "patrol_route": []
     }
   ],

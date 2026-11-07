@@ -38,17 +38,18 @@ test("S16b fantasy: origin import, connectivity, translations", async () => {
       const halls = places.rows.filter((r) => r.kind === "hall");
       assert.ok(halls.length >= 1 && halls.length <= 3, `org halls ${halls.length}`);
       const wild = places.rows.filter((r) => r.kind !== "settlement" && r.kind !== "hall");
-      assert.ok(wild.length >= 7 && wild.length <= 11, `wild places incl. first challenge ${wild.length}`);
+      // S59 added an 8-place outer ring (tiers 2..9) beyond the §17 E starter band.
+      assert.ok(wild.length >= 7 && wild.length <= 19, `wild places incl. first challenge ${wild.length}`);
       const pk = wild.filter((r) => r.combat === "pk");
       assert.ok(pk.length >= 1 && pk.length <= 2, `pk places ${pk.length}`);
       const tutorial = places.rows.filter((r) => r.features.includes("tutorial"));
       assert.equal(tutorial.length, 1, "exactly one first-challenge place");
 
-      // Eight archetypes, one each, all standing in the fantasy region.
+      // Eight archetypes, all standing in the fantasy region. S59 added a monster per tier 2..9.
       const chars = await app.db.query<{ archetype: string; loc: string }>(
         "SELECT archetype, loc FROM chars WHERE id LIKE 'r1:char:fantasy_%' ORDER BY archetype",
       );
-      assert.deepEqual(chars.rows.map((r) => r.archetype).sort(), [...ARCHETYPES].sort());
+      assert.deepEqual([...new Set(chars.rows.map((r) => r.archetype))].sort(), [...ARCHETYPES].sort());
       const locRegion = await app.db.query<{ id: string }>("SELECT id FROM places WHERE region = 'fantasy'");
       const fantasyPlaces = new Set(locRegion.rows.map((r) => r.id));
       for (const c of chars.rows) assert.ok(fantasyPlaces.has(c.loc), `${c.archetype} stands outside the region`);

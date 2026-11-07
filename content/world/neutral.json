@@ -5795,6 +5795,106 @@
       "loc": "place:arena_neutral",
       "respawn_place": "place:arena_neutral"
     }
+  ,
+    {
+      "local": "monster_side_t1",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "beast",
+      "archetype": "monster",
+      "tier": 1,
+      "stage": 1,
+      "loc": "place:wild2_t1",
+      "respawn_place": "place:wild2_t1"
+    },
+    {
+      "local": "monster_side_t2",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "beast",
+      "archetype": "monster",
+      "tier": 2,
+      "stage": 1,
+      "loc": "place:wild2_t2",
+      "respawn_place": "place:wild2_t2"
+    },
+    {
+      "local": "monster_side_t3",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "beast",
+      "archetype": "monster",
+      "tier": 3,
+      "stage": 1,
+      "loc": "place:wild2_t3",
+      "respawn_place": "place:wild2_t3"
+    },
+    {
+      "local": "monster_side_t4",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "undead",
+      "archetype": "monster",
+      "tier": 4,
+      "stage": 1,
+      "loc": "place:wild2_t4",
+      "respawn_place": "place:wild2_t4"
+    },
+    {
+      "local": "monster_side_t5",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "beast",
+      "archetype": "monster",
+      "tier": 5,
+      "stage": 1,
+      "loc": "place:wild2_t5",
+      "respawn_place": "place:wild2_t5"
+    },
+    {
+      "local": "monster_side_t6",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "undead",
+      "archetype": "monster",
+      "tier": 6,
+      "stage": 1,
+      "loc": "place:wild2_t6",
+      "respawn_place": "place:wild2_t6"
+    },
+    {
+      "local": "monster_side_t7",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "construct",
+      "archetype": "monster",
+      "tier": 7,
+      "stage": 1,
+      "loc": "place:wild2_t7",
+      "respawn_place": "place:wild2_t7"
+    },
+    {
+      "local": "monster_side_t8",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "spirit",
+      "archetype": "monster",
+      "tier": 8,
+      "stage": 1,
+      "loc": "place:wild2_t8",
+      "respawn_place": "place:wild2_t8"
+    },
+    {
+      "local": "monster_side_t9",
+      "skin": "xiuxian",
+      "origin_region": "xiuxian",
+      "body": "beast",
+      "archetype": "monster",
+      "tier": 9,
+      "stage": 1,
+      "loc": "place:wild2_t9",
+      "respawn_place": "place:wild2_t9"
+    }
   ],
   "resource_spots": [
     {

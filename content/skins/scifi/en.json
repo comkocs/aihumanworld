@@ -1694,5 +1694,132 @@
   {"key": "org_rank.wuxia_escort_chief", "name": "Convoy Office Chief", "flavor": "The head of the Qingxi Convoy Office."},
   {"key": "org_rank.wuxia_martial_instructor", "name": "Combat Instructor", "flavor": "An instructor of the Pinewind Combat Group."},
   {"key": "org_rank.wuxia_herb_keeper", "name": "Sample Society Steward", "flavor": "A steward of the Rainlisten Sample Society."}
+ ,
+   {
+     "key": "content.r1.place.scifi_out_dune_edge",
+     "name": "Dune Edge",
+     "flavor": "Low dunes on the east edge of the dust plain."
+   },
+   {
+     "key": "content.r1.place.scifi_out_beacon_spur",
+     "name": "Beacon Spur",
+     "flavor": "A beacon spur that leaves the main road."
+   },
+   {
+     "key": "content.r1.place.scifi_out_scrap_field",
+     "name": "Scrap Field",
+     "flavor": "Open ground strewn with scrap."
+   },
+   {
+     "key": "content.r1.place.scifi_out_relay_ruin",
+     "name": "Relay Ruin",
+     "flavor": "The shell of a relay that no longer runs."
+   },
+   {
+     "key": "content.r1.place.scifi_out_storm_gap",
+     "name": "Storm Gap",
+     "flavor": "A gap the dust storm never leaves."
+   },
+   {
+     "key": "content.r1.place.scifi_out_nest_bay",
+     "name": "Nest Bay",
+     "flavor": "A cargo bay taken over as a nest."
+   },
+   {
+     "key": "content.r1.place.scifi_out_core_vault",
+     "name": "Core Vault",
+     "flavor": "A core vault, still locked."
+   },
+   {
+     "key": "content.r1.place.scifi_out_black_archive",
+     "name": "Black Archive",
+     "flavor": "A sealed archive at the far end."
+   },
+   {
+     "key": "content.r1.char.scifi_mon_t2",
+     "name": "Dune Scavenger",
+     "flavor": "A small beast that digs the dunes for scrap."
+   },
+   {
+     "key": "content.r1.char.scifi_mon_t3",
+     "name": "Spur Drone",
+     "flavor": "An old drone still patrolling the spur."
+   },
+   {
+     "key": "content.r1.char.scifi_mon_t4",
+     "name": "Scrap Hound",
+     "flavor": "A hound prowling the scrap field."
+   },
+   {
+     "key": "content.r1.char.scifi_mon_t5",
+     "name": "Ruin Sentry",
+     "flavor": "A sentry unit at the ruin's door."
+   },
+   {
+     "key": "content.r1.char.scifi_mon_t6",
+     "name": "Storm Frame",
+     "flavor": "A heavy frame standing in the storm gap."
+   },
+   {
+     "key": "content.r1.char.scifi_mon_t7",
+     "name": "Bay Parasite",
+     "flavor": "A parasite living in the nest bay."
+   },
+   {
+     "key": "content.r1.char.scifi_mon_t8",
+     "name": "Core Guard",
+     "flavor": "A guard unit inside the core vault."
+   },
+   {
+     "key": "content.r1.char.scifi_mon_t9",
+     "name": "Archive Warden",
+     "flavor": "A warden unit over the sealed archive."
+   }
+ ,
+   {
+     "key": "content.r1.char.monster_side_t1",
+     "name": "Moss Scavenger",
+     "flavor": "A scavenger beast outside the moss cavern."
+   },
+   {
+     "key": "content.r1.char.monster_side_t2",
+     "name": "Spring Crawler",
+     "flavor": "A crawler by the cold spring."
+   },
+   {
+     "key": "content.r1.char.monster_side_t3",
+     "name": "Cinder Lizard",
+     "flavor": "A lizard in the cinder rock."
+   },
+   {
+     "key": "content.r1.char.monster_side_t4",
+     "name": "Gaol Residual",
+     "flavor": "A residual outside the iron gaol."
+   },
+   {
+     "key": "content.r1.char.monster_side_t5",
+     "name": "Den Glider",
+     "flavor": "A glider outside the dragon den."
+   },
+   {
+     "key": "content.r1.char.monster_side_t6",
+     "name": "Nether Patroller",
+     "flavor": "A corpse that patrols the nether road."
+   },
+   {
+     "key": "content.r1.char.monster_side_t7",
+     "name": "Fallen Hulk",
+     "flavor": "A broken machine outside the fallen-star pit."
+   },
+   {
+     "key": "content.r1.char.monster_side_t8",
+     "name": "Thunder Sprite",
+     "flavor": "A lightning sprite by the thunder pool."
+   },
+   {
+     "key": "content.r1.char.monster_side_t9",
+     "name": "Void Beast",
+     "flavor": "A guardian beast on the outer ring of the void."
+   }
  ]
 }

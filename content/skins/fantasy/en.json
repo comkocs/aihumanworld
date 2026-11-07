@@ -1684,5 +1684,132 @@
     {"key": "content.r1.task.scifi_reach_sim", "name": "Report to the Drill Bay", "flavor": "Report to the Illusion Drill Bay."},
     {"key": "content.r1.task.scifi_reach_yard", "name": "Find the Salvage Yard", "flavor": "Find the Salvage Yard."},
     {"key": "content.r1.task.scifi_deliver_ore", "name": "Ore Sample Delivery", "flavor": "Carry an ore sample to the named place."}
+  ,
+    {
+      "key": "content.r1.place.fantasy_out_mire_edge",
+      "name": "Mire Edge",
+      "flavor": "The east edge of the fen, shallow enough to walk."
+    },
+    {
+      "key": "content.r1.place.fantasy_out_willow_track",
+      "name": "Willow Track",
+      "flavor": "A mud track that follows the willows."
+    },
+    {
+      "key": "content.r1.place.fantasy_out_barrow_field",
+      "name": "Barrow Field",
+      "flavor": "A field of barrows set one against the next."
+    },
+    {
+      "key": "content.r1.place.fantasy_out_broken_keep",
+      "name": "Broken Keep",
+      "flavor": "A stone keep, half fallen."
+    },
+    {
+      "key": "content.r1.place.fantasy_out_thorn_pass",
+      "name": "Thorn Pass",
+      "flavor": "A pass grown over with thorns."
+    },
+    {
+      "key": "content.r1.place.fantasy_out_howl_den",
+      "name": "Howl Den",
+      "flavor": "A den that howls at night."
+    },
+    {
+      "key": "content.r1.place.fantasy_out_deep_crypt",
+      "name": "Deep Crypt",
+      "flavor": "A deep crypt under the broken keep."
+    },
+    {
+      "key": "content.r1.place.fantasy_out_king_barrow",
+      "name": "King's Barrow",
+      "flavor": "A king's barrow at the far end."
+    },
+    {
+      "key": "content.r1.char.fantasy_mon_t2",
+      "name": "Mire Lizard",
+      "flavor": "A lizard in the shallow edge of the fen."
+    },
+    {
+      "key": "content.r1.char.fantasy_mon_t3",
+      "name": "Track Boar",
+      "flavor": "A boar that charges down the willow track."
+    },
+    {
+      "key": "content.r1.char.fantasy_mon_t4",
+      "name": "Field Corpse",
+      "flavor": "A corpse that stands up in the barrow field."
+    },
+    {
+      "key": "content.r1.char.fantasy_mon_t5",
+      "name": "Keep Raider",
+      "flavor": "A raider holding the broken keep."
+    },
+    {
+      "key": "content.r1.char.fantasy_mon_t6",
+      "name": "Thorn Wolf",
+      "flavor": "A great wolf in the thorn pass."
+    },
+    {
+      "key": "content.r1.char.fantasy_mon_t7",
+      "name": "Den Bear",
+      "flavor": "A bear in the deep of the den."
+    },
+    {
+      "key": "content.r1.char.fantasy_mon_t8",
+      "name": "Crypt Bones",
+      "flavor": "Bones that walk the deep crypt."
+    },
+    {
+      "key": "content.r1.char.fantasy_mon_t9",
+      "name": "Barrow Guard",
+      "flavor": "A dead guard set over the king's barrow."
+    }
+  ,
+    {
+      "key": "content.r1.char.monster_side_t1",
+      "name": "Moss Whelp",
+      "flavor": "A whelp outside the moss cavern."
+    },
+    {
+      "key": "content.r1.char.monster_side_t2",
+      "name": "Spring Serpent",
+      "flavor": "A serpent by the cold spring."
+    },
+    {
+      "key": "content.r1.char.monster_side_t3",
+      "name": "Cinder Lizard",
+      "flavor": "A lizard in the cinder rock."
+    },
+    {
+      "key": "content.r1.char.monster_side_t4",
+      "name": "Gaol Wraith",
+      "flavor": "A wraith outside the iron gaol."
+    },
+    {
+      "key": "content.r1.char.monster_side_t5",
+      "name": "Den Glider",
+      "flavor": "A gliding beast outside the dragon den."
+    },
+    {
+      "key": "content.r1.char.monster_side_t6",
+      "name": "Nether Corpse",
+      "flavor": "A corpse on the nether road."
+    },
+    {
+      "key": "content.r1.char.monster_side_t7",
+      "name": "Fallen Construct",
+      "flavor": "A construct outside the fallen-star pit."
+    },
+    {
+      "key": "content.r1.char.monster_side_t8",
+      "name": "Thunder Sprite",
+      "flavor": "A lightning sprite by the thunder pool."
+    },
+    {
+      "key": "content.r1.char.monster_side_t9",
+      "name": "Void Beast",
+      "flavor": "A guardian beast on the outer ring of the void."
+    }
   ]
 }

@@ -42,9 +42,11 @@ test("S16a content: neutral import, connectivity, idempotence", async () => {
     assert.equal(equip.rows[0]?.n, "81");
     assert.equal(equip.rows[0]?.u, "81");
 
-    // Monsters: one per tier 1..9 (9 档).
+    // Monsters: every tier 1..9 present (9 档). S59 put a second monster on each tier.
     const monsters = await app.db.query<{ tier: number }>("SELECT tier FROM chars WHERE kind = 'npc' AND archetype = 'monster' ORDER BY tier");
-    assert.deepEqual(monsters.rows.map((r) => r.tier), [1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    const monsterTiers = [...new Set(monsters.rows.map((r) => r.tier))];
+    assert.deepEqual(monsterTiers, [1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    assert.ok(monsters.rows.length >= 9, `monsters ${monsters.rows.length}`);
 
     // Task templates: 5 tpls × 9 tiers; masters t2..t9 with skills at the hard cap.
     const tpls = await app.db.query<{ tpl: string; n: string }>(

@@ -39,7 +39,8 @@ test("S16b wuxia: origin content, connectivity, translations", async () => {
         "SELECT id, content_key, kind, combat, danger, features FROM places WHERE region = 'wuxia'",
       );
       const wild = places.rows.filter((p) => p.id !== "r1:place:start_wuxia" && p.kind !== "hall");
-      assert.ok(wild.length >= 6 && wild.length <= 10, `wild places ${wild.length}`);
+      // S59 added an 8-place outer ring (tiers 2..9) beyond the §17 E starter band.
+      assert.ok(wild.length >= 6 && wild.length <= 18, `wild places ${wild.length}`);
       assert.equal(places.rows.filter((p) => p.kind === "hall").length, 3);
       assert.ok(places.rows.some((p) => p.features.includes("tutorial")));
       assert.ok(places.rows.filter((p) => p.combat === "pk" && p.danger === "high").length >= 1);

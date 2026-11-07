@@ -1684,5 +1684,132 @@
     {"key": "content.r1.task.scifi_reach_sim", "name": "报到演武舱", "flavor": "到模拟演武舱报到。"},
     {"key": "content.r1.task.scifi_reach_yard", "name": "寻打捞坞", "flavor": "找到打捞修缮坞。"},
     {"key": "content.r1.task.scifi_deliver_ore", "name": "矿样交货", "flavor": "把矿样送到指定处。"}
+  ,
+    {
+      "key": "content.r1.place.fantasy_out_mire_edge",
+      "name": "沼缘",
+      "flavor": "沼泽东缘,水浅能走。"
+    },
+    {
+      "key": "content.r1.place.fantasy_out_willow_track",
+      "name": "柳径",
+      "flavor": "沿柳树走的泥径。"
+    },
+    {
+      "key": "content.r1.place.fantasy_out_barrow_field",
+      "name": "坟野",
+      "flavor": "一座挨一座的坟野。"
+    },
+    {
+      "key": "content.r1.place.fantasy_out_broken_keep",
+      "name": "破堡",
+      "flavor": "半塌的石堡。"
+    },
+    {
+      "key": "content.r1.place.fantasy_out_thorn_pass",
+      "name": "荆棘隘",
+      "flavor": "长满荆棘的隘口。"
+    },
+    {
+      "key": "content.r1.place.fantasy_out_howl_den",
+      "name": "嚎穴",
+      "flavor": "夜里有嚎声的兽穴。"
+    },
+    {
+      "key": "content.r1.place.fantasy_out_deep_crypt",
+      "name": "深窖",
+      "flavor": "破堡下的深窖。"
+    },
+    {
+      "key": "content.r1.place.fantasy_out_king_barrow",
+      "name": "王坟",
+      "flavor": "最深处的王坟。"
+    },
+    {
+      "key": "content.r1.char.fantasy_mon_t2",
+      "name": "沼缘蜥蜴",
+      "flavor": "沼缘浅水里的蜥蜴。"
+    },
+    {
+      "key": "content.r1.char.fantasy_mon_t3",
+      "name": "柳径野猪",
+      "flavor": "柳径上冲人的野猪。"
+    },
+    {
+      "key": "content.r1.char.fantasy_mon_t4",
+      "name": "坟野尸傀",
+      "flavor": "坟野里站起来的尸。"
+    },
+    {
+      "key": "content.r1.char.fantasy_mon_t5",
+      "name": "破堡劫匪",
+      "flavor": "占着破堡的劫匪。"
+    },
+    {
+      "key": "content.r1.char.fantasy_mon_t6",
+      "name": "荆棘巨狼",
+      "flavor": "荆棘隘里的巨狼。"
+    },
+    {
+      "key": "content.r1.char.fantasy_mon_t7",
+      "name": "嚎穴熊",
+      "flavor": "嚎穴深处的熊。"
+    },
+    {
+      "key": "content.r1.char.fantasy_mon_t8",
+      "name": "深窖骸骨",
+      "flavor": "深窖里走动的骸骨。"
+    },
+    {
+      "key": "content.r1.char.fantasy_mon_t9",
+      "name": "王坟卫士",
+      "flavor": "守着王坟的亡者。"
+    }
+  ,
+    {
+      "key": "content.r1.char.monster_side_t1",
+      "name": "苔洞幼龙",
+      "flavor": "苔洞外的幼龙。"
+    },
+    {
+      "key": "content.r1.char.monster_side_t2",
+      "name": "冷泉巨蛇",
+      "flavor": "冷泉边的巨蛇。"
+    },
+    {
+      "key": "content.r1.char.monster_side_t3",
+      "name": "焦石蜥蜴",
+      "flavor": "焦石堆里的蜥蜴。"
+    },
+    {
+      "key": "content.r1.char.monster_side_t4",
+      "name": "铁牢亡魂",
+      "flavor": "铁牢外的亡魂。"
+    },
+    {
+      "key": "content.r1.char.monster_side_t5",
+      "name": "龙穴翼兽",
+      "flavor": "龙穴外的翼兽。"
+    },
+    {
+      "key": "content.r1.char.monster_side_t6",
+      "name": "幽冥游尸",
+      "flavor": "幽冥道上的游尸。"
+    },
+    {
+      "key": "content.r1.char.monster_side_t7",
+      "name": "坠星构装",
+      "flavor": "坠星坑外的构装体。"
+    },
+    {
+      "key": "content.r1.char.monster_side_t8",
+      "name": "雷池电灵",
+      "flavor": "雷池边的电灵。"
+    },
+    {
+      "key": "content.r1.char.monster_side_t9",
+      "name": "太虚守兽",
+      "flavor": "太虚外圈的守兽。"
+    }
   ]
 }
