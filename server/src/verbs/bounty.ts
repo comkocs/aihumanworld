@@ -195,7 +195,7 @@ async function post(ctx: VerbContext, me: CharRow, a: Extract<BountyArgs, { op: 
     data: { speaker: me.id, channel: "place", target: null },
   });
   // Last step of the handler: memory only, keyed by the event of this transaction.
-  ctx.services.speech.put(speech.id, note.text, (BigInt(tick) + BigInt(note.ttl)).toString());
+  await ctx.services.speech.persist(ctx.q, speech.id, note.text, (BigInt(tick) + BigInt(note.ttl)).toString(), tick);
   return { task: row, changes, other_speech: note.text };
 }
 

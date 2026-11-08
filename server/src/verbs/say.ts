@@ -82,8 +82,8 @@ export const def = defineVerb<SayArgs, SayResult>({
     // Last step of the handler: the in-memory text must not outlive a rollback.
     const clean = sanitizeText(a.text);
     const expires = String(BigInt(ctx.tick) + BigInt(ttl));
-    ctx.services.speech.put(event.id, clean, expires, ctx.tick);
-    if (settled.npcReply !== null) ctx.services.speech.put(settled.npcReply.event_id, settled.npcReply.text, expires, ctx.tick);
+    await ctx.services.speech.persist(ctx.q, event.id, clean, expires, ctx.tick);
+    if (settled.npcReply !== null) await ctx.services.speech.persist(ctx.q, settled.npcReply.event_id, settled.npcReply.text, expires, ctx.tick);
     return {
       channel: a.target === null ? "place" : "direct",
       target: a.target,

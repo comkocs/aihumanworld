@@ -51,12 +51,16 @@ export async function startApp(config: Config): Promise<App> {
     else log.info("content import skipped", { content_dir: null });
 
     const services: Services = { speech: new SpeechStore(), balance: () => bundle.balance };
+    const world = await db.query<{ tick: string }>("SELECT tick FROM worlds WHERE realm = $1", [config.realm]);
+    if (world.rows[0] === undefined) throw new Error("world missing after boot");
+    await services.speech.restore(db, String(world.rows[0].tick));
+    const dispatchDb: Db = { ...db, tx: (fn) => services.speech.transaction(db, fn) };
     const clock = new Clock(db, {
       realm: config.realm,
       maxCatchupPerTx: config.clock.max_catchup_ticks_per_tx,
       balance: services.balance,
     });
-    const runner: RunnerDeps = { db, realm: config.realm, clock, services };
+    const runner: RunnerDeps = { db: dispatchDb, realm: config.realm, clock, services };
     const run = (input: DispatchInput) => dispatch(runner, input);
     const server = createHttpServer({
       ...runner,
