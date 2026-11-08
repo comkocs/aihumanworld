@@ -17,6 +17,8 @@ import { eventsSince } from "../growth/discourse.ts";
 import { log } from "../log.ts";
 import { requireRule } from "../rules/world_rules.ts";
 import type { SpeechProjection, SpeechStore } from "../speech/store.ts";
+import { briefingFor, commitBriefing, type Briefing } from "./briefing.ts";
+import type { VerbContext } from "./types.ts";
 
 /** At most this many sentences ride in one envelope (the newest ones, oldest first). */
 export const NEW_SPEECH_MAX = 5;
@@ -165,6 +167,7 @@ async function noticeFor(q: Queryable, memo: Memo, realm: string, me: ID, tick: 
 }
 
 export interface Extras {
+  briefing?: Briefing;
   new_speech?: NewSpeech[];
   notice?: Notice;
   guide_rev?: string;
@@ -183,10 +186,12 @@ export async function envelopeExtras(
   oldSeen: Tick,
   tick: Tick,
   head: Seq,
+  ctx: VerbContext,
 ): Promise<Extras> {
   const memo = memoOf(owner);
   const extras: Extras = {
     commit() {
+      commitBriefing(ctx, head);
       memo.heard.set(me, BigInt(head));
       if (extras.notice !== undefined) {
         const shown = memo.noticed.get(me);
@@ -194,6 +199,8 @@ export async function envelopeExtras(
       }
     },
   };
+  const briefing = await briefingFor(ctx);
+  if (briefing !== undefined) extras.briefing = briefing;
   const heard = await newSpeechFor(q, speech, rules, memo, me, oldSeen, tick, head);
   if (heard.length > 0) extras.new_speech = heard;
   const current = await readNotice();

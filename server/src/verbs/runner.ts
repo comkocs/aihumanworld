@@ -18,6 +18,7 @@ import { authenticate, touchSeen } from "../identity/auth.ts";
 import { errText, log } from "../log.ts";
 import { ActionError, ERROR_HTTP, NO_DETAILS, reject, type ErrorCode } from "../protocol/errors.ts";
 import { apCost, requireRule } from "../rules/world_rules.ts";
+import { briefingStart, rememberBriefingStart, type Briefing } from "./briefing.ts";
 import { envelopeExtras, type NewSpeech, type Notice } from "./envelope_extras.ts";
 import { findVerb } from "./registry.ts";
 import type { AnyVerbDef, Gate, Services, VerbContext } from "./types.ts";
@@ -39,6 +40,8 @@ export interface OkEnvelope {
   notice?: Notice;
   /** S81: current entry guide revision, when the notice file is valid. */
   guide_rev?: string;
+  /** S87: bounded offline facts, once per returning interval. */
+  briefing?: Briefing;
 }
 
 export interface ErrEnvelope {
@@ -169,6 +172,7 @@ async function runInTx(deps: RunnerDeps, def: AnyVerbDef, args: unknown, input: 
       actor,
       services: deps.services,
     };
+    rememberBriefingStart(ctx, previousSeen);
     const result = await def.handler(ctx, args);
     const after = ctx.actor;
     if (after === null) throw new Error(`${def.verb}: no actor after handler`);
@@ -183,8 +187,10 @@ async function runInTx(deps: RunnerDeps, def: AnyVerbDef, args: unknown, input: 
       deed_ids: [...w.deedIds],
       event_head: String(head.rows[0]?.event_head ?? world.event_head),
     };
-    if (previousSeen !== null) {
-      const extras = await envelopeExtras(q, deps.services, deps.services.speech, deps.realm, rules, after.id, previousSeen, world.tick, body.event_head);
+    const extrasSeen = briefingStart(ctx);
+    if (extrasSeen !== null) {
+      const extras = await envelopeExtras(q, deps.services, deps.services.speech, deps.realm, rules, after.id, extrasSeen, world.tick, body.event_head, ctx);
+      if (extras.briefing !== undefined && def.verb !== "enter") body.briefing = extras.briefing;
       if (extras.new_speech !== undefined) body.new_speech = extras.new_speech;
       if (extras.notice !== undefined) body.notice = extras.notice;
       if (extras.guide_rev !== undefined) body.guide_rev = extras.guide_rev;

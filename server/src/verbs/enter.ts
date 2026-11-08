@@ -37,6 +37,7 @@ import { requireRule } from "../rules/world_rules.ts";
 import { sanitizeLabel } from "../speech/sanitize.ts";
 import { publicChanges } from "../tasks/common.ts";
 import { supplyInitialTasks } from "../tasks/hooks.ts";
+import { briefingFor, rememberBriefingStart, type Briefing } from "./briefing.ts";
 import { defineVerb, type VerbContext } from "./types.ts";
 
 const args = union("mode", {
@@ -69,6 +70,8 @@ export interface EnterResult {
   email_bound: boolean | null;
   changes: Change[];
   world: WorldClientView;
+  /** S87: offline facts on resume; absent on create or an already consumed interval. */
+  briefing?: Briefing;
 }
 
 async function freshCode(ctx: VerbContext): Promise<{ code: NewCode; hash: string }> {
@@ -410,7 +413,8 @@ async function resume(
       data: { char_id: c.id, from: c.state, to: "active", reason: "resume" },
     });
   }
-  return { char, identity_code: fresh === null ? null : fresh.code.display, created: false, email_bound: emailBound, changes, world: worldClientView(ctx.world) };
+  const briefing = await briefingFor(ctx, true);
+  return { char, identity_code: fresh === null ? null : fresh.code.display, created: false, email_bound: emailBound, changes, world: worldClientView(ctx.world), ...(briefing === undefined ? {} : { briefing }) };
 }
 
 /** S32 (设计者原话 2026-11-06 19): handle + email, no bearer code → a fresh code. */
@@ -452,6 +456,7 @@ async function resumeByHandle(ctx: VerbContext, a: Extract<EnterArgs, { mode: "r
       .map((i) => i.id);
     await ctx.q.query("DELETE FROM identities WHERE id = ANY($1::text[])", [oldest]);
   }
+  rememberBriefingStart(ctx, c.last_seen_tick);
   ctx.actor = await touchSeen(ctx.w, c, ctx.tick, ctx.now);
   return resume(ctx, a, fresh);
 }
