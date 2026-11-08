@@ -792,21 +792,21 @@ async function refreshAll() {
   await pullEvents(false);
 }
 
-function statLine(view) {
+function renderStatus(view) {
   const c = view.char;
-  const bits = [
-    UI.tick + " " + view.tick,
-    view.ap ? UI.ap + " " + view.ap.remaining + "/" + view.ap.per_tick : "",
-    tx("tier" + c.tier) + " · " + tx("stage" + c.stage),
-    UI.coin + " " + c.coin,
-    UI.vigor + " " + c.vigor,
-    UI.xp + " " + c.xp,
-    UI.potential + " " + c.potential,
-    (c.life === "alive" ? UI.alive : UI.dead),
-    UI.door + " " + doorWord(c.door),
+  const status = $("status");
+  clear(status);
+  const groups = [
+    [zh ? "身份" : "Identity", [tx("tier" + c.tier) + " · " + tx("stage" + c.stage), UI.door + " " + doorWord(c.door)]],
+    [zh ? "资源" : "Resources", [UI.coin + " " + c.coin, UI.vigor + " " + c.vigor, UI.xp + " " + c.xp, UI.potential + " " + c.potential]],
+    [UI.state, [UI.tick + " " + view.tick, view.ap ? UI.ap + " " + view.ap.remaining + "/" + view.ap.per_tick : "", c.life === "alive" ? UI.alive : UI.dead, c.train_skill ? UI.training + " " + skillKeyName(c.train_skill) : ""]],
   ];
-  if (c.train_skill) bits.push(UI.training + " " + skillKeyName(c.train_skill));
-  return bits.filter(Boolean).join("  ·  ");
+  for (const [label, values] of groups) {
+    status.appendChild(el("span", { class: "status-group" }, [
+      el("span", { class: "status-label", text: label }),
+      el("span", { class: "status-values" }, values.filter(Boolean).map((text) => el("span", { text }))),
+    ]));
+  }
 }
 
 function renderWorldHead() {
@@ -828,11 +828,17 @@ function renderWorldHead() {
 function renderWorld(view) {
   renderWorldHead();
   hereCombat = view.place.combat || "safe";
-  $("status").textContent = statLine(view);
+  renderStatus(view);
   const grid = $("world-view");
+  // 保留事件节点与展开状态，只移动位置；刷新不改变事件游标与轮询。
+  const eventsCard = $("events-card");
+  world.insertBefore(eventsCard, grid);
   clear(grid);
+  const local = el("div", { class: "world-column local-column" });
+  const social = el("div", { class: "world-column social-column" });
+  const tools = el("div", { class: "world-tools" });
 
-  const here = el("section", { class: "card" });
+  const here = el("section", { class: "card location-card" });
   here.appendChild(el("p", { class: "small", text: UI.here }));
   here.appendChild(el("h2", { class: "place-title", text: placeName(view.place) }));
   const blurb = placeBlurb(view.place);
@@ -848,30 +854,33 @@ function renderWorld(view) {
   const feats = (view.place.features || []).map((f) => tx("feature." + f));
   if (feats.length) here.appendChild(el("p", { class: "small", text: feats.join(" · ") }));
   here.appendChild(el("h3", { text: UI.exits }));
-  const exits = el("div", { class: "row" });
+  const exits = el("div", { class: "exit-list" });
   if (!view.place.exits || view.place.exits.length === 0) empty(exits);
   for (const ex of view.place.exits || []) {
     const label = (UI.dirs[ex.dir] || (zh ? "出口" : "Exit")) + " · " + placeIdName(ex.to) + (ex.locked ? " · " + UI.locked : "");
     exits.appendChild(btn(label, () => act("go", { dir: ex.dir })));
   }
   here.appendChild(exits);
-  grid.appendChild(here);
-
-  grid.appendChild(peopleCard(view.people, view.place, view.peopleTotal));
-  grid.appendChild(groundCard(view.ground));
-  grid.appendChild(bagCard(view.bag, view.people));
-  grid.appendChild(taskCard(UI.tasksOpen, view.openTasks, "open"));
-  grid.appendChild(taskCard(UI.tasksMine, view.mine, "mine"));
-  grid.appendChild(trainCard(view));
-  grid.appendChild(sayCard(view.people));
-  grid.appendChild(onlineCard());
-  grid.appendChild(emailCard());
+  local.appendChild(here);
+  social.appendChild(peopleCard(view.people, view.place, view.peopleTotal));
+  local.appendChild(groundCard(view.ground));
+  local.appendChild(taskCard(UI.tasksOpen, view.openTasks, "open"));
+  local.appendChild(eventsCard);
+  social.appendChild(sayCard(view.people));
+  tools.appendChild(bagCard(view.bag, view.people));
+  tools.appendChild(taskCard(UI.tasksMine, view.mine, "mine"));
+  tools.appendChild(trainCard(view));
+  tools.appendChild(onlineCard());
+  tools.appendChild(emailCard());
+  grid.appendChild(local);
+  grid.appendChild(social);
+  grid.appendChild(tools);
   $("last-raw").textContent = lastRaw;
 }
 
 function peopleCard(people, place, total) {
-  const card = el("section", { class: "card" });
-  const head = el("div", { class: "row" });
+  const card = el("section", { class: "card people-card" });
+  const head = el("div", { class: "row people-heading" });
   head.appendChild(el("h3", { text: UI.people }));
   if (typeof total === "number") {
     head.appendChild(el("span", { class: "small", text: UI.peopleShown.replace("{n}", total).replace("{k}", people.length) }));
@@ -883,10 +892,14 @@ function peopleCard(people, place, total) {
   const canFight = place.combat === "duel" || place.combat === "pk" || place.combat === "pve";
   for (const c of people) {
     names.set(c.id, shortName(c));
-    const row = el("div", { class: "item" });
-    const label = shortName(c) + " · " + tx("tier" + c.tier) + " " + tx("stage" + c.stage);
-    row.appendChild(el("span", { text: label }));
-    const actions = el("span", { class: "row" });
+    const row = el("div", { class: "item person-row" });
+    const name = shortName(c);
+    const rank = tx("tier" + c.tier) + " · " + tx("stage" + c.stage);
+    row.appendChild(el("span", { class: "person-copy", title: name + " · " + rank }, [
+      el("span", { class: "person-name", text: name }),
+      el("span", { class: "person-rank", text: rank }),
+    ]));
+    const actions = el("span", { class: "row person-actions" });
     const actionable = c.life === "alive" && (c.state === "active" || c.state === "draft");
     if (canFight && actionable && (place.combat !== "pve" || c.kind === "npc")) {
       actions.appendChild(btn(UI.attack, () => act("attack", { target: c.id }), "danger"));
@@ -1193,7 +1206,7 @@ async function showWho(handle, box) {
 }
 
 function onlineCard() {
-  const card = el("section", { class: "card" });
+  const card = el("section", { class: "card online-card" });
   const head = el("div", { class: "row" });
   head.appendChild(el("h3", { text: UI.onlineTitle }));
   const note = el("span", { class: "small", text: "" });
@@ -1470,6 +1483,7 @@ function leave() {
   lastRaw = "";
   $("last-raw").textContent = "";
   clear($("world-head"));
+  world.insertBefore($("events-card"), $("world-view"));
   clear($("world-view"));
   clear($("events"));
   clear(reveal);
