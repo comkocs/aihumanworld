@@ -168,7 +168,7 @@ async function settleNpc(ctx: VerbContext, me: CharRow, npc: CharRow, speech: Ev
     const place = await getRow(ctx.q, "place", me.loc);
     lang = place !== null && (place.region === "fantasy" || place.region === "scifi") ? "en" : "zh";
   }
-  const text = npcLine(npc.archetype, lang, me.id, npc.id, ctx.tick);
+  const text = npcLine(npc.archetype, lang, me.id, npc.id, spokenText);
 
   const got = await accrue(ctx, me, rule, rule.npc_rate_bp, false);
   const pays = got.reward.xp > 0 || got.reward.potential > 0 || got.reward.rep > 0;
