@@ -35,9 +35,10 @@ export async function encounterOnArrival(ctx: VerbContext, me: CharRow, dest: Pl
   const n = encounterNumbers(ctx);
   if (n === null || me.kind === "npc") return null;
   const previous = await countRows(ctx.q, "deed", "actor = $1 AND verb = 'go' AND kind = 'travel' AND tick = $2 AND place_id = $3", [me.id, ctx.tick, dest.id]);
-  const chance = previous > 0 ? Math.floor(n.chance_bp / n.repeat_divisor) : n.chance_bp;
+  // repeat_divisor is retained in the numbers but no longer applies to same-tick, same-place arrivals.
+  if (previous > 0) return null;
   const seed = JSON.stringify([ctx.world.realm, me.id, ctx.tick, dest.id]);
-  if (u32(seed, "encounter") % 10000 >= chance) return null;
+  if (u32(seed, "encounter") % 10000 >= n.chance_bp) return null;
 
   const tier = Math.min(me.tier, dest.tier);
   const base = tierNumbers(ctx.balance, tier);

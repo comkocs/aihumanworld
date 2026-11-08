@@ -75,8 +75,8 @@ test("S89: three arrival facts, no event, replay and same-tick repeat", async ()
       assert.deepEqual(events.rows[0]!.data.encounter, fact);
     }
     const replay = await goAt(ticks[1]!);
-    assert.deepEqual(replay.body.result.encounter, { kind: "xp", xp: 3 });
-    assert.equal((await mustGetRow(app.db, "char", id)).xp, replay.before.xp + 3);
+    assert.equal(Object.hasOwn(replay.body.result, "encounter"), false);
+    assert.equal((await mustGetRow(app.db, "char", id)).xp, replay.before.xp);
     const repeatTick = choose((t) => {
       const r = u32(seed(t), "encounter") % 10000;
       return r >= 300 && r < 600;
@@ -85,6 +85,43 @@ test("S89: three arrival facts, no event, replay and same-tick repeat", async ()
     assert.ok(first.body.result.encounter);
     const repeat = await goAt(repeatTick);
     assert.equal(Object.hasOwn(repeat.body.result, "encounter"), false);
+  } finally {
+    await app.close();
+    setQuiet(false);
+  }
+});
+
+test("S96: same-tick return to the same place grants encounter only once", async () => {
+  setQuiet(true);
+  const config = await loadConfig({ ...process.env, AIHW_DB_DRIVER: "pglite", AIHW_PGLITE_DIR: "memory", AIHW_PORT: "0", AIHW_CONTENT_DIR: "null" });
+  config.clock.enabled = false;
+  const app = await startApp(config);
+  try {
+    const invoke = async (verb: string, args: object, bearer: string | null): Promise<Json> =>
+      (await app.dispatch({ verb, body: { args }, bearer, door: "api" })).body;
+    const enter = await invoke("enter", { mode: "create", skin: "xiuxian", door: "api" }, null);
+    assert.equal(enter.ok, true, JSON.stringify(enter));
+    const id: string = enter.result.char.id;
+    const code: string = enter.result.identity_code;
+    let tick = 1;
+    while (tick < 100000) {
+      const seed = JSON.stringify(["r1", id, String(tick), dest]);
+      if (u32(seed, "encounter") % 10000 < 300 && u32(seed, "kind") % 3 === 1) break;
+      tick++;
+    }
+    assert.ok(tick < 100000, "fixed test seed not found");
+    await app.db.query("UPDATE worlds SET tick = $1, tick_started_at = now() WHERE id = $2", [String(tick), "r1:world:main"]);
+    await updateRow(app.db, "char", id, { ap_spent: 0, ap_tick: String(tick) }, String(tick));
+    const first = await invoke("go", { dir: "south" }, code);
+    assert.equal(first.ok, true, JSON.stringify(first));
+    assert.deepEqual(first.result.encounter, { kind: "xp", xp: 3 });
+    const away = await invoke("go", { dir: "north" }, code);
+    assert.equal(away.ok, true, JSON.stringify(away));
+    const before = await mustGetRow(app.db, "char", id);
+    const again = await invoke("go", { dir: "south" }, code);
+    assert.equal(again.ok, true, JSON.stringify(again));
+    assert.equal(Object.hasOwn(again.result, "encounter"), false);
+    assert.equal((await mustGetRow(app.db, "char", id)).xp, before.xp);
   } finally {
     await app.close();
     setQuiet(false);
