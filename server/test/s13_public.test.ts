@@ -118,7 +118,12 @@ test("S13 chain: place page → biography → no code → 304 → web form look"
         const response = await fetch(`${app.url}/char/${id}`, { headers });
         assert.equal(response.status, 200);
         const body = await response.text();
-        assert.ok(body.includes(entry.name));
+        if (headers.Accept === "text/html") {
+          assert.match(body, /id="app"/);
+          const projected = await fetch(`${app.url}/v1/page?path=/char/${id}`, { headers: { "Accept-Language": "zh-CN" } });
+          assert.equal(projected.status, 200);
+          assert.ok((await projected.text()).includes(entry.name));
+        } else assert.ok(body.includes(entry.name));
         assert.doesNotMatch(body, /translation_missing/);
       }
       const markdown = await (await fetch(`${app.url}/char/${id}`)).text();

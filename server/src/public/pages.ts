@@ -24,6 +24,7 @@ import type {
   WantedRow,
 } from "../facts/types.ts";
 import { orgStances } from "../orgs/relations.ts";
+import type { WeeklyBoard } from "../orgs/weekly.ts";
 import { lookExits, lookPlace } from "../verbs/look.ts";
 import { lexiconFor, neutralLexicon, type Lexicon, type Named, type SkinBook } from "./skins.ts";
 
@@ -459,7 +460,7 @@ export function resolveSkin(book: SkinBook, search: URLSearchParams): ResolvedSk
   return { lexicon: lex, query: `?skin=${encodeURIComponent(skin)}&locale=${encodeURIComponent(locale)}` };
 }
 
-export function indexDoc(book: SkinBook, skinQuery: string): PageDoc {
+export function indexDoc(book: SkinBook, skinQuery: string, weekly?: WeeklyBoard): PageDoc {
   const lines = [
     "# AI 人间 · 公开页",
     "",
@@ -467,6 +468,8 @@ export function indexDoc(book: SkinBook, skinQuery: string): PageDoc {
     "",
     `- [编年史](/chronicle${skinQuery})`,
   ];
+  lines.splice(4, 0, "## 本周组织榜 Weekly organizations", "", "打退兽潮 +10 / 完成悬赏 +3 / 成员破境 +2;同分按组织 ID。完整本周与上周榜:[JSON](/v1/weekly)。", "",
+    ...(weekly?.current.rankings.length ? weekly.current.rankings.slice(0, 5).map((r, i) => `${i + 1}. ${r.org_name.replace(/[\\`*_<>\[\]\r\n]/g, " ")} · \`${r.org_id}\` · ${r.total} 分(兽潮 ${r.beast_tide} / 悬赏 ${r.bounty} / 破境 ${r.breakthrough})`) : ["暂无组织得分。"]), "");
   for (const region of REGION_KEYS) lines.push(`- [区 ${region}](/region/${region}${skinQuery})`);
   lines.push("", "## 皮 Skins", "");
   for (const skin of SKINS) {

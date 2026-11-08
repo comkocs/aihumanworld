@@ -28,7 +28,7 @@ test("S80: a same-tier monster kill pays cultivation the result can show; a lowe
     const sparring = await enter();
     const world = await mustGetRow(app.db, "world", "r1:world:main");
     const numbers = app.services.balance().numbers;
-    assert.equal(world.rules_revision, "balance.v1.14");
+    assert.equal(world.rules_revision, "balance.v1.15");
     assert.equal(numbers.combat.monster_kill_xp_bp, 825);
     const task = numbers.tiers.find((r) => r.tier === 1);
     assert.ok(task, `tier 1 row missing; tiers seen: ${numbers.tiers.map((r) => r.tier).join(",")}`);

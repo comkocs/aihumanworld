@@ -16,6 +16,7 @@ import { worldId } from "../facts/ids.ts";
 import { itemPrice, stancePrice, tradePrice } from "../economy/prices.ts";
 import type { Balance } from "../growth/balance.ts";
 import { requireRevision } from "../orgs/numbers.ts";
+import { weeklyBoard } from "../orgs/weekly.ts";
 import { ActionError, NO_DETAILS, reject } from "../protocol/errors.ts";
 import type { ID } from "../facts/types.ts";
 import { charId } from "../protocol/shapes.ts";
@@ -26,7 +27,7 @@ import type { LookResult } from "../verbs/look.ts";
 import { authenticate, parseBearer } from "../identity/auth.ts";
 import type { DispatchInput, DispatchOutput } from "../verbs/runner.ts";
 import { argsFromPost, formBySlug, formsOf, type WebForm } from "./forms.ts";
-import { formDocument, formsIndexDocument, homeHtml, publicHtml, resultDocument, shellLang, wantsHtml, type ShellLang } from "./html.ts";
+import { formDocument, formsIndexDocument, homeHtml, pageBlocks, publicHtml, resultDocument, shellLang, wantsHtml, type ShellLang } from "./html.ts";
 import { indexDoc, isFactId, renderPage, resolveSkin, type PageDoc, type PageKind, type ResolvedSkin } from "./pages.ts";
 import { lexiconFor, loadSkins, neutralLexicon, type SkinBook } from "./skins.ts";
 
@@ -41,6 +42,22 @@ export interface PublicDeps {
 const BODY_MAX = 65536;
 const SKINS_DIR = join(SERVER_ROOT, "..", "content", "skins");
 const STATIC_DIR = join(SERVER_ROOT, "src", "public", "static");
+const WEB_DIR = join(SERVER_ROOT, "src", "public", "web-dist");
+const legacyWeb = (): boolean => process.env.AIHW_WEB_LEGACY === "1";
+
+async function sendWeb(res: ServerResponse, lang: ShellLang): Promise<void> {
+  const shell = await readFile(join(WEB_DIR, "index.html"), "utf8");
+  sendHtml(res, 200, shell.replace('lang="zh-CN"', `lang="${lang === "zh" ? "zh-CN" : "en"}"`), true);
+}
+
+async function sendWebAsset(res: ServerResponse, name: string): Promise<void> {
+  let body: string;
+  try { body = await readFile(join(WEB_DIR, "assets", name), "utf8"); }
+  catch { return notFound(res); }
+  send(res, 200, name.endsWith(".css") ? "text/css" : "text/javascript", body, {
+    "Cache-Control": "public, max-age=31536000, immutable", "Content-Security-Policy": CSP,
+  });
+}
 const PLAY_PAGE = `<!doctype html>
 <html lang="zh-CN">
 <head>
@@ -411,6 +428,14 @@ async function handleGet(deps: PublicDeps, req: IncomingMessage, res: ServerResp
     send(res, 200, "application/json", JSON.stringify(verbCatalog(world.rules, world.rules_revision)), { "Cache-Control": "no-store", "Content-Security-Policy": CSP });
     return;
   }
+  if (path === "/v1/weekly") {
+    const board = await deps.db.tx(async (q) => {
+      const world = await mustGetRow(q, "world", worldId(deps.realm), { lock: true });
+      return weeklyBoard(q, world, deps.balance());
+    });
+    send(res, 200, "application/json", JSON.stringify(board), { "Cache-Control": "no-store", "Content-Security-Policy": CSP });
+    return;
+  }
   const who = /^\/v1\/who\/([A-Z][0-9]{5,7})$/.exec(path);
   if (who?.[1] !== undefined) {
     await sendWho(deps, res, who[1]);
@@ -430,8 +455,12 @@ async function handleGet(deps: PublicDeps, req: IncomingMessage, res: ServerResp
     await sendShop(deps, req, res, decodeURIComponent(shop[1]));
     return;
   }
+  const webAsset = /^\/web\/assets\/([a-zA-Z0-9_-]+\.(?:js|css))$/.exec(path);
+  if (webAsset?.[1] !== undefined) return sendWebAsset(res, webAsset[1]);
   if (path === "/play") {
-    sendHtml(res, 200, PLAY_PAGE, true);
+    if (!legacyWeb() && wantsHtml(headerLine(req, "accept"))) {
+      await sendWeb(res, shellLang(headerLine(req, "accept-language")));
+    } else sendHtml(res, 200, PLAY_PAGE, true);
     return;
   }
   if (path === "/v1/defs" || path === "/play/definitions") {
@@ -452,6 +481,17 @@ async function handleGet(deps: PublicDeps, req: IncomingMessage, res: ServerResp
   const html = wantsHtml(headerLine(req, "accept"));
   const lang = shellLang(headerLine(req, "accept-language"));
   const chosen = resolveSkin(book, search);
+  if (path === "/v1/page") {
+    const hit = routeOf(search.get("path") ?? "/");
+    if (hit === null || hit.kind === "index") return notFound(res);
+    const view = browserSkin(book, hit.kind, hit.ref, search, lang);
+    const doc = await renderPage(deps.db, { kind: hit.kind, ref: hit.ref, lexicon: view.lexicon, ...(!search.has("skin") ? { birthBook: book } : {}) });
+    if (doc === null) return notFound(res);
+    send(res, 200, "application/json", JSON.stringify({ kind: hit.kind, ...pageBlocks(doc.markdown), query: hit.kind === "char" && !search.has("skin") ? "" : view.query }), {
+      "Cache-Control": "no-store", "Content-Security-Policy": CSP,
+    });
+    return;
+  }
   if (path === "/act") {
     sendHtml(res, 200, indexHtml(chosen.query, lang), true);
     return;
@@ -467,7 +507,11 @@ async function handleGet(deps: PublicDeps, req: IncomingMessage, res: ServerResp
   if (hit === null) return notFound(res);
   if (!html) {
     if (hit.kind === "index") {
-      sendPage(req, res, indexDoc(book, chosen.query));
+      const board = await deps.db.tx(async (q) => {
+        const world = await mustGetRow(q, "world", worldId(deps.realm), { lock: true });
+        return weeklyBoard(q, world, deps.balance());
+      });
+      sendPage(req, res, indexDoc(book, chosen.query, board));
       return;
     }
     const doc = await renderPage(deps.db, { kind: hit.kind, ref: hit.ref, lexicon: chosen.lexicon, ...(!search.has("skin") ? { birthBook: book } : {}) });
@@ -477,12 +521,14 @@ async function handleGet(deps: PublicDeps, req: IncomingMessage, res: ServerResp
   }
   const view = browserSkin(book, hit.kind, hit.ref, search, lang);
   if (hit.kind === "index") {
-    sendHtml(res, 200, homeHtml(lang, book), true);
+    if (!legacyWeb()) await sendWeb(res, lang);
+    else sendHtml(res, 200, homeHtml(lang, book), true);
     return;
   }
   const doc = await renderPage(deps.db, { kind: hit.kind, ref: hit.ref, lexicon: view.lexicon, ...(!search.has("skin") ? { birthBook: book } : {}) });
   if (doc === null) return notFound(res);
-  sendHtml(res, 200, publicHtml(lang, doc.markdown, hit.kind === "char" && !search.has("skin") ? "" : view.query), true);
+  if (!legacyWeb()) await sendWeb(res, lang);
+  else sendHtml(res, 200, publicHtml(lang, doc.markdown, hit.kind === "char" && !search.has("skin") ? "" : view.query), true);
 }
 
 async function handlePost(deps: PublicDeps, req: IncomingMessage, res: ServerResponse, path: string, search: URLSearchParams): Promise<void> {

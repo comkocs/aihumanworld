@@ -32,7 +32,7 @@ test("S89: three arrival facts, no event, replay and same-tick repeat", async ()
     const id: string = enter.result.char.id;
     const code: string = enter.result.identity_code;
     const world = await mustGetRow(app.db, "world", "r1:world:main");
-    assert.equal(world.rules_revision, "balance.v1.14");
+    assert.equal(world.rules_revision, "balance.v1.15");
     const seed = (tick: number): string => JSON.stringify(["r1", id, String(tick), dest]);
     const choose = (predicate: (tick: number) => boolean): number => {
       for (let tick = 1; tick < 100000; tick++) if (predicate(tick)) return tick;

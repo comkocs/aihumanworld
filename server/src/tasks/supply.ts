@@ -23,6 +23,8 @@ import type {
   WorldRow,
 } from "../facts/types.ts";
 import type { Writer } from "../facts/writer.ts";
+import { mulDiv } from "../growth/balance.ts";
+import { systemTaskRewardBp } from "../world_events/clock.ts";
 import { must, releaseTask } from "./common.ts";
 import { rewardKey, taskNumbers, type TaskNumbers } from "./numbers.ts";
 
@@ -120,11 +122,13 @@ async function instantiate(ctx: SupplyCtx, n: TaskNumbers, char: CharRow, t: Tas
     items.push(inst.id);
   }
   const spec = t.reward_spec;
+  const place = await getRow(q, "place", placeId);
+  const rewardBp = place === null ? 10000 : await systemTaskRewardBp(q, place);
   const reward = {
-    coin: Math.min(spec.coin, base.coin),
-    xp: Math.min(spec.xp, base.xp),
-    potential: Math.min(spec.potential, base.potential),
-    rep: Math.min(spec.rep, n.rep_system),
+    coin: mulDiv(Math.min(spec.coin, base.coin), rewardBp, 10000),
+    xp: mulDiv(Math.min(spec.xp, base.xp), rewardBp, 10000),
+    potential: mulDiv(Math.min(spec.potential, base.potential), rewardBp, 10000),
+    rep: mulDiv(Math.min(spec.rep, n.rep_system), rewardBp, 10000),
     items,
   };
   const raw = t.duration_ticks === 0 ? n.duration.default : t.duration_ticks;

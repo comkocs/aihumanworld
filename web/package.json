@@ -1,0 +1,12 @@
+{
+  "name": "aihw-web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": { "build": "vite build" },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.0",
+    "vite": "^7.2.0",
+    "vue": "^3.5.0"
+  }
+}

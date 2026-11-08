@@ -12,6 +12,7 @@ import { PAGE_DEFAULT, limit, page } from "../protocol/shapes.ts";
 import { obj, oneOf, opt, type Out } from "../protocol/validate.ts";
 import { merged } from "../tasks/common.ts";
 import { recordPresenceEvidence } from "../tasks/hooks.ts";
+import { systemTaskRewardBp } from "../world_events/clock.ts";
 import { defineVerb, type VerbContext } from "./types.ts";
 
 const SECTIONS = ["place", "people", "items", "tasks", "deeds"] as const;
@@ -25,7 +26,7 @@ const args = obj({
 export type LookArgs = Out<typeof args>;
 
 export type LookExit = PlaceRow["exits"][number] & Partial<Pick<PlaceRow, "tier" | "danger" | "region">>;
-export type LookPlace = Omit<PlaceRow, "exits"> & { exits: LookExit[]; npc_attackable?: false };
+export type LookPlace = Omit<PlaceRow, "exits"> & { exits: LookExit[]; npc_attackable?: false; system_task_reward_bp?: number };
 
 /**
  * S78: an NPC that belongs to an org carries the stance between that org and the
@@ -154,7 +155,8 @@ export const def = defineVerb<LookArgs, LookResult>({
     const me = ctx.actor;
     if (me === null) throw new Error("look without actor");
     const place = await mustGetRow(ctx.q, "place", me.loc);
-    const shownPlace = { ...lookPlace(place), exits: await lookExits(ctx.q, place) };
+    const rewardBp = await systemTaskRewardBp(ctx.q, place);
+    const shownPlace = { ...lookPlace(place), exits: await lookExits(ctx.q, place), ...(rewardBp < 10000 ? { system_task_reward_bp: rewardBp } : {}) };
     await discover(ctx, place);
     await recordPresenceEvidence(ctx, ctx.actor ?? me, place);
     // deed_head after any deed this look wrote.

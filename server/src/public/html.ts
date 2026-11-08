@@ -215,6 +215,25 @@ export function markdownHtml(markdown: string): string {
   return `<article class="prose card">${parts.join("\n")}</article>`;
 }
 
+/** 浏览器专用结构直接取自既有公开投影，不改 Markdown 原文。 */
+export function pageBlocks(markdown: string): { title: string; skin: string | null; intro: string[]; sections: { title: string; lines: string[] }[] } {
+  let title = "AI 人间";
+  let skin: string | null = null;
+  const intro: string[] = [];
+  const sections: { title: string; lines: string[] }[] = [];
+  let lines = intro;
+  for (const line of markdown.split("\n")) {
+    if (line.startsWith("# ")) title = line.slice(2);
+    else if (line.startsWith("skin: ")) skin = line.slice(6);
+    else if (line.startsWith("## ")) {
+      const section = { title: line.slice(3), lines: [] as string[] };
+      sections.push(section);
+      lines = section.lines;
+    } else if (line.trim() !== "" && line !== "(none)") lines.push(line.replace(/^- /, ""));
+  }
+  return { title, skin, intro, sections };
+}
+
 export function publicHtml(lang: ShellLang, markdown: string, query: string): string {
   const title = /^#\s+(.+)$/m.exec(markdown)?.[1] ?? COPY[lang].title;
   return pageShell(lang, title, markdownHtml(markdown), query);

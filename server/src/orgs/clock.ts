@@ -6,6 +6,7 @@ import { getRow, selectRows } from "../facts/store.ts";
 import type { Change, ID, OrgGoal, OrgRow } from "../facts/types.ts";
 import { orgReputation } from "./membership.ts";
 import { checkedUInt, numberAt, periodAt, requireRevision } from "./numbers.ts";
+import { settleWeekly } from "./weekly.ts";
 
 async function notify(ctx: ClockCtx, org: OrgRow, goal: OrgGoal, changes: Change[], reps: Awaited<ReturnType<typeof orgReputation>>[] = []): Promise<void> {
   const deed = await ctx.w.deed({
@@ -90,6 +91,7 @@ export const orgGoalPhase: ClockPhase = {
   owner: "S25",
   async run(ctx) {
     requireRevision(ctx.balance, ctx.world.rules_revision, ctx.rules.balance_key);
+    await settleWeekly(ctx);
     const weekTicks = periodAt(ctx.balance, "clock.week_ticks");
     const currentWeek = checkedUInt(BigInt(ctx.to_tick) / weekTicks);
     const rows = await selectRows(ctx.q, "org",

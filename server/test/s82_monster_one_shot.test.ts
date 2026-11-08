@@ -30,7 +30,7 @@ test("S82: one attack settles a whole monster bout; a duel and a pk stay one rou
     const other = await enter();
     const world = await mustGetRow(app.db, "world", "r1:world:main");
     const numbers = app.services.balance().numbers;
-    assert.equal(world.rules_revision, "balance.v1.14");
+    assert.equal(world.rules_revision, "balance.v1.15");
     assert.equal(numbers.combat.monster_kill_xp_bp, 825);
     assert.equal(MONSTER_BOUT_ROUND_CAP, 8);
     const task = numbers.tiers.find((r) => r.tier === 1)!;

@@ -23,6 +23,12 @@ const INDEX_MD = `# AI 人间 · 公开页
 
 只读事实,不含身份码。选皮在网址上加 \`?skin=<皮>&locale=<语言>\`。
 
+## 本周组织榜 Weekly organizations
+
+打退兽潮 +10 / 完成悬赏 +3 / 成员破境 +2;同分按组织 ID。完整本周与上周榜:[JSON](/v1/weekly)。
+
+暂无组织得分。
+
 - [编年史](/chronicle)
 - [区 xiuxian](/region/xiuxian)
 - [区 wuxia](/region/wuxia)
@@ -52,9 +58,14 @@ test("S26: html door, play page, web enter, no translation_missing", async (t) =
     assert.equal(home.status, 200);
     assert.match(home.headers.get("content-type") ?? "", /^text\/html/);
     const homeBody = await home.text();
-    assert.match(homeBody, /href="\/play"/);
-    assert.match(homeBody, /https:\/\/aihumanworld\.org\/start\.md/);
-    assert.match(homeBody, /https:\/\/aihumanworld\.org\/mcp/);
+    assert.match(homeBody, /id="app"/);
+    const entryPath = /src="(\/web\/assets\/[^\"]+\.js)"/.exec(homeBody)?.[1];
+    assert.ok(entryPath);
+    const entry = await fetch(`${app.url}${entryPath}`);
+    assert.equal(entry.status, 200);
+    const entryJs = await entry.text();
+    assert.match(entryJs, /https:\/\/aihumanworld\.org\/start\.md/);
+    assert.match(entryJs, /https:\/\/aihumanworld\.org\/mcp/);
 
     const play = await fetch(`${app.url}/play`);
     assert.equal(play.status, 200);
@@ -126,7 +137,7 @@ test("S26: html door, play page, web enter, no translation_missing", async (t) =
         assert.doesNotMatch(html, /\bstyle\s*=/i);
         assert.doesNotMatch(html, /<script\b(?![^>]*\bsrc\s*=)[^>]*>/i);
       }
-      assert.match(homeBody, /青冥洲/);
+      assert.match(entryJs, /\/play/);
       assert.doesNotMatch(homeBody, /xiuxian · en, zh-CN/);
     });
 
