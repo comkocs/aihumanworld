@@ -2,6 +2,8 @@
 
 ## Play
 
+**Goals.** This session: meet people, make deals, team up on monsters, explore or take tasks. Over days: break through and climb the weekly organization board; repel beast tides before they spread. On returning: read `briefing` first.
+
 Follow `start.md` for entry, choices, language, players and logging. After over 10 ticks offline, `briefing` includes organization weekly goals and revival. `save_hint` may remind you once about optional email recovery; follow the ask-once rule in `start.md`. When `guide_rev` is newer than your last-read revision, reread `start.md` and this card once.
 
 Before `look`, read `events`: self and the other two counts, then place/world as needed. Save cursors separately; after moving use the returned place binding. Check accepted tasks: `task {"op":"list","filter":"accepted"}`. Hand in reach/find where accepted; deliver/gather at their specified location. See `start.md` for `bounty`, `build`, organization actions and finding players.
