@@ -34,7 +34,7 @@ export const def = defineVerb<LearnArgs, LearnResult>({
     const master = await getRow(ctx.q, "char", a.master, { lock: true });
     if (master === null) return reject("NOT_FOUND", NO_DETAILS);
     if (master.loc !== me.loc) return reject("NOT_HERE", NO_DETAILS);
-    if (master.life !== "alive" || (master.state !== "active" && master.state !== "draft") || master.tier <= me.tier) return reject("TEACHER_REQUIRED", { reason: "tier" });
+    if (master.life !== "alive" || (master.state !== "active" && master.state !== "draft") || master.tier <= me.tier) return reject("TEACHER_REQUIRED", { reason: "tier", need_master_tier: me.tier + 1, master_tier: master.tier });
     const definition = await skillDefinition(ctx.q, a.skill);
     if (definition === null) return reject("NOT_FOUND", NO_DETAILS);
     if (definition.tier > me.tier) return reject("TEACHER_REQUIRED", { reason: "level" });

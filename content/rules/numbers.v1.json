@@ -1,7 +1,7 @@
 {
  "meta": {
   "schema": "aihw.numbers.v1",
-  "revision_key": "balance.v1.16",
+  "revision_key": "balance.v1.17",
   "integer_only": true
  },
  "world_rules": {
@@ -44,7 +44,7 @@
    "build": 1,
    "breakthrough": 2
   },
-  "balance_key": "balance.v1.16"
+  "balance_key": "balance.v1.17"
  },
  "clock": {
   "day_ticks": 1440,
@@ -207,7 +207,7 @@
   },
   {
    "tier": 2,
-   "learn_coin": 900,
+   "learn_coin": 630,
    "org_join_fee": 300,
    "org_leave_coin": 750,
    "wanted_bounty_coin": 300,
@@ -215,7 +215,7 @@
   },
   {
    "tier": 3,
-   "learn_coin": 1380,
+   "learn_coin": 970,
    "org_join_fee": 460,
    "org_leave_coin": 1150,
    "wanted_bounty_coin": 460,
@@ -223,7 +223,7 @@
   },
   {
    "tier": 4,
-   "learn_coin": 1980,
+   "learn_coin": 1410,
    "org_join_fee": 660,
    "org_leave_coin": 1650,
    "wanted_bounty_coin": 660,
@@ -231,7 +231,7 @@
   },
   {
    "tier": 5,
-   "learn_coin": 3000,
+   "learn_coin": 2180,
    "org_join_fee": 1000,
    "org_leave_coin": 2500,
    "wanted_bounty_coin": 1000,
@@ -239,7 +239,7 @@
   },
   {
    "tier": 6,
-   "learn_coin": 4620,
+   "learn_coin": 3410,
    "org_join_fee": 1540,
    "org_leave_coin": 3850,
    "wanted_bounty_coin": 1540,
@@ -247,7 +247,7 @@
   },
   {
    "tier": 7,
-   "learn_coin": 6600,
+   "learn_coin": 4990,
    "org_join_fee": 2200,
    "org_leave_coin": 5500,
    "wanted_bounty_coin": 2200,
@@ -255,7 +255,7 @@
   },
   {
    "tier": 8,
-   "learn_coin": 10200,
+   "learn_coin": 7860,
    "org_join_fee": 3400,
    "org_leave_coin": 8500,
    "wanted_bounty_coin": 3400,
@@ -263,7 +263,7 @@
   },
   {
    "tier": 9,
-   "learn_coin": 15600,
+   "learn_coin": 12320,
    "org_join_fee": 5200,
    "org_leave_coin": 13000,
    "wanted_bounty_coin": 5200,
