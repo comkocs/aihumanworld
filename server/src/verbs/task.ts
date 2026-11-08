@@ -8,11 +8,14 @@
 // org weekly goal progress is S25's (from the same facts). The first world
 // completion of a template writes first_clear with the S5 bonus.
 
+import { join } from "node:path";
+import { SERVER_ROOT } from "../config.ts";
 import { pageRows, resolveLimit } from "../facts/paging.ts";
 import { countRows, getRow, mustGetRow, selectRows } from "../facts/store.ts";
 import type { Change, CharRow, DeedRow, Holder, ID, ItemInstanceRow, Reward, Seq, TaskInstanceRow } from "../facts/types.ts";
 import { settleBountyTrade, type TradeReward } from "../growth/trade_bonus.ts";
 import { NO_DETAILS, reject } from "../protocol/errors.ts";
+import { lexiconFor, loadSkins, type SkinBook } from "../public/skins.ts";
 import { PAGE_DEFAULT, limit, page, taskId } from "../protocol/shapes.ts";
 import { oneOf, opt, union, type Out } from "../protocol/validate.ts";
 import { requireRule } from "../rules/world_rules.ts";
@@ -49,15 +52,21 @@ const args = union("op", {
   abandon: { id: taskId },
 });
 export type TaskArgs = Out<typeof args>;
+type SubmitAt = "anywhere" | { place_id: ID; name: string };
+type TargetStatus = Pick<CharRow, "life" | "revive_tick" | "loc"> | {
+  alive_here: number;
+  next_revive_tick_here: CharRow["revive_tick"];
+};
+type TaskListRow = TaskInstanceRow & { submit_at: SubmitAt; target_status?: TargetStatus | null };
 export type TaskResult =
   | {
-      rows: TaskInstanceRow[];
+      rows: TaskListRow[];
       page: { after: ID | null; through: Seq };
       has_more: boolean;
       snapshot_changed: boolean;
       hint?: TaskHint;
     }
-  | { task: TaskInstanceRow; reward: Reward | null; changes: Change[]; hint?: TaskHint; trade_reward?: TradeReward };
+  | { task: TaskInstanceRow; reward: Reward | null; changes: Change[]; submit_at?: SubmitAt; hint?: TaskHint; trade_reward?: TradeReward };
 type Edit = Extract<TaskResult, { task: TaskInstanceRow }>;
 type TaskHint = { zh: string; en: string };
 
@@ -93,6 +102,38 @@ function actor(ctx: VerbContext): CharRow {
 
 const issuerChar = (t: TaskInstanceRow): ID | null => (t.issuer.kind === "char" ? t.issuer.id : null);
 
+let bookPromise: Promise<SkinBook> | null = null;
+async function submitAt(ctx: VerbContext, t: TaskInstanceRow): Promise<SubmitAt> {
+  const c = t.condition;
+  if (c.tpl === "find" || c.tpl === "reach") return "anywhere";
+  const placeId = c.tpl === "deliver" || c.tpl === "gather" ? c.to_place : t.offer_place;
+  const place = await mustGetRow(ctx.q, "place", placeId);
+  bookPromise ??= loadSkins(join(SERVER_ROOT, "..", "content", "skins"));
+  const skin = place.region === "neutral" ? actor(ctx).skin : place.region;
+  const lex = lexiconFor(await bookPromise, skin, skin === "xiuxian" || skin === "wuxia" ? "zh-CN" : "en");
+  return { place_id: place.id, name: lex.name(place.content_key).name };
+}
+
+async function targetStatus(ctx: VerbContext, t: TaskInstanceRow): Promise<TargetStatus | null> {
+  const c = t.condition;
+  if (c.tpl !== "slay") return null;
+  if (c.target !== null) {
+    const target = await getRow(ctx.q, "char", c.target);
+    return target === null ? null : { life: target.life, revive_tick: target.revive_tick, loc: target.loc };
+  }
+  const result = await ctx.q.query<{ alive_here: unknown; next_revive_tick_here: unknown }>(
+    "SELECT count(*) FILTER (WHERE life = 'alive') AS alive_here, " +
+      "min(revive_tick) FILTER (WHERE life = 'dead') AS next_revive_tick_here FROM chars " +
+      "WHERE kind = 'npc' AND state <> 'buried' AND loc = $1 AND archetype = $2 AND tier = $3",
+    [actor(ctx).loc, c.archetype, c.tier],
+  );
+  const row = result.rows[0];
+  return {
+    alive_here: Number(row?.alive_here ?? 0),
+    next_revive_tick_here: row?.next_revive_tick_here == null ? null : String(row.next_revive_tick_here),
+  };
+}
+
 async function list(ctx: VerbContext, a: Extract<TaskArgs, { op: "list" }>): Promise<TaskResult> {
   const me = actor(ctx);
   let where: string;
@@ -108,8 +149,12 @@ async function list(ctx: VerbContext, a: Extract<TaskArgs, { op: "list" }>): Pro
   }
   const lim = resolveLimit(a.limit, ctx.rules);
   const p = await pageRows(ctx.q, "task", where, params, a.page, lim, ctx.world.deed_head);
+  const rows: TaskListRow[] = [];
+  for (const t of p.rows as TaskInstanceRow[]) {
+    rows.push({ ...t, submit_at: await submitAt(ctx, t), ...(t.condition.tpl === "slay" ? { target_status: await targetStatus(ctx, t) } : {}) });
+  }
   const full = systemFactor(systemDoneToday(ctx, me), taskNumbers(ctx.balance).decay_step_bp) === 0;
-  return { rows: p.rows as TaskInstanceRow[], page: p.page, has_more: p.has_more, snapshot_changed: p.snapshot_changed, ...(full ? { hint: fullHint } : {}) };
+  return { rows, page: p.page, has_more: p.has_more, snapshot_changed: p.snapshot_changed, ...(full ? { hint: fullHint } : {}) };
 }
 
 async function accept(ctx: VerbContext, id: ID): Promise<Edit> {
@@ -148,7 +193,7 @@ async function accept(ctx: VerbContext, id: ID): Promise<Edit> {
     participants: unique([me.id, issuerChar(t)]),
   });
   await emitTaskChanged(w, task, deed.id);
-  return { task, reward: null, changes: [change] };
+  return { task, reward: null, changes: [change], submit_at: await submitAt(ctx, task) };
 }
 
 const before = (aT: number, aS: number, bT: number, bS: number): boolean => aT < bT || (aT === bT && aS < bS);
@@ -233,9 +278,11 @@ async function submit(ctx: VerbContext, id: ID): Promise<Edit> {
   if (t.state !== "accepted") return reject("TASK_STATE", { state: t.state }, "args.id");
   if (t.taker !== me.id) return reject("NOT_ALLOWED", { reason: "ownership" }, "args.id");
   if (isExpired(t, tick)) return reject("TASK_STATE", { state: "expired" }, "args.id");
-  const c = t.condition;
-  const at = c.tpl === "deliver" || c.tpl === "gather" ? c.to_place : t.offer_place;
-  if (me.loc !== at) return reject("CONDITION_UNMET", { reason: "location", place_id: at }, "args.id");
+  const at = await submitAt(ctx, t);
+  if (at !== "anywhere" && me.loc !== at.place_id) {
+    const details = { reason: "location" as const, place_id: at.place_id, place_name: at.name, hint: `回 ${at.name} 交` };
+    return reject("CONDITION_UNMET", details, "args.id");
+  }
   const n = taskNumbers(ctx.balance);
 
   const changes: Change[] = [];
@@ -385,7 +432,7 @@ async function abandon(ctx: VerbContext, id: ID): Promise<Edit> {
 
 export const def = defineVerb<TaskArgs, TaskResult>({
   verb: "task",
-  summary: "查看、接取、提交或放弃可核实的任务。玩家悬赏成交奖回包 trade_reward 可见。",
+  summary: "查看、接取、提交或放弃可核实的任务。寻找、到达条件满足后可就地交差，其余交差点见 submit_at。玩家悬赏成交奖回包 trade_reward 可见。",
   errors: ["NOT_FOUND", "NOT_HERE", "TASK_STATE", "TASK_LIMIT", "CONDITION_UNMET"],
   purpose: (a) => ({ list: "列出可接或已接任务。", accept: "接取指定任务。", submit: "核验目标并提交任务领取报酬。", abandon: "放弃已接任务。" })[a.op],
   args,
