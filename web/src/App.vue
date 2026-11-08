@@ -79,8 +79,16 @@ async function loadNames() {
     ]);
     const lex = new Map(book.entries.map(e => [e.key, e.name]));
     lexicon.value = Object.fromEntries(lex);
+    const missingPlaces = defs.places.filter(p => !lex.has(p.content_key));
+    const fallbackBooks = missingPlaces.length ? await Promise.allSettled(
+      skins.filter(s => s.id !== skin.value).map(s => get(`/play/lexicon/${s.id}/${encodeURIComponent(locale)}.json`)),
+    ) : [];
+    const placeNames = new Map(lex);
+    for (const fallback of fallbackBooks) if (fallback.status === 'fulfilled') {
+      for (const e of fallback.value.entries) if (!placeNames.has(e.key)) placeNames.set(e.key, e.name);
+    }
     const result = {};
-    for (const p of defs.places) if (lex.has(p.content_key)) result[p.id] = lex.get(p.content_key);
+    for (const p of defs.places) if (placeNames.has(p.content_key)) result[p.id] = placeNames.get(p.content_key);
     for (const e of book.entries) {
       const m = /^content\.([a-z][a-z0-9_]*)\.char\.(.+)$/.exec(e.key);
       if (m) result[`${m[1]}:char:${m[2]}`] = e.name;
@@ -144,7 +152,7 @@ function deedName(id) {
     const number = /:char:c(\d+)$/.exec(id)?.[1];
     return number ? `A${number.padStart(5, '0')}` : (zh ? '一位同行者' : 'A traveler');
   }
-  return type === 'place' ? (zh ? '一处地方' : 'a place') : (zh ? '一个组织' : 'an organization');
+  return type === 'place' ? id.split(':').at(-1) : (zh ? '一个组织' : 'an organization');
 }
 function deedParts(deed) {
   const parts = [];
@@ -152,12 +160,18 @@ function deedParts(deed) {
   const link = id => parts.push({ text: deedName(id), href: `/${id.split(':')[1]}/${id}${query.value}` });
   const refs = (deed.targets || []).filter(id => /^[a-z][a-z0-9_]*:(char|place|org):[a-z][a-z0-9_]*$/.test(id) && id !== deed.actor);
   const label = Object.hasOwn(deedLabels, deed.kind) ? deedLabels[deed.kind][zh ? 0 : 1] : (zh ? '留下了一则事迹' : 'left a story');
-  if (deed.actor) link(deed.actor); else text(zh ? '世界' : 'The world');
-  if (deed.kind === 'discourse' && refs.length) {
+  if (deed.actor) link(deed.actor);
+  if (deed.kind === 'discourse' && deed.actor && refs.length) {
     text(zh ? ' 与 ' : ' and ');
     link(refs.shift());
     text(zh ? ' 论道' : ' shared a conversation');
-  } else text(` ${label}`);
+  } else text(`${deed.actor ? ' ' : ''}${label}`);
+  if (deed.kind === 'world_event' && deed.result?.world_event) {
+    const event = deed.result.world_event;
+    const kind = { beast_tide: zh ? '兽潮' : 'Beast tide', secret_realm: zh ? '秘境' : 'Secret realm' }[event.kind];
+    const phase = { open: zh ? '开场' : 'opens', close: zh ? '收场' : 'closes' }[event.phase];
+    if (kind && phase) text(` · ${zh ? kind + phase : kind + ' ' + phase}`);
+  }
   for (const id of refs) { text(' · '); link(id); }
   if (deed.place && deed.place !== deed.actor && !refs.includes(deed.place) && !(deed.targets || []).includes(deed.place)) {
     text(' · '); link(deed.place);
@@ -165,6 +179,16 @@ function deedParts(deed) {
   return parts;
 }
 function deedTick(deed) { return zh ? `第 ${deed.tick} 刻` : `Tick ${deed.tick}`; }
+function introLine(line) {
+  const notes = {
+    '全世界近期公开事迹(visibility = world),最近在前。不含身份码。': ['全世界最近发生的公开事，最新在前。', 'Recent public stories from around the world, newest first.'],
+    '本区地点,按 ID 末尾数字(没有则为 0)再按 ID 字节序排列;数字分配 ID 即数字序,命名 ID 不按创建先后。': ['这里是本区的地点。', 'Places in this region.'],
+    '在场者 / 物 / 出口 / 可接任务 / 近期事迹。事实,不含身份码。': ['看看这里的人、物、出口、任务和近期事迹。', 'People, things, exits, tasks and recent stories here.'],
+    '公开字段与公开事迹。余额、体力、身份凭据不在此页。': ['这里记载着公开的故事。', 'Public stories about this traveler.'],
+    '组织事实与它同其他组织的盟 / 敌。未列出的都是中立。不含成员名单。': ['看看这个组织和它的盟友与对手。', 'Discover this organization, its allies and its rivals.'],
+  };
+  return Object.hasOwn(notes, line) ? notes[line][zh ? 0 : 1] : line;
+}
 function skinHref(id) {
   const params = new URLSearchParams(location.search);
   params.set('skin', id);
@@ -220,7 +244,7 @@ onMounted(() => {
       <div v-if="loading" class="page-state" role="status">{{ words.loading }}</div>
       <div v-else-if="error" class="page-state" role="alert"><p>{{ words.failed }}</p><button @click="loadPage">{{ words.retry }}</button></div>
       <article v-else-if="page" class="fact-page">
-        <header class="fact-header"><p class="eyebrow">{{ words.public }}</p><h1><FactLine :text="pageTitle" :query="page.query" :names="names"/></h1><p v-for="(line, i) in page.intro" :key="i"><FactLine :text="line" :query="page.query" :names="names"/></p></header>
+        <header class="fact-header"><p class="eyebrow">{{ words.public }}</p><h1><FactLine :text="pageTitle" :query="page.query" :names="names"/></h1><p v-for="(line, i) in page.intro" :key="i"><FactLine :text="introLine(line)" :query="page.query" :names="names"/></p></header>
         <div class="fact-sections"><section v-for="(section, i) in page.sections" :key="i" class="panel fact-section"><div class="panel-heading"><h2>{{ section.title }}</h2><span class="section-count">{{ section.lines.length }}</span></div><ul v-if="section.lines.length" class="fact-list"><li v-for="(line, j) in section.lines" :key="j"><template v-if="deedFor(line)"><span class="deed-sentence"><template v-for="(part, k) in deedParts(deedFor(line))" :key="k"><a v-if="part.href" :href="part.href">{{ part.text }}</a><template v-else>{{ part.text }}</template></template></span><small class="deed-tick">{{ deedTick(deedFor(line)) }}</small></template><span v-else-if="/`[a-z][a-z0-9_]*:deed:/.test(line)">{{ zh ? '一则事迹' : 'A story' }}</span><FactLine v-else :text="line" :query="page.query" :names="names"/></li></ul><p v-else class="empty-note">{{ words.empty }}</p></section></div>
       </article>
     </template>

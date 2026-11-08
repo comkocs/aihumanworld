@@ -32,6 +32,16 @@ test("S91：Vue 壳、原 Markdown、公开只读数据与回退", async () => {
         VALUES ($1, $2, $2, $3, 'attack', 'first_kill', $4::jsonb, $5, $6::jsonb, $7, $8::jsonb, 'v1', $9)`,
       [`r1:deed:s91_${seq}`, seq, char.id, JSON.stringify([npc]), "r1:place:start_xiuxian", JSON.stringify({ outcome: "success" }), visibility, JSON.stringify([char.id]), `s91_${seq}`]);
     }
+    const worldEvents = [
+      { kind: "beast_tide", phase: "open" }, { kind: "beast_tide", phase: "close" },
+      { kind: "secret_realm", phase: "open" }, { kind: "secret_realm", phase: "close" },
+    ] as const;
+    for (const [i, event] of worldEvents.entries()) {
+      const seq = 900003 + i;
+      await app.db.query(`INSERT INTO deeds (id, seq, tick, actor, verb, kind, targets, place_id, result, visibility, participants, rules_revision, first_key)
+        VALUES ($1, $2, $2, NULL, 'clock', 'world_event', $3::jsonb, $4, $5::jsonb, 'world', '[]'::jsonb, 'v1', NULL)`,
+      [`r1:deed:s91_${seq}`, seq, JSON.stringify(["r1:place:start_xiuxian"]), "r1:place:start_xiuxian", JSON.stringify({ outcome: "success", world_event: { ...event, tier: 1 }, changes: [] })]);
+    }
     const pages: { path: string; kind: PageKind; ref: string | null }[] = [
       { path: "/chronicle", kind: "chronicle", ref: null },
       { path: "/region/xiuxian", kind: "region", ref: "xiuxian" },
@@ -59,7 +69,7 @@ test("S91：Vue 壳、原 Markdown、公开只读数据与回退", async () => {
       assert.equal(data.status, 200, p.path);
       assert.match(data.headers.get("content-type") ?? "", /^application\/json/);
       const projected = await data.json() as {
-        deeds: Record<string, { tick: string; kind: string; actor: string; targets: string[]; place: string }>;
+        deeds: Record<string, { tick: string; kind: string; actor: string | null; targets: string[]; place: string; result?: { world_event: { kind: string; phase: string } } }>;
         deedNames: Record<string, { handle?: string; content_key?: string }>;
         [key: string]: unknown;
       };
@@ -71,6 +81,13 @@ test("S91：Vue 壳、原 Markdown、公开只读数据与回退", async () => {
         assert.ok(deedNames[npc]);
         assert.equal(deedNames["r1:place:start_xiuxian"]?.content_key, "content.r1.place.start_xiuxian");
         assert.equal(deeds["r1:deed:s91_900002"], undefined);
+        if (p.kind !== "char") for (const [i, event] of worldEvents.entries()) {
+          const seq = 900003 + i;
+          assert.deepEqual(deeds[`r1:deed:s91_${seq}`], {
+            tick: String(seq), kind: "world_event", actor: null, targets: ["r1:place:start_xiuxian"],
+            place: "r1:place:start_xiuxian", result: { world_event: event },
+          });
+        }
       } else assert.deepEqual(deeds, {});
     }
     const assets = [...shell.matchAll(/(?:src|href)="(\/web\/assets\/[^\"]+)"/g)].map(m => m[1]!);

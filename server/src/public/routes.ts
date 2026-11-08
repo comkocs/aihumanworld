@@ -273,9 +273,14 @@ async function pageDeeds(q: Queryable, blocks: ReturnType<typeof pageBlocks>, ki
     visibility = `(actor = $${params.length - 1} OR targets @> $${params.length}::jsonb OR participants @> $${params.length}::jsonb) AND visibility IN ('place', 'world')`;
   }
   const rows = await selectRows(q, "deed", `id IN (${marks(ids)}) AND ${visibility}`, params);
-  const deeds = Object.fromEntries(rows.map((d) => [d.id, {
-    tick: d.tick, kind: d.kind, actor: d.actor, targets: d.targets, place: d.place_id,
-  }]));
+  const deeds = Object.fromEntries(rows.map((d) => {
+    const event = d.kind === "world_event" ? (d.result as { world_event?: { kind?: unknown; phase?: unknown } }).world_event : undefined;
+    return [d.id, {
+      tick: d.tick, kind: d.kind, actor: d.actor, targets: d.targets, place: d.place_id,
+      ...(event && (event.kind === "beast_tide" || event.kind === "secret_realm") && (event.phase === "open" || event.phase === "close")
+        ? { result: { world_event: { kind: event.kind, phase: event.phase } } } : {}),
+    }];
+  }));
   const refs = [...new Set(rows.flatMap((d) => [d.actor, ...d.targets, d.place_id]).filter((id): id is string => id !== null))];
   const chars = refs.filter((id) => isFactId(id, "char"));
   const places = refs.filter((id) => isFactId(id, "place"));
