@@ -26,8 +26,8 @@ export interface ErrorDetailsMap {
     available: UInt;
   };
   CAPACITY_EXCEEDED: { required: UInt; available: UInt };
-  ITEM_STATE: { reason: "consumed" | "equipped" | "socket" | "type" | "durability" };
-  SKILL_CAP: { level: UInt; cap: UInt };
+  ITEM_STATE: { reason: "consumed" | "equipped" | "socket" | "type" | "durability" | "tier"; required_tier?: UInt };
+  SKILL_CAP: { level: UInt; cap: UInt; scroll_tier?: UInt };
   TEACHER_REQUIRED: { reason: "tier" | "level" | "bond" | "payment" };
   TASK_STATE: { state: TaskState };
   TASK_LIMIT: { kind: "accepted" | "bounty"; limit: UInt };

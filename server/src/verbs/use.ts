@@ -134,21 +134,21 @@ async function consume(ctx: VerbContext, id: ID): Promise<UseResult> {
     const max = (await stats(ctx.q, ctx.balance, me)).vigor_max;
     await operation.update("char", me.id, { vigor: Number(BigInt(me.vigor) + BigInt(effect.vigor) > BigInt(max) ? BigInt(max) : BigInt(me.vigor) + BigInt(effect.vigor)) });
   } else if (def.kind === "scroll" && effect.kind === "learn") {
-    if (def.tier !== me.tier) return reject("ITEM_STATE", { reason: "type" });
+    if (def.tier > me.tier) return reject("ITEM_STATE", { reason: "tier", required_tier: def.tier });
     const skill = (await selectRows(ctx.q, "skill", "record = 'definition' AND key = $1", [effect.skill]))[0];
     if (skill?.record !== "definition") return reject("NOT_FOUND", NO_DETAILS);
-    if (skill.tier > me.tier) return reject("ITEM_STATE", { reason: "type" });
+    if (skill.tier > me.tier) return reject("ITEM_STATE", { reason: "tier", required_tier: skill.tier });
     if (skill.org_id !== null) {
       const member = await membership(ctx.q, me.id);
       const org = await getRow(ctx.q, "org", skill.org_id);
       if (member.b !== skill.org_id || !org?.skill_defs.includes(skill.id)) return reject("NOT_ALLOWED", { reason: "rank" });
     }
     const old = (await selectRows(ctx.q, "skill", "record = 'learned' AND char_id = $1 AND def_id = $2", [me.id, skill.id]))[0];
-    const hard = cellNumber(ctx.balance, "tiers", { tier: me.tier }, "skill_cap_hard");
+    const hard = cellNumber(ctx.balance, "tiers", { tier: def.tier }, "skill_cap_hard");
     const previous = old?.record === "learned" ? old : null;
-    if ((previous?.level ?? 0) >= hard || effect.levels === 0) return reject("SKILL_CAP", { level: previous?.level ?? 0, cap: hard });
+    if ((previous?.level ?? 0) >= hard || effect.levels === 0) return reject("SKILL_CAP", { level: previous?.level ?? 0, cap: hard, ...(def.tier < me.tier ? { scroll_tier: def.tier } : {}) });
     const level = Number(BigInt(previous?.level ?? 0) + BigInt(effect.levels) > BigInt(hard) ? BigInt(hard) : BigInt(previous?.level ?? 0) + BigInt(effect.levels));
-    const cap = Math.min(hard, Math.max(previous?.cap ?? 0, level));
+    const cap = def.tier < me.tier ? Math.max(previous?.cap ?? 0, level) : Math.min(hard, Math.max(previous?.cap ?? 0, level));
     const next: SkillLearnedRow = previous === null ? {
       id: await ctx.w.newId("skill"), created_tick: ctx.tick, updated_tick: ctx.tick,
       record: "learned", char_id: me.id, def_id: skill.id, level, cap,
@@ -417,7 +417,7 @@ async function makeBond(ctx: VerbContext, changes: Change[], kind: "mentor" | "a
 
 export const def = defineVerb<UseArgs, UseResult>({
   verb: "use",
-  summary: "使用物品、买卖修理，或管理组织与人物关系。",
+  summary: "使用物品、买卖修理，或管理组织与人物关系。卷轴阶不高于你即可用；低阶卷轴只能把技能升到它那阶的上限。",
   errors: ["NOT_FOUND", "NOT_HERE", "NOT_ALLOWED", "ITEM_STATE", "INSUFFICIENT_RESOURCE", "CAPACITY_EXCEEDED", "SKILL_CAP", "EXIT_BLOCKED", "OFFER_STATE"],
   purpose: (a) => ({
     consume: "消耗药品、卷轴或地图。", unlock: "用匹配钥匙打开当前地点指定方向的锁门。",
