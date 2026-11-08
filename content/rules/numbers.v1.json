@@ -790,6 +790,7 @@
  "npc": {
   "patrol_step_ticks": 5,
   "monster_respawn_ticks": 30,
+  "monster_respawn_crowded_ticks": 10,
   "npc_respawn_ticks": 60,
   "tutorial_respawn_ticks": 1,
   "resource_respawn_ticks": 120,

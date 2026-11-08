@@ -57,7 +57,7 @@ export interface Numbers {
     /** S48: red-name duration by tier relation of the initiator who killed in a pk place (absent = kill_player_ticks). */
     kill_lower_ticks?: number; kill_peer_ticks?: number; kill_higher_ticks?: number;
   };
-  npc: { monster_respawn_ticks: number; npc_respawn_ticks: number; tutorial_respawn_ticks: number };
+  npc: { monster_respawn_ticks: number; monster_respawn_crowded_ticks: number; npc_respawn_ticks: number; tutorial_respawn_ticks: number };
   consumables: { table: { tier: number; grade: number; bt_bonus_bp: number }[] };
   economy: { start_coin: number; start_potential: number };
   orgs: { goal_min_target: number; goal_reward_rep: number };
@@ -185,7 +185,7 @@ export function parseBalance(input: unknown): Balance {
   }
   numbersAt(root, "death", "xp_loss_bp revive_wait_ticks revive_vigor_bp pk_drop_chance_bp pk_drop_count");
   numbersAt(root, "wanted", "attack_guard_ticks kill_player_ticks");
-  numbersAt(root, "npc", "monster_respawn_ticks npc_respawn_ticks tutorial_respawn_ticks");
+  numbersAt(root, "npc", "monster_respawn_ticks monster_respawn_crowded_ticks npc_respawn_ticks tutorial_respawn_ticks");
   numbersAt(root, "economy", "start_coin start_potential");
   numbersAt(root, "orgs", "goal_min_target goal_reward_rep");
   numbersAt(root, "tasks.deed_bonus.first_kill", "xp_bp potential_bp rep_mult");

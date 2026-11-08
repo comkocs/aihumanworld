@@ -10,6 +10,7 @@ import { monsterKillReward } from "../growth/monster_reward.ts";
 import { settleCoKillTrade, type TradeReward } from "../growth/trade_bonus.ts";
 import { backpack, combatant, neutralFacts } from "../growth/facts.ts";
 import { resolutionSeed, resolveCombat, u32 } from "../growth/settlement.ts";
+import { monsterRespawnWait } from "../npc/respawn.ts";
 import { NO_DETAILS, reject } from "../protocol/errors.ts";
 import { charId } from "../protocol/shapes.ts";
 import { obj, type Out } from "../protocol/validate.ts";
@@ -127,7 +128,7 @@ export const def = defineVerb<AttackArgs, AttackResult>({
       let next = { ...char, vigor };
       if (dies) {
         const n = ctx.balance.numbers;
-        const wait = char.kind !== "npc" ? n.death.revive_wait_ticks : char.archetype === "tutorial_opponent" ? n.npc.tutorial_respawn_ticks : char.archetype === "monster" ? n.npc.monster_respawn_ticks : n.npc.npc_respawn_ticks;
+        const wait = char.kind !== "npc" ? n.death.revive_wait_ticks : char.archetype === "tutorial_opponent" ? n.npc.tutorial_respawn_ticks : char.archetype === "monster" ? await monsterRespawnWait(ctx.q, ctx.balance, char, ctx.tick) : n.npc.npc_respawn_ticks;
         const xpLoss = Math.min(char.xp, mulDiv(gridNumbers(ctx.balance, char.tier, char.stage).xp_need, n.death.xp_loss_bp, 10000));
         next = { ...next, life: "dead", revive_tick: (BigInt(ctx.tick) + BigInt(wait)).toString(), xp: char.xp - xpLoss, last_yield_tick: ctx.tick };
         push(await ctx.w.update("char", char.id, { vigor, life: next.life, revive_tick: next.revive_tick, xp: next.xp, last_yield_tick: ctx.tick }));

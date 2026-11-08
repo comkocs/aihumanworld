@@ -12,6 +12,7 @@ import { SpeechStore } from "../speech/store.ts";
 import { combatant, neutralFacts } from "../growth/facts.ts";
 import { resolutionSeed, resolveCombat, u32 } from "../growth/settlement.ts";
 import { recordSlayEvidence } from "../tasks/evidence.ts";
+import { monsterRespawnWait } from "./respawn.ts";
 
 export function npcLifeNumber(ctx: ClockCtx, key: string, fallback: number, min: number, max: number): number {
   const npc = ctx.balance.numbers.npc as unknown as Record<string, unknown>;
@@ -77,7 +78,7 @@ export async function ambush(ctx: ClockCtx, monster: CharRow): Promise<void> {
     let next = { ...char, vigor };
     if (dies) {
       const n = ctx.balance.numbers;
-      const wait = char.kind === "npc" ? n.npc.monster_respawn_ticks : n.death.revive_wait_ticks;
+      const wait = char.kind === "npc" && char.archetype === "monster" ? await monsterRespawnWait(ctx.q, ctx.balance, char, ctx.to_tick) : char.kind === "npc" ? n.npc.monster_respawn_ticks : n.death.revive_wait_ticks;
       const xpLoss = Math.min(char.xp, mulDiv(gridNumbers(ctx.balance, char.tier, char.stage).xp_need, n.death.xp_loss_bp, 10000));
       next = { ...next, life: "dead", revive_tick: (BigInt(ctx.to_tick) + BigInt(wait)).toString(), xp: char.xp - xpLoss, last_yield_tick: ctx.to_tick };
       push(await ctx.w.update("char", char.id, { vigor, life: next.life, revive_tick: next.revive_tick, xp: next.xp, last_yield_tick: ctx.to_tick }));
