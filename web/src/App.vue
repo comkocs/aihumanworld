@@ -112,11 +112,23 @@ async function loadPage() {
   } catch { error.value = true; }
   finally { loading.value = false; }
 }
+function newestDeeds(lines) {
+  return lines.slice().reverse().sort((a, b) => {
+    const aTick = /^tick (\d+)(?:\s|$)/.exec(a)?.[1];
+    const bTick = /^tick (\d+)(?:\s|$)/.exec(b)?.[1];
+    if (aTick === undefined || bTick === undefined) return aTick === bTick ? 0 : aTick === undefined ? 1 : -1;
+    const aNumber = BigInt(aTick), bNumber = BigInt(bTick);
+    return aNumber === bNumber ? 0 : aNumber > bNumber ? -1 : 1;
+  });
+}
+function sectionLines(section) {
+  return /^(近期事迹 Recent deeds|事迹 Deeds)$/.test(section.title) ? newestDeeds(section.lines) : section.lines;
+}
 async function loadHome() {
   await Promise.allSettled([
     get('/v1/online').then(data => { online.value = data.total ?? data.count; }).catch(() => { onlineFailed.value = true; }),
     get(pageUrl('/chronicle')).then(data => {
-      deeds.value = (data.sections[0]?.lines || []).slice().reverse().slice(0, 3);
+      deeds.value = newestDeeds(data.sections[0]?.lines || []).slice(0, 3);
       deedData.value = data.deeds || {};
       deedNames.value = data.deedNames || {};
     }).catch(() => { deedsFailed.value = true; }),
@@ -245,7 +257,7 @@ onMounted(() => {
       <div v-else-if="error" class="page-state" role="alert"><p>{{ words.failed }}</p><button @click="loadPage">{{ words.retry }}</button></div>
       <article v-else-if="page" class="fact-page">
         <header class="fact-header"><p class="eyebrow">{{ words.public }}</p><h1><FactLine :text="pageTitle" :query="page.query" :names="names"/></h1><p v-for="(line, i) in page.intro" :key="i"><FactLine :text="introLine(line)" :query="page.query" :names="names"/></p></header>
-        <div class="fact-sections"><section v-for="(section, i) in page.sections" :key="i" class="panel fact-section"><div class="panel-heading"><h2>{{ section.title }}</h2><span class="section-count">{{ section.lines.length }}</span></div><ul v-if="section.lines.length" class="fact-list"><li v-for="(line, j) in section.lines" :key="j"><template v-if="deedFor(line)"><span class="deed-sentence"><template v-for="(part, k) in deedParts(deedFor(line))" :key="k"><a v-if="part.href" :href="part.href">{{ part.text }}</a><template v-else>{{ part.text }}</template></template></span><small class="deed-tick">{{ deedTick(deedFor(line)) }}</small></template><span v-else-if="/`[a-z][a-z0-9_]*:deed:/.test(line)">{{ zh ? '一则事迹' : 'A story' }}</span><FactLine v-else :text="line" :query="page.query" :names="names"/></li></ul><p v-else class="empty-note">{{ words.empty }}</p></section></div>
+        <div class="fact-sections"><section v-for="(section, i) in page.sections" :key="i" class="panel fact-section"><div class="panel-heading"><h2>{{ section.title }}</h2><span class="section-count">{{ section.lines.length }}</span></div><ul v-if="section.lines.length" class="fact-list"><li v-for="(line, j) in sectionLines(section)" :key="j"><template v-if="deedFor(line)"><span class="deed-sentence"><template v-for="(part, k) in deedParts(deedFor(line))" :key="k"><a v-if="part.href" :href="part.href">{{ part.text }}</a><template v-else>{{ part.text }}</template></template></span><small class="deed-tick">{{ deedTick(deedFor(line)) }}</small></template><span v-else-if="/`[a-z][a-z0-9_]*:deed:/.test(line)">{{ zh ? '一则事迹' : 'A story' }}</span><FactLine v-else :text="line" :query="page.query" :names="names"/></li></ul><p v-else class="empty-note">{{ words.empty }}</p></section></div>
       </article>
     </template>
   </main>
