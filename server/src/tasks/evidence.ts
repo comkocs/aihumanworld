@@ -1,8 +1,8 @@
 // [S24] Task evidence (事实格式 §9.1). Presence (find / reach place) is written
 // on look / go as a self `discover` deed; gather evidence is the `take` deed;
-// slay is counted at submit from S10's combat deeds read as facts (combat_win
-// whose changes show the victim dead; duels never count). Evidence is
-// deduplicated and only facts after accepted_seq count.
+// S83: slay progress is recorded on the kill and rechecked at submit from combat
+// facts showing the victim dead (including a clock ambush counter-kill; never
+// duels). Evidence is deduplicated and only facts after accepted_seq count.
 
 import type { Queryable } from "../db/db.ts";
 import { getRow, selectRows } from "../facts/store.ts";
@@ -82,6 +82,35 @@ export async function gatherEvidence(tx: Tx, char: CharRow, item: ItemInstanceRo
   return changes;
 }
 
+/** One matching kill fact, shared by the live progress and the submit recheck. */
+function matchesSlay(char: CharRow, t: TaskInstanceRow, d: DeedRow): boolean {
+  const c = t.condition;
+  if (c.tpl !== "slay" || t.accepted_seq === null || BigInt(d.seq) <= BigInt(t.accepted_seq)) return false;
+  const inputs = d.result.roll?.inputs;
+  const snap = inputs?.target;
+  if (snap === undefined || snap === null || inputs?.mode === "duel") return false;
+  const won = d.actor === char.id && d.kind === "combat_win";
+  // S82's ambush roll leads with the participant, but the deed belongs to the
+  // attacking monster: its combat_loss is the participant's counter-kill.
+  const countered = d.verb === "clock" && d.kind === "combat_loss" && d.actor === snap.char_id &&
+    d.targets.includes(char.id) && inputs?.actor.char_id === char.id && inputs.mode === "pve" && snap.archetype === "monster";
+  return (won || countered) && snap.tier === c.tier &&
+    (c.target !== null ? snap.char_id === c.target : snap.archetype === c.archetype) &&
+    d.result.changes.some((ch) => ch.table === "char" && ch.id === snap.char_id && ch.after.life === "dead");
+}
+
+/** Record a kill immediately, once per deed and only while an accepted task needs it. */
+export async function recordSlayEvidence(tx: Tx, char: CharRow, deed: DeedRow): Promise<Change[]> {
+  const changes: Change[] = [];
+  if (char.kind === "npc") return changes;
+  for (const t of await acceptedTasks(tx.q, char.id, "'slay'", tx.tick)) {
+    const c = t.condition;
+    if (c.tpl !== "slay" || t.progress.count >= c.count || t.progress.evidence.includes(deed.id)) continue;
+    if (matchesSlay(char, t, deed)) changes.push(await addEvidence(tx, t, deed.id));
+  }
+  return changes;
+}
+
 /** Deeds proving the slay condition since acceptance (at most condition.count). */
 export async function slayEvidence(q: Queryable, char: CharRow, t: TaskInstanceRow): Promise<ID[]> {
   const c = t.condition;
@@ -89,20 +118,14 @@ export async function slayEvidence(q: Queryable, char: CharRow, t: TaskInstanceR
   const deeds = (await selectRows(
     q,
     "deed",
-    "actor = $1 AND kind = 'combat_win' AND seq > $2",
-    [char.id, t.accepted_seq],
+    "seq > $2 AND ((actor = $1 AND kind = 'combat_win') OR " +
+      "(verb = 'clock' AND kind = 'combat_loss' AND targets @> $3::jsonb))",
+    [char.id, t.accepted_seq, JSON.stringify([char.id])],
     "ORDER BY seq",
   )) as DeedRow[];
   const out: ID[] = [];
   for (const d of deeds) {
-    const snap = d.result.roll?.inputs.target ?? null;
-    const victim = snap?.char_id ?? d.targets.find((x) => x !== char.id) ?? null;
-    if (victim === null) continue;
-    const died = d.result.changes.some((ch) => ch.table === "char" && ch.id === victim && ch.after.life === "dead");
-    if (!died) continue;
-    const ok = snap !== null && snap.tier === c.tier &&
-      (c.target !== null ? victim === c.target : snap.archetype === c.archetype);
-    if (ok) out.push(d.id);
+    if (matchesSlay(char, t, d)) out.push(d.id);
     if (out.length >= c.count) break;
   }
   return out;

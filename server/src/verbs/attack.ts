@@ -12,6 +12,7 @@ import { resolutionSeed, resolveCombat, u32 } from "../growth/settlement.ts";
 import { NO_DETAILS, reject } from "../protocol/errors.ts";
 import { charId } from "../protocol/shapes.ts";
 import { obj, type Out } from "../protocol/validate.ts";
+import { recordSlayEvidence } from "../tasks/evidence.ts";
 import { defineVerb, type VerbContext } from "./types.ts";
 
 const args = obj({ target: charId });
@@ -217,7 +218,8 @@ export const def = defineVerb<AttackArgs, AttackResult>({
       await ctx.w.emit({ scope: "place", place_id: place.id, type: "life_changed", deed_id: death.id, data: life });
       if (resolved.winner !== null) {
         const input = char.id === me.id ? actorInput : targetInput;
-        // slay task progress is the task stream's: submit verifies combat deeds itself.
+        // S83: record slay progress on the kill; submit still rechecks the combat facts.
+        if (char.id === target.id && resolved.winner === me.id) changes.push(...await recordSlayEvidence(ctx, me, deed));
         if (char.kind === "npc") changes.push(...await firstKill(ctx, resolved.winner, input));
         // S62: the first of this origin region to beat the opponent at its tutorial place.
         const killer = await getRow(ctx.q, "char", resolved.winner);

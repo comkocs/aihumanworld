@@ -10,6 +10,7 @@ import { monsterKillReward } from "../growth/monster_reward.ts";
 import { SpeechStore } from "../speech/store.ts";
 import { combatant, neutralFacts } from "../growth/facts.ts";
 import { resolutionSeed, resolveCombat, u32 } from "../growth/settlement.ts";
+import { recordSlayEvidence } from "../tasks/evidence.ts";
 
 export function npcLifeNumber(ctx: ClockCtx, key: string, fallback: number, min: number, max: number): number {
   const npc = ctx.balance.numbers.npc as unknown as Record<string, unknown>;
@@ -130,6 +131,8 @@ export async function ambush(ctx: ClockCtx, monster: CharRow): Promise<void> {
   const verbCtx = { q: ctx.q, w: ctx.w, world: ctx.world, rules: ctx.rules, balance: ctx.balance, tick: ctx.to_tick,
     now: ctx.now, door: "api" as const, actor: null, services: { speech: new SpeechStore(), balance: () => ctx.balance } };
   const counterPay = countered ? await monsterKillReward(verbCtx, target, monster, deed.id) : { changes: [] };
+  // S83: the monster's combat_loss also proves its victim's counter-kill for slay tasks.
+  if (countered) await recordSlayEvidence({ q: ctx.q, w: ctx.w, tick: ctx.to_tick }, target, deed);
   const data = { attacker: monster.id, target: target.id, winner: result.winner, mode: "pve" as const, outcome: result.outcome, dead: dead.map((c) => c.id), deed_id: deed.id, ambush: true,
     ...(dropped.length > 0 ? { dropped } : {}),
     ...(counterPay.reward !== undefined ? { reward: { xp: counterPay.reward.xp, potential: counterPay.reward.potential } } : {}) };
