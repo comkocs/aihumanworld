@@ -141,10 +141,12 @@ test("S92: 30 ticks of speech, four bilateral exchanges, durable dedupe, coin re
       body: "beast", archetype: "monster", state: "active", tier: 1, stage: 1, vigor: 1, xp: 0, potential: 0,
       life: "alive", revive_tick: null, loc: place, respawn_place: place, patrol_route: [], patrol_index: 0 };
     const otherMonster = { ...monster, id: "r1:char:s92_monster_other" };
+    const thirdMonster = { ...monster, id: "r1:char:s92_monster_third" };
     await insertRow(app.db, "char", monster);
     await insertRow(app.db, "char", otherMonster);
+    await insertRow(app.db, "char", thirdMonster);
     await updateRow(app.db, "place", place, { combat: "pve", danger: "low" }, current.tick);
-    for (const p of [a, b]) {
+    for (const p of [a, b, c]) {
       const learned = (await selectRows(app.db, "skill", "record = 'learned' AND char_id = $1", [p.id]))[0];
       assert.ok(learned?.record === "learned");
       await updateRow(app.db, "skill", learned.id, { level: 1000, cap: 1000 }, current.tick);
@@ -152,16 +154,28 @@ test("S92: 30 ticks of speech, four bilateral exchanges, durable dedupe, coin re
     }
     const first = await call("attack", { target: otherMonster.id }, a.code);
     assert.equal(first.result.outcome, "win");
+    assert.equal(Object.hasOwn(first.result, "trade_reward"), false);
+    const third = await call("attack", { target: thirdMonster.id }, c.code);
+    assert.equal(third.result.outcome, "win");
     await app.db.query("UPDATE worlds SET tick = tick + 10");
     const beforeKill = await growth();
     const kill = await call("attack", { target: monster.id }, b.code);
     assert.equal(kill.result.outcome, "win");
     assert.equal((await row(a.id)).xp - beforeKill[0]![0]!, bonus.xp);
     const tradeEvents = (await app.db.query<Json>("SELECT data FROM events WHERE deed_id = $1 AND type = 'reward_granted' AND data->'trade'->>'kind' = 'hunt'", [kill.result.deed_id])).rows;
-    assert.equal(tradeEvents.length, 2);
+    assert.equal(tradeEvents.length, 4);
     for (const e of tradeEvents) assert.deepEqual([e.data.reward.xp, e.data.reward.potential], [bonus.xp, bonus.potential]);
+    const ownTradeEvents = tradeEvents.filter((e) => e.data.char_id === b.id);
+    assert.equal(ownTradeEvents.length, 2);
+    assert.deepEqual(kill.result.trade_reward, ownTradeEvents.reduce((sum, e) => ({ xp: sum.xp + e.data.reward.xp, potential: sum.potential + e.data.reward.potential }), { xp: 0, potential: 0 }));
+    assert.ok(kill.result.reward);
+    assert.equal((await row(b.id)).xp - beforeKill[1]![0]!, kill.result.reward.xp + kill.result.trade_reward.xp);
+    const combatEvents = (await app.db.query<Json>("SELECT data FROM events WHERE deed_id = $1 AND type = 'combat_resolved'", [kill.result.deed_id])).rows;
+    assert.ok(combatEvents.length > 0);
+    assert.ok(combatEvents.every((e) => !Object.hasOwn(e.data, "trade_reward")));
     await updateRow(app.db, "char", monster.id, { vigor: 1, life: "alive", revive_tick: null }, current.tick);
     const second = await call("attack", { target: monster.id }, b.code);
+    assert.equal(Object.hasOwn(second.result, "trade_reward"), false);
     assert.equal((await app.db.query("SELECT 1 FROM events WHERE deed_id = $1 AND data->'trade'->>'kind' = 'hunt'", [second.result.deed_id])).rows.length, 0);
     await app.db.query("UPDATE worlds SET tick = tick + 29");
     await updateRow(app.db, "char", otherMonster.id, { vigor: 1, life: "alive", revive_tick: null }, current.tick);

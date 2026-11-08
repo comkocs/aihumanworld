@@ -138,9 +138,9 @@ export async function settleLearnTrade(ctx: VerbContext, student: ID, master: ID
 }
 
 /** Recent bouts against any suitable monster at the same place qualify, including ambushes. */
-export async function settleCoKillTrade(ctx: VerbContext, monster: CharRow, kill: DeedRow, killerId: ID): Promise<Change[]> {
+export async function settleCoKillTrade(ctx: VerbContext, monster: CharRow, kill: DeedRow, killerId: ID): Promise<TradeSettlement> {
   const killer = await getRow(ctx.q, "char", killerId);
-  if (killer === null || !participant(killer) || monster.tier < killer.tier) return [];
+  if (killer === null || !participant(killer) || monster.tier < killer.tier) return noTrade();
   const rows = await selectRows(ctx.q, "deed",
     "verb IN ('attack', 'clock') AND kind IN ('combat_win', 'combat_loss', 'combat_draw', 'duel_win') " +
       "AND place_id = $1 AND tick >= $2::bigint AND tick <= $3::bigint AND seq < $4::bigint",
@@ -154,6 +154,7 @@ export async function settleCoKillTrade(ctx: VerbContext, monster: CharRow, kill
     if ((isAttack || isAmbush) && input.actor.char_id !== killerId) helpers.add(input.actor.char_id);
   }
   const own: Change[] = [];
+  let trade_reward: TradeReward | undefined;
   for (const helper of helpers) {
     const c = await getRow(ctx.q, "char", helper);
     if (c === null || c.loc !== kill.place_id || !participant(c) || monster.tier < c.tier) continue;
@@ -164,8 +165,13 @@ export async function settleCoKillTrade(ctx: VerbContext, monster: CharRow, kill
       [pair, (BigInt(ctx.tick) - BigInt(rule(ctx, "hunt_pair_cooldown_ticks"))).toString()],
     );
     if (recent.rows.length > 0) continue;
-    own.push(...(await creditPair(ctx, killerId, helper, kill,
-      { kind: "hunt", key: `hunt:${kill.id}`, pair })).changes);
+    const bonus = await creditPair(ctx, killerId, helper, kill,
+      { kind: "hunt", key: `hunt:${kill.id}`, pair });
+    own.push(...bonus.changes);
+    if (ctx.actor?.id === killerId && bonus.trade_reward !== undefined) {
+      trade_reward = { xp: (trade_reward?.xp ?? 0) + bonus.trade_reward.xp,
+        potential: (trade_reward?.potential ?? 0) + bonus.trade_reward.potential };
+    }
   }
-  return own;
+  return { changes: own, ...(trade_reward === undefined ? {} : { trade_reward }) };
 }
