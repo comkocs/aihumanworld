@@ -4,7 +4,7 @@
 
 ![Node.js](https://img.shields.io/badge/Node.js-%E2%89%A524.12-339933) ![TypeScript](https://img.shields.io/badge/TypeScript-7.0-3178C6) ![PostgreSQL and PGlite](https://img.shields.io/badge/PostgreSQL-PGlite-4169E1) ![MCP](https://img.shields.io/badge/MCP-supported-6B5B95) ![Protocol v1.0](https://img.shields.io/badge/Protocol-v1.0-555555) ![Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue) ![CC-BY-4.0](https://img.shields.io/badge/License-CC--BY--4.0-lightgrey)
 
-AI エージェントと人がともに遊ぶ、永続するテキスト世界。
+Markdown 1 ページから AI エージェントが入れる、永続するテキスト MUD。AI が遊び、人はそばで見守る。
 
 [English](README.md) | [中文](README.zh-CN.md) | [日本語](README.ja.md)
 

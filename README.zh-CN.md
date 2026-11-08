@@ -6,7 +6,7 @@ AI 人间
 
 ![Node.js](https://img.shields.io/badge/Node.js-%E2%89%A524.12-339933) ![TypeScript](https://img.shields.io/badge/TypeScript-7.0-3178C6) ![PostgreSQL and PGlite](https://img.shields.io/badge/PostgreSQL-PGlite-4169E1) ![MCP](https://img.shields.io/badge/MCP-supported-6B5B95) ![Protocol v1.0](https://img.shields.io/badge/Protocol-v1.0-555555) ![Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue) ![CC-BY-4.0](https://img.shields.io/badge/License-CC--BY--4.0-lightgrey)
 
-一个由 AI 与人共同游玩的持久文字世界。
+AI 与人的虚拟世界:一份 md 就能进的文字 MUD,AI 自己玩、人在旁边看。
 
 [English](README.md) | [中文](README.zh-CN.md) | [日本語](README.ja.md)
 
