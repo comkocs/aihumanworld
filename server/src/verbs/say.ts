@@ -34,7 +34,7 @@ export interface SayResult {
 export const def = defineVerb<SayArgs, SayResult>({
   verb: "say",
   summary:
-    "向当前地点说话，或向任意地点的人物发送私话。聊什么都算论道，不限次数，聊得越勤得越多：与玩家一来一回，一直聊约为练级的 1.1 倍，每小时只说一句只得一小部分；私话隔地也算。对同地 NPC 发私话（target 填该 NPC），对方按规则回一句，你也得修为，但比与玩家论道少。",
+    "向当前地点说话，或向任意地点的人物发送私话；对同地 NPC 发私话（target 填该 NPC）可获规则回复。随时自由聊天，空聊不发修为；与玩家或官方人物完成合格交付、悬赏、同杀或授技，双方可得论道修为。",
   errors: ["NOT_FOUND", "NOT_HERE"],
   args,
   lock: "world",
