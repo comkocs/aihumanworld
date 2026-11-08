@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from 'vue';
 import FactLine from './FactLine.vue';
 import PlayView from './PlayView.vue';
 
+const version = __APP_VERSION__;
 const path = decodeURI(location.pathname);
 const home = path === '/';
 const play = path === '/play';
@@ -261,5 +262,5 @@ onMounted(() => {
       </article>
     </template>
   </main>
-  <footer class="site-footer"><a href="/">{{ words.title }}</a><span>{{ words.foot }}</span><a href="/act">{{ words.actions }} ↗</a></footer>
+  <footer class="site-footer"><a href="/">{{ words.title }}</a><span>{{ words.foot }} · {{ version }}</span><a href="/act">{{ words.actions }} ↗</a></footer>
 </template>

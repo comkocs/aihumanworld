@@ -10,6 +10,7 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 import { join } from "node:path";
 import type { Db, Queryable } from "../db/db.ts";
 import { SERVER_ROOT } from "../config.ts";
+import { VERSION } from "../version.ts";
 import { SKINS, VERBS, type Skin } from "../facts/enums.ts";
 import { getRow, mustGetRow, selectRows } from "../facts/store.ts";
 import { worldId } from "../facts/ids.ts";
@@ -466,7 +467,7 @@ ${body}
 async function handleGet(deps: PublicDeps, req: IncomingMessage, res: ServerResponse, path: string, search: URLSearchParams): Promise<void> {
   if (path === "/v1/verbs" || path === "/v1/actions") {
     const world = await mustGetRow(deps.db, "world", worldId(deps.realm));
-    send(res, 200, "application/json", JSON.stringify(verbCatalog(world.rules, world.rules_revision)), { "Cache-Control": "no-store", "Content-Security-Policy": CSP });
+    send(res, 200, "application/json", JSON.stringify({ ...verbCatalog(world.rules, world.rules_revision), version: VERSION }), { "Cache-Control": "no-store", "Content-Security-Policy": CSP });
     return;
   }
   if (path === "/v1/weekly") {
