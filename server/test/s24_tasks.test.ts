@@ -148,6 +148,7 @@ test("S24 chain: deliver task → daily decay → bounty escrow / payout / refun
     assert.equal(done.result.task.state, "completed");
     assert.deepEqual(done.result.task.escrow, { coin: 0, items: [] });
     assert.deepEqual(done.result.reward, { coin: 100, xp: 300, potential: 30, rep: 0, items: [] });
+    assert.equal(done.result.hint, undefined);
     assert.equal(await coinOf(a), coin0 + 100);
     const parcelAt = await db.query<{ k: string; at: string }>(
       "SELECT holder ->> 'kind' AS k, holder ->> 'id' AS at FROM items WHERE id = 'r1:item:s24_parcel_ground'",
@@ -169,14 +170,29 @@ test("S24 chain: deliver task → daily decay → bounty escrow / payout / refun
       if (k === 1) await ok("go", { dir: "north" }, codeA);
       const r = await ok("task", { op: "submit", id: home.id }, codeA);
       assert.equal(r.result.task.state, "completed");
+      if (k < 4) assert.equal(r.result.hint, undefined);
+      else {
+        assert.match(r.result.hint.zh, k === 4 ? /下一件起/ : /收益已满/);
+        assert.match(r.result.hint.en, k === 4 ? /next task/ : /exhausted/);
+        for (const text of [r.result.hint.zh, r.result.hint.en]) assert.ok(text.length > 0);
+      }
       coins.push(r.result.reward.coin);
       xps.push(r.result.reward.xp);
     }
+    const fullList = await ok("task", { op: "list" }, codeA);
+    assert.match(fullList.result.hint.zh, /收益已满/);
+    assert.match(fullList.result.hint.en, /exhausted/);
+    const acceptedList = await ok("task", { op: "list", filter: "accepted" }, codeA);
+    assert.deepEqual(acceptedList.result.hint, fullList.result.hint);
     assert.deepEqual(coins, [80, 60, 40, 20, 0]);
     assert.deepEqual(xps, [240, 180, 120, 60, 0]);
     const today = await db.query<{ n: unknown }>("SELECT system_tasks_today AS n FROM chars WHERE id = $1", [a]);
     assert.equal(Number(today.rows[0]?.n), 6);
     assert.equal(await coinOf(a), coin0 + 300);
+    await db.query("UPDATE chars SET day_index = day_index + 1 WHERE id = $1", [a]);
+    const resetList = await ok("task", { op: "list" }, codeA);
+    assert.equal(resetList.result.hint, undefined);
+    await db.query("UPDATE chars SET day_index = day_index - 1 WHERE id = $1", [a]);
 
     // ---- bounty: post (escrow) → another char takes and completes it → paid ----
     const enterB = await ok("enter", { mode: "create", skin: "xiuxian", door: "api" });
@@ -205,7 +221,9 @@ test("S24 chain: deliver task → daily decay → bounty escrow / payout / refun
     await ok("go", { dir: "north" }, codeB);
     assert.equal(await totalCoin(), total);
     await nextTick();
+    await db.query("UPDATE chars SET day_index = (SELECT day_index FROM worlds LIMIT 1), system_tasks_today = 5 WHERE id = $1", [b]);
     const paid = await ok("task", { op: "submit", id: bounty.id }, codeB);
+    assert.equal(paid.result.hint, undefined);
     assert.equal(paid.result.task.state, "completed");
     assert.equal(paid.result.reward.coin, 50);
     assert.equal(paid.result.reward.rep, 1);

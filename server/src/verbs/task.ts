@@ -54,9 +54,36 @@ export type TaskResult =
       page: { after: ID | null; through: Seq };
       has_more: boolean;
       snapshot_changed: boolean;
+      hint?: TaskHint;
     }
-  | { task: TaskInstanceRow; reward: Reward | null; changes: Change[] };
+  | { task: TaskInstanceRow; reward: Reward | null; changes: Change[]; hint?: TaskHint };
 type Edit = Extract<TaskResult, { task: TaskInstanceRow }>;
+type TaskHint = { zh: string; en: string };
+
+const alternatives = {
+  zh: "可以找人论道、给物或交易，接玩家悬赏，打本阶怪，去切磋场切磋，或参与组织周目标；这些不受系统差事递减限制。",
+  en: "You can discuss with others, give items or trade, take player bounties, fight monsters of your tier, spar in a duel area, or join an organization's weekly goal; these are not subject to system-task decay.",
+};
+const fullHint: TaskHint = {
+  zh: `今日系统差事常规收益已满，不再给常规收益，明天（下一个游戏日）重置。${alternatives.zh}`,
+  en: `Today's regular system-task rewards are exhausted and give no further rewards; they reset tomorrow (the next game day). ${alternatives.en}`,
+};
+const nextFullHint: TaskHint = {
+  zh: `今日系统差事下一件起不再给常规收益，明天（下一个游戏日）重置。${alternatives.zh}`,
+  en: `Regular system-task rewards will stop starting with the next task today; they reset tomorrow (the next game day). ${alternatives.en}`,
+};
+const zeroHint: TaskHint = {
+  zh: `本次系统差事常规收益为零，每日递减明天（下一个游戏日）重置。${alternatives.zh}`,
+  en: `This system task gave no regular reward; daily decay resets tomorrow (the next game day). ${alternatives.en}`,
+};
+const zeroNextFullHint: TaskHint = {
+  zh: `本次系统差事常规收益为零，下一件起不再给常规收益，明天（下一个游戏日）重置。${alternatives.zh}`,
+  en: `This system task gave no regular reward, and regular rewards will stop starting with the next task today; they reset tomorrow (the next game day). ${alternatives.en}`,
+};
+
+const systemFactor = (done: number, step: number): number => Math.max(0, 10000 - step * done);
+const systemDoneToday = (ctx: VerbContext, me: CharRow): number =>
+  me.day_index === ctx.world.day_index ? me.system_tasks_today : 0;
 
 function actor(ctx: VerbContext): CharRow {
   if (ctx.actor === null) throw new Error("task without actor");
@@ -80,7 +107,8 @@ async function list(ctx: VerbContext, a: Extract<TaskArgs, { op: "list" }>): Pro
   }
   const lim = resolveLimit(a.limit, ctx.rules);
   const p = await pageRows(ctx.q, "task", where, params, a.page, lim, ctx.world.deed_head);
-  return { rows: p.rows as TaskInstanceRow[], page: p.page, has_more: p.has_more, snapshot_changed: p.snapshot_changed };
+  const full = systemFactor(systemDoneToday(ctx, me), taskNumbers(ctx.balance).decay_step_bp) === 0;
+  return { rows: p.rows as TaskInstanceRow[], page: p.page, has_more: p.has_more, snapshot_changed: p.snapshot_changed, ...(full ? { hint: fullHint } : {}) };
 }
 
 async function accept(ctx: VerbContext, id: ID): Promise<Edit> {
@@ -219,9 +247,10 @@ async function submit(ctx: VerbContext, id: ID): Promise<Edit> {
   let reward: Reward;
   let payItems = true;
   let counters: Partial<CharRow> = {};
+  let hint: TaskHint | undefined;
   if (systemFunded) {
-    const done = me.day_index === ctx.world.day_index ? me.system_tasks_today : 0;
-    const factor = Math.max(0, 10000 - n.decay_step_bp * done);
+    const done = systemDoneToday(ctx, me);
+    const factor = systemFactor(done, n.decay_step_bp);
     const f = (v: number): number => mulDivFloor(v, factor, 10000);
     payItems = factor > 0 && factor >= n.item_min_pct_bp;
     reward = {
@@ -232,6 +261,12 @@ async function submit(ctx: VerbContext, id: ID): Promise<Edit> {
       items: payItems ? [...escrow.items] : [],
     };
     counters = { day_index: ctx.world.day_index, system_tasks_today: done + 1 };
+    if (t.kind === "system") {
+      const zero = reward.coin === 0 && reward.xp === 0 && reward.potential === 0 && reward.rep === 0 && reward.items.length === 0;
+      if (factor === 0) hint = fullHint;
+      else if (systemFactor(done + 1, n.decay_step_bp) === 0) hint = zero ? zeroNextFullHint : nextFullHint;
+      else if (zero) hint = zeroHint;
+    }
   } else {
     reward = { coin: escrow.coin, xp: t.reward.xp, potential: t.reward.potential, rep: t.reward.rep, items: [...escrow.items] };
   }
@@ -304,7 +339,7 @@ async function submit(ctx: VerbContext, id: ID): Promise<Edit> {
     }
   }
   ctx.actor = cur;
-  return { task, reward, changes };
+  return { task, reward, changes, ...(hint === undefined ? {} : { hint }) };
 }
 
 async function abandon(ctx: VerbContext, id: ID): Promise<Edit> {
