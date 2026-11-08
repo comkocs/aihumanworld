@@ -109,8 +109,20 @@ async function loadHome() {
   ]);
   loading.value = false;
 }
+const deedLabels = {
+  travel: ['行旅', 'Travel'], discover: ['发现', 'Discovery'], first_found: ['首次发现', 'First discovery'],
+  first_clear: ['首次通关', 'First clear'], first_kill: ['首次击败', 'First defeat'],
+  combat_win: ['战斗获胜', 'Combat victory'], combat_loss: ['战斗失利', 'Combat defeat'], combat_draw: ['战斗平局', 'Combat draw'], duel_win: ['切磋获胜', 'Sparring victory'],
+  bounty_done: ['悬赏完成', 'Bounty completed'], task_done: ['任务完成', 'Task completed'], task_accept: ['接受任务', 'Task accepted'], task_release: ['放弃任务', 'Task released'], bounty_post: ['发布悬赏', 'Bounty posted'],
+  org_join: ['加入组织', 'Organization joined'], org_promote: ['组织晋升', 'Organization promotion'], org_leave: ['离开组织', 'Organization left'], org_expel: ['组织除名', 'Organization expulsion'], org_goal: ['组织大事', 'Organization event'],
+  relation_offer: ['发起结交', 'Connection offered'], relation_accept: ['结交', 'Connection accepted'], relation_end: ['结束关系', 'Connection ended'], enmity: ['结怨', 'Enmity'], wanted: ['通缉', 'Wanted'], wanted_end: ['通缉结束', 'Wanted status ended'],
+  death: ['身故', 'Death'], revive: ['复苏', 'Revival'], stage_up: ['晋升小境界', 'Stage advanced'], breakthrough: ['破境', 'Breakthrough'], ascend: ['晋升境界', 'Ascension'],
+  build: ['建造', 'Construction'], take: ['拾取', 'Item taken'], give: ['赠予', 'Gift'], use: ['使用', 'Use'], equip: ['装备', 'Equipment'], repair: ['修理', 'Repair'], trade: ['交易', 'Trade'], train: ['修炼', 'Training'], learn: ['学习', 'Learning'], identity: ['身份', 'Identity'], discourse: ['论道', 'Discourse'],
+  first_gate: ['首次通关试炼', 'First trial cleared'], first_build: ['首次建造', 'First construction'], first_crossing: ['首次跨区', 'First crossing'], org_create: ['开派', 'Organization founded'], first_org: ['首开组织', 'First organization'], world_event: ['世界事件', 'World event'],
+};
 function deedTitle(line) {
-  return line.replace(/^tick \d+\s*·\s*/, '').split(' · verb ')[0];
+  const kind = /`deed\.([a-z0-9_]+)`/.exec(line)?.[1];
+  return (kind && Object.hasOwn(deedLabels, kind) ? deedLabels[kind] : ['一件事', 'A story'])[zh ? 0 : 1];
 }
 function deedTick(line) { return /^tick (\d+)/.exec(line)?.[1] || '—'; }
 function actor(line) { return /actor `([^`]+)`/.exec(line)?.[1]; }

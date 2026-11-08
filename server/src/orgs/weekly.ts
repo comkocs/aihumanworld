@@ -81,7 +81,7 @@ async function rankWeek(q: Queryable, realm: string, balance: Balance, week: num
     let entry = scores.get(orgId);
     if (entry === undefined) {
       const org = await getRow(q, "org", orgId);
-      if (org === null) return;
+      if (org === null || org.registry) return;
       entry = { org_id: orgId, org_name: await orgName(org), total: 0, beast_tide: 0, bounty: 0, breakthrough: 0 };
       scores.set(orgId, entry);
     }
@@ -113,12 +113,16 @@ async function rankWeek(q: Queryable, realm: string, balance: Balance, week: num
 async function periodBoard(q: Queryable, realm: string, balance: Balance, week: number): Promise<WeeklyPeriod> {
   const period = periodAt(balance, "clock.week_ticks");
   const saved = await q.query<{ rankings: WeeklyEntry[] }>("SELECT rankings FROM s88_weekly_results WHERE realm = $1 AND week = $2", [realm, week]);
+  const rankings = saved.rows[0]?.rankings;
+  const visible = rankings === undefined ? await rankWeek(q, realm, balance, week) : (await Promise.all(
+    rankings.map(async (entry) => (await getRow(q, "org", entry.org_id))?.registry === false ? entry : null),
+  )).filter((entry): entry is WeeklyEntry => entry !== null);
   return {
     week,
     start_tick: (BigInt(week) * period).toString(),
     until_tick: (BigInt(week + 1) * period).toString(),
     settled: saved.rows.length > 0,
-    rankings: saved.rows[0]?.rankings ?? await rankWeek(q, realm, balance, week),
+    rankings: visible,
   };
 }
 

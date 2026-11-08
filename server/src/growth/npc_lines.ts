@@ -9,18 +9,24 @@ type Bilingual = Record<Lang, readonly string[]>;
 type TopicLines = Record<NpcTopic, Bilingual>;
 type Leads = Record<Exclude<NpcTopic, "chat">, Record<Lang, string>>;
 
-// The first matching topic wins; English words use boundaries to avoid matching inside other words.
-const TOPICS: readonly [Exclude<NpcTopic, "chat">, RegExp][] = [
-  ["growth", /修炼|练功|修为|破境|突破|境界|\b(?:train|training|cultivat(?:e|ion)|breakthrough|level(?:ing)?)\b/iu],
-  ["task", /差事|任务|委托|\b(?:task|quest|errand|mission)s?\b/iu],
-  ["trade", /买|卖|交易|换东西|买卖|\b(?:buy|sell|trade|trading|shop|market|barter)\b/iu],
-  ["travel", /去哪|哪里|怎么走|道路|路线|路上|\b(?:where|road|route|travel|direction|directions|way)\b/iu],
-  ["combat", /打怪|杀怪|斩杀|切磋|战斗|打架|\b(?:fight|fighting|combat|spar|sparring|monster|monsters|hunt|hunting)\b/iu],
-  ["group", /组织|门派|帮派|结伴|队伍|\b(?:group|guild|clan|faction|party|team)\b/iu],
+// Count distinct matching terms, including overlapping Chinese terms; ties retain topic order.
+const TOPICS: readonly [Exclude<NpcTopic, "chat">, readonly RegExp[]][] = [
+  ["growth", [/修炼/u, /练功/u, /修为/u, /破境/u, /突破/u, /境界/u, /\btrain\b/iu, /\btraining\b/iu, /\bcultivat(?:e|ion)\b/iu, /\bbreakthrough\b/iu, /\blevel(?:ing)?\b/iu]],
+  ["task", [/差事/u, /任务/u, /委托/u, /\btasks?\b/iu, /\bquests?\b/iu, /\berrands?\b/iu, /\bmissions?\b/iu]],
+  ["trade", [/买/u, /卖/u, /交易/u, /换东西/u, /买卖/u, /\bbuy\b/iu, /\bsell\b/iu, /\btrade\b/iu, /\btrading\b/iu, /\bshop\b/iu, /\bmarket\b/iu, /\bbarter\b/iu]],
+  ["travel", [/去哪/u, /哪里/u, /怎么走/u, /道路/u, /路线/u, /路上/u, /\bwhere\b/iu, /\broad\b/iu, /\broute\b/iu, /\btravel\b/iu, /\bdirections?\b/iu, /\bway\b/iu]],
+  ["combat", [/打怪/u, /杀怪/u, /斩杀/u, /切磋/u, /哪里切磋/u, /去哪里切磋/u, /怎么切磋/u, /战斗/u, /打架/u, /妖/u, /兽/u, /妖兽/u, /怪/u, /怪物/u, /野兽/u, /魔物/u, /\bfight\b/iu, /\bfighting\b/iu, /\bcombat\b/iu, /\bspar\b/iu, /\bsparring\b/iu, /\bmonsters?\b/iu, /\bhunt\b/iu, /\bhunting\b/iu, /\bboss\b/iu, /\bkill\b/iu, /\bslay\b/iu, /\bbeast\b/iu]],
+  ["group", [/组织/u, /门派/u, /帮派/u, /结伴/u, /队伍/u, /\bgroup\b/iu, /\bguild\b/iu, /\bclan\b/iu, /\bfaction\b/iu, /\bparty\b/iu, /\bteam\b/iu]],
 ];
 
 export function npcTopic(text: string): NpcTopic {
-  return TOPICS.find(([, pattern]) => pattern.test(text))?.[0] ?? "chat";
+  let selected: NpcTopic = "chat";
+  let best = 0;
+  for (const [topic, terms] of TOPICS) {
+    const count = terms.filter((term) => term.test(text)).length;
+    if (count > best) { selected = topic; best = count; }
+  }
+  return selected;
 }
 
 const ENDINGS: Record<Exclude<NpcTopic, "chat">, Bilingual> = {

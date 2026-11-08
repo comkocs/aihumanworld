@@ -43,6 +43,10 @@ test("S84: Chinese and English topics select the matching role pool", () => {
   }
   assert.equal(npcTopic("a beautifully painted landscape"), "chat");
   assert.equal(npcTopic("修炼和任务"), "growth");
+  assert.equal(npcTopic("打妖兽有什么讲究"), "combat");
+  assert.equal(npcTopic("去哪里切磋"), "combat");
+  assert.equal(npcTopic("where can I kill a beast"), "combat");
+  assert.equal(npcTopic("where can I spar"), "travel");
 });
 
 test("S84: five direct questions in one tick have different replies across topics", async () => {

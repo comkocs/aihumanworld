@@ -76,9 +76,24 @@ test("S88: tide spread, regional offers / look, live organization board and week
     const world = await mustGetRow(app.db, "world", worldId);
     assert.equal(world.rules_revision, "balance.v1.13");
     await updateRow(app.db, "world", worldId, { rules: { ...world.rules, ap_per_tick: 1000 } }, world.tick);
-    orgId = (await selectRows(app.db, "bond", "kind = 'member' AND state = 'active' AND a = $1", [actor.id]))[0]!.b;
+    const registryId = (await selectRows(app.db, "bond", "kind = 'member' AND state = 'active' AND a = $1", [helper.id]))[0]!.b;
+    assert.equal((await mustGetRow(app.db, "org", registryId)).registry, true);
     assert.deepEqual((await board()).current.rankings, []);
     assert.equal((await board()).previous, null);
+
+    await t.test("registry member breakthrough does not enter the weekly board", async () => {
+      await updateRow(app.db, "char", helper.id, { tier: 2, stage: 1, xp: 1000000, ap_spent: 0 }, world.tick);
+      const inner = (await app.db.query<{ id: string }>("SELECT s.id FROM skills s JOIN skills d ON d.id = s.def_id WHERE s.record = 'learned' AND s.char_id = $1 AND d.key = 'inner'", [helper.id])).rows[0]!;
+      await updateRow(app.db, "skill", inner.id, { level: 12, cap: 12 }, world.tick);
+      assert.equal((await ok("breakthrough", { mode: "stage" }, helper.code)).result.outcome, "success");
+      assert.deepEqual((await board()).current.rankings, []);
+    });
+
+    const sect = (await selectRows(app.db, "org", "registry = false AND region = 'xiuxian'", [], "ORDER BY id LIMIT 1"))[0]!;
+    assert.ok(sect);
+    await updateRow(app.db, "char", actor.id, { loc: sect.hall, coin: 1000, ap_spent: 0 }, world.tick);
+    await ok("use", { op: "org_join", org: sect.id }, actor.code);
+    orgId = sect.id;
 
     await t.test("missed tide persists deterministic adjacent destination and a non-stacking regional 0.8", async () => {
       await phase(worldEventPhase, rule.period_ticks);
