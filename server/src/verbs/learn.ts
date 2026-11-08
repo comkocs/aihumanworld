@@ -4,6 +4,7 @@ import { getRow, selectRows } from "../facts/store.ts";
 import type { Change, Cost, SkillLearnedRow } from "../facts/types.ts";
 import { addUInt, tierNumbers } from "../growth/balance.ts";
 import { learnedSkill, skillDefinition } from "../growth/facts.ts";
+import { settleLearnTrade } from "../growth/trade_bonus.ts";
 import { NO_DETAILS, reject } from "../protocol/errors.ts";
 import { charId, skillKey } from "../protocol/shapes.ts";
 import { obj, oneOf, type Out } from "../protocol/validate.ts";
@@ -20,7 +21,7 @@ export interface LearnResult {
 
 export const def = defineVerb<LearnArgs, LearnResult>({
   verb: "learn",
-  summary: "向同地更高阶师父学技能，按关系或钱支付学费。上限不够时向阶更高、该技能更高的师父学艺，每次上限 +5（不超本阶硬上限）。",
+  summary: "向同地更高阶师父学技能，按关系或钱支付学费。上限不够时向阶更高、该技能更高的师父学艺，每次上限 +5（不超本阶硬上限）。向玩家或官方师父学成一次，师徒各得较低阶 0.2 件任务修为与潜能；NPC 教学不算成交奖。",
   errors: ["NOT_FOUND", "NOT_HERE", "TEACHER_REQUIRED", "INSUFFICIENT_RESOURCE", "SKILL_CAP"],
   args,
   lock: "world",
@@ -86,6 +87,7 @@ export const def = defineVerb<LearnArgs, LearnResult>({
       const visible = changes.filter((c) => c.table === "char" && c.id === who);
       if (visible.length > 0) await ctx.w.emit({ scope: "self", recipients: [who], type: "fact_changed", deed_id: deed.id, data: { changes: visible } });
     }
+    changes.push(...await settleLearnTrade(ctx, me.id, master.id, deed));
     return { skill, paid: { coin, potential: 0, items: [] }, changes: changes.filter((c) => c.table !== "char" || c.id === me.id) };
   },
 });

@@ -7,6 +7,7 @@ import type { Change, CharRow, ItemDefinitionRow } from "../facts/types.ts";
 import { deriveStats, gridNumbers, mulDiv, type NeutralFacts } from "../growth/balance.ts";
 import { firstKill } from "../growth/combat_effects.ts";
 import { monsterKillReward } from "../growth/monster_reward.ts";
+import { settleCoKillTrade } from "../growth/trade_bonus.ts";
 import { SpeechStore } from "../speech/store.ts";
 import { combatant, neutralFacts } from "../growth/facts.ts";
 import { resolutionSeed, resolveCombat, u32 } from "../growth/settlement.ts";
@@ -131,6 +132,7 @@ export async function ambush(ctx: ClockCtx, monster: CharRow): Promise<void> {
   const verbCtx = { q: ctx.q, w: ctx.w, world: ctx.world, rules: ctx.rules, balance: ctx.balance, tick: ctx.to_tick,
     now: ctx.now, door: "api" as const, actor: null, services: { speech: new SpeechStore(), balance: () => ctx.balance } };
   const counterPay = countered ? await monsterKillReward(verbCtx, target, monster, deed.id) : { changes: [] };
+  if (countered) await settleCoKillTrade(verbCtx, monster, deed, target.id);
   // S83: the monster's combat_loss also proves its victim's counter-kill for slay tasks.
   if (countered) await recordSlayEvidence({ q: ctx.q, w: ctx.w, tick: ctx.to_tick }, target, deed);
   const data = { attacker: monster.id, target: target.id, winner: result.winner, mode: "pve" as const, outcome: result.outcome, dead: dead.map((c) => c.id), deed_id: deed.id, ambush: true,

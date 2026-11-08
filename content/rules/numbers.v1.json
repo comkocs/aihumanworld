@@ -1,7 +1,7 @@
 {
  "meta": {
   "schema": "aihw.numbers.v1",
-  "revision_key": "balance.v1.15",
+  "revision_key": "balance.v1.16",
   "integer_only": true
  },
  "world_rules": {
@@ -44,7 +44,7 @@
    "build": 1,
    "breakthrough": 2
   },
-  "balance_key": "balance.v1.15"
+  "balance_key": "balance.v1.16"
  },
  "clock": {
   "day_ticks": 1440,
@@ -1745,11 +1745,19 @@
    "discourse": {
     "rep_mult": 0,
     "window_ticks": 60,
-    "first_xp_bp": 100,
-    "first_potential_bp": 100,
-    "talk_rate_bp": 11000,
+    "first_xp_bp": 0,
+    "first_potential_bp": 0,
+    "talk_rate_bp": 0,
     "talk_accrue_max_ticks": 3,
-    "npc_rate_bp": 7000
+    "npc_rate_bp": 0
+   },
+   "trade": {
+    "xp_bp": 2000,
+    "potential_bp": 2000,
+    "min_value_bp": 1000,
+    "full_value_bp": 10000,
+    "hunt_window_ticks": 10,
+    "hunt_pair_cooldown_ticks": 30
    },
    "combat_social": {
     "duel_win_bp": 8400,

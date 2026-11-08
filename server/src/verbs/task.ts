@@ -11,6 +11,7 @@
 import { pageRows, resolveLimit } from "../facts/paging.ts";
 import { countRows, getRow, mustGetRow, selectRows } from "../facts/store.ts";
 import type { Change, CharRow, DeedRow, Holder, ID, ItemInstanceRow, Reward, Seq, TaskInstanceRow } from "../facts/types.ts";
+import { settleBountyTrade } from "../growth/trade_bonus.ts";
 import { NO_DETAILS, reject } from "../protocol/errors.ts";
 import { PAGE_DEFAULT, limit, page, taskId } from "../protocol/shapes.ts";
 import { oneOf, opt, union, type Out } from "../protocol/validate.ts";
@@ -339,6 +340,7 @@ async function submit(ctx: VerbContext, id: ID): Promise<Edit> {
     }
   }
   ctx.actor = cur;
+  if (t.kind === "bounty") changes.push(...await settleBountyTrade(ctx, t, deed));
   return { task, reward, changes, ...(hint === undefined ? {} : { hint }) };
 }
 

@@ -7,6 +7,7 @@ import type { Change, CharRow, ID, ItemDefinitionRow, Roll } from "../facts/type
 import { deriveStats, gridNumbers, mulDiv, type NeutralFacts } from "../growth/balance.ts";
 import { firstKill, markWanted, settlePkKill, socialCombatReward } from "../growth/combat_effects.ts";
 import { monsterKillReward } from "../growth/monster_reward.ts";
+import { settleCoKillTrade } from "../growth/trade_bonus.ts";
 import { backpack, combatant, neutralFacts } from "../growth/facts.ts";
 import { resolutionSeed, resolveCombat, u32 } from "../growth/settlement.ts";
 import { NO_DETAILS, reject } from "../protocol/errors.ts";
@@ -58,7 +59,7 @@ async function monsterDropDef(ctx: VerbContext, seed: string, tier: number): Pro
 export const def = defineVerb<AttackArgs, AttackResult>({
   verb: "attack",
   summary:
-    "依当前地点战斗规则攻击同地目标。打怪物一次攻击就分出整场胜负:赢了怪死、当场掉落并给修为,输了照旧扣体力、可能阵亡,平了双方受伤、怪不死;打不打由你看怪的阶段自己判断,没有准入门槛。与另一位玩家在切磋场较量,每对每天首次胜得 0.84 件任务修为、负得 0.42 件、平局各得 0.56 件;在其他任何地点击杀对方得 0.79 件。按双方较低阶的满额任务算,切磋与 PK 奖励每天共至多 5 次。单玩时持续玩家聊天最快,探索次之,五场切磋胜再次,五次 PK 击杀约等于练级。除切磋场外由你发起并击杀玩家会被通缉(红名)并挂系统悬赏:高杀低两天且无奖,同阶四小时、低杀高两小时;击杀红名者不受罚,得红名者阶 2.37 件任务修为与悬赏币。新角色建角后 5 刻内不能被其他玩家攻击,之后处处可 PK。",
+    "依当前地点战斗规则攻击同地目标。打怪物一次攻击就分出整场胜负:赢了怪死、当场掉落并给修为,输了照旧扣体力、可能阵亡,平了双方受伤、怪不死;打不打由你看怪的阶段自己判断,没有准入门槛。与另一位玩家在切磋场较量,每对每天首次胜得 0.84 件任务修为、负得 0.42 件、平局各得 0.56 件;在其他任何地点击杀对方得 0.79 件。按双方较低阶的满额任务算,切磋与 PK 奖励每天共至多 5 次。交流只在成交时给论道修为,空聊不给;足值成交双方各得较低阶 0.2 件任务修为与潜能。同杀时击杀者与同地过去 10 刻内对同地同阶或更高阶怪出过手的其他参与角色两两各得完整成交奖;伏击中被攻击也算出手,怪阶不得低于双方,同一对 30 刻最多一次。24 次足值成交的比较情景略高于八处同阶首达,五场切磋胜再次,五次 PK 击杀约等于练级。除切磋场外由你发起并击杀玩家会被通缉(红名)并挂系统悬赏:高杀低两天且无奖,同阶四小时、低杀高两小时;击杀红名者不受罚,得红名者阶 2.37 件任务修为与悬赏币。新角色建角后 5 刻内不能被其他玩家攻击,之后处处可 PK。",
   errors: ["NOT_FOUND", "NOT_HERE", "NOT_ALLOWED", "INSUFFICIENT_RESOURCE"],
   args,
   lock: "world",
@@ -180,6 +181,7 @@ export const def = defineVerb<AttackArgs, AttackResult>({
     const killedMonster = place.combat !== "duel" && me.kind !== "npc" && resolved.winner === me.id && dead.some((c) => c.id === target.id) && target.kind === "npc" && target.archetype === "monster";
     const monsterPay = killedMonster ? await monsterKillReward(ctx, ctx.actor ?? me, target, deed.id) : { changes: [] as Change[] };
     changes.push(...monsterPay.changes);
+    if (killedMonster) changes.push(...await settleCoKillTrade(ctx, target, deed, me.id));
     const data = {
       attacker: me.id, target: target.id, winner: resolved.winner, mode, outcome: resolved.outcome, dead: dead.map((c) => c.id), deed_id: deed.id,
       ...(monsterDrops.length > 0 ? { dropped: monsterDrops.map((d) => ({ item_id: d.id, def_id: d.def_id })) } : {}),
