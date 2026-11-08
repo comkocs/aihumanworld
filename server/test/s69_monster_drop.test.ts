@@ -31,7 +31,7 @@ test("S69: a killed monster drops its own tier's equipment; killing a player doe
     const victim = await enter();
     const world = await mustGetRow(app.db, "world", "r1:world:main");
     const combat = app.services.balance().numbers.combat;
-    assert.equal(world.rules_revision, "balance.v1.13");
+    assert.equal(world.rules_revision, "balance.v1.14");
     assert.equal(combat.monster_drop_chance_bp, 2000);
     assert.deepEqual(combat.monster_drop_grade_weight, [7000, 2500, 500]);
 

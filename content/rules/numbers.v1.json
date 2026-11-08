@@ -1,7 +1,7 @@
 {
  "meta": {
   "schema": "aihw.numbers.v1",
-  "revision_key": "balance.v1.13",
+  "revision_key": "balance.v1.14",
   "integer_only": true
  },
  "world_rules": {
@@ -44,7 +44,7 @@
    "build": 1,
    "breakthrough": 2
   },
-  "balance_key": "balance.v1.13"
+  "balance_key": "balance.v1.14"
  },
  "clock": {
   "day_ticks": 1440,
@@ -1700,6 +1700,12 @@
   "org_enemy_buy_bp": 12000,
   "org_ally_sell_bp": 11000,
   "org_enemy_sell_bp": 8000
+ },
+ "encounter": {
+  "chance_bp": 600,
+  "repeat_divisor": 2,
+  "xp_bp": 100,
+  "coin_bp": 100
  },
  "tasks": {
   "decay_step_bp": 2000,

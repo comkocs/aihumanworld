@@ -87,8 +87,8 @@ test("S46 ①: talking pays by time (1.1 x training), no count limit, 初识 onc
   const numbers = JSON.parse(await readFile(NUMBERS, "utf8")) as Json;
   const rule = numbers.tasks.deed_bonus.discourse;
   const t1 = numbers.tiers.find((r: Json) => r.tier === 1);
-  assert.equal(numbers.meta.revision_key, "balance.v1.13");
-  assert.equal(numbers.world_rules.balance_key, "balance.v1.13");
+  assert.equal(numbers.meta.revision_key, "balance.v1.14");
+  assert.equal(numbers.world_rules.balance_key, "balance.v1.14");
   assert.deepEqual(rule, { rep_mult: 0, window_ticks: 60, first_xp_bp: 100, first_potential_bp: 100, talk_rate_bp: 11000, talk_accrue_max_ticks: 3, npc_rate_bp: 7000 });
   // Tier 1: the full-attendance day is 1188 xp / 234 potential; talking earns 1.1 x of it per tick since one's own last talk reward.
   const dayTicks: number = numbers.clock.day_ticks;

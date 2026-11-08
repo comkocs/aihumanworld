@@ -8,6 +8,7 @@
 
 import type { ClockCtx } from "../clock/phases.ts";
 import { noteFirstCrossing } from "../facts/firsts.ts";
+import { emitEncounter, encounterOnArrival, type EncounterFact } from "../growth/encounter.ts";
 import { openWorldEvent, secretRealmBonus } from "../world_events/clock.ts";
 import { countRows, getRow, mustGetRow } from "../facts/store.ts";
 import type { Change, CharRow, ID, PlaceRow, ReputationRow, Reward } from "../facts/types.ts";
@@ -25,6 +26,7 @@ export interface GoResult {
   from: ID;
   to: ID;
   changes: Change[];
+  encounter?: EncounterFact;
 }
 
 /** S72: true when an open secret realm has waived the key on this exact door. */
@@ -139,6 +141,12 @@ export const def = defineVerb<GoArgs, GoResult>({
       await w.emit({ scope: "self", recipients: [me.id], type: "reward_granted", deed_id: d.id, data: { char_id: me.id, source: d.id, reward: { ...realm.reward, items: [] } } });
     }
 
+    const encounter = await encounterOnArrival(ctx, cur, dest);
+    if (encounter !== null) {
+      cur = encounter.row;
+      changes.push(...encounter.changes);
+    }
+
     const travel = await w.deed({
       actor: me.id,
       verb: "go",
@@ -149,6 +157,7 @@ export const def = defineVerb<GoArgs, GoResult>({
       visibility: "place",
       participants: [me.id],
     });
+    if (encounter !== null) await emitEncounter(ctx, me.id, travel.id, encounter);
     const moved = { char_id: me.id, from: here.id, to: dest.id };
     await w.emit({ scope: "self", recipients: [me.id], type: "moved", deed_id: travel.id, data: moved });
     await w.emit({ scope: "place", place_id: here.id, type: "moved", deed_id: travel.id, data: moved });
@@ -158,6 +167,6 @@ export const def = defineVerb<GoArgs, GoResult>({
     // S62: first of this origin region to step into another origin region's start place.
     await noteFirstCrossing(w, cur, dest);
     changes.push(...(await recordPresenceEvidence(ctx, cur, dest, "go")));
-    return { from: here.id, to: dest.id, changes };
+    return { from: here.id, to: dest.id, changes, ...(encounter === null ? {} : { encounter: encounter.fact }) };
   },
 });
