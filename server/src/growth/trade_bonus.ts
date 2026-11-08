@@ -25,6 +25,10 @@ const rule = (ctx: VerbContext, name: string): number => numberAt(ctx.balance, `
 const pairKey = (a: ID, b: ID): string => [a, b].sort().join("|");
 const participant = (c: CharRow): boolean => c.kind !== "npc" && (c.state === "active" || c.state === "draft");
 
+export type TradeReward = { xp: number; potential: number };
+type TradeSettlement = { changes: Change[]; trade_reward?: TradeReward };
+const noTrade = (): TradeSettlement => ({ changes: [] });
+
 async function paid(ctx: VerbContext, key: string, pair: string): Promise<boolean> {
   const r = await ctx.q.query(
     "SELECT 1 FROM events WHERE type = 'reward_granted' AND data->'trade'->>'key' = $1 AND data->'trade'->>'pair' = $2 LIMIT 1",
@@ -34,14 +38,14 @@ async function paid(ctx: VerbContext, key: string, pair: string): Promise<boolea
 }
 
 /** Both get the lower tier's task value, scaled by real value up to one full exchange. */
-async function creditPair(ctx: VerbContext, aId: ID, bId: ID, deed: DeedRow, note: TradeNote, value?: number): Promise<Change[]> {
+async function creditPair(ctx: VerbContext, aId: ID, bId: ID, deed: DeedRow, note: TradeNote, value?: number): Promise<TradeSettlement> {
   const a = await getRow(ctx.q, "char", aId, { lock: true });
   const b = await getRow(ctx.q, "char", bId, { lock: true });
-  if (a === null || b === null || a.id === b.id || !participant(a) || !participant(b) || await paid(ctx, note.key, note.pair)) return [];
+  if (a === null || b === null || a.id === b.id || !participant(a) || !participant(b) || await paid(ctx, note.key, note.pair)) return noTrade();
   const t = tierNumbers(ctx.balance, Math.min(a.tier, b.tier));
   const fullValue = mulDiv(t.task_coin, rule(ctx, "full_value_bp"), 10000);
   const minimum = Math.max(1, mulDiv(t.task_coin, rule(ctx, "min_value_bp"), 10000));
-  if (value !== undefined && value < minimum) return [];
+  if (value !== undefined && value < minimum) return noTrade();
   const weight = value === undefined ? fullValue : Math.min(value, fullValue);
   const denominator = 10000 * fullValue;
   const reward: Reward = {
@@ -51,6 +55,7 @@ async function creditPair(ctx: VerbContext, aId: ID, bId: ID, deed: DeedRow, not
     rep: 0, items: [],
   };
   const own: Change[] = [];
+  let trade_reward: TradeReward | undefined;
   for (const [who, other] of [[a, b], [b, a]] as const) {
     const got = await creditGrowth(ctx.q, ctx.w, who, reward);
     // `trade` is optional S92 metadata on the existing reward event, not a new event kind.
@@ -60,22 +65,23 @@ async function creditPair(ctx: VerbContext, aId: ID, bId: ID, deed: DeedRow, not
     if (ctx.actor?.id === who.id) {
       ctx.actor = got.row;
       own.push(...got.changes);
+      if (reward.xp > 0 || reward.potential > 0) trade_reward = { xp: reward.xp, potential: reward.potential };
     }
   }
-  return own;
+  return { changes: own, ...(trade_reward === undefined ? {} : { trade_reward }) };
 }
 
 /** Only the first transfer of an instance between participants is eligible. */
-export async function settleGiveItem(ctx: VerbContext, giver: ID, receiver: ID, item: ID, deed: DeedRow): Promise<Change[]> {
+export async function settleGiveItem(ctx: VerbContext, giver: ID, receiver: ID, item: ID, deed: DeedRow): Promise<TradeSettlement> {
   const instance = await getRow(ctx.q, "item", item);
   const a = await getRow(ctx.q, "char", giver);
   const b = await getRow(ctx.q, "char", receiver);
-  if (instance?.record !== "instance" || a === null || b === null || !participant(a) || !participant(b)) return [];
+  if (instance?.record !== "instance" || a === null || b === null || !participant(a) || !participant(b)) return noTrade();
   const previous = await ctx.q.query(
     "SELECT 1 FROM events WHERE type = 'reward_granted' AND data->'trade'->>'key' IN ($1, $2) LIMIT 1",
     [`item-journal:${item}`, `item:${item}`],
   );
-  if (previous.rows.length > 0) return [];
+  if (previous.rows.length > 0) return noTrade();
   const pair = pairKey(giver, receiver);
   const note: TradeNote = { kind: "give_item", key: `item:${item}`, pair };
   const data = { char_id: giver, source: deed.id, reward: { coin: 0, xp: 0, potential: 0, rep: 0, items: [] },
@@ -85,13 +91,13 @@ export async function settleGiveItem(ctx: VerbContext, giver: ID, receiver: ID, 
 }
 
 /** Only the giver's new all-participant net-outflow high water earns credit. */
-export async function settleGiveCoin(ctx: VerbContext, giver: ID, receiver: ID, amount: number, deed: DeedRow): Promise<Change[]> {
+export async function settleGiveCoin(ctx: VerbContext, giver: ID, receiver: ID, amount: number, deed: DeedRow): Promise<TradeSettlement> {
   const a = await getRow(ctx.q, "char", giver);
   const b = await getRow(ctx.q, "char", receiver);
-  if (a === null || b === null || !participant(a) || !participant(b)) return [];
+  if (a === null || b === null || !participant(a) || !participant(b)) return noTrade();
   const pair = pairKey(giver, receiver);
   const replay = await ctx.q.query("SELECT 1 FROM events WHERE type = 'reward_granted' AND deed_id = $1 AND data->'trade'->>'key' = $2 LIMIT 1", [deed.id, `journal:${deed.id}`]);
-  if (replay.rows.length > 0) return [];
+  if (replay.rows.length > 0) return noTrade();
   let fresh = 0n;
   let giverNote: TradeNote | undefined;
   for (const [owner, delta] of [[giver, BigInt(amount)], [receiver, -BigInt(amount)]] as const) {
@@ -115,8 +121,8 @@ export async function settleGiveCoin(ctx: VerbContext, giver: ID, receiver: ID, 
 }
 
 /** Player-funded bounty completion: escrow value scales the bonus; system/NPC bounties never count. */
-export async function settleBountyTrade(ctx: VerbContext, task: TaskInstanceRow, deed: DeedRow): Promise<Change[]> {
-  if (task.kind !== "bounty" || task.issuer.kind !== "char" || task.taker === null) return [];
+export async function settleBountyTrade(ctx: VerbContext, task: TaskInstanceRow, deed: DeedRow): Promise<TradeSettlement> {
+  if (task.kind !== "bounty" || task.issuer.kind !== "char" || task.taker === null) return noTrade();
   let value = task.escrow.coin;
   for (const item of task.escrow.items) {
     const instance = await getRow(ctx.q, "item", item);
@@ -127,7 +133,7 @@ export async function settleBountyTrade(ctx: VerbContext, task: TaskInstanceRow,
 }
 
 /** A successful level/cap advancement is one teaching exchange, not repeat credit for the deed. */
-export async function settleLearnTrade(ctx: VerbContext, student: ID, master: ID, deed: DeedRow): Promise<Change[]> {
+export async function settleLearnTrade(ctx: VerbContext, student: ID, master: ID, deed: DeedRow): Promise<TradeSettlement> {
   return creditPair(ctx, student, master, deed, { kind: "learn", key: `learn:${deed.id}`, pair: pairKey(student, master) });
 }
 
@@ -158,8 +164,8 @@ export async function settleCoKillTrade(ctx: VerbContext, monster: CharRow, kill
       [pair, (BigInt(ctx.tick) - BigInt(rule(ctx, "hunt_pair_cooldown_ticks"))).toString()],
     );
     if (recent.rows.length > 0) continue;
-    own.push(...await creditPair(ctx, killerId, helper, kill,
-      { kind: "hunt", key: `hunt:${kill.id}`, pair }));
+    own.push(...(await creditPair(ctx, killerId, helper, kill,
+      { kind: "hunt", key: `hunt:${kill.id}`, pair })).changes);
   }
   return own;
 }

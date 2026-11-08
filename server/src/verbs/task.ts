@@ -11,7 +11,7 @@
 import { pageRows, resolveLimit } from "../facts/paging.ts";
 import { countRows, getRow, mustGetRow, selectRows } from "../facts/store.ts";
 import type { Change, CharRow, DeedRow, Holder, ID, ItemInstanceRow, Reward, Seq, TaskInstanceRow } from "../facts/types.ts";
-import { settleBountyTrade } from "../growth/trade_bonus.ts";
+import { settleBountyTrade, type TradeReward } from "../growth/trade_bonus.ts";
 import { NO_DETAILS, reject } from "../protocol/errors.ts";
 import { PAGE_DEFAULT, limit, page, taskId } from "../protocol/shapes.ts";
 import { oneOf, opt, union, type Out } from "../protocol/validate.ts";
@@ -57,7 +57,7 @@ export type TaskResult =
       snapshot_changed: boolean;
       hint?: TaskHint;
     }
-  | { task: TaskInstanceRow; reward: Reward | null; changes: Change[]; hint?: TaskHint };
+  | { task: TaskInstanceRow; reward: Reward | null; changes: Change[]; hint?: TaskHint; trade_reward?: TradeReward };
 type Edit = Extract<TaskResult, { task: TaskInstanceRow }>;
 type TaskHint = { zh: string; en: string };
 
@@ -340,8 +340,9 @@ async function submit(ctx: VerbContext, id: ID): Promise<Edit> {
     }
   }
   ctx.actor = cur;
-  if (t.kind === "bounty") changes.push(...await settleBountyTrade(ctx, t, deed));
-  return { task, reward, changes, ...(hint === undefined ? {} : { hint }) };
+  const bonus = t.kind === "bounty" ? await settleBountyTrade(ctx, t, deed) : undefined;
+  if (bonus !== undefined) changes.push(...bonus.changes);
+  return { task, reward, changes, ...(hint === undefined ? {} : { hint }), ...(bonus?.trade_reward === undefined ? {} : { trade_reward: bonus.trade_reward }) };
 }
 
 async function abandon(ctx: VerbContext, id: ID): Promise<Edit> {
@@ -384,7 +385,7 @@ async function abandon(ctx: VerbContext, id: ID): Promise<Edit> {
 
 export const def = defineVerb<TaskArgs, TaskResult>({
   verb: "task",
-  summary: "查看、接取、提交或放弃可核实的任务。",
+  summary: "查看、接取、提交或放弃可核实的任务。玩家悬赏成交奖回包 trade_reward 可见。",
   errors: ["NOT_FOUND", "NOT_HERE", "TASK_STATE", "TASK_LIMIT", "CONDITION_UNMET"],
   purpose: (a) => ({ list: "列出可接或已接任务。", accept: "接取指定任务。", submit: "核验目标并提交任务领取报酬。", abandon: "放弃已接任务。" })[a.op],
   args,

@@ -6,7 +6,7 @@
 
 import { getRow } from "../facts/store.ts";
 import type { Change, ID } from "../facts/types.ts";
-import { settleGiveCoin, settleGiveItem } from "../growth/trade_bonus.ts";
+import { settleGiveCoin, settleGiveItem, type TradeReward } from "../growth/trade_bonus.ts";
 import { NO_DETAILS, reject } from "../protocol/errors.ts";
 import { charId, itemId } from "../protocol/shapes.ts";
 import { obj, posUint, union, type Out } from "../protocol/validate.ts";
@@ -21,11 +21,12 @@ export type GiveArgs = Out<typeof args>;
 export interface GiveResult {
   target: ID;
   changes: Change[];
+  trade_reward?: TradeReward;
 }
 
 export const def = defineVerb<GiveArgs, GiveResult>({
   verb: "give",
-  summary: "把一件物品实例或一定数量的钱交给同地人物。与玩家或官方人物的足值成交双方各得较低阶 0.2 件任务修为与潜能，不足按价值折算；低于一成任务币值不给，每件物品首次玩家间转手才算，钱只奖给出方对所有玩家及官方累计净流出新高的增量。NPC 不算。",
+  summary: "把一件物品实例或一定数量的钱交给同地人物。与玩家或官方人物的足值成交双方各得较低阶 0.2 件任务修为与潜能，不足按价值折算；低于一成任务币值不给，每件物品首次玩家间转手才算，钱只奖给出方对所有玩家及官方累计净流出新高的增量，回包 trade_reward 可见。NPC 不算。",
   errors: ["NOT_FOUND", "NOT_HERE", "ITEM_STATE", "INSUFFICIENT_RESOURCE"],
   args,
   lock: "world",
@@ -65,9 +66,9 @@ export const def = defineVerb<GiveArgs, GiveResult>({
       const receiver = await getRow(q, "char", to.id);
       const receiverGrowth: Change[] = receiver !== null && (receiver.xp !== to.xp || receiver.potential !== to.potential)
         ? [{ table: "char", id: to.id, after: { xp: receiver.xp, potential: receiver.potential } }] : [];
-      await w.emit({ scope: "self", recipients: [me.id], type: "fact_changed", deed_id: deed.id, data: { changes: [mine.change, ...bonus] } });
+      await w.emit({ scope: "self", recipients: [me.id], type: "fact_changed", deed_id: deed.id, data: { changes: [mine.change, ...bonus.changes] } });
       await w.emit({ scope: "self", recipients: [to.id], type: "fact_changed", deed_id: deed.id, data: { changes: [theirs.change, ...receiverGrowth] } });
-      return { target: to.id, changes: [mine.change, ...bonus] };
+      return { target: to.id, changes: [mine.change, ...bonus.changes], ...(bonus.trade_reward === undefined ? {} : { trade_reward: bonus.trade_reward }) };
     }
 
     const field = "args.asset.item";
@@ -87,6 +88,6 @@ export const def = defineVerb<GiveArgs, GiveResult>({
     const deed = await deedOf([to.id, it.id], [m.change]);
     await emitItem(w, m.row, "give", [me.id, to.id], deed.id);
     const bonus = await settleGiveItem(ctx, me.id, to.id, it.id, deed);
-    return { target: to.id, changes: [m.change, ...bonus] };
+    return { target: to.id, changes: [m.change, ...bonus.changes], ...(bonus.trade_reward === undefined ? {} : { trade_reward: bonus.trade_reward }) };
   },
 });

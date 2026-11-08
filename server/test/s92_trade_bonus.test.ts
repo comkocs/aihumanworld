@@ -52,6 +52,11 @@ test("S92: 30 ticks of speech, four bilateral exchanges, durable dedupe, coin re
       for (let i = 0; i < 2; i += 1) assert.deepEqual(after[i]!.map((v, j) => v - before[i]![j]!), [expected.xp, expected.potential]);
       return r;
     };
+    const checkTradeReward = async (r: Json, actor: string, kind: string) => {
+      const events = await app.db.query<Json>("SELECT data->'reward' AS reward FROM events WHERE deed_id = $1 AND type = 'reward_granted' AND data->>'char_id' = $2 AND data->'trade'->>'kind' = $3 AND data->'trade'->>'key' NOT LIKE '%journal:%'", [r.deed_ids[0], actor, kind]);
+      assert.equal(events.rows.length, 1);
+      assert.deepEqual(r.result.trade_reward, { xp: events.rows[0]!.reward.xp, potential: events.rows[0]!.reward.potential });
+    };
     const def = (await selectRows(app.db, "item", "record = 'definition' AND kind = 'blade' AND tier = 1 AND grade = 1"))[0];
     assert.ok(def?.record === "definition");
     const item: ItemInstanceRow = {
@@ -62,20 +67,25 @@ test("S92: 30 ticks of speech, four bilateral exchanges, durable dedupe, coin re
     await insertRow(app.db, "item", item);
     const gift = await checkBoth(() => call("give", { target: b.id, asset: { kind: "item", item: item.id } }, a.code));
     assert.ok(gift.result.changes.some((x: Json) => x.id === a.id && x.after.xp !== undefined));
+    await checkTradeReward(gift, a.id, "give_item");
     const beforeSecondHand = await Promise.all([b, c].map(async (p) => { const r = await row(p.id); return [r.xp, r.potential]; }));
     const secondHand = await call("give", { target: c.id, asset: { kind: "item", item: item.id } }, b.code);
     assert.deepEqual(await Promise.all([b, c].map(async (p) => { const r = await row(p.id); return [r.xp, r.potential]; })), beforeSecondHand);
+    assert.equal(Object.hasOwn(secondHand.result, "trade_reward"), false);
     assert.equal((await app.db.query("SELECT 1 FROM events WHERE deed_id = $1 AND data->'trade'->>'kind' = 'give_item'", [secondHand.deed_ids[0]])).rows.length, 0);
     await call("give", { target: a.id, asset: { kind: "item", item: item.id } }, c.code);
     await checkBoth(() => call("give", { target: b.id, asset: { kind: "item", item: item.id } }, a.code), { xp: 0, potential: 0 });
 
     await updateRow(app.db, "char", a.id, { coin: 10000 }, world.tick);
-    await checkBoth(() => call("give", { target: b.id, asset: { kind: "coin", amount: 1 } }, a.code), { xp: 0, potential: 0 });
+    const tooSmall = await checkBoth(() => call("give", { target: b.id, asset: { kind: "coin", amount: 1 } }, a.code), { xp: 0, potential: 0 });
+    assert.equal(Object.hasOwn(tooSmall.result, "trade_reward"), false);
     await checkBoth(() => call("give", { target: a.id, asset: { kind: "coin", amount: 1 } }, b.code), { xp: 0, potential: 0 });
-    await checkBoth(() => call("give", { target: b.id, asset: { kind: "coin", amount: 101 } }, a.code));
+    const coinTrade = await checkBoth(() => call("give", { target: b.id, asset: { kind: "coin", amount: 101 } }, a.code));
+    await checkTradeReward(coinTrade, a.id, "give_coin");
     await checkBoth(() => call("give", { target: a.id, asset: { kind: "coin", amount: 101 } }, b.code), { xp: 0, potential: 0 });
     await checkBoth(() => call("give", { target: b.id, asset: { kind: "coin", amount: 101 } }, a.code), { xp: 0, potential: 0 });
-    await checkBoth(() => call("give", { target: b.id, asset: { kind: "coin", amount: 10 } }, a.code), { xp: 6, potential: 0 });
+    const partial = await checkBoth(() => call("give", { target: b.id, asset: { kind: "coin", amount: 10 } }, a.code), { xp: 6, potential: 0 });
+    await checkTradeReward(partial, a.id, "give_coin");
     const cheapDef = (await selectRows(app.db, "item", "record = 'definition' AND kind = 'ore' AND tier = 1 AND grade = 1"))[0];
     assert.ok(cheapDef?.record === "definition");
     const cheapItem = { ...item, id: "r1:item:s92_cheap", def_id: cheapDef.id, dura: 0, sockets: [] };
@@ -101,12 +111,15 @@ test("S92: 30 ticks of speech, four bilateral exchanges, durable dedupe, coin re
       const paid = await app.db.query<Json>("SELECT data->'reward' AS reward FROM events WHERE deed_id = $1 AND type = 'reward_granted' AND data->'trade'->>'kind' = 'give_coin'", [transfer.deed_ids[0]]);
       assert.ok(paid.rows.length > 0);
       assert.ok(paid.rows.every((e) => e.reward.xp === 0 && e.reward.potential === 0));
+      assert.equal(Object.hasOwn(transfer.result, "trade_reward"), false);
     }
 
     const current = await mustGetRow(app.db, "world", world.id);
     const post = await call("bounty", { op: "post", condition: { tpl: "reach", mode: "tier", tier: 1, stage: 1 }, reward: { coin: 100, items: [] }, expires_tick: (BigInt(current.tick) + 120n).toString() }, a.code);
     await call("task", { op: "accept", id: post.result.task.id }, b.code);
-    await checkBoth(() => call("task", { op: "submit", id: post.result.task.id }, b.code));
+    const bountyTrade = await checkBoth(() => call("task", { op: "submit", id: post.result.task.id }, b.code));
+    await checkTradeReward(bountyTrade, b.id, "bounty");
+    assert.equal(bountyTrade.result.reward.coin, 100);
     const again = (await app.dispatch({ verb: "task", body: { args: { op: "submit", id: post.result.task.id } }, bearer: b.code, door: "api" })).body as Json;
     assert.equal(again.ok, false);
     assert.equal(again.error.code, "TASK_STATE");
@@ -118,7 +131,8 @@ test("S92: 30 ticks of speech, four bilateral exchanges, durable dedupe, coin re
     assert.ok(teacher?.record === "learned");
     await updateRow(app.db, "skill", teacher.id, { level: 16, cap: 16 }, current.tick);
     await insertRow(app.db, "bond", { id: "r1:bond:s92_mentor", created_tick: current.tick, updated_tick: current.tick, kind: "mentor", a: b.id, b: a.id, state: "active", weight: 0, rank: null, since_tick: current.tick, ended_tick: null });
-    await checkBoth(() => call("learn", { master: b.id, skill: "inner", payment: "bond" }, a.code));
+    const learnTrade = await checkBoth(() => call("learn", { master: b.id, skill: "inner", payment: "bond" }, a.code));
+    await checkTradeReward(learnTrade, a.id, "learn");
     await updateRow(app.db, "char", b.id, { tier: 1, stage: 4, vigor: 2300 }, current.tick);
 
     // Two separately resolved fights against different monsters qualify, without a prior loss.
