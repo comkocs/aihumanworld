@@ -257,6 +257,42 @@ async function sendLexicon(res: ServerResponse, skin: string, locale: string): P
  * content keys. One body for `GET /v1/defs` (no auth, no arguments) and its web
  * alias `GET /play/definitions`.
  */
+async function pageDeeds(q: Queryable, blocks: ReturnType<typeof pageBlocks>, kind: PageKind, ref: string | null) {
+  const ids = [...new Set(blocks.sections.filter((section) => /^(近期事迹 Recent deeds|事迹 Deeds)$/.test(section.title)).flatMap((section) => section.lines.flatMap((line) =>
+    [...line.matchAll(/`([a-z][a-z0-9_]*:deed:[a-z][a-z0-9_]*)`/g)].map((match) => match[1]!),
+  )))];
+  if (ids.length === 0 || (kind !== "chronicle" && kind !== "place" && kind !== "char")) return { deeds: {}, deedNames: {} };
+  const marks = (values: string[]) => values.map((_, i) => `$${i + 1}`).join(", ");
+  const params: string[] = [...ids];
+  let visibility = "visibility = 'world'";
+  if (kind === "place" && ref !== null) {
+    params.push(ref);
+    visibility = `place_id = $${params.length} AND visibility IN ('place', 'world')`;
+  } else if (kind === "char" && ref !== null) {
+    params.push(ref, JSON.stringify([ref]));
+    visibility = `(actor = $${params.length - 1} OR targets @> $${params.length}::jsonb OR participants @> $${params.length}::jsonb) AND visibility IN ('place', 'world')`;
+  }
+  const rows = await selectRows(q, "deed", `id IN (${marks(ids)}) AND ${visibility}`, params);
+  const deeds = Object.fromEntries(rows.map((d) => [d.id, {
+    tick: d.tick, kind: d.kind, actor: d.actor, targets: d.targets, place: d.place_id,
+  }]));
+  const refs = [...new Set(rows.flatMap((d) => [d.actor, ...d.targets, d.place_id]).filter((id): id is string => id !== null))];
+  const chars = refs.filter((id) => isFactId(id, "char"));
+  const places = refs.filter((id) => isFactId(id, "place"));
+  const orgs = refs.filter((id) => isFactId(id, "org"));
+  const deedNames: Record<string, { handle?: string | null; kind?: string; archetype?: string | null; tier?: number; content_key?: string; name?: string | null }> = {};
+  if (chars.length) for (const c of await selectRows(q, "char", `id IN (${marks(chars)})`, chars)) {
+    deedNames[c.id] = { handle: c.handle, kind: c.kind, archetype: c.archetype, tier: c.tier };
+  }
+  if (places.length) for (const p of await selectRows(q, "place", `id IN (${marks(places)})`, places)) {
+    deedNames[p.id] = { content_key: p.content_key };
+  }
+  if (orgs.length) for (const o of await selectRows(q, "org", `id IN (${marks(orgs)})`, orgs)) {
+    deedNames[o.id] = { content_key: o.content_key, name: o.player_name ?? null };
+  }
+  return { deeds, deedNames };
+}
+
 async function sendDefinitions(deps: PublicDeps, res: ServerResponse): Promise<void> {
   const where = "record = 'definition' AND split_part(id, ':', 1) = $1";
   const items = await selectRows(deps.db, "item", where, [deps.realm]);
@@ -487,7 +523,9 @@ async function handleGet(deps: PublicDeps, req: IncomingMessage, res: ServerResp
     const view = browserSkin(book, hit.kind, hit.ref, search, lang);
     const doc = await renderPage(deps.db, { kind: hit.kind, ref: hit.ref, lexicon: view.lexicon, ...(!search.has("skin") ? { birthBook: book } : {}) });
     if (doc === null) return notFound(res);
-    send(res, 200, "application/json", JSON.stringify({ kind: hit.kind, ...pageBlocks(doc.markdown), query: hit.kind === "char" && !search.has("skin") ? "" : view.query }), {
+    const blocks = pageBlocks(doc.markdown);
+    const deedData = await pageDeeds(deps.db, blocks, hit.kind, hit.ref);
+    send(res, 200, "application/json", JSON.stringify({ kind: hit.kind, ...blocks, query: hit.kind === "char" && !search.has("skin") ? "" : view.query, ...deedData }), {
       "Cache-Control": "no-store", "Content-Security-Policy": CSP,
     });
     return;

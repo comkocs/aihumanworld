@@ -50,6 +50,9 @@ const deeds = ref([]);
 const deedsFailed = ref(false);
 const weekly = ref([]);
 const names = ref({});
+const lexicon = ref({});
+const deedData = ref({});
+const deedNames = ref({});
 const regionNames = ref({});
 const pageTitle = computed(() => {
   if (!page.value) return '';
@@ -75,6 +78,7 @@ async function loadNames() {
       get(`/play/lexicon/${skin.value}/${encodeURIComponent(locale)}.json`), get('/v1/defs'),
     ]);
     const lex = new Map(book.entries.map(e => [e.key, e.name]));
+    lexicon.value = Object.fromEntries(lex);
     const result = {};
     for (const p of defs.places) if (lex.has(p.content_key)) result[p.id] = lex.get(p.content_key);
     for (const e of book.entries) {
@@ -90,6 +94,8 @@ async function loadPage() {
   error.value = false;
   try {
     page.value = await get(pageUrl(path));
+    deedData.value = page.value.deeds || {};
+    deedNames.value = page.value.deedNames || {};
     const resolved = page.value.skin?.split('/')[0];
     if (skins.some(s => s.id === resolved)) skin.value = resolved;
     document.documentElement.dataset.skin = skin.value;
@@ -103,6 +109,8 @@ async function loadHome() {
     get('/v1/online').then(data => { online.value = data.total ?? data.count; }).catch(() => { onlineFailed.value = true; }),
     get(pageUrl('/chronicle')).then(data => {
       deeds.value = (data.sections[0]?.lines || []).slice().reverse().slice(0, 3);
+      deedData.value = data.deeds || {};
+      deedNames.value = data.deedNames || {};
     }).catch(() => { deedsFailed.value = true; }),
     get('/v1/weekly').then(data => { weekly.value = data.current?.rankings || []; }).catch(() => {}),
     loadNames(),
@@ -120,12 +128,43 @@ const deedLabels = {
   build: ['建造', 'Construction'], take: ['拾取', 'Item taken'], give: ['赠予', 'Gift'], use: ['使用', 'Use'], equip: ['装备', 'Equipment'], repair: ['修理', 'Repair'], trade: ['交易', 'Trade'], train: ['修炼', 'Training'], learn: ['学习', 'Learning'], identity: ['身份', 'Identity'], discourse: ['论道', 'Discourse'],
   first_gate: ['首次通关试炼', 'First trial cleared'], first_build: ['首次建造', 'First construction'], first_crossing: ['首次跨区', 'First crossing'], org_create: ['开派', 'Organization founded'], first_org: ['首开组织', 'First organization'], world_event: ['世界事件', 'World event'],
 };
-function deedTitle(line) {
-  const kind = /`deed\.([a-z0-9_]+)`/.exec(line)?.[1];
-  return (kind && Object.hasOwn(deedLabels, kind) ? deedLabels[kind] : ['一件事', 'A story'])[zh ? 0 : 1];
+function deedFor(line) {
+  const id = /`([a-z][a-z0-9_]*:deed:[a-z][a-z0-9_]*)`/.exec(line)?.[1];
+  return id ? deedData.value[id] : null;
 }
-function deedTick(line) { return /^tick (\d+)/.exec(line)?.[1] || '—'; }
-function actor(line) { return /actor `([^`]+)`/.exec(line)?.[1]; }
+function deedName(id) {
+  const info = deedNames.value[id] || {};
+  const type = id.split(':')[1];
+  if (info.handle) return info.handle;
+  if (info.name) return info.name;
+  if (info.content_key && lexicon.value[info.content_key]) return lexicon.value[info.content_key];
+  if (names.value[id]) return names.value[id];
+  if (type === 'char') {
+    if (info.kind === 'npc') return lexicon.value[`npc.${info.archetype}`] || (zh ? '一位人物' : 'A figure');
+    const number = /:char:c(\d+)$/.exec(id)?.[1];
+    return number ? `A${number.padStart(5, '0')}` : (zh ? '一位同行者' : 'A traveler');
+  }
+  return type === 'place' ? (zh ? '一处地方' : 'a place') : (zh ? '一个组织' : 'an organization');
+}
+function deedParts(deed) {
+  const parts = [];
+  const text = value => parts.push({ text: value });
+  const link = id => parts.push({ text: deedName(id), href: `/${id.split(':')[1]}/${id}${query.value}` });
+  const refs = (deed.targets || []).filter(id => /^[a-z][a-z0-9_]*:(char|place|org):[a-z][a-z0-9_]*$/.test(id) && id !== deed.actor);
+  const label = Object.hasOwn(deedLabels, deed.kind) ? deedLabels[deed.kind][zh ? 0 : 1] : (zh ? '留下了一则事迹' : 'left a story');
+  if (deed.actor) link(deed.actor); else text(zh ? '世界' : 'The world');
+  if (deed.kind === 'discourse' && refs.length) {
+    text(zh ? ' 与 ' : ' and ');
+    link(refs.shift());
+    text(zh ? ' 论道' : ' shared a conversation');
+  } else text(` ${label}`);
+  for (const id of refs) { text(' · '); link(id); }
+  if (deed.place && deed.place !== deed.actor && !refs.includes(deed.place) && !(deed.targets || []).includes(deed.place)) {
+    text(' · '); link(deed.place);
+  }
+  return parts;
+}
+function deedTick(deed) { return zh ? `第 ${deed.tick} 刻` : `Tick ${deed.tick}`; }
 function skinHref(id) {
   const params = new URLSearchParams(location.search);
   params.set('skin', id);
@@ -166,7 +205,7 @@ onMounted(() => {
       </section>
       <div class="world-dashboard">
         <section class="panel online-panel" aria-live="polite"><p class="panel-label"><span class="live-dot"></span>{{ words.online }}</p><strong class="online-number">{{ online ?? '—' }}</strong><p class="muted">{{ onlineFailed ? words.failed : words.people }}</p><div class="online-rule"></div><a href="/play" class="quiet-link">{{ words.play }} <span aria-hidden="true">↗</span></a></section>
-        <section class="panel deeds-panel"><div class="panel-heading"><div><h2>{{ words.today }}</h2><p>{{ words.recent }}</p></div><a :href="'/chronicle' + query" :aria-label="words.view">↗</a></div><ol v-if="deeds.length" class="story-list"><li v-for="(line, i) in deeds" :key="i"><span class="story-dot"></span><div><FactLine :text="deedTitle(line)" :query="query" :names="names"/><small><a v-if="actor(line)" :href="'/char/' + actor(line) + query">{{ names[actor(line)] || (zh ? '一位同行者' : 'A traveler') }}</a><span v-else>{{ zh ? '世界' : 'World' }}</span> · {{ zh ? '第' : 'Tick' }} {{ deedTick(line) }} {{ zh ? '刻' : '' }}</small></div></li></ol><p v-else class="empty-note">{{ loading ? words.loading : deedsFailed ? words.failed : words.emptyDeeds }}</p></section>
+        <section class="panel deeds-panel"><div class="panel-heading"><div><h2>{{ words.today }}</h2><p>{{ words.recent }}</p></div><a :href="'/chronicle' + query" :aria-label="words.view">↗</a></div><ol v-if="deeds.length" class="story-list"><li v-for="(line, i) in deeds" :key="i"><span class="story-dot"></span><div v-if="deedFor(line)"><template v-for="(part, k) in deedParts(deedFor(line))" :key="k"><a v-if="part.href" :href="part.href">{{ part.text }}</a><template v-else>{{ part.text }}</template></template><small>{{ deedTick(deedFor(line)) }}</small></div><div v-else>{{ zh ? '一则事迹' : 'A story' }}</div></li></ol><p v-else class="empty-note">{{ loading ? words.loading : deedsFailed ? words.failed : words.emptyDeeds }}</p></section>
         <section class="panel weekly-panel"><div class="panel-heading"><div><h2>{{ words.weekly }}</h2><p>{{ words.weekNote }}</p></div><span class="rank-seal" aria-hidden="true">榜</span></div><ol v-if="weekly.length" class="ranking"><li v-for="(row, i) in weekly.slice(0, 3)" :key="row.org_id"><span class="rank-number">{{ String(i + 1).padStart(2, '0') }}</span><a :href="'/org/' + row.org_id + query">{{ row.org_name || row.org_id }}</a><strong>{{ row.total }}</strong></li></ol><p v-else class="empty-note">{{ loading ? words.loading : words.emptyWeek }}</p></section>
       </div>
       <section class="origins-section"><div class="section-heading"><div><p class="eyebrow">{{ zh ? '从何处启程' : 'Where will you begin?' }}</p><h2>{{ words.origins }}</h2></div><p class="muted">{{ words.originNote }}</p></div><div class="origin-grid"><a v-for="s in skins" :key="s.id" :href="'/region/' + s.id + '?skin=' + s.id + '&locale=' + locale" class="origin-card" :data-origin="s.id"><span class="origin-glyph" aria-hidden="true">{{ s.mark }}</span><span class="origin-index">{{ s.name }}</span><h3>{{ s.sub }}</h3><p>{{ s.desc }}</p><span class="origin-foot">{{ regionNames[s.id] || s.name }} <span aria-hidden="true">↗</span></span></a></div><a class="neutral-link" :href="'/region/neutral' + query">{{ words.neutral }} ↗</a></section>
@@ -182,7 +221,7 @@ onMounted(() => {
       <div v-else-if="error" class="page-state" role="alert"><p>{{ words.failed }}</p><button @click="loadPage">{{ words.retry }}</button></div>
       <article v-else-if="page" class="fact-page">
         <header class="fact-header"><p class="eyebrow">{{ words.public }}</p><h1><FactLine :text="pageTitle" :query="page.query" :names="names"/></h1><p v-for="(line, i) in page.intro" :key="i"><FactLine :text="line" :query="page.query" :names="names"/></p></header>
-        <div class="fact-sections"><section v-for="(section, i) in page.sections" :key="i" class="panel fact-section"><div class="panel-heading"><h2>{{ section.title }}</h2><span class="section-count">{{ section.lines.length }}</span></div><ul v-if="section.lines.length" class="fact-list"><li v-for="(line, j) in section.lines" :key="j"><FactLine :text="line" :query="page.query" :names="names"/></li></ul><p v-else class="empty-note">{{ words.empty }}</p></section></div>
+        <div class="fact-sections"><section v-for="(section, i) in page.sections" :key="i" class="panel fact-section"><div class="panel-heading"><h2>{{ section.title }}</h2><span class="section-count">{{ section.lines.length }}</span></div><ul v-if="section.lines.length" class="fact-list"><li v-for="(line, j) in section.lines" :key="j"><template v-if="deedFor(line)"><span class="deed-sentence"><template v-for="(part, k) in deedParts(deedFor(line))" :key="k"><a v-if="part.href" :href="part.href">{{ part.text }}</a><template v-else>{{ part.text }}</template></template></span><small class="deed-tick">{{ deedTick(deedFor(line)) }}</small></template><span v-else-if="/`[a-z][a-z0-9_]*:deed:/.test(line)">{{ zh ? '一则事迹' : 'A story' }}</span><FactLine v-else :text="line" :query="page.query" :names="names"/></li></ul><p v-else class="empty-note">{{ words.empty }}</p></section></div>
       </article>
     </template>
   </main>
