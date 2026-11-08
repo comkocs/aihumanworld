@@ -21,6 +21,7 @@ import { apCost, requireRule } from "../rules/world_rules.ts";
 import { briefingStart, rememberBriefingStart, type Briefing } from "./briefing.ts";
 import { envelopeExtras, type NewSpeech, type Notice } from "./envelope_extras.ts";
 import { findVerb } from "./registry.ts";
+import { saveHintFor, type SaveHint } from "./save_hint.ts";
 import type { AnyVerbDef, Gate, Services, VerbContext } from "./types.ts";
 
 export const PROTOCOL = "aihw.v1";
@@ -42,6 +43,8 @@ export interface OkEnvelope {
   guide_rev?: string;
   /** S87: bounded offline facts, once per returning interval. */
   briefing?: Briefing;
+  /** S102: one-time private reminder to offer email recovery. */
+  save_hint?: SaveHint;
 }
 
 export interface ErrEnvelope {
@@ -189,6 +192,8 @@ async function runInTx(deps: RunnerDeps, def: AnyVerbDef, args: unknown, input: 
     };
     const extrasSeen = briefingStart(ctx);
     if (extrasSeen !== null) {
+      const saveHint = await saveHintFor(q, after, world.tick);
+      if (saveHint !== undefined) body.save_hint = saveHint;
       const extras = await envelopeExtras(q, deps.services, deps.services.speech, deps.realm, rules, after.id, extrasSeen, world.tick, body.event_head, ctx);
       if (extras.briefing !== undefined && def.verb !== "enter") body.briefing = extras.briefing;
       if (extras.new_speech !== undefined) body.new_speech = extras.new_speech;
