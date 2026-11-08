@@ -32,16 +32,29 @@ export type LookPlace = Omit<PlaceRow, "exits"> & { exits: LookExit[]; npc_attac
  * S78: an NPC that belongs to an org carries the stance between that org and the
  * caller's org. Other people, and a caller with no org, stay unmarked.
  */
-async function peopleRows(q: Queryable, actor: ID | null, rows: CharRow[]): Promise<unknown[]> {
-  const mine = actor === null ? null : await memberOrg(q, actor);
+async function peopleRows(ctx: VerbContext, rows: CharRow[]): Promise<unknown[]> {
+  const { q, actor, tick } = ctx;
+  const mine = actor === null ? null : await memberOrg(q, actor.id);
   const out: unknown[] = [];
   for (const c of rows) {
     const shown: PublicChar = publicChar(c);
+    const role = c.archetype === "monster" || c.archetype === "tutorial_opponent" ? "monster"
+      : c.archetype === "guard" || c.archetype === "patroller" ? "guard"
+      : c.kind === "official" ? "official" : c.kind === "player" ? "player" : "npc";
+    const row = {
+      ...shown,
+      role,
+      ...(actor !== null && c.id !== actor.id ? { vs_you: c.tier > actor.tier ? "higher" : c.tier === actor.tier ? "same" : "lower" } : {}),
+      ...(c.life === "dead" ? {
+        revive_tick: c.revive_tick,
+        revives_in: Math.max(0, Number(BigInt(c.revive_tick ?? tick) - BigInt(tick))),
+      } : {}),
+    };
     if (mine !== null && c.kind === "npc") {
       const theirs = await memberOrg(q, c.id);
       const stance: OrgStance = theirs === null ? "neutral" : await orgStance(q, mine, theirs);
-      out.push(theirs === null ? shown : { ...shown, org_id: theirs, org_stance: stance });
-    } else out.push(shown);
+      out.push(theirs === null ? row : { ...row, org_id: theirs, org_stance: stance });
+    } else out.push(row);
   }
   return out;
 }
@@ -182,7 +195,7 @@ export const def = defineVerb<LookArgs, LookResult>({
     const sq = sectionQuery(a.section, place.id, me.id);
     const lim = resolveLimit(a.limit, ctx.rules);
     const p = await pageRows(ctx.q, sq.table, sq.where, sq.params, a.page, lim, deedHead, sq.seqColumn);
-    const rows: unknown[] = a.section === "people" ? await peopleRows(ctx.q, ctx.actor?.id ?? null, p.rows as CharRow[]) : p.rows;
+    const rows: unknown[] = a.section === "people" ? await peopleRows(ctx, p.rows as CharRow[]) : p.rows;
     return { place: shownPlace, section: a.section, rows, page: p.page, has_more: p.has_more, snapshot_changed: p.snapshot_changed, counts };
   },
 });
