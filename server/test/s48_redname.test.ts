@@ -131,6 +131,9 @@ test("S48: newbie window, red name by tier relation, hunting a red name", async 
     await vigorOf(n3, 1000000);
     const struck = await call("attack", { target: n1.id }, n3.code); // n3 strikes a participant first: its protection ends now
     assert.equal(struck.ok, true, JSON.stringify(struck));
+    // S103 settles a whole PK bout now; restore both before the independent protection counter-check.
+    await vigorOf(n1, 1000000);
+    await vigorOf(n3, 1000000);
     const back = await call("attack", { target: n3.id }, n1.code); // n1 may answer inside what used to be n3's window
     assert.equal(back.ok, true, JSON.stringify(back));
     await advance(1); // created + 5: the window is over
