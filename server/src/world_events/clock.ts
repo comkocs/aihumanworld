@@ -66,6 +66,19 @@ export function windowAt(n: WorldEventNumbers, tick: bigint): { open: bigint; cl
   return { open, close, kind };
 }
 
+// ops-only one-off windows for a live test; the 720-tick schedule is untouched; unset the variable after the test.
+export function extraWindowAt(n: WorldEventNumbers, tick: bigint, raw: string | undefined = process.env.AIHW_WORLD_EVENT_EXTRA): { open: bigint; close: bigint; kind: WorldEventKind } | null {
+  if (!raw) return null;
+  for (const segment of raw.split(",")) {
+    const parts = segment.split(":").map((part) => part.trim());
+    if (parts.length !== 2) continue;
+    const [tickText, kind] = parts;
+    if (tickText === undefined || !/^\d+$/.test(tickText) || (kind !== "beast_tide" && kind !== "secret_realm")) continue;
+    if (BigInt(tickText) === tick) return { open: tick, close: tick + BigInt(n.duration_ticks), kind };
+  }
+  return null;
+}
+
 interface EventRow {
   open_tick: string;
   close_tick: string;
@@ -369,6 +382,19 @@ export const worldEventPhase: ClockPhase = {
       [ctx.to_tick],
     );
     for (const row of due.rows) await closeWindow(ctx, row);
+
+    const extra = extraWindowAt(rule, BigInt(ctx.to_tick));
+    if (extra !== null) {
+      const open = await ctx.q.query("SELECT 1 FROM s72_world_events WHERE state = 'open'");
+      if (open.rows.length > 0) {
+        log.warn("加开的世界事件与开着的窗重叠，跳过", { open_tick: extra.open.toString() });
+        return;
+      }
+      const seen = await ctx.q.query("SELECT 1 FROM s72_world_events WHERE open_tick = $1", [extra.open.toString()]);
+      if (seen.rows.length > 0) return;
+      await openWindow(ctx, rule, extra.open, extra.close, extra.kind);
+      return;
+    }
 
     const win = windowAt(rule, BigInt(ctx.to_tick));
     if (win === null || win.open !== BigInt(ctx.to_tick)) return;

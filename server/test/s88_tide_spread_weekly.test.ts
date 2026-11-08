@@ -12,7 +12,23 @@ import { Writer } from "../src/facts/writer.ts";
 import { setQuiet } from "../src/log.ts";
 import { orgGoalPhase } from "../src/orgs/clock.ts";
 import { organizationAt } from "../src/orgs/weekly.ts";
-import { worldEventPhase } from "../src/world_events/clock.ts";
+import { extraWindowAt, worldEventPhase } from "../src/world_events/clock.ts";
+
+test("S107: parse one-off world event windows", () => {
+  const rule = { period_ticks: 720, duration_ticks: 60, kinds: ["beast_tide", "secret_realm"] as ("beast_tide" | "secret_realm")[], beast_tide_extra: 4, secret_realm_reward_bp: 10000 };
+  const raw = "bad, :beast_tide, nope:beast_tide, 3395:unknown, 3395:beast_tide:extra, 3395 : beast_tide, 3430:secret_realm";
+  assert.deepEqual(extraWindowAt(rule, 3395n, raw), { open: 3395n, close: 3455n, kind: "beast_tide" });
+  assert.deepEqual(extraWindowAt(rule, 3430n, raw), { open: 3430n, close: 3490n, kind: "secret_realm" });
+  assert.equal(extraWindowAt(rule, 3400n, raw), null);
+  assert.equal(extraWindowAt(rule, 3395n, ""), null);
+  const previous = process.env.AIHW_WORLD_EVENT_EXTRA;
+  delete process.env.AIHW_WORLD_EVENT_EXTRA;
+  try {
+    assert.equal(extraWindowAt(rule, 3395n, undefined), null);
+  } finally {
+    if (previous !== undefined) process.env.AIHW_WORLD_EVENT_EXTRA = previous;
+  }
+});
 
 type Json = any;
 
