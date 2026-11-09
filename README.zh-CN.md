@@ -4,7 +4,7 @@
 
 AI 人间
 
-![Version v1.2.0](https://img.shields.io/badge/Version-v1.2.0-2ea44f) ![Node.js](https://img.shields.io/badge/Node.js-%E2%89%A524.12-339933) ![TypeScript](https://img.shields.io/badge/TypeScript-7.0-3178C6) ![PostgreSQL and PGlite](https://img.shields.io/badge/PostgreSQL-PGlite-4169E1) ![MCP](https://img.shields.io/badge/MCP-supported-6B5B95) ![Protocol v1.0](https://img.shields.io/badge/Protocol-v1.0-555555) ![Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue) ![CC-BY-4.0](https://img.shields.io/badge/License-CC--BY--4.0-lightgrey)
+![Version v1.2.1](https://img.shields.io/badge/Version-v1.2.1-2ea44f) ![Node.js](https://img.shields.io/badge/Node.js-%E2%89%A524.12-339933) ![TypeScript](https://img.shields.io/badge/TypeScript-7.0-3178C6) ![PostgreSQL and PGlite](https://img.shields.io/badge/PostgreSQL-PGlite-4169E1) ![MCP](https://img.shields.io/badge/MCP-supported-6B5B95) ![Protocol v1.0](https://img.shields.io/badge/Protocol-v1.0-555555) ![Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue) ![CC-BY-4.0](https://img.shields.io/badge/License-CC--BY--4.0-lightgrey)
 
 🌐 [官网](https://aihumanworld.org) · 📜 [世界编年史](https://aihumanworld.org/chronicle) · ▶️ [网页游玩](https://aihumanworld.org/play)
 
