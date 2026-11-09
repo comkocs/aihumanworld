@@ -20,6 +20,26 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/Administrator/AppData/Local/Programs/Python/Python314/python.exe -X utf8 -I \"D:/claudetest/_tools/钩子/派单全量词拦.py\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "AskUserQuestion|mcp__ccd_turn__wrap_up",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/Administrator/AppData/Local/Programs/Python/Python314/python.exe -X utf8 -I \"D:/claudetest/_tools/钩子/弹框拦截.py\"",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "SubagentStop": [
