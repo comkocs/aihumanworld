@@ -242,15 +242,18 @@ export async function systemTaskRewardBp(q: Queryable, place: PlaceRow): Promise
   return state?.pressured_regions.includes(place.region) ? state.reward_bp : 10000;
 }
 
-/** First traversable outward exit by destination id, then direction. No pve requirement at the new site. */
-async function adjacentPlace(q: Queryable, from: PlaceRow): Promise<PlaceRow | null> {
+/** Prefer unvisited traversable exits by destination id, then direction; otherwise use the first. */
+async function adjacentPlace(q: Queryable, from: PlaceRow, visited: Set<ID>): Promise<PlaceRow | null> {
   const exits = from.exits.filter((e) => !e.locked && e.to !== from.id && e.to.split(":")[0] === from.id.split(":")[0])
     .sort((a, b) => a.to < b.to ? -1 : a.to > b.to ? 1 : a.dir < b.dir ? -1 : a.dir > b.dir ? 1 : 0);
+  let fallback: PlaceRow | null = null;
   for (const exit of exits) {
     const dest = await getRow(q, "place", exit.to);
-    if (dest !== null && dest.combat !== "safe" && dest.combat !== "duel") return dest;
+    if (dest === null || dest.combat === "safe" || dest.combat === "duel") continue;
+    fallback ??= dest;
+    if (!visited.has(dest.id)) return dest;
   }
-  return null;
+  return fallback;
 }
 
 interface TideResolution {
@@ -287,7 +290,18 @@ async function closeTide(ctx: ClockCtx, row: EventRow): Promise<TideResolution> 
     }
   }
   const place = await getRow(ctx.q, "place", row.place_id);
-  const next = defeated || place === null ? null : await adjacentPlace(ctx.q, place);
+  const visited = new Set<ID>([row.place_id]);
+  if (!defeated && place !== null) {
+    const previous = await ctx.q.query<{ place_id: ID; resolution: TideResolution | null }>(
+      "SELECT place_id, resolution FROM s72_world_events WHERE kind = 'beast_tide' AND open_tick < $1 ORDER BY open_tick DESC",
+      [row.open_tick],
+    );
+    for (const event of previous.rows) {
+      if (event.resolution?.defeated !== false) break;
+      visited.add(event.place_id);
+    }
+  }
+  const next = defeated || place === null ? null : await adjacentPlace(ctx.q, place, visited);
   if (!defeated && next === null) log.warn("兽潮没有可扩散的相邻地点，下一场留在原处", { place_id: row.place_id, open_tick: row.open_tick });
   const old = await tideState(ctx.q, ctx.world.realm);
   const regions = new Set(old?.pressured_regions ?? []);

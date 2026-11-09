@@ -276,3 +276,46 @@ test("S88: tide spread, regional offers / look, live organization board and week
     await app.close();
   }
 });
+
+test("S114: consecutive missed tides prefer an unvisited adjacent place", async () => {
+  setQuiet(true);
+  const config = await loadConfig({ ...process.env, AIHW_DB_DRIVER: "pglite", AIHW_PGLITE_DIR: "memory", AIHW_PORT: "0" });
+  config.clock.enabled = false;
+  const app = await startApp(config);
+  const balance = app.services.balance();
+  const rule = balance.numbers.world_events!;
+  const worldId = `${config.realm}:world:main`;
+  const phase = async (tick: number): Promise<void> => {
+    await app.db.tx(async (q) => {
+      const world = await mustGetRow(q, "world", worldId, { lock: true });
+      const to = String(tick);
+      const writer = new Writer(q, config.realm, to, world.rules_revision, true);
+      await worldEventPhase.run({ q, w: writer, world, rules: world.rules, balance, from_tick: world.tick, to_tick: to, now: new Date() });
+      await updateRow(q, "world", world.id, { tick: to, tick_started_at: new Date().toISOString(), day_index: Math.floor(tick / balance.numbers.clock.day_ticks), week_index: Math.floor(tick / balance.numbers.clock.week_ticks) }, to);
+    });
+  };
+  const eventAt = async (tick: number): Promise<Json> => (await app.db.query<Json>("SELECT * FROM s72_world_events WHERE open_tick = $1", [String(tick)])).rows[0];
+
+  try {
+    balance.numbers.meta.revision_key = "balance.v1.13";
+    const world = await mustGetRow(app.db, "world", worldId);
+    await updateRow(app.db, "world", worldId, { rules_revision: "balance.v1.13", rules: { ...world.rules, balance_key: "balance.v1.13" } }, world.tick);
+    const dungeon = await mustGetRow(app.db, "place", `${config.realm}:place:dungeon_t1`);
+    await updateRow(app.db, "place", dungeon.id, { exits: dungeon.exits.map((e) => ({ ...e, locked: false })) }, world.tick);
+    await phase(rule.period_ticks);
+    await phase(rule.period_ticks + rule.duration_ticks);
+    const first = await eventAt(rule.period_ticks);
+    assert.equal(first.resolution.defeated, false);
+    await phase(3 * rule.period_ticks);
+    await phase(3 * rule.period_ticks + rule.duration_ticks);
+    const second = await eventAt(3 * rule.period_ticks);
+    assert.equal(second.place_id, first.resolution.next_place_id);
+    assert.equal(second.resolution.defeated, false);
+    assert.equal(first.place_id, `${config.realm}:place:inner_t1`);
+    assert.equal(second.place_id, dungeon.id);
+    assert.equal(second.resolution.next_place_id, `${config.realm}:place:wild_t1`);
+    assert.notEqual(second.resolution.next_place_id, first.place_id);
+  } finally {
+    await app.close();
+  }
+});
